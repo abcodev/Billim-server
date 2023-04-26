@@ -26,11 +26,11 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
 
-#  profiles:
-#    include:
-#      - aws
-#      - email
-#      - import
+  profiles:
+    include:
+      - aws
+      - email
+      - import
 
 logging:
   level:
