@@ -31,26 +31,24 @@ public class ProductController {
 
     private final OrderService orderService;
 
+
+    //
     @GetMapping("/product/list")
-    public String productList(@RequestParam(required = false, defaultValue = "0", value = "page") int page,
-                              Model model
+    public ResponseEntity<Page<ProductListResponse>> productList(
+            @RequestParam(required = false, defaultValue = "0", value = "page") int page
     ) {
         Page<ProductListResponse> productList = productService.findAllProduct(page);
-        model.addAttribute("productList", productList);
-        model.addAttribute("totalPage", productList.getTotalPages());
-        return "pages/product/productList";
+        return ResponseEntity.ok(productList);
     }
 
-
+    //
     @GetMapping("/product/detail/{productId}")
-    public String productDetail(@PathVariable("productId") int productId, Model model) {
+    public ResponseEntity<ProductDetailResponse> productDetail(@PathVariable("productId") int productId, Model model) {
         Product product = productService.retrieve(productId);
-        ProductDetailResponse productDetail = ProductDetailResponse.of(product);
         List<LocalDate> alreadyDates = orderService.reservationDate(product);
-        model.addAttribute("product", productDetail);
-        model.addAttribute("alreadyDates",alreadyDates);
-        return "pages/product/productDetail";
+        return ResponseEntity.ok(ProductDetailResponse.of(product, alreadyDates));
     }
+
 
 
     @GetMapping("/product/date")
@@ -76,15 +74,19 @@ public class ProductController {
     }
 
 
-    @GetMapping("/product/enroll")
-    public String productEnroll(Model model) {
+    //
+    // FE 는 상품 등록 페이지로 진입
+    // 필요한 정보들 -> API 호출을 통해서 카테고리 목록을 가져옴
+    @GetMapping("/product/category")
+    @ResponseBody
+    public ResponseEntity<List<ProductCategory>> productEnroll() {
         List<ProductCategory> categoryList = productService.categoryList();
-        model.addAttribute("categoryList", categoryList);
-        return "pages/product/productEnroll";
+        return ResponseEntity.ok(categoryList);
     }
 
 
-    @PostMapping(value = "/product/enroll", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    //
+    @PostMapping(value = "/product", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     public ResponseEntity<Product> registerProduct(@ModelAttribute @Valid ProductRegisterRequest req,
                                                    User user
