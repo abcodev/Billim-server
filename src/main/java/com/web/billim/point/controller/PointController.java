@@ -1,8 +1,10 @@
 package com.web.billim.point.controller;
 
-import org.springframework.stereotype.Controller;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@Slf4j
+@RestController
 public class PointController {
 
     /*

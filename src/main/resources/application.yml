@@ -32,19 +32,10 @@ spring:
       - email
       - import
 
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
 logging:
   level:
     root: INFO
-
----
-spring:
-  config:
-    activate:
-      on-profile: fe-test
-
-  # H2 데이터베이스 설정
-  datasource:
-    url: jdbc:mysql://localhost:3306/billim
-    username: admin
-    password: admin123
-    driver-class-name: com.mysql.cj.jdbc.Driver

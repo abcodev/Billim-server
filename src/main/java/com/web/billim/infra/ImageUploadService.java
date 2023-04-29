@@ -1,4 +1,4 @@
-package com.web.billim.common.infra;
+package com.web.billim.infra;
 
 import org.springframework.web.multipart.MultipartFile;
 
