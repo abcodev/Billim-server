@@ -1,6 +1,6 @@
 package com.web.billim.product.service;
 
-import com.web.billim.common.infra.ImageUploadService;
+import com.web.billim.infra.ImageUploadService;
 import com.web.billim.member.domain.Member;
 import com.web.billim.member.repository.MemberRepository;
 import com.web.billim.product.domain.ImageProduct;

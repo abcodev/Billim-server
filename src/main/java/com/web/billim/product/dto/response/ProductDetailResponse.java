@@ -7,6 +7,7 @@ import com.web.billim.product.type.TradeMethod;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,8 +22,33 @@ public class ProductDetailResponse {
     private Member member;
     private List<String> imageUrls;
     private List<TradeMethod> tradeMethods;
+    private List<LocalDate> alreadyDates;
 
-    public static ProductDetailResponse of(Product product){
+    /*
+     *  응답데이터는 JSON
+     *   객체 -> JSON 이 되어야함 : 이거를 데이터 파싱
+     *   Jackson(ObjectMapper)
+     *
+     *  {
+     *      "productId": 1,
+     *      "productName": "테스트",
+     *      "detail": "상품 설명",
+     *      "price": 50000,
+     *      "member": {
+     *          "memberId": 10,
+     *          ...
+     *      },
+     *      "imageUrls": [
+     *          "https://s3/1",
+     *          "https://s3/2",
+     *          "https://s3/3"
+     *      ],
+     *      "tradeMethods": ["DIRECT"],
+     *      "alreadyDates": ["2023-04-17", "2023-04-18"]
+     *  }
+     */
+
+    public static ProductDetailResponse of(Product product, List<LocalDate> alreadyDates){
         return ProductDetailResponse.builder()
                 .productId(product.getProductId())
                 .productName(product.getProductName())
@@ -35,6 +61,7 @@ public class ProductDetailResponse {
                                 .collect(Collectors.toList())
                 )
                 .tradeMethods(product.getTradeMethods())
+                .alreadyDates(alreadyDates)
                 .build();
     }
 }
