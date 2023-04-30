@@ -25,23 +25,6 @@ public class OrderController {
     private final ProductService productService;
     private final PointService pointService;
 
-//    @GetMapping ("/order/confirm")
-//    public String orderConfirm(String startDate, String endDate, int productId, Model model) {
-//
-//        model.addAttribute("startDate",startDate);
-//        model.addAttribute("endDate", endDate);
-//
-//        Product product = productService.retrieve(productId);
-//        ProductDetailResponse productDetail = ProductDetailResponse.of(product);
-//        List<LocalDate> alreadyDates = orderService.reservationDate(product);
-//
-//        model.addAttribute("product", productDetail);
-//        model.addAttribute("alreadyDates",alreadyDates);
-//
-//        return "pages/order/orderInfo";
-//    }
-
-
     @PostMapping("/order")
     public ResponseEntity<PaymentInfoResponse> order(@RequestBody OrderCommand command,
                                                      @AuthenticationPrincipal User user
