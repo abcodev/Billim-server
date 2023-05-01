@@ -9,7 +9,6 @@ import com.web.billim.product.dto.response.ProductDetailResponse;
 import com.web.billim.product.dto.response.ProductListResponse;
 import com.web.billim.product.service.ProductService;
 import com.web.billim.security.domain.User;
-import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -31,7 +30,7 @@ public class ProductController {
 
     private final OrderService orderService;
 
-    @ApiOperation(value = "전체 상품목록 조회", notes = "전체 상품목록조회, 페이징 처리")
+//    @ApiOperation(value = "전체 상품목록 조회", notes = "전체 상품목록조회, 페이징 처리")
     @GetMapping("/product/list")
     public ResponseEntity<Page<ProductListResponse>> productList(
             @RequestParam(required = false, defaultValue = "0", value = "page") int page
@@ -78,7 +77,7 @@ public class ProductController {
     //
     // FE 는 상품 등록 페이지로 진입
     // 필요한 정보들 -> API 호출을 통해서 카테고리 목록을 가져옴
-    @ApiOperation(value = "상품 카테고리", notes = "상품 카테고리 불러오기")
+//    @ApiOperation(value = "상품 카테고리", notes = "상품 카테고리 불러오기")
     @GetMapping("/product/category")
     @ResponseBody
     public ResponseEntity<List<ProductCategory>> productEnroll() {
