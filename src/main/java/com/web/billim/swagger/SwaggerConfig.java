@@ -28,8 +28,8 @@ public class SwaggerConfig {
     }
     private ApiInfo mySwaggerInfo() {
         return new ApiInfoBuilder()
-                .title("SwaggerTest API")
-                .description("SwaggerTest API Docs")
+                .title("BILLIM")
+                .description("server api")
                 .build();
     }
 }
