@@ -27,7 +27,6 @@ public class MemberService {
     private final CouponService couponService;
     private final PointService pointService;
     private final MemberRepository memberRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public Map<String, String> validateHandling(BindingResult bindingResult) {
         Map<String, String> validatorResult = new HashMap<>();
@@ -39,26 +38,26 @@ public class MemberService {
         return validatorResult;
     }
 
-    public void singUp(MemberSignupRequest memberSignupRequest) {
-        memberSignupRequest.setPassword(bCryptPasswordEncoder.encode(memberSignupRequest.getPassword()));
-        Member member = memberSignupRequest.toEntity();
-        memberRepository.save(member);
+//    public void singUp(MemberSignupRequest memberSignupRequest) {
+//        memberSignupRequest.setPassword(bCryptPasswordEncoder.encode(memberSignupRequest.getPassword()));
+//        Member member = memberSignupRequest.toEntity();
+//        memberRepository.save(member);
+//
+//        // 쿠폰 주기
+//        couponRepository.findByName("회원가입 쿠폰")
+//                .map(coupon -> couponService.issueCoupon(member, coupon))
+//                .orElseThrow();
+//
+//        // 포인트 주기
+//        AddPointCommand command = new AddPointCommand(member, 1000, LocalDateTime.now().plusDays(365));
+//        pointService.addPoint(command);
+//    }
 
-        // 쿠폰 주기
-        couponRepository.findByName("회원가입 쿠폰")
-                .map(coupon -> couponService.issueCoupon(member, coupon))
-                .orElseThrow();
-
-        // 포인트 주기
-        AddPointCommand command = new AddPointCommand(member, 1000, LocalDateTime.now().plusDays(365));
-        pointService.addPoint(command);
-    }
-
-    public FindIdResponse findId(FindIdRequest findIdRequest) {
-        return memberRepository.findByNameAndEmail(findIdRequest.getName(), findIdRequest.getEmail())
-                .map(FindIdResponse::from)
-                .orElse(new FindIdResponse());
-    }
+//    public FindIdResponse findId(FindIdRequest findIdRequest) {
+//        return memberRepository.findByNameAndEmail(findIdRequest.getName(), findIdRequest.getEmail())
+//                .map(FindIdResponse::from)
+//                .orElse(new FindIdResponse());
+//    }
 
     public Member retrieve(int memberId) {
         return memberRepository.findById(memberId)

@@ -42,23 +42,23 @@ public class MemberController {
         binder.addValidators(checkPasswordValidator);
     }
 
-    @PostMapping("/member/signup")
-    public String memberSingUpProc(@Valid MemberSignupRequest memberSignupRequest,
-                                   BindingResult bindingResult,
-                                   Model model
-    ) {
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("memberDto", memberSignupRequest);
-
-            Map<String, String> validatorResult = memberService.validateHandling(bindingResult);
-            for (String key : validatorResult.keySet()) {
-                model.addAttribute(key, validatorResult.get(key));
-            }
-            return "pages/member/signup";
-        }
-        memberService.singUp(memberSignupRequest);
-        return "pages/home";
-    }
+//    @PostMapping("/member/signup")
+//    public String memberSingUpProc(@Valid MemberSignupRequest memberSignupRequest,
+//                                   BindingResult bindingResult,
+//                                   Model model
+//    ) {
+//        if (bindingResult.hasErrors()) {
+//            model.addAttribute("memberDto", memberSignupRequest);
+//
+//            Map<String, String> validatorResult = memberService.validateHandling(bindingResult);
+//            for (String key : validatorResult.keySet()) {
+//                model.addAttribute(key, validatorResult.get(key));
+//            }
+//            return "pages/member/signup";
+//        }
+//        memberService.singUp(memberSignupRequest);
+//        return "pages/home";
+//    }
 
     @GetMapping("/member/logout")
     public ResponseEntity<Void> logoutPage(HttpServletRequest request, HttpServletResponse response) {
@@ -67,10 +67,10 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/member/findId")
-    public ResponseEntity<FindIdResponse> findId(FindIdRequest findIdRequest) {
-        return ResponseEntity.ok(memberService.findId(findIdRequest));
-    }
+//    @PostMapping("/member/findId")
+//    public ResponseEntity<FindIdResponse> findId(FindIdRequest findIdRequest) {
+//        return ResponseEntity.ok(memberService.findId(findIdRequest));
+//    }
 
 }
 
