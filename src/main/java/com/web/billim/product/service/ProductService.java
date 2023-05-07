@@ -12,7 +12,6 @@ import com.web.billim.product.dto.response.ProductListResponse;
 import com.web.billim.product.repository.ImageProductRepository;
 import com.web.billim.product.repository.ProductCategoryRepository;
 import com.web.billim.product.repository.ProductRepository;
-import com.web.billim.security.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -82,11 +81,11 @@ public class ProductService {
     }
 
 
-    public List<MyProductSalesResponse> myProduceSales(User user) {
-        return productRepository.findByMember_memberId(user.getMemberId()).stream()
-                .map(MyProductSalesResponse::of)
-                .collect(Collectors.toList());
-    }
+//    public List<MyProductSalesResponse> myProduceSales(User user) {
+//        return productRepository.findByMember_memberId(user.getMemberId()).stream()
+//                .map(MyProductSalesResponse::of)
+//                .collect(Collectors.toList());
+//    }
 
     public Optional<Product> findProduct(int i) {
         return productRepository.findById(i);

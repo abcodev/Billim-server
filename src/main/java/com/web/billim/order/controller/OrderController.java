@@ -5,7 +5,6 @@ import com.web.billim.order.dto.response.PaymentInfoResponse;
 import com.web.billim.order.service.OrderService;
 import com.web.billim.point.service.PointService;
 import com.web.billim.product.service.ProductService;
-import com.web.billim.security.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -25,13 +24,13 @@ public class OrderController {
     private final ProductService productService;
     private final PointService pointService;
 
-    @PostMapping("/order")
-    public ResponseEntity<PaymentInfoResponse> order(@RequestBody OrderCommand command,
-                                                     @AuthenticationPrincipal User user
-    ) {
-        PaymentInfoResponse resp = orderService.order(user.getMemberId(), command);
-        return ResponseEntity.ok(resp);
-    }
+//    @PostMapping("/order")
+//    public ResponseEntity<PaymentInfoResponse> order(@RequestBody OrderCommand command,
+//                                                     @AuthenticationPrincipal User user
+//    ) {
+//        PaymentInfoResponse resp = orderService.order(user.getMemberId(), command);
+//        return ResponseEntity.ok(resp);
+//    }
 
 
 

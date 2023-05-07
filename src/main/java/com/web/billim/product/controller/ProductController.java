@@ -8,7 +8,6 @@ import com.web.billim.product.dto.response.MyProductSalesResponse;
 import com.web.billim.product.dto.response.ProductDetailResponse;
 import com.web.billim.product.dto.response.ProductListResponse;
 import com.web.billim.product.service.ProductService;
-import com.web.billim.security.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -66,12 +65,12 @@ public class ProductController {
 //    }
 
 
-    @GetMapping("/myPage/sales")
-    public String myPageSalesManagement(Model model, User user) {
-        List<MyProductSalesResponse> products = productService.myProduceSales(user);
-        model.addAttribute("myProducts", products);
-        return "pages/myPage/mySalesList";
-    }
+//    @GetMapping("/myPage/sales")
+//    public String myPageSalesManagement(Model model, User user) {
+//        List<MyProductSalesResponse> products = productService.myProduceSales(user);
+//        model.addAttribute("myProducts", products);
+//        return "pages/myPage/mySalesList";
+//    }
 
 
     //
@@ -86,15 +85,15 @@ public class ProductController {
     }
 
 
-    @PostMapping(value = "/product", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @ResponseBody
-    public ResponseEntity<Product> registerProduct(
-            @ModelAttribute @Valid ProductRegisterRequest req,
-            User user
-    ) {
-        req.setRegisterMember(user.getMemberId());
-        return ResponseEntity.ok(productService.register(req));
-    }
+//    @PostMapping(value = "/product", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    @ResponseBody
+//    public ResponseEntity<Product> registerProduct(
+//            @ModelAttribute @Valid ProductRegisterRequest req,
+//            User user
+//    ) {
+//        req.setRegisterMember(user.getMemberId());
+//        return ResponseEntity.ok(productService.register(req));
+//    }
 
 
 }
