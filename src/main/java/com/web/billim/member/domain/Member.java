@@ -19,7 +19,7 @@ public class Member extends JpaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private int memberId;
-
+    private String email;
 
     private String password;
 
@@ -28,9 +28,6 @@ public class Member extends JpaEntity {
     private String nickname;
 
     private String address;
-
-    private String email;
-
     @Enumerated(EnumType.STRING)
     private MemberGrade grade;
 
