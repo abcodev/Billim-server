@@ -3,22 +3,21 @@ package com.web.billim.member.controller;
 import com.web.billim.common.validation.CheckIdValidator;
 import com.web.billim.common.validation.CheckNickNameValidator;
 import com.web.billim.common.validation.CheckPasswordValidator;
+import com.web.billim.member.domain.Member;
 import com.web.billim.member.dto.request.FindIdRequest;
 import com.web.billim.member.dto.request.MemberSignupRequest;
-import com.web.billim.member.dto.response.FindIdResponse;
+//import com.web.billim.member.dto.response.FindIdResponse;
 import com.web.billim.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -42,23 +41,20 @@ public class MemberController {
         binder.addValidators(checkPasswordValidator);
     }
 
-//    @PostMapping("/member/signup")
-//    public String memberSingUpProc(@Valid MemberSignupRequest memberSignupRequest,
-//                                   BindingResult bindingResult,
-//                                   Model model
-//    ) {
-//        if (bindingResult.hasErrors()) {
-//            model.addAttribute("memberDto", memberSignupRequest);
-//
-//            Map<String, String> validatorResult = memberService.validateHandling(bindingResult);
-//            for (String key : validatorResult.keySet()) {
-//                model.addAttribute(key, validatorResult.get(key));
-//            }
-//            return "pages/member/signup";
-//        }
-//        memberService.singUp(memberSignupRequest);
-//        return "pages/home";
-//    }
+    @PostMapping("/member/signup")
+    public ResponseEntity memberSingUpProc(@Valid @RequestBody MemberSignupRequest memberSignupRequest,
+                                   BindingResult bindingResult
+    ) {
+        if (bindingResult.hasErrors()) {
+            // 유효성 검사에서 걸린 경우
+            // 2. 어디가 잘 못 됬는지 알려준다.
+            // valid_~ 형태의 String 으로 반환해줌
+            Map<String, String> validatorResult = memberService.validateHandling(bindingResult);
+            return new ResponseEntity<>(validatorResult, HttpStatus.OK);
+        }
+        memberService.signUp(memberSignupRequest);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 //    @GetMapping("/member/logout")
 //    public ResponseEntity<Void> logoutPage(HttpServletRequest request, HttpServletResponse response) {

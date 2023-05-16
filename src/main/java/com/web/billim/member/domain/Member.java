@@ -18,7 +18,7 @@ public class Member extends JpaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
-    private int memberId;
+    private long memberId;
     private String email;
 
     private String password;
@@ -37,5 +37,4 @@ public class Member extends JpaEntity {
     public void prePersist(){
         this.profileImageUrl = this.profileImageUrl == null ? "https://cdn-icons-png.flaticon.com/512/8246/8246830.png": this.profileImageUrl;
     }
-
 }
