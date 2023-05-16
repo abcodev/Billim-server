@@ -14,7 +14,7 @@ public class CheckIdValidator extends AbstractValidator<MemberSignupRequest> {
 
     @Override
     protected void doValidate(MemberSignupRequest dto, Errors errors) {
-        if(memberRepository.existsByUserId(dto.toEntity().getUserId())){
+        if(memberRepository.existsByEmail(dto.toEntity().getEmail())){
             errors.rejectValue("userId","아이디 중복 오류","이미 사용중인 아이디 입니다");
         }
     }
