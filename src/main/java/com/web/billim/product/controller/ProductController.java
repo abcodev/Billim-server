@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -24,14 +24,15 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/product")
 public class ProductController {
 
     private final ProductService productService;
 
     private final OrderService orderService;
 
-    @ApiOperation(value = "전체 상품목록 조회", notes = "전체 상품목록조회, 페이징 처리")
-    @GetMapping("/product/list")
+    @ApiOperation(value = "전체 상품목록 조회", notes = "전체 상품목록조회, 페이징")
+    @GetMapping("/list")
     public ResponseEntity<Page<ProductListResponse>> productList(
             @RequestParam(required = false, defaultValue = "0", value = "page") int page
     ) {
@@ -39,19 +40,17 @@ public class ProductController {
         return ResponseEntity.ok(productList);
     }
 
-    //
-    @GetMapping("/product/detail/{productId}")
+
+    @GetMapping("/detail/{productId}")
     public ResponseEntity<ProductDetailResponse> productDetail(
-            @PathVariable("productId") int productId, Model model
+            @PathVariable("productId") long productId
     ) {
         Product product = productService.retrieve(productId);
         List<LocalDate> alreadyDates = orderService.reservationDate(product);
         return ResponseEntity.ok(ProductDetailResponse.of(product, alreadyDates));
     }
 
-
-
-    @GetMapping("/product/date")
+    @GetMapping("/date")
     @ResponseBody
     public ResponseEntity<List<LocalDate>> test() {
         Product product = productService.retrieve(1);
@@ -59,40 +58,26 @@ public class ProductController {
         return ResponseEntity.ok(dates);
     }
 
-
-//    @GetMapping("/myPage/purchase")
-//    public String myPage() {
-//        return "pages/myPage/myPurchaseList";
-//    }
-
-
-//    @GetMapping("/myPage/sales")
-//    public String myPageSalesManagement(Model model, User user) {
-//        List<MyProductSalesResponse> products = productService.myProduceSales(user);
-//        model.addAttribute("myProducts", products);
-//        return "pages/myPage/mySalesList";
-//    }
-
-
-    @ApiOperation(value = "상품 카테고리", notes = "상품 카테고리 불러오기")
-    @GetMapping("/product/category")
+    // ok
+    @ApiOperation(value = "상품 카테고리 목록", notes = "상품 전체 카테고리 목록 조회")
+    @GetMapping("/category")
     @ResponseBody
     public ResponseEntity<List<ProductCategory>> productEnroll() {
         List<ProductCategory> categoryList = productService.categoryList();
         return ResponseEntity.ok(categoryList);
     }
 
-
-//    @PostMapping(value = "/product", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    @ResponseBody
-//    public ResponseEntity<Product> registerProduct(
-//            @ModelAttribute @Valid ProductRegisterRequest req,
-//            User user
-//    ) {
-//        req.setRegisterMember(user.getMemberId());
-//        return ResponseEntity.ok(productService.register(req));
-//    }
-
+    //
+    @ApiOperation(value = "상품 등록")
+    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseBody
+    public ResponseEntity<Product> registerProduct(
+            @ModelAttribute @Valid ProductRegisterRequest req,
+            @AuthenticationPrincipal long memberId
+    ) {
+        req.setRegisterMember(memberId);
+        return ResponseEntity.ok(productService.register(req));
+    }
 
 }
 

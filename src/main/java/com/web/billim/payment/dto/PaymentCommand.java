@@ -11,10 +11,10 @@ public class PaymentCommand {
 
 	private Member member;
 	private ProductOrder order;
-	private int couponIssueId;
-	private int usedPoint;
+	private long couponIssueId;
+	private long usedPoint;
 
-	public PaymentCommand(Member member, ProductOrder order, int couponIssueId, int usedPoint) {
+	public PaymentCommand(Member member, ProductOrder order, long couponIssueId, long usedPoint) {
 		this.member = member;
 		this.order = order;
 		this.couponIssueId = couponIssueId;

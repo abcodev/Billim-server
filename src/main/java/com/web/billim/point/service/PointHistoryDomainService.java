@@ -17,10 +17,10 @@ public class PointHistoryDomainService {
 
 	private final PointUsedHistoryRepository pointUsedHistoryRepository;
 
-	public List<PointUsedHistory> generateHistory(Payment payment, Map<SavedPoint, Integer> usedPointMap) {
+	public List<PointUsedHistory> generateHistory(Payment payment, Map<SavedPoint, Long> usedPointMap) {
 		List<PointUsedHistory> histories = usedPointMap.entrySet().stream().map(entry -> {
 			SavedPoint savedPoint = entry.getKey();
-			int usedAmount = entry.getValue();
+			long usedAmount = entry.getValue();
 
 			return PointUsedHistory.builder()
 				.payment(payment)

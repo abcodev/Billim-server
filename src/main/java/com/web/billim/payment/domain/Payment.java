@@ -20,7 +20,7 @@ public class Payment extends JpaEntity {
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "payment_id")
-	private Integer id;
+	private Long id;
 
 	@JoinColumn(name = "order_id", referencedColumnName = "product_order_id")
 	@OneToOne
@@ -31,11 +31,11 @@ public class Payment extends JpaEntity {
 	private CouponIssue couponIssue;
 
 	@Column(name = "point")
-	private int usedPoint;
+	private long usedPoint;
 
 	private String impUid;
 	private String merchantUid;
-	private int totalAmount;
+	private long totalAmount;
 
 	@Enumerated(EnumType.STRING)
 	private PaymentStatus status;

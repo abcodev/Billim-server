@@ -17,7 +17,7 @@ public class Review extends JpaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_id")
-    private Integer id;
+    private Long id;
 
     @JoinColumn(name = "product_id", referencedColumnName = "product_id")
     @ManyToOne
@@ -29,7 +29,7 @@ public class Review extends JpaEntity {
 
     private String content;
 
-    private int starRating;
+    private long starRating;
 
     private String status;
 }

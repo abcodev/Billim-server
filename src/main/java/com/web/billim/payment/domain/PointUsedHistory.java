@@ -16,7 +16,7 @@ public class PointUsedHistory extends JpaEntity {
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "point_history_id")
-	private Integer id;
+	private Long id;
 
 	@JoinColumn(name = "payment_id", referencedColumnName = "payment_id")
 	@ManyToOne
@@ -26,6 +26,6 @@ public class PointUsedHistory extends JpaEntity {
 	@ManyToOne
 	private SavedPoint savedPoint;
 
-	private int amount;
+	private long amount;
 
 }

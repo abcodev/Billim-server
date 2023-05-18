@@ -28,10 +28,7 @@ public class MemberService {
 //    private final CouponService couponService;
 //    private final PointService pointService;
     private final MemberRepository memberRepository;
-
     private final PasswordEncoder passwordEncoder;
-
-
 
 
     public Map<String, String> validateHandling(BindingResult bindingResult) {
@@ -63,7 +60,7 @@ public class MemberService {
 //                .orElse(new FindIdResponse());
 //    }
 
-    public Member retrieve(int memberId) {
+    public Member retrieve(long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new RuntimeException("해당 사용자(" + memberId + ") 를 찾을 수 없습니다."));
     }

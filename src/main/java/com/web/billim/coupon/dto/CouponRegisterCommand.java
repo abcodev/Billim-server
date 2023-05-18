@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class CouponRegisterCommand {
 
 	private String name;
-	private int rate;
-	private int limitDate;
+	private long rate;
+	private long limitDate;
 
 }

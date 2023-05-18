@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PointService {
 
-//	private final PointDomainService pointDomainService;
+	private final PointDomainService pointDomainService;
 	private final SavedPointRepository savedPointRepository;
 	private final PointUsedHistoryRepository pointUsedHistoryRepository;
 	private final PointHistoryDomainService pointHistoryDomainService;
@@ -34,10 +34,10 @@ public class PointService {
 	}
 
 	// 2. 특정 사용자의 사용가능 적립금 조회 (R)
-	public int retrieveAvailablePoint(int memberId) {
+	public long retrieveAvailablePoint(long memberId) {
 		return savedPointRepository.findAllNotExpired(memberId).stream()
 				// A : SavedPoint -> B : Integer
-				.mapToInt(SavedPoint::getAvailableAmount)
+				.mapToLong(SavedPoint::getAvailableAmount)
 				.sum();
 	}
 
@@ -66,15 +66,15 @@ public class PointService {
 		return pointHistories;
 	}
 
-//	// 4. 결제시 특정 사용자의 적립금 사용 (U)
-//	@Transactional
-//	public List<PointUsedHistory> usePoint(Payment payment) {
-//		// 1. 포인트 사용
-//		Map<SavedPoint, Integer> usedPointMap = pointDomainService.use(payment.getMember(), payment.getUsedPoint());
-//
-//		// 2. 포인트 사용내역 추가
-//		return pointHistoryDomainService.generateHistory(payment, usedPointMap);
-//	}
+	// 4. 결제시 특정 사용자의 적립금 사용 (U)
+	@Transactional
+	public List<PointUsedHistory> usePoint(Payment payment) {
+		// 1. 포인트 사용
+		Map<SavedPoint, Long> usedPointMap = pointDomainService.use(payment.getMember(), payment.getUsedPoint());
+
+		// 2. 포인트 사용내역 추가
+		return pointHistoryDomainService.generateHistory(payment, usedPointMap);
+	}
 
 
 }

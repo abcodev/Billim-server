@@ -43,7 +43,7 @@ public class CouponService {
 
     // 3. 쿠폰 사용
     @Transactional
-    public void useCoupon(Member member, int couponIssueId) {
+    public void useCoupon(Member member, long couponIssueId) {
         CouponIssue couponIssue = couponIssueRepository.findById(couponIssueId)
                 .orElseThrow(() -> new RuntimeException("쿠폰 정보를 찾을 수 없습니다!"));
 

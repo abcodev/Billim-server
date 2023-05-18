@@ -17,7 +17,7 @@ public class CouponIssue extends JpaEntity {
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "coupon_issue_id")
-	private Integer id;
+	private Long id;
 
 	@JoinColumn(name = "member_id", referencedColumnName = "member_id")
 	@ManyToOne(fetch = FetchType.LAZY)

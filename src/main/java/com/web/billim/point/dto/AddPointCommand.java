@@ -14,13 +14,13 @@ import java.time.LocalDateTime;
 public class AddPointCommand {
 
     private Member member;
-    private int amount;
+    private long amount;
     private LocalDateTime expiredAt;
 
     public static AddPointCommand from(Payment payment) {
         Member buyer = payment.getMember();
-        int price = payment.getTotalAmount();
-        int amount = (int) (price * buyer.getGrade().getSavedPointRate() / 100.0);
+        long price = payment.getTotalAmount();
+        long amount = (long) (price * buyer.getGrade().getSavedPointRate() / 100.0);
         return new AddPointCommand(buyer, amount, LocalDateTime.now().plusYears(1));
     }
 

@@ -38,6 +38,12 @@ public class AmazonS3ImageUploadService implements ImageUploadService {
 		return uploadUrl;
 	}
 
+	@Override
+	public String upload(String encodedBase64Image, String path) {
+		// 준비해서옴
+		return null;
+	}
+
 	private String put(File file, String fileName) {
 		amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, file).withCannedAcl(CannedAccessControlList.PublicRead));
 		return amazonS3Client.getUrl(bucket, fileName).toString();

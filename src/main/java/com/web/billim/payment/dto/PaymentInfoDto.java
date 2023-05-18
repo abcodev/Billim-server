@@ -13,7 +13,7 @@ public class PaymentInfoDto {
 
 	private ProductOrder order;
 	private CouponIssue coupon;
-	private int usedPoint;
-	private int amount;
+	private long usedPoint;
+	private long amount;
 
 }

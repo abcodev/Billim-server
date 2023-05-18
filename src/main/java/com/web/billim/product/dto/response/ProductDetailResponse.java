@@ -15,10 +15,10 @@ import java.util.stream.Collectors;
 @Builder
 public class ProductDetailResponse {
 
-    private int productId;
+    private long productId;
     private String productName;
     private String detail;
-    private int price;
+    private long price;
     private Member member;
     private List<String> imageUrls;
     private List<TradeMethod> tradeMethods;

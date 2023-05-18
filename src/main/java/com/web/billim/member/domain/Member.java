@@ -35,6 +35,6 @@ public class Member extends JpaEntity {
 
     @PrePersist
     public void prePersist(){
-        this.profileImageUrl = this.profileImageUrl == null ? "https://cdn-icons-png.flaticon.com/512/8246/8246830.png": this.profileImageUrl;
+        this.profileImageUrl = this.profileImageUrl == null ? "https://billim.s3.ap-northeast-2.amazonaws.com/profile/profile-default.png": this.profileImageUrl;
     }
 }

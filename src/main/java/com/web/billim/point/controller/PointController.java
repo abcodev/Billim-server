@@ -12,4 +12,6 @@ public class PointController {
      *   2. 적립금 내역 조회 (적립, 사용)
      */
 
+    // 포인트 전체 금액 조회
+
 }

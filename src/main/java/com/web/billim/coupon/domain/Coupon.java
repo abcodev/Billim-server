@@ -17,11 +17,11 @@ public class Coupon extends JpaEntity {
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "coupon_id")
-	private Integer id;
+	private Long id;
 
 	private String name;
-	private int rate;
-	private int limitDate;
+	private long rate;
+	private long limitDate;
 
 	public CouponIssue issue(Member member) {
 		return CouponIssue.builder()

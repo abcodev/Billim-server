@@ -12,7 +12,7 @@ public class PaymentInfoResponse {
 
 	private String name;
 	private String merchantUid;
-	private int amount;
+	private long amount;
 
 	public static PaymentInfoResponse from(Payment savedPayment) {
 		return new PaymentInfoResponse(

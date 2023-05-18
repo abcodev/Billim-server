@@ -49,7 +49,7 @@ class PointDomainServiceTest {
 	public void use_사용가능_적립금_부족하면_에러나는지_확인() {
 		// given
 		Member member = Member.builder().memberId(1).build();
-		int amount = 5000;
+		long amount = 5000;
 		SavedPoint point_2000 = SavedPoint.builder().availableAmount(2000).build();
 		given(savedPointRepository.findAllNotExpired(1))
 				.willReturn(List.of(point_2000));
@@ -63,7 +63,7 @@ class PointDomainServiceTest {
 	public void use_정상동작_확인() {
 		// given
 		Member member = Member.builder().memberId(1).build();
-		int amount = 5000;
+		long amount = 5000;
 		SavedPoint point_1000 = SavedPoint.builder().availableAmount(1000).build();
 		SavedPoint point_2000 = SavedPoint.builder().availableAmount(2000).build();
 		SavedPoint point_3000 = SavedPoint.builder().availableAmount(3000).build();
@@ -83,7 +83,7 @@ class PointDomainServiceTest {
 	public void use_사용된_포인트_반환값_확인() {
 		// given
 		Member member = Member.builder().memberId(1).build();
-		int amount = 2000;
+		long amount = 2000;
 		SavedPoint point_1000 = SavedPoint.builder().availableAmount(1000).build();
 		SavedPoint point_2000 = SavedPoint.builder().availableAmount(2000).build();
 		SavedPoint point_3000 = SavedPoint.builder().availableAmount(3000).build();
@@ -91,7 +91,7 @@ class PointDomainServiceTest {
 				.willReturn(List.of(point_1000, point_2000, point_3000));
 
 		// when
-		Map<SavedPoint, Integer> usedPointMap = pointDomainService.use(member, amount);
+		Map<SavedPoint, Long> usedPointMap = pointDomainService.use(member, amount);
 
 		// then
 		assertEquals(usedPointMap.size(), 2);

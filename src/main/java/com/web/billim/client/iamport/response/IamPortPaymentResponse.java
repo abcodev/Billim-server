@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class IamPortPaymentResponse {
 
-    private int code;
+    private long code;
     private String message;
     private IamPortPaymentData response;
 

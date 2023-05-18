@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class IamPortAccessTokenResponse {
 
-    private int code;
+    private long code;
     private String message;
     private IamPortAccessTokenData response;
 

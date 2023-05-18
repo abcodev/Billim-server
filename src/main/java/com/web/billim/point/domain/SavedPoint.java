@@ -3,6 +3,7 @@ package com.web.billim.point.domain;
 import com.web.billim.common.domain.JpaEntity;
 import com.web.billim.member.domain.Member;
 import com.web.billim.point.dto.AddPointCommand;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import javax.persistence.*;
@@ -18,14 +19,18 @@ public class SavedPoint extends JpaEntity {
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "point_id")
-	private Integer id;
+	private Long id;
 
 	@JoinColumn(name = "member_id", referencedColumnName = "member_id")
 	@ManyToOne
 	private Member member;
 
-	private int amount;
-	private int availableAmount;
+	private long amount;
+
+	@ApiModelProperty("사용가능한 적립금")
+	private long availableAmount;
+
+	@ApiModelProperty("적립금 만료일")
 	private LocalDateTime expiredAt;
 
 	public static SavedPoint of(AddPointCommand command) {
@@ -37,8 +42,8 @@ public class SavedPoint extends JpaEntity {
 				.build();
 	}
 
-	public int use(int amount) {
-		int usedAmount;
+	public long use(long amount) {
+		long usedAmount;
 		if (this.availableAmount >= amount) {
 			usedAmount = amount;
 			this.availableAmount -= amount;

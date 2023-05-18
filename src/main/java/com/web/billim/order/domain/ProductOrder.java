@@ -23,7 +23,7 @@ public class ProductOrder extends JpaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_order_id")
-    private Integer orderId;
+    private Long orderId;
 
     @JoinColumn(name = "product_id", referencedColumnName = "product_id")
     @ManyToOne
@@ -56,9 +56,9 @@ public class ProductOrder extends JpaEntity {
         return new Period(startAt, endAt);
     }
 
-    public int getPrice() {
-        int productPrice = this.product.getPrice();
-        int rentDays = java.time.Period.between(this.startAt, this.endAt).getDays() + 1;
+    public long getPrice() {
+        long productPrice = this.product.getPrice();
+        long rentDays = java.time.Period.between(this.startAt, this.endAt).getDays() + 1;
         return productPrice * rentDays;
     }
 

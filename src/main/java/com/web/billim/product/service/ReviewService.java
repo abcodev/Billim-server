@@ -13,9 +13,9 @@ public class ReviewService {
 
 	private final ReviewRepository reviewRepository;
 
-	public double calculateStarRating(int productId) {
+	public double calculateStarRating(long productId) {
 		return reviewRepository.findAllByProductId(productId).stream()
-			.collect(Collectors.summarizingInt(Review::getStarRating))
+			.collect(Collectors.summarizingLong(Review::getStarRating))
 			.getAverage();
 	}
 

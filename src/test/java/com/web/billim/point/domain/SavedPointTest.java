@@ -13,10 +13,10 @@ class SavedPointTest {
 		SavedPoint savedPoint = SavedPoint.builder()
 				.availableAmount(2000)
 				.build();
-		int amount = 1000;
+		long amount = 1000;
 
 		// when
-		int usedAmount = savedPoint.use(amount);
+		long usedAmount = savedPoint.use(amount);
 
 		// then
 		assertEquals(usedAmount, 1000);
@@ -29,10 +29,10 @@ class SavedPointTest {
 		SavedPoint savedPoint = SavedPoint.builder()
 				.availableAmount(500)
 				.build();
-		int amount = 1000;
+		long amount = 1000;
 
 		// when
-		int usedAmount = savedPoint.use(amount);
+		long usedAmount = savedPoint.use(amount);
 
 		// then
 		assertEquals(usedAmount, 500);

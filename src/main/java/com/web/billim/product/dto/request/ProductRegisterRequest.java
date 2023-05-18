@@ -17,9 +17,9 @@ import java.util.List;
 public class ProductRegisterRequest {
 
     @Positive // 양수만 가능
-    private int categoryId;
+    private long categoryId;
 
-    private int memberId;
+    private long memberId;
 
     @NotEmpty
 //	@NotBlank(message = "대여 상품명은 필수 항목입니다.")
@@ -32,7 +32,7 @@ public class ProductRegisterRequest {
 //    @NotBlank(message = "금액은 필수항목입니다. 100원 이상 입력해 주세요.")
     @Positive
     @Min(value = 100, message = "100원 이상 입력해 주세요.")
-    private int price;
+    private long price;
 
 //    @NotBlank(message = "필수입력")
     private List<MultipartFile> images;
@@ -41,7 +41,7 @@ public class ProductRegisterRequest {
 //    @Min(value = 5, message = "사진을 5장 첨부 해 주세요.")
     private List<TradeMethod> tradeMethods;
 
-    public void setRegisterMember(int memberId) {
+    public void setRegisterMember(long memberId) {
         this.memberId = memberId;
     }
 }

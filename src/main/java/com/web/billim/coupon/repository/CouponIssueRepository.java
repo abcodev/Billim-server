@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CouponIssueRepository extends JpaRepository<CouponIssue, Integer> {
+public interface CouponIssueRepository extends JpaRepository<CouponIssue, Long> {
 	@Query("SELECT ci FROM CouponIssue ci WHERE ci.member = :member AND ci.status = 'AVAILABLE'")
 	List<CouponIssue> findAllByMember(@Param("member") Member member);
 }

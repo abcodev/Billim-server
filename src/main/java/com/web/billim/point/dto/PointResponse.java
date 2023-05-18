@@ -14,7 +14,7 @@ import java.util.List;
 public class PointResponse {
 
 	private PointType type;
-	private int amount;
+	private long amount;
 	private LocalDateTime at; // 시점
 	private LocalDateTime expiredAt;
 
@@ -23,7 +23,7 @@ public class PointResponse {
 			.type(PointType.USED)
 			.amount(
 				histories.stream()
-					.mapToInt(PointUsedHistory::getAmount)
+					.mapToLong(PointUsedHistory::getAmount)
 					.sum()
 			)
 			.at(payment.getCreatedAt())

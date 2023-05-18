@@ -12,9 +12,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class AvailableCouponResponse {
 
-	private int couponIssueId;
+	private long couponIssueId;
 	private String name;
-	private int rate;
+	private long rate;
 	private LocalDateTime expiredAt;
 
 	public static AvailableCouponResponse from(CouponIssue coupon) {

@@ -11,16 +11,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class PaymentAmountCalculateService {
 
 	@Transactional
-	public PaymentInfoDto calculateAmount(ProductOrder order, CouponIssue coupon, int usedPoint) {
-		int basePrice = order.getPrice();
+	public PaymentInfoDto calculateAmount(ProductOrder order, CouponIssue coupon, long usedPoint) {
+		long basePrice = order.getPrice();
 
-		int salePrice = 0;
+		long salePrice = 0;
 		if (coupon != null) {
 			salePrice = (int) (basePrice * (coupon.getCoupon().getRate() / 100.0));
 		}
-		int deliveryPrice = order.getTradeMethod().equals(TradeMethod.DELIVERY) ? 3000 : 0;
+		long deliveryPrice = order.getTradeMethod().equals(TradeMethod.DELIVERY) ? 3000 : 0;
 
-		int amount = basePrice - salePrice - usedPoint + deliveryPrice;
+		long amount = basePrice - salePrice - usedPoint + deliveryPrice;
 		return new PaymentInfoDto(order, coupon, usedPoint, amount);
 	}
 

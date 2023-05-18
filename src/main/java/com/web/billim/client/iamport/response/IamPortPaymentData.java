@@ -14,7 +14,7 @@ public class IamPortPaymentData {
 
     private String impUid;
     private String merchantUid;
-    private int amount;
+    private long amount;
     private String status;
 
 }

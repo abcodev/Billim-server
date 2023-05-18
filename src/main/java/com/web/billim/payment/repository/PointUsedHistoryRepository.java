@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface PointUsedHistoryRepository extends JpaRepository<PointUsedHistory, Integer> {
+public interface PointUsedHistoryRepository extends JpaRepository<PointUsedHistory, Long> {
 
 	@Query("SELECT puh FROM PointUsedHistory puh WHERE puh.payment.productOrder.member = :member")
 	List<PointUsedHistory> findAllByMember(@Param("member") Member member);

@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface OrderRepository extends JpaRepository<ProductOrder, Integer> {
+public interface OrderRepository extends JpaRepository<ProductOrder, Long> {
     List<ProductOrder> findAllByProductAndEndAtAfter(Product product, LocalDate now);
 
     Optional<ProductOrder> findByMemberAndStatus(Member member, ProductOrderStatus status);

@@ -7,7 +7,6 @@ import com.web.billim.product.domain.ImageProduct;
 import com.web.billim.product.domain.Product;
 import com.web.billim.product.domain.ProductCategory;
 import com.web.billim.product.dto.request.ProductRegisterRequest;
-import com.web.billim.product.dto.response.MyProductSalesResponse;
 import com.web.billim.product.dto.response.ProductListResponse;
 import com.web.billim.product.repository.ImageProductRepository;
 import com.web.billim.product.repository.ProductCategoryRepository;
@@ -74,7 +73,7 @@ public class ProductService {
 
 
     @Transactional
-    public Product retrieve(int productId) {
+    public Product retrieve(long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("해당 ProductId(" + productId + ") 에 대한 상품정보가 없습니다."));
         return product;
@@ -87,7 +86,7 @@ public class ProductService {
 //                .collect(Collectors.toList());
 //    }
 
-    public Optional<Product> findProduct(int i) {
+    public Optional<Product> findProduct(long i) {
         return productRepository.findById(i);
     }
 
