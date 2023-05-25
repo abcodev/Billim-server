@@ -43,6 +43,7 @@ public class ChatMessage extends JpaEntity {
 	private Member sender;
 
 	@Enumerated(EnumType.STRING)
+	@Column(name = "message_type")
 	private ChatMessageType type;
 
 	private String message;

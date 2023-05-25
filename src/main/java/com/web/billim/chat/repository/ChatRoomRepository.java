@@ -1,5 +1,6 @@
 package com.web.billim.chat.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
@@ -14,4 +15,7 @@ public interface ChatRoomRepository extends CrudRepository<ChatRoom, Long> {
 
 	@Query("SELECT cr FROM ChatRoom cr WHERE cr.product.productId = :productId AND cr.buyer.memberId = :memberId")
 	Optional<ChatRoom> findByProductIdAndMemberId(@Param("productId") long productId, @Param("memberId") long memberId);
+
+	@Query("SELECT cr FROM ChatRoom cr WHERE cr.product.productId = :productId")
+	List<ChatRoom> findByProductId(@Param("productId") long productId);
 }
