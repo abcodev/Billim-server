@@ -1,5 +1,6 @@
 package com.web.billim.product.domain;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import javax.persistence.*;

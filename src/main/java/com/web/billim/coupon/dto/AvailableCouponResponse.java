@@ -1,6 +1,7 @@
 package com.web.billim.coupon.dto;
 
 import com.web.billim.coupon.domain.CouponIssue;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,9 +13,16 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class AvailableCouponResponse {
 
+	@ApiModelProperty(value = "쿠폰 발급번호")
 	private long couponIssueId;
+
+	@ApiModelProperty(value = "쿠폰 이름")
 	private String name;
+
+	@ApiModelProperty(value = "쿠폰 할인율")
 	private long rate;
+
+	@ApiModelProperty(value = "쿠폰 소멸일")
 	private LocalDateTime expiredAt;
 
 	public static AvailableCouponResponse from(CouponIssue coupon) {

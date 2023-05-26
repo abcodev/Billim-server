@@ -59,7 +59,7 @@ public class ProductService {
 
 
     public Page<ProductListResponse> findAllProduct(int page) {
-        PageRequest paging = PageRequest.of(page, 12);
+        PageRequest paging = PageRequest.of(page, 20);
         return productRepository.findAllByOrderByCreatedAtDesc(paging).map(product -> {
             double starRating = reviewService.calculateStarRating(product.getProductId());
             return ProductListResponse.of(product, starRating);
@@ -74,9 +74,8 @@ public class ProductService {
 
     @Transactional
     public Product retrieve(long productId) {
-        Product product = productRepository.findById(productId)
+        return productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("해당 ProductId(" + productId + ") 에 대한 상품정보가 없습니다."));
-        return product;
     }
 
 

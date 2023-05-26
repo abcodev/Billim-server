@@ -66,7 +66,7 @@ CREATE TABLE `product_order`
     `member_id`        bigint                                                          NOT NULL COMMENT '구매회원번호',
     `status`           varchar(10)                                                     NOT NULL COMMENT '대여상태', # 대여중, 예약중, 취소
     `start_at`         timestamp                                                       NOT NULL COMMENT '시작일',
-    `end_at`          timestamp                                                       NOT NULL COMMENT '종료일',
+    `end_at`           timestamp                                                       NOT NULL COMMENT '종료일',
     `buyer_name`       varchar(100)                                                    NULL COMMENT '구매자이름',
     `buyer_address`    varchar(200)                                                    NULL COMMENT '주소',
     `buyer_phone`      varchar(100)                                                    NULL COMMENT '연락처',
@@ -141,17 +141,6 @@ CREATE TABLE `coupon`
     `updated_at` timestamp default current_timestamp on update current_timestamp NOT NULL COMMENT '마지막 수정일자'
 );
 
-DROP TABLE IF EXISTS `chat_room`;
-
-CREATE TABLE `chat_room`
-(
-    `chat_room_id` bigint primary key auto_increment COMMENT '채팅방번호',
-    `product_id`   bigint                                                          NOT NULL COMMENT '상품번호',
-    `member_id`    bigint                                                          NOT NULL COMMENT '구매회원번호',
-    `created_at`   timestamp default current_timestamp                             NOT NULL COMMENT '생성일자',
-    `updated_at`   timestamp default current_timestamp on update current_timestamp NOT NULL COMMENT '업데이트일자'
-);
-
 DROP TABLE IF EXISTS `notification`;
 
 CREATE TABLE `notification`
@@ -166,19 +155,30 @@ CREATE TABLE `notification`
     `updated_at` timestamp default current_timestamp on update current_timestamp NOT NULL COMMENT '수정일자'
 );
 
+DROP TABLE IF EXISTS `chat_room`;
+
+CREATE TABLE `chat_room`
+(
+    `chat_room_id` bigint primary key auto_increment COMMENT '채팅방번호',
+    `product_id`   bigint                                                          NOT NULL COMMENT '상품번호',
+    `member_id`    bigint                                                          NOT NULL COMMENT '구매회원번호',
+    `created_at`   timestamp default current_timestamp                             NOT NULL COMMENT '생성일자',
+    `updated_at`   timestamp default current_timestamp on update current_timestamp NOT NULL COMMENT '업데이트일자'
+);
+
 DROP TABLE IF EXISTS `chat_message`;
 
 CREATE TABLE `chat_message`
 (
-    `chat_message_id`   bigint primary key auto_increment COMMENT '메세지번호',
-    `chat_room_id` bigint                                                          NOT NULL COMMENT '채팅방번호',
-    `member_id`    bigint                                                          NOT NULL COMMENT '발신회원번호',
-    `message_type` varchar(64)                                                     NOT NULL COMMENT '메시지 종류(IMAGE,TEXT)',
-    `message`      varchar(2000)                                                   NULL COMMENT '채팅메세지',
-    `image_url`    varchar(2000)                                                   NULL COMMENT '이미지',
-    `read_yn`      varchar(10)                                                         NOT NULL COMMENT '읽음여부',
-    `created_at`   timestamp default current_timestamp                             NOT NULL COMMENT '생성일자',
-    `updated_at`   timestamp default current_timestamp on update current_timestamp NOT NULL COMMENT '수정일자'
+    `chat_message_id` bigint primary key auto_increment COMMENT '메세지번호',
+    `chat_room_id`    bigint                                                          NOT NULL COMMENT '채팅방번호',
+    `member_id`       bigint                                                          NOT NULL COMMENT '발신회원번호',
+    `message_type`    varchar(64)                                                     NOT NULL COMMENT '메시지 종류(IMAGE,TEXT)',
+    `message`         varchar(2000)                                                   NULL COMMENT '채팅메세지',
+    `image_url`       varchar(2000)                                                   NULL COMMENT '이미지',
+    `read_yn`         varchar(10)                                                     NOT NULL COMMENT '읽음여부',
+    `created_at`      timestamp default current_timestamp                             NOT NULL COMMENT '생성일자',
+    `updated_at`      timestamp default current_timestamp on update current_timestamp NOT NULL COMMENT '수정일자'
 );
 
 DROP TABLE IF EXISTS `review`;

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.web.billim.chat.domain.ChatMessage;
 import com.web.billim.chat.domain.ChatRoom;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,12 +19,28 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ChatRoomAndPreviewResponse {
 
+	@ApiModelProperty(value = "채팅방 고유번호")
 	private long chatRoomId;
-	private long opponentId;
-	private String opponentNickname;
-	private String opponentProfileImageUrl;
+
+	@ApiModelProperty(value = "채팅 상대방 회원 고유번호")
+//	private long opponentId;
+	private long receiverId;
+
+	@ApiModelProperty(value = "채팅 상대방 회원 닉네임")
+//	private String opponentNickname;
+	private String receiverNickname;
+
+	@ApiModelProperty(value = "채팅 상대방 회원 프로필 이미지 주소")
+//	private String opponentProfileImageUrl;
+	private String receiverProfileImageUrl;
+
+	@ApiModelProperty(value = "읽지 않은 메세지 개수")
 	private int unreadCount;
+
+	@ApiModelProperty(value = "최신 채팅")
 	private String latestMessage;
+
+	@ApiModelProperty(value = "최신 채팅 시간")
 	private LocalDateTime latestMessageTime;
 
 	// ChatRoomAndPreviewResponse 를 ResponseEntity 에 담아서 응답을 보냈음
@@ -32,9 +49,9 @@ public class ChatRoomAndPreviewResponse {
 	public static ChatRoomAndPreviewResponse of(ChatRoom chatRoom, ChatMessage latestMessage, int unreadCount) {
 		ChatRoomAndPreviewResponseBuilder builder = ChatRoomAndPreviewResponse.builder()
 			.chatRoomId(chatRoom.getId())
-			.opponentId(chatRoom.getBuyer().getMemberId())
-			.opponentNickname(chatRoom.getBuyer().getNickname())
-			.opponentProfileImageUrl(chatRoom.getBuyer().getProfileImageUrl())
+			.receiverId(chatRoom.getBuyer().getMemberId())
+			.receiverNickname(chatRoom.getBuyer().getNickname())
+			.receiverProfileImageUrl(chatRoom.getBuyer().getProfileImageUrl())
 			.unreadCount(unreadCount);
 
 		if (latestMessage != null) {

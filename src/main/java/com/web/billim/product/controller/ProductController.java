@@ -4,7 +4,6 @@ import com.web.billim.order.service.OrderService;
 import com.web.billim.product.domain.Product;
 import com.web.billim.product.domain.ProductCategory;
 import com.web.billim.product.dto.request.ProductRegisterRequest;
-import com.web.billim.product.dto.response.MyProductSalesResponse;
 import com.web.billim.product.dto.response.ProductDetailResponse;
 import com.web.billim.product.dto.response.ProductListResponse;
 import com.web.billim.product.service.ProductService;
