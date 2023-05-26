@@ -1,0 +1,4 @@
+jwt:
+  secret: billimDuatjgkrWkdguswjd#djfakskrlfrpgodigksmsrjdi1234567890
+  access-time: 6000
+  refresh-time: 12000
