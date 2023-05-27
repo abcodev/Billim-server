@@ -35,7 +35,7 @@ public class UserDetailsDto implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> collect = new ArrayList<>();
         collect.add((GrantedAuthority) () -> grade.toString());
-        return null;
+        return collect;
     }
 
     @Override

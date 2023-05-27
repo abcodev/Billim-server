@@ -1,4 +1,4 @@
-package com.web.billim.security.jwt.filter;
+package com.web.billim.security.filter;
 
 import com.web.billim.security.jwt.provider.JwtTokenProvider;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -50,5 +50,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return bearerToken.substring(7);
         }
         return null;
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        return  request.getServletPath().equals("/auth/login");
     }
 }
