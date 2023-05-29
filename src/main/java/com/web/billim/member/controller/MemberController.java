@@ -1,5 +1,7 @@
 package com.web.billim.member.controller;
 
+import com.web.billim.common.validation.CheckIdValidator;
+import com.web.billim.common.validation.CheckNickNameValidator;
 import com.web.billim.common.validation.CheckPasswordValidator;
 import com.web.billim.member.domain.Member;
 import com.web.billim.member.dto.request.FindIdRequest;
@@ -26,16 +28,16 @@ import java.util.Map;
 public class MemberController {
 
     private final MemberService memberService;
-//    private final CheckIdValidator checkIdValidator;
-//    private final CheckNickNameValidator checkNickNameValidator;
+    private final CheckIdValidator checkIdValidator;
+    private final CheckNickNameValidator checkNickNameValidator;
     private final CheckPasswordValidator checkPasswordValidator;
 
-//    @InitBinder
-//    public void validatorBinder(WebDataBinder binder) {
-//        binder.addValidators(checkIdValidator);
-//        binder.addValidators(checkNickNameValidator);
-//        binder.addValidators(checkPasswordValidator);
-//    }
+    @InitBinder
+    public void validatorBinder(WebDataBinder binder) {
+        binder.addValidators(checkIdValidator);
+        binder.addValidators(checkNickNameValidator);
+        binder.addValidators(checkPasswordValidator);
+    }
 
     @PostMapping("/signup")
     public ResponseEntity memberSingUpProc(@Valid @RequestBody MemberSignupRequest memberSignupRequest,
