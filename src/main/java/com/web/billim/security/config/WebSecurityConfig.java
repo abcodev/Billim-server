@@ -1,40 +1,39 @@
 package com.web.billim.security.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.web.billim.security.CustomAuthenticationProvider;
-import com.web.billim.security.filter.UsernamePasswordAuthenticationFilter;
-import com.web.billim.security.handler.RestAuthenticationFailureHandler;
-import com.web.billim.security.handler.RestauthenticationSuccessHandler;
+import com.web.billim.redis.service.JwtTokenRedisService;
+import com.web.billim.security.provider.JwtAuthenticationProvider;
+import com.web.billim.security.provider.UsernamPasswordAuthenticationProvider;
+import com.web.billim.security.jwt.configure.JwtTokenFilterConfigurer;
+import com.web.billim.security.jwt.provider.JwtTokenProvider;
+
 import com.web.billim.security.service.UserDetailServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.SecurityFilterChain;
+
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+@RequiredArgsConstructor
+public class WebSecurityConfig {
 
+    private final JwtTokenProvider jwtTokenProvider;
+
+    private final UserDetailServiceImpl userDetailsService;
+
+    private final JwtTokenRedisService jwtTokenRedisService;
 
 
     @Bean
-    public UsernamePasswordAuthenticationFilter usernamePasswordAuthenticationFilter() throws Exception{
-        UsernamePasswordAuthenticationFilter filter = new UsernamePasswordAuthenticationFilter(authenticationManagerBean(),objectMapper());
-        filter.setAuthenticationSuccessHandler(authenticationSuccessHandler());
-        filter.setAuthenticationFailureHandler(authenticationFailureHandler());
-        return filter;
-
-    }
-
-    @Override
-    public void configure(HttpSecurity http) throws Exception{
+    public SecurityFilterChain securityFilterChain(AuthenticationManager authenticationManager,HttpSecurity http) throws Exception{
         http.csrf().disable()
                 .formLogin().disable()
                 .httpBasic().disable()
@@ -42,43 +41,40 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
-//                 security 은 기본적으로 session 기반이지만 우리는 token을 사용하기 때문에 세션을 사용하지 않는다고 설정
                 .and()
                 .authorizeRequests()
                 .antMatchers("/auth/**").permitAll()
-
                 .antMatchers("/**").permitAll()
-//                .antMatchers("/member/signup").permitAll()
-                .anyRequest().authenticated();
-    }
+                .anyRequest().authenticated()
+                .and()
+                .apply(new JwtTokenFilterConfigurer(jwtTokenProvider, authenticationManager,jwtTokenRedisService));
 
-
-
-    @Bean
-    public AuthenticationSuccessHandler authenticationSuccessHandler(){
-        return new RestauthenticationSuccessHandler();
+        return http.build();
     }
 
     @Bean
-    public AuthenticationFailureHandler authenticationFailureHandler(){
-        return new RestAuthenticationFailureHandler();
+    public AuthenticationManager configureAuthenticationManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.authenticationProvider(usernamPasswordAuthenticationProvider());
+        authenticationManagerBuilder.authenticationProvider(jwtAuthenticationProvider());
+        return authenticationManagerBuilder.build();
     }
 
     @Bean
-    public CustomAuthenticationProvider customAuthenticationProvider(UserDetailServiceImpl userService) {
-        return new CustomAuthenticationProvider(userService, passwordEncoder());
+    public UsernamPasswordAuthenticationProvider usernamPasswordAuthenticationProvider(){
+        return new UsernamPasswordAuthenticationProvider(userDetailsService,passwordEncoder());
     }
+
     @Bean
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
-    @Bean
-    public ObjectMapper objectMapper() {
-        return new ObjectMapper();
+    public JwtAuthenticationProvider jwtAuthenticationProvider(){
+        return new JwtAuthenticationProvider(jwtTokenProvider);
     }
 
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
+
+
+
 }

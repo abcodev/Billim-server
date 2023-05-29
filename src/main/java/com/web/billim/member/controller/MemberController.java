@@ -10,9 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -77,9 +74,15 @@ public class MemberController {
 
     // 비밀번호 재설정
 
+
     // 닉네임 변경
 
+
     // 주소 변경
+    @PutMapping("/change/Address")
+    public ResponseEntity<Void> changeAddress() {
+        return ResponseEntity.ok().build();
+    }
 
     // 소셜 연동
 
@@ -91,9 +94,8 @@ public class MemberController {
 }
 
 
-
 /*
- *  [ 비밀번호 재설정 ]
+ * 비밀번호 재설정
  *   1. 기존 패스워드, 변경할 패스워드, 변경할 패스워드 확인을 받는다.
  *   2. 이메일, 기존 패스워드, 변경할 패스워드를 서버로 전송
  *   3. 이메일로 Member 조회

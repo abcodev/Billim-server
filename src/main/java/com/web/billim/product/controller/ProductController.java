@@ -27,10 +27,9 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
-
     private final OrderService orderService;
 
-    @ApiOperation(value = "전체 상품목록 조회", notes = "전체 상품목록조회, 페이징")
+    @ApiOperation(value = "전체 상품목록 조회", notes = "전체 상품목록조회, 페이징 처리")
     @GetMapping("/list")
     public ResponseEntity<Page<ProductListResponse>> productList(
             @RequestParam(required = false, defaultValue = "0", value = "page") int page
@@ -71,11 +70,11 @@ public class ProductController {
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     public ResponseEntity<Product> registerProduct(
-            @ModelAttribute @Valid ProductRegisterRequest req,
+            @ModelAttribute @Valid ProductRegisterRequest request,
             @AuthenticationPrincipal long memberId
     ) {
-        req.setRegisterMember(memberId);
-        return ResponseEntity.ok(productService.register(req));
+        request.setRegisterMember(memberId);
+        return ResponseEntity.ok(productService.register(request));
     }
 
 }

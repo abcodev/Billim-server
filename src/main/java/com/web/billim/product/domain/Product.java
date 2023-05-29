@@ -49,6 +49,9 @@ public class Product extends JpaEntity {
     @ApiModelProperty(value = "거래 방법")
     private String tradeMethod;
 
+//    @ApiModelProperty(value = "직거래 지역")
+//    private String tradeArea;
+
     @JoinColumn(name = "product_id")
     @OneToMany(fetch = FetchType.LAZY) // EAGER(즉시 로딩)
     @ApiModelProperty("상품 이미지 리스트 주소")
@@ -66,6 +69,7 @@ public class Product extends JpaEntity {
                 .detail(request.getDetail())
                 .price(request.getPrice())
                 .tradeMethod(request.getTradeMethods().stream().map(Objects::toString).collect(Collectors.joining(",")))
+//                .tradeArea(request.getTradeArea())
                 .images(images)
                 .build();
     }
