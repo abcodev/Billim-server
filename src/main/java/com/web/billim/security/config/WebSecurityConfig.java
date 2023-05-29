@@ -1,45 +1,39 @@
 package com.web.billim.security.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.web.billim.security.CustomAuthenticationProvider;
-import com.web.billim.security.filter.LoginCheckFilter;
-import com.web.billim.security.handler.RestAuthenticationFailureHandler;
-import com.web.billim.security.handler.RestauthenticationSuccessHandler;
+import com.web.billim.redis.service.JwtTokenRedisService;
+import com.web.billim.security.provider.JwtAuthenticationProvider;
+import com.web.billim.security.provider.UsernamPasswordAuthenticationProvider;
 import com.web.billim.security.jwt.configure.JwtTokenFilterConfigurer;
 import com.web.billim.security.jwt.provider.JwtTokenProvider;
+
 import com.web.billim.security.service.UserDetailServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.SecurityFilterChain;
+
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
 
+    private final UserDetailServiceImpl userDetailsService;
+
+    private final JwtTokenRedisService jwtTokenRedisService;
+
+
     @Bean
-    public LoginCheckFilter loginCheckFilter(AuthenticationManager authenticationManager) {
-        LoginCheckFilter filter = new LoginCheckFilter();
-        filter.setAuthenticationManager(authenticationManager);
-        filter.setAuthenticationSuccessHandler(authenticationSuccessHandler());
-        filter.setAuthenticationFailureHandler(authenticationFailureHandler());
-        return filter;
-
-    }
-
-    @Override
-    public void configure(HttpSecurity http) throws Exception{
+    public SecurityFilterChain securityFilterChain(AuthenticationManager authenticationManager,HttpSecurity http) throws Exception{
         http.csrf().disable()
                 .formLogin().disable()
                 .httpBasic().disable()
@@ -53,31 +47,34 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .apply(new JwtTokenFilterConfigurer(jwtTokenProvider));
-    }
+                .apply(new JwtTokenFilterConfigurer(jwtTokenProvider, authenticationManager,jwtTokenRedisService));
 
-
-    @Bean
-    public AuthenticationSuccessHandler authenticationSuccessHandler(){
-        return new RestauthenticationSuccessHandler(jwtTokenProvider);
+        return http.build();
     }
 
     @Bean
-    public AuthenticationFailureHandler authenticationFailureHandler(){
-        return new RestAuthenticationFailureHandler();
+    public AuthenticationManager configureAuthenticationManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.authenticationProvider(usernamPasswordAuthenticationProvider());
+        authenticationManagerBuilder.authenticationProvider(jwtAuthenticationProvider());
+        return authenticationManagerBuilder.build();
     }
 
     @Bean
-    public CustomAuthenticationProvider customAuthenticationProvider(UserDetailServiceImpl userService) {
-        return new CustomAuthenticationProvider(userService, passwordEncoder(),jwtTokenProvider);
+    public UsernamPasswordAuthenticationProvider usernamPasswordAuthenticationProvider(){
+        return new UsernamPasswordAuthenticationProvider(userDetailsService,passwordEncoder());
     }
+
     @Bean
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
+    public JwtAuthenticationProvider jwtAuthenticationProvider(){
+        return new JwtAuthenticationProvider(jwtTokenProvider);
     }
 
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
+
+
+
 }

@@ -16,9 +16,9 @@ public class RefreshToken {
 
     private String refreshToken;
 
-    /**
-     * @Indexed -- 해당 필드값으로 데이터를 불러올수 있다.
-     */
-    @Indexed
-    private String accessToken;
+//    /**
+//     * @Indexed -- 해당 필드값으로 데이터를 불러올수 있다.
+//     */
+//    @Indexed
+//    private String accessToken;
 }

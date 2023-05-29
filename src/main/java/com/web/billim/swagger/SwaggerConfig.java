@@ -2,7 +2,6 @@ package com.web.billim.swagger;
 
 import com.fasterxml.classmate.TypeResolver;
 import com.web.billim.security.domain.LoginReq;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -15,13 +14,17 @@ import springfox.documentation.spring.web.plugins.Docket;
 
 @Configuration
 @EnableWebMvc
-@RequiredArgsConstructor
 public class SwaggerConfig {
 
     private final TypeResolver typeResolver;
 
+    public SwaggerConfig(TypeResolver typeResolver) {
+        this.typeResolver = typeResolver;
+    }
+
     @Bean
     public Docket swaggerApi(){
+
 
         return new Docket(DocumentationType.OAS_30)
                 .select()
@@ -41,4 +44,3 @@ public class SwaggerConfig {
                 .build();
     }
 }
-
