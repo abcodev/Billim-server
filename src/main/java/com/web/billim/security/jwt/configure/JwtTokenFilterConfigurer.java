@@ -9,29 +9,32 @@ import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 public class JwtTokenFilterConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
-
     private final JwtTokenRedisService jwtTokenRedisService;
+
 
     public JwtTokenFilterConfigurer(JwtTokenProvider jwtTokenProvider, AuthenticationManager authenticationManager, JwtTokenRedisService jwtTokenRedisService) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.authenticationManager = authenticationManager;
         this.jwtTokenRedisService = jwtTokenRedisService;
+
     }
 
     @Override
     public void configure(HttpSecurity builder){
+
         // JWT token 인증 provider
-        JwtAuthenticationFilter customFilter = new JwtAuthenticationFilter(jwtTokenProvider);
+        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager);
 
         // Login filter
         LoginAuthenticationFilter loginAuthenticationFilter = new LoginAuthenticationFilter(authenticationManager,jwtTokenProvider,jwtTokenRedisService);
 
         builder.addFilterBefore(loginAuthenticationFilter,UsernamePasswordAuthenticationFilter.class);
-        builder.addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class);
+        builder.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

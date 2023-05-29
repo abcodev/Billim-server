@@ -1,7 +1,8 @@
 package com.web.billim.security.config;
 
 import com.web.billim.redis.service.JwtTokenRedisService;
-import com.web.billim.security.UsernamPasswordAuthenticationProvider;
+import com.web.billim.security.provider.JwtAuthenticationProvider;
+import com.web.billim.security.provider.UsernamPasswordAuthenticationProvider;
 import com.web.billim.security.jwt.configure.JwtTokenFilterConfigurer;
 import com.web.billim.security.jwt.provider.JwtTokenProvider;
 
@@ -18,6 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -28,6 +30,7 @@ public class WebSecurityConfig {
     private final UserDetailServiceImpl userDetailsService;
 
     private final JwtTokenRedisService jwtTokenRedisService;
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(AuthenticationManager authenticationManager,HttpSecurity http) throws Exception{
@@ -53,6 +56,7 @@ public class WebSecurityConfig {
     public AuthenticationManager configureAuthenticationManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.authenticationProvider(usernamPasswordAuthenticationProvider());
+        authenticationManagerBuilder.authenticationProvider(jwtAuthenticationProvider());
         return authenticationManagerBuilder.build();
     }
 
@@ -62,7 +66,15 @@ public class WebSecurityConfig {
     }
 
     @Bean
+    public JwtAuthenticationProvider jwtAuthenticationProvider(){
+        return new JwtAuthenticationProvider(jwtTokenProvider);
+    }
+
+    @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
+
+
+
 }

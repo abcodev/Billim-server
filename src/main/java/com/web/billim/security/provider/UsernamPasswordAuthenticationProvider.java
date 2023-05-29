@@ -1,6 +1,4 @@
-package com.web.billim.security;
-
-import com.web.billim.security.jwt.provider.JwtTokenProvider;
+package com.web.billim.security.provider;
 import com.web.billim.security.service.UserDetailServiceImpl;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -32,13 +30,13 @@ public class UsernamPasswordAuthenticationProvider implements AuthenticationProv
 
 
         if(user != null && this.passwordEncoder.matches(password, user.getPassword())){
-            return new UsernamePasswordAuthenticationToken(user,null,user.getAuthorities());
+            return new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword(),user.getAuthorities());
         }else {
             throw new BadCredentialsException("Invalid username or password");
         }
     }
     @Override
     public boolean supports(Class<?> authentication) {
-        return authentication.equals(UsernamePasswordAuthenticationToken.class);
+        return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
     }
 }

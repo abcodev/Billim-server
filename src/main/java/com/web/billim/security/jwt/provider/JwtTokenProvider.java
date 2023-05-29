@@ -1,5 +1,8 @@
 package com.web.billim.security.jwt.provider;
 
+import com.web.billim.security.domain.UserDetailsDto;
+import com.web.billim.security.jwt.domain.BillimAuthentication;
+import com.web.billim.security.service.UserDetailServiceImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +22,7 @@ import java.util.Date;
 @Slf4j
 public class JwtTokenProvider implements InitializingBean {
 
-    private final UserDetailsService userDetailsService;
+    private final UserDetailServiceImpl userDetailsService;
     private final long ACCESS_TIME;
     private final long REFRESH_TIME;
     private final String secretKey;
@@ -29,7 +32,7 @@ public class JwtTokenProvider implements InitializingBean {
     public JwtTokenProvider(@Value("${jwt.secret}")String secretKey,
                             @Value("${jwt.access-time}") long ACCESS_TIME,
                             @Value("${jwt.refresh-time}") long  REFRESH_TIME,
-                            UserDetailsService userDetailsService) {
+                            UserDetailServiceImpl userDetailsService) {
         this.secretKey = secretKey;
         this.ACCESS_TIME = ACCESS_TIME;
         this.REFRESH_TIME = REFRESH_TIME;
@@ -44,14 +47,14 @@ public class JwtTokenProvider implements InitializingBean {
     }
 
     // Access Token 발급
-    public String createAccessToken(Authentication authentication){
+    public String createAccessToken(String email){
         Date now = new Date();
         Date validityDate = new Date(now.getTime() + ACCESS_TIME);
         return Jwts.builder()
-                .setSubject(authentication.getName())
-                .claim("aut",authentication)
+                .setSubject(email)
+                .claim("email",email)
                 .setIssuedAt(now)
-                .setExpiration(validityDate)
+//                .setExpiration(validityDate)
                 .signWith(key,SignatureAlgorithm.HS512)
                 .compact();
     }
@@ -78,8 +81,8 @@ public class JwtTokenProvider implements InitializingBean {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-        UserDetails userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
-        return new UsernamePasswordAuthenticationToken(userDetails,token,userDetails.getAuthorities());
+        UserDetailsDto userDetails = (UserDetailsDto) userDetailsService.loadUserByUsername(claims.getSubject());
+        return new UsernamePasswordAuthenticationToken(userDetails.getUsername(),userDetails.getPassword(),userDetails.getAuthorities());
     }
 
 
@@ -87,7 +90,7 @@ public class JwtTokenProvider implements InitializingBean {
     // token 검증
     public Boolean tokenValidation(String token){
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(secretKey);
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch(io.jsonwebtoken.security.SecurityException | MalformedJwtException e){
             log.error("잘못된 JWT 서명입니다.");
