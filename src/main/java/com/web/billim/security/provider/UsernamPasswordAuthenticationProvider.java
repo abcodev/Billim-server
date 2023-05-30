@@ -1,4 +1,5 @@
 package com.web.billim.security.provider;
+import com.web.billim.security.domain.UserDetailsDto;
 import com.web.billim.security.service.UserDetailServiceImpl;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -25,12 +26,10 @@ public class UsernamPasswordAuthenticationProvider implements AuthenticationProv
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String email = (String) authentication.getPrincipal();
         String password = (String) authentication.getCredentials();
-
-        UserDetails user = userDetailService.loadUserByUsername(email);
-
+        UserDetailsDto user = userDetailService.loadUserByUsername(email);
 
         if(user != null && this.passwordEncoder.matches(password, user.getPassword())){
-            return new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword(),user.getAuthorities());
+            return new UsernamePasswordAuthenticationToken(user.getMemberId(),null,user.getAuthorities());
         }else {
             throw new BadCredentialsException("Invalid username or password");
         }

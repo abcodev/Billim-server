@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @ApiModel(description = "Login Request")
-public class LoginReq {
+public class LoginRequest {
     @ApiModelProperty(value = "Email", required = true)
     private String email;
     @ApiModelProperty(value = "Password", required = true)

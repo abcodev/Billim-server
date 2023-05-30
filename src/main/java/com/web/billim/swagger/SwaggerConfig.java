@@ -1,7 +1,7 @@
 package com.web.billim.swagger;
 
 import com.fasterxml.classmate.TypeResolver;
-import com.web.billim.security.domain.LoginReq;
+import com.web.billim.security.domain.LoginRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -35,7 +35,7 @@ public class SwaggerConfig {
 //                PathSelectors.any() 모든 Api 통과
                 .build()
                 .apiInfo(mySwaggerInfo())
-                .additionalModels(typeResolver.resolve(LoginReq.class));
+                .additionalModels(typeResolver.resolve(LoginRequest.class));
     }
     private ApiInfo mySwaggerInfo() {
         return new ApiInfoBuilder()

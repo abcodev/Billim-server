@@ -56,6 +56,18 @@ public class WebSecurityConfig {
 
         return http.build();
     }
+//    @Bean
+//    public WebSecurityCustomizer webSecurityCustomizer(){
+//        return web -> {
+//            web.ignoring()
+//                    .antMatchers(
+//                            "/","product/list","product/detail/**","product/category",
+//                            "/v3/api-docs", "/configuration/ui", "/swagger-resources/**",
+//                            "/configuration/security", "/swagger-ui.html/**", "/swagger-ui/**", "/webjars/**", "/swagger/**"
+//                    );
+//        };
+//    }
+
 
     @Bean
     public AuthenticationManager configureAuthenticationManager(HttpSecurity http) throws Exception {

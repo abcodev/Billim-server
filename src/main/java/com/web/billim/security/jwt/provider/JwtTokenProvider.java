@@ -47,27 +47,24 @@ public class JwtTokenProvider implements InitializingBean {
     }
 
     // Access Token 발급
-    public String createAccessToken(String email){
-        Date now = new Date();
-        Date validityDate = new Date(now.getTime() + ACCESS_TIME);
+    public String createAccessToken(String memberId){
         return Jwts.builder()
-                .setSubject(email)
-                .claim("email",email)
-                .setIssuedAt(now)
-//                .setExpiration(validityDate)
+                .setHeaderParam("typ","ACCESS")
+                .setSubject(memberId)
+                .setAudience("BRONZE")
+                .setIssuedAt(new Date(System.currentTimeMillis()+ACCESS_TIME))
+                .setExpiration(new Date(System.currentTimeMillis()))
                 .signWith(key,SignatureAlgorithm.HS512)
                 .compact();
     }
 
     // Refresh Token 발급
-    public String createRefreshToken(Authentication authentication){
-        Date now = new Date();
-        Date validityDate = new Date(now.getTime() + REFRESH_TIME);
+    public String createRefreshToken(String memberId){
         return Jwts.builder()
-                .setSubject(authentication.getName())
-                .claim("aut",authentication)
-                .setIssuedAt(now)
-                .setExpiration(validityDate)
+                .setHeaderParam("typ","REFRESH")
+                .setSubject(memberId)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis()+REFRESH_TIME))
                 .signWith(key,SignatureAlgorithm.HS512)
                 .compact();
     }
