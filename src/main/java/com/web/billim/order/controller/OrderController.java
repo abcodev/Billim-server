@@ -24,13 +24,13 @@ public class OrderController {
     private final ProductService productService;
     private final PointService pointService;
 
-//    @PostMapping("/order")
-//    public ResponseEntity<PaymentInfoResponse> order(@RequestBody OrderCommand command,
-//                                                     @AuthenticationPrincipal User user
-//    ) {
-//        PaymentInfoResponse resp = orderService.order(user.getMemberId(), command);
-//        return ResponseEntity.ok(resp);
-//    }
+    @PostMapping("/order")
+    public ResponseEntity<PaymentInfoResponse> order(@RequestBody OrderCommand command,
+                                                     @AuthenticationPrincipal long memberId
+    ) {
+        PaymentInfoResponse resp = orderService.order(memberId, command);
+        return ResponseEntity.ok(resp);
+    }
 
 
 

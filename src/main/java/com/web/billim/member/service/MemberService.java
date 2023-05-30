@@ -23,10 +23,9 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Service
 public class MemberService {
-
-//    private final CouponRepository couponRepository;
-//    private final CouponService couponService;
-//    private final PointService pointService;
+    private final CouponRepository couponRepository;
+    private final CouponService couponService;
+    private final PointService pointService;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -43,15 +42,15 @@ public class MemberService {
 
     public void signUp(MemberSignupRequest memberSignupRequest) {
         memberSignupRequest.PasswordChange(passwordEncoder);
-        memberRepository.save(memberSignupRequest.toEntity());
-//        // 쿠폰 주기
-//        couponRepository.findByName("회원가입 쿠폰")
-//                .map(coupon -> couponService.issueCoupon(member, coupon))
-//                .orElseThrow();
-//
-//        // 포인트 주기
-//        AddPointCommand command = new AddPointCommand(member, 1000, LocalDateTime.now().plusDays(365));
-//        pointService.addPoint(command);
+        Member member = memberRepository.save(memberSignupRequest.toEntity());
+        // 쿠폰 주기
+        couponRepository.findByName("회원가입 쿠폰")
+                .map(coupon -> couponService.issueCoupon(member, coupon))
+                .orElseThrow();
+
+        // 포인트 주기
+        AddPointCommand command = new AddPointCommand(member, 1000, LocalDateTime.now().plusDays(365));
+        pointService.addPoint(command);
     }
 
 //    public FindIdResponse findId(FindIdRequest findIdRequest) {

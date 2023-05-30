@@ -24,7 +24,7 @@ public class ChatMessageResponse {
 	@ApiModelProperty(value = "채팅 보낸 회원 고유번호")
 	private long senderId;
 
-	@ApiModelProperty(value = "채팅 메세지 타입 : TEXT(내용), IMAGE(사진)")
+	@ApiModelProperty(value = "채팅 메세지 타입 : TEXT, IMAGE")
 	private ChatMessageType type;
 
 	@ApiModelProperty(value = "채팅 내용")

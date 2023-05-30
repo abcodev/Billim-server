@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class FindIdResponse {
 
-    private String userId;
+    private String email;
 
     public static FindIdResponse from(Member member) {
         return new FindIdResponse(member.getEmail());

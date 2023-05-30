@@ -23,9 +23,9 @@ public class CouponController {
     private final CouponService couponService;
 
     // 쿠폰 전체 목록 조회
-//    @GetMapping("/list/{memberId}")
-//    public ResponseEntity<List<AvailableCouponResponse>> myCouponList(@PathVariable("memberId") Member member) {
-//        return ResponseEntity.ok(couponService.retrieveAvailableCouponList(member));
-//    }
+    @GetMapping("/list/{memberId}")
+    public ResponseEntity<List<AvailableCouponResponse>> myCouponList(@PathVariable("memberId") Member member) {
+        return ResponseEntity.ok(couponService.retrieveAvailableCouponList(member));
+    }
 
 }

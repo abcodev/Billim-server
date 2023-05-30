@@ -29,7 +29,8 @@ public class ProductController {
     private final ProductService productService;
     private final OrderService orderService;
 
-    @ApiOperation(value = "전체 상품목록 조회", notes = "전체 상품목록조회, 페이징 처리")
+    // ok
+    @ApiOperation(value = "전체 상품목록 조회", notes = "전체 상품목록조회, 페이징")
     @GetMapping("/list")
     public ResponseEntity<Page<ProductListResponse>> productList(
             @RequestParam(required = false, defaultValue = "0", value = "page") int page
@@ -40,18 +41,17 @@ public class ProductController {
 
 
     @GetMapping("/detail/{productId}")
-    public ResponseEntity<ProductDetailResponse> productDetail(
-            @PathVariable("productId") long productId
-    ) {
+    public ResponseEntity<ProductDetailResponse> productDetail(@PathVariable("productId") long productId) {
         Product product = productService.retrieve(productId);
         List<LocalDate> alreadyDates = orderService.reservationDate(product);
         return ResponseEntity.ok(ProductDetailResponse.of(product, alreadyDates));
     }
 
-    @GetMapping("/date")
+    @ApiOperation(value = "상품 예약된 날짜 조회", notes = "예약중이어서 이용할 수 없는 날짜 조회")
+    @GetMapping("/date/{productId}")
     @ResponseBody
-    public ResponseEntity<List<LocalDate>> test() {
-        Product product = productService.retrieve(1);
+    public ResponseEntity<List<LocalDate>> alreadyReservedDate(@PathVariable("productId") long productId) {
+        Product product = productService.retrieve(productId);
         List<LocalDate> dates = orderService.reservationDate(product);
         return ResponseEntity.ok(dates);
     }

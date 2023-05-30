@@ -1,6 +1,6 @@
 package com.web.billim.security.config;
 
-import com.web.billim.redis.service.JwtTokenRedisService;
+import com.web.billim.redis.service.JwtTokenRedisService;;
 import com.web.billim.security.provider.JwtAuthenticationProvider;
 import com.web.billim.security.provider.UsernamPasswordAuthenticationProvider;
 import com.web.billim.security.jwt.configure.JwtTokenFilterConfigurer;
@@ -14,10 +14,15 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationEntryPointFailureHandler;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Configuration
@@ -74,7 +79,6 @@ public class WebSecurityConfig {
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
-
 
 
 }

@@ -18,18 +18,15 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @GetMapping("/complete")
-    public ResponseEntity<Void> paymentComplete(
-            @RequestParam("imp_uid") String impUid,
-            @RequestParam("merchant_uid") String merchantUid
+    public ResponseEntity<Void> paymentComplete(@RequestParam("imp_uid") String impUid,
+                                                @RequestParam("merchant_uid") String merchantUid
     ) {
         paymentService.complete(impUid, merchantUid);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/failure")
-    public ResponseEntity<Void> paymentFailure(
-            @RequestParam("merchant_uid") String merchantUid
-    ) {
+    public ResponseEntity<Void> paymentFailure(@RequestParam("merchant_uid") String merchantUid) {
         paymentService.rollback(merchantUid);
         return ResponseEntity.ok().build();
     }

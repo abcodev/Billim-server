@@ -40,8 +40,9 @@ public class MemberController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity memberSingUpProc(@Valid @RequestBody MemberSignupRequest memberSignupRequest,
-                                   BindingResult bindingResult
+    public ResponseEntity memberSingUpProc(
+            @Valid @RequestBody MemberSignupRequest memberSignupRequest,
+            BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors()) {
             // 유효성 검사에서 걸린 경우
