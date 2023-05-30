@@ -1,7 +1,7 @@
 package com.web.billim.redis.service;
 
 import com.web.billim.redis.JwtTokenRedisRepository;
-import com.web.billim.security.jwt.domain.RefreshToken;
+import com.web.billim.security.jwt.domain.RedisJwt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +11,7 @@ public class JwtTokenRedisService {
 
     private final JwtTokenRedisRepository jwtTokenRedisRepository;
 
-    public void saveToken(RefreshToken refreshToken){
-        jwtTokenRedisRepository.save(refreshToken.getMemberId(),refreshToken.getRefreshToken());
+    public void saveToken(RedisJwt redisJwt){
+        jwtTokenRedisRepository.save(redisJwt.getMemberId(), redisJwt.getRefreshToken());
     }
 }

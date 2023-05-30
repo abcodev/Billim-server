@@ -1,12 +1,7 @@
 package com.web.billim.member.controller;
 
-import com.web.billim.security.domain.LoginReq;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletResponse;
-import java.net.http.HttpResponse;
 
 @RestController
 @RequestMapping("/auth")

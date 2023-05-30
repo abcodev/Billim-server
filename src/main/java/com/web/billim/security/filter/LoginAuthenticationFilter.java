@@ -2,10 +2,9 @@ package com.web.billim.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.web.billim.redis.service.JwtTokenRedisService;
-import com.web.billim.security.domain.LoginReq;
-import com.web.billim.security.domain.response.LoginRes;
-import com.web.billim.security.jwt.domain.BillimAuthentication;
-import com.web.billim.security.jwt.domain.RefreshToken;
+import com.web.billim.security.domain.LoginRequest;
+import com.web.billim.security.domain.response.LoginResponse;
+import com.web.billim.security.jwt.domain.RedisJwt;
 import com.web.billim.security.jwt.provider.JwtTokenProvider;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -40,8 +39,8 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException{
-        LoginReq loginReq = obtainEmailPassword(request);
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginReq.getEmail(),loginReq.getPassword());
+        LoginRequest loginRequest = obtainEmailPassword(request);
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword());
 //        BillimAuthentication billimAuthentication = new BillimAuthentication(loginReq.getEmail(),loginReq.getPassword());
         return authenticationManager.authenticate(authenticationToken);
     }
@@ -51,29 +50,26 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         // JWT 토큰 발급 및 응답 처리 로직
         // 예시로서는 JwtTokenProvider 클래스를 사용하여 토큰을 생성하고 응답에 포함시킵니다.
-        String email = authResult.getPrincipal().toString();
+        String memberId = authResult.getPrincipal().toString();
+        String accessToken  = jwtTokenProvider.createAccessToken(memberId);
+        String refreshToken = jwtTokenProvider.createRefreshToken(memberId);
+//        long memberId = jwtTokenProvider.
+        RedisJwt redisJwt = new RedisJwt(1,refreshToken);
+        jwtTokenRedisService.saveToken(redisJwt);
 
-        String acceesToken  = jwtTokenProvider.createAccessToken(email);
-        String refreshtoken = jwtTokenProvider.createRefreshToken(authResult);
-        RefreshToken refreshToken = new RefreshToken(1,refreshtoken);
-        jwtTokenRedisService.saveToken(refreshToken);
-
-
-        LoginRes token = new LoginRes(acceesToken,refreshtoken);
+        LoginResponse token = new LoginResponse(accessToken,refreshToken);
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonToken = objectMapper.writeValueAsString(token);
-
         response.getWriter().write(jsonToken);
-//        chain.doFilter(request,response);
     }
 
 
-    private LoginReq obtainEmailPassword(HttpServletRequest request) {
+    private LoginRequest obtainEmailPassword(HttpServletRequest request) {
             try {
                 InputStream requestBody = request.getInputStream();
                 ObjectMapper objectMapper = new ObjectMapper();
-                LoginReq loginReq = objectMapper.readValue(requestBody, LoginReq.class);
-                return loginReq;
+                LoginRequest loginRequest = objectMapper.readValue(requestBody, LoginRequest.class);
+                return loginRequest;
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
