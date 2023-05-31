@@ -47,11 +47,22 @@ public class JwtTokenProvider implements InitializingBean {
     }
 
     // Access Token 발급
-    public String createAccessToken(String memberId){
+//    public String createAccessToken(String memberId){
+//        return Jwts.builder()
+//                .setHeaderParam("typ","ACCESS")
+//                .setSubject(memberId)
+//                .setAudience("BRONZE")
+//                .setIssuedAt(new Date(System.currentTimeMillis()+ACCESS_TIME))
+//                .setExpiration(new Date(System.currentTimeMillis()))
+//                .signWith(key,SignatureAlgorithm.HS512)
+//                .compact();
+//    }
+
+    public String createAccessToken(String memberId, String grade){
         return Jwts.builder()
                 .setHeaderParam("typ","ACCESS")
                 .setSubject(memberId)
-                .setAudience("BRONZE")
+                .setAudience(grade)
                 .setIssuedAt(new Date(System.currentTimeMillis()+ACCESS_TIME))
                 .setExpiration(new Date(System.currentTimeMillis()))
                 .signWith(key,SignatureAlgorithm.HS512)
@@ -78,7 +89,7 @@ public class JwtTokenProvider implements InitializingBean {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-        UserDetailsDto userDetails = (UserDetailsDto) userDetailsService.loadUserByUsername(claims.getSubject());
+        UserDetailsDto userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
         return new UsernamePasswordAuthenticationToken(userDetails.getUsername(),userDetails.getPassword(),userDetails.getAuthorities());
     }
 

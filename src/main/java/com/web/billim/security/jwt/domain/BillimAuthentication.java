@@ -3,13 +3,11 @@ package com.web.billim.security.jwt.domain;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import java.util.Collection;
-import java.util.Objects;
 
 public class BillimAuthentication extends AbstractAuthenticationToken {
 
-
     private final Object principal;
-    private Object credentials;
+    private final Object credentials;
 
 
     // 인증전 -- token 넣어주기 / false

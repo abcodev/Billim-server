@@ -31,7 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String jwt = resolveToken(request,AUTHORIZATION_HEADER);
-        Authentication authentication =authenticationManager.authenticate(new BillimAuthentication(null,jwt));
+        Authentication authentication = authenticationManager.authenticate(new BillimAuthentication(null,jwt));
         if(authentication.isAuthenticated()){
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
