@@ -1,12 +1,10 @@
-package com.web.billim.security.provider;
-import com.web.billim.security.domain.UserDetailsDto;
-import com.web.billim.security.service.UserDetailServiceImpl;
+package com.web.billim.security;
+import com.web.billim.security.domain.UserDetailsEntity;
+import com.web.billim.security.dto.LoginAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 
@@ -26,16 +24,15 @@ public class UsernamPasswordAuthenticationProvider implements AuthenticationProv
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String email = (String) authentication.getPrincipal();
         String password = (String) authentication.getCredentials();
-        UserDetailsDto user = userDetailService.loadUserByUsername(email);
-
+        UserDetailsEntity user = userDetailService.loadUserByUsername(email);
         if(user != null && this.passwordEncoder.matches(password, user.getPassword())){
-            return new UsernamePasswordAuthenticationToken(user.getMemberId(),null,user.getAuthorities());
+            return new LoginAuthenticationToken(user.getAuthorities(),user.getUsername());
         }else {
             throw new BadCredentialsException("Invalid username or password");
         }
     }
     @Override
     public boolean supports(Class<?> authentication) {
-        return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
+        return LoginAuthenticationToken.class.isAssignableFrom(authentication);
     }
 }

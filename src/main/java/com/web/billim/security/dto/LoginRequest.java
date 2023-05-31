@@ -1,4 +1,4 @@
-package com.web.billim.security.domain;
+package com.web.billim.security.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

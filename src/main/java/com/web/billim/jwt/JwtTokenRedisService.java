@@ -1,7 +1,6 @@
-package com.web.billim.redis.service;
+package com.web.billim.jwt;
 
-import com.web.billim.redis.JwtTokenRedisRepository;
-import com.web.billim.security.jwt.domain.RedisJwt;
+import com.web.billim.jwt.dto.RedisJwt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

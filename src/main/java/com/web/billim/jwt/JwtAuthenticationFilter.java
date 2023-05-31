@@ -1,10 +1,8 @@
-package com.web.billim.security.filter;
+package com.web.billim.jwt;
 
-import com.web.billim.security.jwt.domain.BillimAuthentication;
+import com.web.billim.jwt.dto.JwtAuthenticationToken;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -31,9 +29,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String jwt = resolveToken(request,AUTHORIZATION_HEADER);
-        Authentication authentication = authenticationManager.authenticate(new BillimAuthentication(null,jwt));
-        if(authentication.isAuthenticated()){
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        JwtAuthenticationToken jwtAuthenticationToken = (JwtAuthenticationToken) authenticationManager.authenticate(new JwtAuthenticationToken(jwt));
+        if(jwtAuthenticationToken.isAuthenticated()){
+            SecurityContextHolder.getContext().setAuthentication(jwtAuthenticationToken);
         }
         filterChain.doFilter(request,response);
     }

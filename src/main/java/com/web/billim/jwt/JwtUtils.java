@@ -1,17 +1,14 @@
-package com.web.billim.security.jwt.provider;
+package com.web.billim.jwt;
 
-import com.web.billim.security.domain.UserDetailsDto;
-import com.web.billim.security.jwt.domain.BillimAuthentication;
-import com.web.billim.security.service.UserDetailServiceImpl;
+import com.web.billim.jwt.dto.JwtAuthenticationToken;
+import com.web.billim.security.domain.UserDetailsEntity;
+import com.web.billim.security.UserDetailServiceImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -20,7 +17,7 @@ import java.util.Date;
 
 @Component
 @Slf4j
-public class JwtTokenProvider implements InitializingBean {
+public class JwtUtils implements InitializingBean {
 
     private final UserDetailServiceImpl userDetailsService;
     private final long ACCESS_TIME;
@@ -29,10 +26,10 @@ public class JwtTokenProvider implements InitializingBean {
     private Key key;
 
 
-    public JwtTokenProvider(@Value("${jwt.secret}")String secretKey,
-                            @Value("${jwt.access-time}") long ACCESS_TIME,
-                            @Value("${jwt.refresh-time}") long  REFRESH_TIME,
-                            UserDetailServiceImpl userDetailsService) {
+    public JwtUtils(@Value("${jwt.secret}")String secretKey,
+                    @Value("${jwt.access-time}") long ACCESS_TIME,
+                    @Value("${jwt.refresh-time}") long  REFRESH_TIME,
+                    UserDetailServiceImpl userDetailsService) {
         this.secretKey = secretKey;
         this.ACCESS_TIME = ACCESS_TIME;
         this.REFRESH_TIME = REFRESH_TIME;
@@ -47,22 +44,11 @@ public class JwtTokenProvider implements InitializingBean {
     }
 
     // Access Token 발급
-//    public String createAccessToken(String memberId){
-//        return Jwts.builder()
-//                .setHeaderParam("typ","ACCESS")
-//                .setSubject(memberId)
-//                .setAudience("BRONZE")
-//                .setIssuedAt(new Date(System.currentTimeMillis()+ACCESS_TIME))
-//                .setExpiration(new Date(System.currentTimeMillis()))
-//                .signWith(key,SignatureAlgorithm.HS512)
-//                .compact();
-//    }
-
-    public String createAccessToken(String memberId, String grade){
+    public String createAccessToken(String memberId, GrantedAuthority memberGrade){
         return Jwts.builder()
                 .setHeaderParam("typ","ACCESS")
                 .setSubject(memberId)
-                .setAudience(grade)
+                .setAudience(memberGrade.toString())
                 .setIssuedAt(new Date(System.currentTimeMillis()+ACCESS_TIME))
                 .setExpiration(new Date(System.currentTimeMillis()))
                 .signWith(key,SignatureAlgorithm.HS512)
@@ -83,14 +69,14 @@ public class JwtTokenProvider implements InitializingBean {
 
 
     // 회원 정보 추출
-    public Authentication getAuthentication(String token){
+    public JwtAuthenticationToken getAuthentication(String token){
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-        UserDetailsDto userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
-        return new UsernamePasswordAuthenticationToken(userDetails.getUsername(),userDetails.getPassword(),userDetails.getAuthorities());
+        UserDetailsEntity userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
+        return new JwtAuthenticationToken(userDetails.getAuthorities(),userDetails.getUsername());
     }
 
 

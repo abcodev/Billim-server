@@ -1,9 +1,7 @@
 package com.web.billim.member.repository;
 
 import com.web.billim.member.domain.Member;
-import com.web.billim.security.domain.UserDetailsDto;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;

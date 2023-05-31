@@ -1,4 +1,4 @@
-package com.web.billim.redis;
+package com.web.billim.jwt;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;

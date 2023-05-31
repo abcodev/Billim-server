@@ -1,12 +1,12 @@
 package com.web.billim.security.config;
 
-import com.web.billim.redis.service.JwtTokenRedisService;;
-import com.web.billim.security.provider.JwtAuthenticationProvider;
-import com.web.billim.security.provider.UsernamPasswordAuthenticationProvider;
-import com.web.billim.security.jwt.configure.JwtTokenFilterConfigurer;
-import com.web.billim.security.jwt.provider.JwtTokenProvider;
+import com.web.billim.jwt.JwtTokenRedisService;
+import com.web.billim.jwt.JwtAuthenticationProvider;
+import com.web.billim.security.UsernamPasswordAuthenticationProvider;
+import com.web.billim.jwt.JwtTokenFilterConfigurer;
+import com.web.billim.jwt.JwtUtils;
 
-import com.web.billim.security.service.UserDetailServiceImpl;
+import com.web.billim.security.UserDetailServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,15 +14,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationEntryPointFailureHandler;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Configuration
@@ -30,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtUtils jwtUtils;
 
     private final UserDetailServiceImpl userDetailsService;
 
@@ -52,10 +47,21 @@ public class WebSecurityConfig {
                 .antMatchers("/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .apply(new JwtTokenFilterConfigurer(jwtTokenProvider, authenticationManager,jwtTokenRedisService));
+                .apply(new JwtTokenFilterConfigurer(jwtUtils, authenticationManager,jwtTokenRedisService));
 
         return http.build();
     }
+//    @Bean
+//    public WebSecurityCustomizer webSecurityCustomizer(){
+//        return web -> {
+//            web.ignoring()
+//                    .antMatchers(
+//                            "/","product/list","product/detail/**","product/category",
+//                            "/v3/api-docs", "/configuration/ui", "/swagger-resources/**",
+//                            "/configuration/security", "/swagger-ui.html/**", "/swagger-ui/**", "/webjars/**", "/swagger/**"
+//                    );
+//        };
+//    }
 
 
     @Bean
@@ -73,13 +79,14 @@ public class WebSecurityConfig {
 
     @Bean
     public JwtAuthenticationProvider jwtAuthenticationProvider(){
-        return new JwtAuthenticationProvider(jwtTokenProvider);
+        return new JwtAuthenticationProvider(jwtUtils);
     }
 
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
+
 
 
 }
