@@ -1,4 +1,4 @@
-package com.web.billim.security.jwt.domain;
+package com.web.billim.jwt.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

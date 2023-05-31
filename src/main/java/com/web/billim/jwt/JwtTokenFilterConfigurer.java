@@ -1,25 +1,21 @@
-package com.web.billim.security.jwt.configure;
+package com.web.billim.jwt;
 
-import com.web.billim.redis.service.JwtTokenRedisService;
-import com.web.billim.security.filter.JwtAuthenticationFilter;
-import com.web.billim.security.filter.LoginAuthenticationFilter;
-import com.web.billim.security.jwt.provider.JwtTokenProvider;
+import com.web.billim.security.LoginAuthenticationFilter;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 
 public class JwtTokenFilterConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenRedisService jwtTokenRedisService;
 
 
-    public JwtTokenFilterConfigurer(JwtTokenProvider jwtTokenProvider, AuthenticationManager authenticationManager, JwtTokenRedisService jwtTokenRedisService) {
-        this.jwtTokenProvider = jwtTokenProvider;
+    public JwtTokenFilterConfigurer(JwtUtils jwtUtils, AuthenticationManager authenticationManager, JwtTokenRedisService jwtTokenRedisService) {
+        this.jwtUtils = jwtUtils;
         this.authenticationManager = authenticationManager;
         this.jwtTokenRedisService = jwtTokenRedisService;
 
@@ -32,7 +28,7 @@ public class JwtTokenFilterConfigurer extends SecurityConfigurerAdapter<DefaultS
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager);
 
         // Login filter
-        LoginAuthenticationFilter loginAuthenticationFilter = new LoginAuthenticationFilter(authenticationManager,jwtTokenProvider,jwtTokenRedisService);
+        LoginAuthenticationFilter loginAuthenticationFilter = new LoginAuthenticationFilter(authenticationManager, jwtUtils,jwtTokenRedisService);
 
         builder.addFilterBefore(loginAuthenticationFilter,UsernamePasswordAuthenticationFilter.class);
         builder.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

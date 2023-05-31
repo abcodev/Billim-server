@@ -1,12 +1,12 @@
-package com.web.billim.security.domain.response;
+package com.web.billim.jwt.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginResponse {
-    private String accessToken;
+public class ReIssueTokenRequest {
     private String refreshToken;
 }
