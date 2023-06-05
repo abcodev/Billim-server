@@ -21,24 +21,24 @@ public class ProductRegisterRequest {
 
     private long memberId;
 
-    @NotEmpty
+//    @NotEmpty
     private String name;
 
-    @NotEmpty
+//    @NotEmpty
     private String detail;
 
-    @Positive
-    @NotEmpty
-    @Min(value = 100, message = "100원 이상 입력해 주세요.")
+//    @Positive
+//    @NotEmpty
+//    @Min(value = 100, message = "100원 이상 입력해 주세요.")
     private long price;
 
-    @NotEmpty
+//    @NotEmpty
     private List<MultipartFile> images;
 
-    @NotEmpty
+//    @NotEmpty
     private List<TradeMethod> tradeMethods;
 
-    private String tradeArea;
+//    private String tradeArea;
 
     public void setRegisterMember(long memberId) {
         this.memberId = memberId;

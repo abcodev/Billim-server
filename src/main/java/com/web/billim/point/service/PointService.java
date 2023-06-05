@@ -34,6 +34,7 @@ public class PointService {
 	}
 
 	// 2. 특정 사용자의 사용가능 적립금 조회 (R)
+	@Transactional
 	public long retrieveAvailablePoint(long memberId) {
 		return savedPointRepository.findAllNotExpired(memberId).stream()
 				// A : SavedPoint -> B : Integer

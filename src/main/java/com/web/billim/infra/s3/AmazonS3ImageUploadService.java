@@ -24,23 +24,25 @@ public class AmazonS3ImageUploadService implements ImageUploadService {
 	private String bucket;
 
 	@Override
-	public String upload(MultipartFile image, String path) throws IOException {
-
-		File convertFile = new File(Objects.requireNonNull(image.getOriginalFilename()));
-		if (convertFile.createNewFile()) {
-			try (FileOutputStream fos = new FileOutputStream(convertFile)) {
-				fos.write(image.getBytes());
+	public String upload(MultipartFile image, String path) {
+		try {
+			File convertFile = new File(Objects.requireNonNull(image.getOriginalFilename()));
+			if (convertFile.createNewFile()) {
+				try (FileOutputStream fos = new FileOutputStream(convertFile)) {
+					fos.write(image.getBytes());
+				}
 			}
+			String fileName = path + "/" + image.getOriginalFilename();
+			String uploadUrl = this.put(convertFile, fileName);
+			convertFile.delete();
+			return uploadUrl;
+		} catch (IOException ex) {
+			throw new RuntimeException("이미지 업로드 실패");
 		}
-		String fileName = path + "/" + image.getOriginalFilename();
-		String uploadUrl = this.put(convertFile, fileName);
-		convertFile.delete();
-		return uploadUrl;
 	}
 
 	@Override
 	public String upload(String encodedBase64Image, String path) {
-		// 준비해서옴
 		return null;
 	}
 

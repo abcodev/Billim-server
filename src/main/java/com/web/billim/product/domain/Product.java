@@ -29,12 +29,12 @@ public class Product extends JpaEntity {
     private Long productId;
 
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @ApiModelProperty(value = "상품 카테고리")
     private ProductCategory productCategory;
 
     @JoinColumn(name = "member_id", referencedColumnName = "member_id")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
     @ApiModelProperty(value = "상품명")

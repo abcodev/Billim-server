@@ -17,10 +17,9 @@ import java.util.Collection;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDetailsEntity implements UserDetails {
-//    @Delegate
+
     private long memberId;
     private String email;
-
     private String password;
     private MemberGrade grade;
 

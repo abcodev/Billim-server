@@ -1,10 +1,23 @@
 package com.web.billim.member.domain;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.PrePersist;
+import javax.persistence.Table;
+
 import com.web.billim.common.domain.JpaEntity;
 import com.web.billim.member.type.MemberGrade;
-import lombok.*;
 
-import javax.persistence.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 
 @Entity
@@ -36,5 +49,17 @@ public class Member extends JpaEntity {
     @PrePersist
     public void prePersist(){
         this.profileImageUrl = this.profileImageUrl == null ? "https://billim.s3.ap-northeast-2.amazonaws.com/profile/profile-default.png": this.profileImageUrl;
+    }
+
+    public void updateProfileImage(String imageUrl) {
+        this.profileImageUrl = imageUrl;
+    }
+
+    public void updateAddress(String address) {
+        this.address = address;
+    }
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
     }
 }

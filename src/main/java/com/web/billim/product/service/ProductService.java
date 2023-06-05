@@ -44,12 +44,8 @@ public class ProductService {
 
         // 1. 이미지 저장
         List<ImageProduct> images = request.getImages().stream().map(image -> {
-            try {
-                String url = imageUploadService.upload(image, "product");
-                return imageProductRepository.save(ImageProduct.of(url));
-            } catch (IOException e) {
-                throw new RuntimeException("파일 업로드중 에러가 발생했습니다.", e);
-            }
+            String url = imageUploadService.upload(image, "product");
+            return imageProductRepository.save(ImageProduct.of(url));
         }).collect(Collectors.toList());
 
         // 2. Product 정보 데이터베이스에 저장 & 반환
@@ -70,7 +66,6 @@ public class ProductService {
         });
     }
 
-
     @Transactional
     public Product retrieve(long productId) {
         return productRepository.findById(productId)
@@ -84,9 +79,9 @@ public class ProductService {
 //                .collect(Collectors.toList());
 //    }
 
-    public Optional<Product> findProduct(long i) {
-        return productRepository.findById(i);
-    }
+//    public Optional<Product> findProduct(long i) {
+//        return productRepository.findById(i);
+//    }
 
 
 //    public ReservationDateResponse reservationDate(int productId) {

@@ -19,7 +19,7 @@ class ProductOrderTest {
 			.build();
 
 		// when
-		int price = order.getPrice();
+		long price = order.getPrice();
 
 		// then
 		assertEquals(price, 6000);
