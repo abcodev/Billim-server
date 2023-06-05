@@ -21,4 +21,12 @@ public class UserDetailServiceImpl implements UserDetailsService {
         }
         return null;
     }
+
+    public UserDetailsEntity findByMemberId(long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow();
+        if(member != null){
+            return new UserDetailsEntity(member);
+        }
+        return null;
+    }
 }

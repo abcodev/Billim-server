@@ -2,6 +2,7 @@ package com.web.billim.member.controller;
 
 import com.web.billim.jwt.JwtService;
 import com.web.billim.jwt.dto.ReIssueTokenRequest;
+import com.web.billim.member.dto.response.ReIssueTokenResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,20 +23,12 @@ public class AuthController {
     }
 
     @PostMapping("/reIssue/token")
-    public ResponseEntity<?> reIssueToken(@RequestBody ReIssueTokenRequest req){
-
-        jwtService.reIssueToken(req);
-        return ResponseEntity.ok("a");
-
-
-        // 1. reIssueRequest (memberId,refreshToken) 으로 받아오기
-        // 2. refreshtoken 유효성 검사
-        // 3. redis 에 저장된 refreshToken 으로 검증
-        // 4. 일치하다면 accessToken , refreshToken 재발급
-        // 5. 일치하지 않다면 예외처리
-
-
-
+    public ResponseEntity<?> reIssueToken(
+            @RequestBody ReIssueTokenRequest req
+    ){
+        String accessToken = req.getAccessToken();
+        String refreshToken = req.getRefreshToken();
+        ReIssueTokenResponse response = jwtService.reIssueToken(accessToken,refreshToken);
+        return ResponseEntity.ok(response);
     }
-
 }

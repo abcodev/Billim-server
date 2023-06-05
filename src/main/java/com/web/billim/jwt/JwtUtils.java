@@ -1,6 +1,7 @@
 package com.web.billim.jwt;
 
 import com.web.billim.jwt.dto.JwtAuthenticationToken;
+import com.web.billim.member.type.MemberGrade;
 import com.web.billim.security.domain.UserDetailsEntity;
 import com.web.billim.security.UserDetailServiceImpl;
 import io.jsonwebtoken.*;
@@ -44,13 +45,14 @@ public class JwtUtils implements InitializingBean {
     }
 
     // Access Token 발급
-    public String createAccessToken(String memberId, GrantedAuthority memberGrade){
+    // GrantedAuthority
+    public String createAccessToken(String memberId, MemberGrade memberGrade){
         return Jwts.builder()
                 .setHeaderParam("typ","ACCESS")
                 .setSubject(memberId)
                 .setAudience(memberGrade.toString())
-                .setIssuedAt(new Date(System.currentTimeMillis()+ACCESS_TIME))
-                .setExpiration(new Date(System.currentTimeMillis()))
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis()+ACCESS_TIME))
                 .signWith(key,SignatureAlgorithm.HS512)
                 .compact();
     }
@@ -75,8 +77,8 @@ public class JwtUtils implements InitializingBean {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-        UserDetailsEntity userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
-        return new JwtAuthenticationToken(userDetails.getAuthorities(),userDetails.getUsername());
+        UserDetailsEntity userDetails = userDetailsService.findByMemberId(Long.parseLong(claims.getSubject()));
+        return new JwtAuthenticationToken(userDetails.getAuthorities(),userDetails.getMemberId());
     }
 
 

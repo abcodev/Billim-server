@@ -26,7 +26,7 @@ public class UsernamPasswordAuthenticationProvider implements AuthenticationProv
         String password = (String) authentication.getCredentials();
         UserDetailsEntity user = userDetailService.loadUserByUsername(email);
         if(user != null && this.passwordEncoder.matches(password, user.getPassword())){
-            return new LoginAuthenticationToken(user.getAuthorities(),user.getUsername());
+            return new LoginAuthenticationToken(user.getAuthorities(),user.getMemberId());
         }else {
             throw new BadCredentialsException("Invalid username or password");
         }

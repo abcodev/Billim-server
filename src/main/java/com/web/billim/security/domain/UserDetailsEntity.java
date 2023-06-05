@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -22,20 +23,18 @@ public class UserDetailsEntity implements UserDetails {
     private String email;
 
     private String password;
-    private MemberGrade grade;
+    private List<MemberGrade> grade;
 
     public UserDetailsEntity(Member member){
         this.memberId = member.getMemberId();
         this.email = member.getEmail();
         this.password = member.getPassword();
-        this.grade = member.getGrade();
+        this.grade = List.of(member.getGrade());
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<GrantedAuthority> collect = new ArrayList<>();
-        collect.add(new SimpleGrantedAuthority(grade.name()));
-        return collect;
+       return this.grade;
     }
 
     @Override

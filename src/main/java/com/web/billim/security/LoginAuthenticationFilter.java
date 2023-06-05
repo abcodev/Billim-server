@@ -2,18 +2,21 @@ package com.web.billim.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.web.billim.jwt.JwtTokenRedisService;
+import com.web.billim.member.type.MemberGrade;
 import com.web.billim.security.dto.LoginRequest;
 import com.web.billim.security.dto.LoginResponse;
 import com.web.billim.security.dto.LoginAuthenticationToken;
 import com.web.billim.jwt.dto.RedisJwt;
 import com.web.billim.jwt.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -21,6 +24,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
+import java.util.List;
 
 @Slf4j
 public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -37,7 +42,7 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
         this.jwtTokenRedisService = jwtTokenRedisService;
-        setFilterProcessesUrl("/auth/login");
+        setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/auth/login", "POST"));
     }
 
     @Override
@@ -48,12 +53,14 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
     }
 
 
+
+
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         // JWT 토큰 발급 및 응답 처리 로직
         // 예시로서는 JwtTokenProvider 클래스를 사용하여 토큰을 생성하고 응답에 포함시킵니다.
         String memberId = authResult.getPrincipal().toString();
-        GrantedAuthority memberGrade = authResult.getAuthorities().stream().findFirst().orElseThrow();
+        MemberGrade memberGrade = (MemberGrade) authResult.getAuthorities().stream().findFirst().orElseThrow();
         log.info("등급"+memberGrade);
         String accessToken  = jwtUtils.createAccessToken(memberId,memberGrade);
         String refreshToken = jwtUtils.createRefreshToken(memberId);
