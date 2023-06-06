@@ -1,6 +1,8 @@
 package com.web.billim.member.type;
 
-public enum MemberGrade {
+import org.springframework.security.core.GrantedAuthority;
+
+public enum MemberGrade implements GrantedAuthority {
     BRONZE(1),
     SILVER(2),
     GOLD(3),
@@ -12,5 +14,10 @@ public enum MemberGrade {
     }
     public int getSavedPointRate() {
         return this.savedPointRate;
+    }
+
+    @Override
+    public String getAuthority() {
+        return this.name();
     }
 }

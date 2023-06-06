@@ -5,13 +5,12 @@ import org.springframework.security.core.GrantedAuthority;
 import java.util.Collection;
 
 public class JwtAuthenticationToken extends AbstractAuthenticationToken {
-
-    private final String email;
-    private final String credentials;
+    private final Object email;
+    private final Object credentials;
 
 
     // url 요청시 token 넣어주기 / 인증전
-    public JwtAuthenticationToken(String  credentials){
+    public JwtAuthenticationToken(Object  credentials){
         super(null);
         this.email = null;
         this.credentials = credentials;
@@ -20,7 +19,7 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
 
     // provider -> filter 반환
 
-    public JwtAuthenticationToken(Collection<? extends GrantedAuthority> authorities, String email){
+    public JwtAuthenticationToken(Collection<? extends GrantedAuthority> authorities, Object email){
         super(authorities);
         this.email = email;
         this.credentials = null;
@@ -29,12 +28,12 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
 
 
     @Override
-    public String getCredentials() {
+    public Object getCredentials() {
         return this.credentials;
     }
 
     @Override
-    public String getPrincipal() {
+    public Object getPrincipal() {
         return this.email;
     }
 

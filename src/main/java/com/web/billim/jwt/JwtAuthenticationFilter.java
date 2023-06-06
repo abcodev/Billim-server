@@ -31,7 +31,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String jwt = resolveToken(request,AUTHORIZATION_HEADER);
         JwtAuthenticationToken jwtAuthenticationToken = (JwtAuthenticationToken) authenticationManager.authenticate(new JwtAuthenticationToken(jwt));
         if(jwtAuthenticationToken.isAuthenticated()){
-            SecurityContextHolder.getContext().setAuthentication(jwtAuthenticationToken);
+            if(!(request.getRequestURI().equals("/auth/reIssue/token"))) {
+                SecurityContextHolder.getContext().setAuthentication(jwtAuthenticationToken);
+            }
         }
         filterChain.doFilter(request,response);
     }
@@ -48,9 +50,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
 
         String[] excludePath = {
-                "/","product/list","product/**","product/category", "member/signup",
+                "/","product/list","product/detail/**","product/category","/member/signup",
                 "/v3/api-docs", "/configuration/ui", "/swagger-resources/**",
                 "/configuration/security", "/swagger-ui.html/**", "/swagger-ui/**", "/webjars/**", "/swagger/**"
+                ,"/auth/reIssue/token"
         };
         String path = request.getRequestURI();
         return Arrays.stream(excludePath).anyMatch(path::startsWith);
