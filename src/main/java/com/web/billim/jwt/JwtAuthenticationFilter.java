@@ -28,7 +28,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String jwt = resolveToken(request,AUTHORIZATION_HEADER);
+        String jwt = resolveToken(request);
         JwtAuthenticationToken jwtAuthenticationToken = (JwtAuthenticationToken) authenticationManager.authenticate(new JwtAuthenticationToken(jwt));
         if(jwtAuthenticationToken.isAuthenticated()){
             if(!(request.getRequestURI().equals("/auth/reIssue/token"))) {
@@ -38,8 +38,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request,response);
     }
 
-    private String resolveToken(HttpServletRequest request, String header){
-        String bearerToken = request.getHeader(header);
+    private String resolveToken(HttpServletRequest request){
+        String bearerToken = request.getHeader(JwtAuthenticationFilter.AUTHORIZATION_HEADER);
         if(bearerToken != null && bearerToken.startsWith("Bearer-")){
             return bearerToken.substring(7);
         }

@@ -14,7 +14,7 @@ public class MemberInfoResponse {
     private String address;
     private String profileImageUrl;
 
-    public static MemberInfoResponse of(Member member) {
+    public static MemberInfoResponse from(Member member) {
         return MemberInfoResponse.builder()
                 .memberId(member.getMemberId())
                 .email(member.getEmail())

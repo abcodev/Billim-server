@@ -10,7 +10,7 @@ import org.springframework.data.redis.core.RedisHash;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@RedisHash(value = "REFREHTOKEN", timeToLive = 12000)
+@RedisHash(value = "REFRESHTOKEN", timeToLive = 3600000)
 public class RedisJwt {
     // redis 생명주기를 timeToLive 3일로 지정
     @Id

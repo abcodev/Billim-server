@@ -8,6 +8,8 @@ import com.web.billim.product.dto.response.ProductDetailResponse;
 import com.web.billim.product.dto.response.ProductListResponse;
 import com.web.billim.product.repository.ProductRepository;
 import com.web.billim.product.service.ProductService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -55,7 +57,7 @@ public class ProductController {
         return ResponseEntity.ok(productList);
     }
 
-    @ApiOperation(value = "상품 상세정보, 이미 예약된 조회", notes = "productId에 따른 상품 상세정보, alreadyDates(이미 예약되어 이용할 수 없는 날짜 리스트)")
+    @ApiOperation(value = "상품 상세정보", notes = "productId에 따른 상품 상세정보 & 이미 예약되어 이용할 수 없는 날짜")
     @GetMapping("/detail/{productId}")
     public ResponseEntity<ProductDetailResponse> productDetail(@PathVariable("productId") long productId) {
         Product product = productService.retrieve(productId);
@@ -71,8 +73,7 @@ public class ProductController {
         return ResponseEntity.ok(dates);
     }
 
-    // ok
-    @ApiOperation(value = "상품 카테고리 목록", notes = "상품 전체 카테고리 목록 조회")
+    @ApiOperation(value = "*상품 카테고리 목록", notes = "상품 전체 카테고리 목록 조회")
     @GetMapping("/category")
     public ResponseEntity<List<ProductCategory>> productEnroll() {
         List<ProductCategory> categoryList = productService.categoryList();
@@ -81,6 +82,9 @@ public class ProductController {
 
     //
     @ApiOperation(value = "상품 등록")
+    @ApiImplicitParams(
+            @ApiImplicitParam(name = "name", value = "상품명", dataType = "")
+    )
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Product> registerProduct(@ModelAttribute @Valid ProductRegisterRequest request,
                                                    @AuthenticationPrincipal long memberId

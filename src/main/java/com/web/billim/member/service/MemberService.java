@@ -1,5 +1,6 @@
 package com.web.billim.member.service;
 
+import com.web.billim.coupon.dto.AvailableCouponResponse;
 import com.web.billim.coupon.repository.CouponRepository;
 import com.web.billim.coupon.service.CouponService;
 import com.web.billim.infra.ImageUploadService;
@@ -74,6 +75,13 @@ public class MemberService {
                 .orElseThrow(() -> new RuntimeException("해당 사용자(" + memberId + ") 를 찾을 수 없습니다."));
     }
 
+    public List<MemberInfoResponse> findMemberInfo(long memberId) {
+        return memberRepository.findById(memberId).stream()
+                .map(MemberInfoResponse::from)
+                .collect(Collectors.toList());
+    }
+
+
     @Transactional
 	public void updateProfileImage(long memberId, MultipartFile profileImage) {
         String imageUrl = imageUploadService.upload(profileImage, "profile");
@@ -109,13 +117,6 @@ public class MemberService {
 //                    memberRepository.save(member);
 //                });
 //    }
-
-//    public List<MemberInfoResponse> findMemberInfo(long memberId) {
-//        return memberRepository.findById(memberId).stream()
-//                .map(MemberInfoResponse::of)
-//                .collect(Collectors.toList());
-//    }
-
 
 }
 

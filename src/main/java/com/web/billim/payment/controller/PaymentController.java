@@ -1,6 +1,8 @@
 package com.web.billim.payment.controller;
 
 import com.web.billim.payment.service.PaymentService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,8 @@ public class PaymentController {
 
     private final PaymentService paymentService;
 
+    @ApiOperation(value = "결제 성공")
+    @ApiImplicitParam(name = "imp_uid", value = "")
     @GetMapping("/complete")
     public ResponseEntity<Void> paymentComplete(@RequestParam("imp_uid") String impUid,
                                                 @RequestParam("merchant_uid") String merchantUid

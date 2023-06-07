@@ -8,6 +8,9 @@ import com.web.billim.member.dto.request.MemberSignupRequest;
 import com.web.billim.member.dto.response.MemberInfoResponse;
 import com.web.billim.member.service.MemberService;
 import com.web.billim.product.domain.Product;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -44,7 +47,7 @@ public class MemberController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity memberSignUpProc(@Valid @RequestBody MemberSignupRequest memberSignupRequest,
+    public ResponseEntity memberSignUp (@Valid @RequestBody MemberSignupRequest memberSignupRequest,
                                            BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors()) {
@@ -61,8 +64,10 @@ public class MemberController {
     // 로그아웃
 
 
+
+
     // 아이디 찾기
-//    @PostMapping("/member/findId")
+//    @PostMapping("/findId")
 //    public ResponseEntity<FindIdResponse> findId(FindIdRequest findIdRequest) {
 //        return ResponseEntity.ok(memberService.findId(findIdRequest));
 //    }
@@ -71,16 +76,15 @@ public class MemberController {
     // 비밀번호 찾기
 
 
-    // 회원정보 전체 불러오기
-//    @GetMapping("/my/info")
-//    public ResponseEntity<List<MemberInfoResponse>> memberInfo(@AuthenticationPrincipal long memberId) {
-//        List<MemberInfoResponse> infoList = memberService.findMemberInfo(memberId);
-//        return ResponseEntity.ok(infoList);
-//    }
+    @ApiOperation(value = "내 정보 조회" , notes = "회원 정보 수정시 내 정보 조회")
+    @GetMapping("/info")
+    public ResponseEntity<MemberInfoResponse> memberInfo(long memberId) {
+        return ResponseEntity.ok().build();
+    }
 
 
-    // 프로필 사진 변경
-    @PutMapping(value = "/my/profile-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ApiOperation(value = "프로필 이미지 변경")
+    @PutMapping(value = "/profile-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updateProfileImage(long memberId, MultipartFile profileImage) {
         memberService.updateProfileImage(memberId, profileImage);
         return ResponseEntity.ok().build();
@@ -88,7 +92,7 @@ public class MemberController {
 
 
     // 주소 변경
-//    @PutMapping("/my/address")
+//    @PutMapping("/address")
 //    public ResponseEntity<Void> updateAddress(long memberId, String address) {
 //        memberService.updateAddress(memberId, address);
 //        return ResponseEntity.ok().build();
@@ -115,7 +119,7 @@ public class MemberController {
 
 
     // 닉네임 변경
-//    @PutMapping("/my/nickname")
+//    @PutMapping("/nickname")
 //    public ResponseEntity<Void> updateNickname(long memberId, String nickname) {
 //        memberService.updateNickname(memberId, nickname);
 //        return ResponseEntity.ok().build();
@@ -124,7 +128,10 @@ public class MemberController {
 
     // 소셜 연동
 
+
     // 회원 차단
+
+
 
     // 회원 탈퇴
 

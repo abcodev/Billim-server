@@ -17,7 +17,7 @@ public class ProductListResponse {
     private long productId;
     private String productName;
     private ProductCategory productCategory;
-    private String detail;
+//    private String detail;
     private long price;
     @ApiModelProperty(value = "상품 이미지 url")
     private List<String> imageUrls;
@@ -29,7 +29,7 @@ public class ProductListResponse {
                 .productId(product.getProductId())
                 .productName(product.getProductName())
                 .productCategory(product.getProductCategory())
-                .detail(product.getDetail())
+//                .detail(product.getDetail())
                 .price(product.getPrice())
                 .imageUrls(
                         product.getImages().stream()

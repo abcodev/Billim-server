@@ -5,6 +5,9 @@ import com.web.billim.order.dto.response.PaymentInfoResponse;
 import com.web.billim.order.service.OrderService;
 import com.web.billim.point.service.PointService;
 import com.web.billim.product.service.ProductService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +27,7 @@ public class OrderController {
     private final ProductService productService;
     private final PointService pointService;
 
+    @ApiOperation(value = "주문")
     @PostMapping("/order")
     public ResponseEntity<PaymentInfoResponse> order(@RequestBody OrderCommand command,
                                                      @AuthenticationPrincipal long memberId

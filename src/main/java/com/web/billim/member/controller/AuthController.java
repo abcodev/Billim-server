@@ -15,7 +15,6 @@ public class AuthController {
     private final JwtService jwtService;
 
 
-
     @GetMapping("/test")
     public ResponseEntity<String> test1(){
         String test = "check";
@@ -23,9 +22,7 @@ public class AuthController {
     }
 
     @PostMapping("/reIssue/token")
-    public ResponseEntity<?> reIssueToken(
-            @RequestBody ReIssueTokenRequest req
-    ){
+    public ResponseEntity<?> reIssueToken(@RequestBody ReIssueTokenRequest req){
         String accessToken = req.getAccessToken();
         String refreshToken = req.getRefreshToken();
         ReIssueTokenResponse response = jwtService.reIssueToken(accessToken,refreshToken);
