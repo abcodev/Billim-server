@@ -24,11 +24,8 @@ public class JwtTokenFilterConfigurer extends SecurityConfigurerAdapter<DefaultS
     @Override
     public void configure(HttpSecurity builder){
 
-        // JWT token 인증 provider
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager);
-
-        // Login filter
         LoginAuthenticationFilter loginAuthenticationFilter = new LoginAuthenticationFilter(authenticationManager, jwtUtils,jwtTokenRedisService);
+        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager);
 
         builder.addFilterBefore(loginAuthenticationFilter,UsernamePasswordAuthenticationFilter.class);
         builder.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

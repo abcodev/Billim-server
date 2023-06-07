@@ -1,7 +1,7 @@
-package com.web.billim.jwt.dto;
+package com.web.billim.common.domain;
+
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
@@ -10,10 +10,9 @@ import org.springframework.data.redis.core.RedisHash;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@RedisHash(value = "REFREHTOKEN", timeToLive = 3600000)
-public class RedisJwt {
+@RedisHash(value = "Email", timeToLive = 12000)
+public class RedisEmail {
     @Id
-    private long memberId;
-    private String refreshToken;
-
+    private String email;
+    private String verifyCode;
 }

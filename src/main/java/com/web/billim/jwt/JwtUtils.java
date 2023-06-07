@@ -58,10 +58,9 @@ public class JwtUtils implements InitializingBean {
     }
 
     // Refresh Token 발급
-    public String createRefreshToken(String memberId){
+    public String createRefreshToken(){
         return Jwts.builder()
                 .setHeaderParam("typ","REFRESH")
-                .setSubject(memberId)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis()+REFRESH_TIME))
                 .signWith(key,SignatureAlgorithm.HS512)

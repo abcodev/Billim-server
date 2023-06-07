@@ -3,6 +3,7 @@ package com.web.billim.jwt;
 import com.web.billim.jwt.dto.JwtAuthenticationToken;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -29,12 +30,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String jwt = resolveToken(request,AUTHORIZATION_HEADER);
-        JwtAuthenticationToken jwtAuthenticationToken = (JwtAuthenticationToken) authenticationManager.authenticate(new JwtAuthenticationToken(jwt));
-        if(jwtAuthenticationToken.isAuthenticated()){
-            if(!(request.getRequestURI().equals("/auth/reIssue/token"))) {
-                SecurityContextHolder.getContext().setAuthentication(jwtAuthenticationToken);
+            try {
+                JwtAuthenticationToken jwtAuthenticationToken = (JwtAuthenticationToken) authenticationManager.authenticate(new JwtAuthenticationToken(jwt));
+                if(jwtAuthenticationToken.isAuthenticated()) {
+                    if (!(request.getRequestURI().equals("/auth/reIssue/token"))) {
+                        SecurityContextHolder.getContext().setAuthentication(jwtAuthenticationToken);
+                    }
+                }
+            }catch (AuthenticationException authenticationException){
+                SecurityContextHolder.clearContext();
             }
-        }
         filterChain.doFilter(request,response);
     }
 
@@ -53,7 +58,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 "/","product/list","product/detail/**","product/category","/member/signup",
                 "/v3/api-docs", "/configuration/ui", "/swagger-resources/**",
                 "/configuration/security", "/swagger-ui.html/**", "/swagger-ui/**", "/webjars/**", "/swagger/**"
-                ,"/auth/reIssue/token"
+                ,"/auth/reIssue/token","/member/send/email"
         };
         String path = request.getRequestURI();
         return Arrays.stream(excludePath).anyMatch(path::startsWith);
