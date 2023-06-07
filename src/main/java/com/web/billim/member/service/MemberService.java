@@ -1,25 +1,19 @@
 package com.web.billim.member.service;
 
-import com.web.billim.coupon.dto.AvailableCouponResponse;
 import com.web.billim.common.dto.EmailAuthRequest;
 import com.web.billim.common.dto.EmailRequest;
-import com.web.billim.common.handler.TokenExpiredException;
 import com.web.billim.common.service.EmailService;
 import com.web.billim.coupon.repository.CouponRepository;
 import com.web.billim.coupon.service.CouponService;
 import com.web.billim.infra.ImageUploadService;
 import com.web.billim.jwt.JwtTokenRedisService;
 import com.web.billim.member.domain.Member;
-import com.web.billim.member.dto.request.FindIdRequest;
 import com.web.billim.member.dto.request.MemberSignupRequest;
-//import com.web.billim.member.dto.response.FindIdResponse;
 import com.web.billim.member.dto.response.MemberInfoResponse;
 import com.web.billim.member.repository.MemberRepository;
 import com.web.billim.point.dto.AddPointCommand;
 import com.web.billim.point.service.PointService;
-import com.web.billim.product.domain.Product;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +21,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -46,7 +39,6 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenRedisService jwtTokenRedisService;
-
     private final EmailService emailService;
 
 

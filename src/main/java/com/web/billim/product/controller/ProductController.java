@@ -47,7 +47,7 @@ public class ProductController {
         return ResponseEntity.ok(resp);
     }
 
-    //
+
     @ApiOperation(value = "전체 상품목록 조회", notes = "전체 상품목록조회, 페이징")
     @GetMapping("/list")
     public ResponseEntity<Page<ProductListResponse>> productList(
@@ -80,10 +80,10 @@ public class ProductController {
         return ResponseEntity.ok(categoryList);
     }
 
-    //
+
     @ApiOperation(value = "상품 등록")
     @ApiImplicitParams(
-            @ApiImplicitParam(name = "name", value = "상품명", dataType = "")
+            @ApiImplicitParam(name = "name", value = "상품명")
     )
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Product> registerProduct(@ModelAttribute @Valid ProductRegisterRequest request,

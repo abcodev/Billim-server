@@ -5,11 +5,9 @@ import com.web.billim.common.dto.EmailRequest;
 import com.web.billim.common.validation.CheckIdValidator;
 import com.web.billim.common.validation.CheckNickNameValidator;
 import com.web.billim.common.validation.CheckPasswordValidator;
-import com.web.billim.member.domain.Member;
 import com.web.billim.member.dto.request.MemberSignupRequest;
 import com.web.billim.member.dto.response.MemberInfoResponse;
 import com.web.billim.member.service.MemberService;
-import com.web.billim.product.domain.Product;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -18,16 +16,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.parameters.P;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -78,8 +72,6 @@ public class MemberController {
         memberService.confirmEmail(emailAuthRequest);
         return ResponseEntity.ok(200);
     }
-
-
 
 
 
