@@ -40,7 +40,7 @@ public class OrderService {
 
     // Lock
     @Transactional
-    public PaymentInfoResponse order(int memberId, OrderCommand orderCommand) {
+    public PaymentInfoResponse order(long memberId, OrderCommand orderCommand) {
         Member member = memberService.retrieve(memberId);
 
         // 1. 해당 사용자가 주문중인게 있는지 확인

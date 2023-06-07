@@ -14,7 +14,6 @@ import java.util.Optional;
 @Repository
 public interface OrderRepository extends JpaRepository<ProductOrder, Long> {
     List<ProductOrder> findAllByProductAndEndAtAfter(Product product, LocalDate now);
-
     Optional<ProductOrder> findByMemberAndStatus(Member member, ProductOrderStatus status);
     Optional<ProductOrder> findByProductAndStatus(Product product, ProductOrderStatus status);
 }

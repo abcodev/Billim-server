@@ -4,6 +4,8 @@ import com.web.billim.member.domain.Member;
 import com.web.billim.product.domain.ImageProduct;
 import com.web.billim.product.domain.Product;
 import com.web.billim.product.type.TradeMethod;
+import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiOperation;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,38 +17,21 @@ import java.util.stream.Collectors;
 @Builder
 public class ProductDetailResponse {
 
+    @ApiModelProperty("상품 고유번호")
     private long productId;
+    @ApiModelProperty("상품명")
     private String productName;
+    @ApiModelProperty("상품 상세설명")
     private String detail;
+    @ApiModelProperty("대여료(/일)")
     private long price;
     private Member member;
+    @ApiModelProperty("상품 이미지 url")
     private List<String> imageUrls;
+    @ApiModelProperty("거래 방법")
     private List<TradeMethod> tradeMethods;
+    @ApiModelProperty("이미 예약된 날짜")
     private List<LocalDate> alreadyDates;
-
-    /*
-     *  응답데이터는 JSON
-     *   객체 -> JSON 이 되어야함 : 이거를 데이터 파싱
-     *   Jackson(ObjectMapper)
-     *
-     *  {
-     *      "productId": 1,
-     *      "productName": "테스트",
-     *      "detail": "상품 설명",
-     *      "price": 50000,
-     *      "member": {
-     *          "memberId": 10,
-     *          ...
-     *      },
-     *      "imageUrls": [
-     *          "https://s3/1",
-     *          "https://s3/2",
-     *          "https://s3/3"
-     *      ],
-     *      "tradeMethods": ["DIRECT"],
-     *      "alreadyDates": ["2023-04-17", "2023-04-18"]
-     *  }
-     */
 
     public static ProductDetailResponse of(Product product, List<LocalDate> alreadyDates){
         return ProductDetailResponse.builder()

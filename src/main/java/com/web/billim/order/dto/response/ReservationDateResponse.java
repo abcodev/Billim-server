@@ -9,7 +9,6 @@ import java.util.List;
 @Data
 @Builder
 public class ReservationDateResponse {
-
     private  List<LocalDateTime> resDate;
 
 }

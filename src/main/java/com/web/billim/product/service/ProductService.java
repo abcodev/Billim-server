@@ -3,6 +3,9 @@ package com.web.billim.product.service;
 import com.web.billim.infra.ImageUploadService;
 import com.web.billim.member.domain.Member;
 import com.web.billim.member.repository.MemberRepository;
+import com.web.billim.order.domain.ProductOrder;
+import com.web.billim.order.dto.response.ReservationDateResponse;
+import com.web.billim.order.repository.OrderRepository;
 import com.web.billim.product.domain.ImageProduct;
 import com.web.billim.product.domain.Product;
 import com.web.billim.product.domain.ProductCategory;
@@ -29,6 +32,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ProductCategoryRepository productCategoryRepository;
     private final ImageProductRepository imageProductRepository;
+    private final OrderRepository orderRepository;
     private final ImageUploadService imageUploadService;
     private final ReviewService reviewService;
 
@@ -40,12 +44,8 @@ public class ProductService {
 
         // 1. 이미지 저장
         List<ImageProduct> images = request.getImages().stream().map(image -> {
-            try {
-                String url = imageUploadService.upload(image, "product");
-                return imageProductRepository.save(ImageProduct.of(url));
-            } catch (IOException e) {
-                throw new RuntimeException("파일 업로드중 에러가 발생했습니다.", e);
-            }
+            String url = imageUploadService.upload(image, "product");
+            return imageProductRepository.save(ImageProduct.of(url));
         }).collect(Collectors.toList());
 
         // 2. Product 정보 데이터베이스에 저장 & 반환
@@ -57,7 +57,7 @@ public class ProductService {
         return productCategoryRepository.findAll();
     }
 
-
+    @Transactional
     public Page<ProductListResponse> findAllProduct(int page) {
         PageRequest paging = PageRequest.of(page, 20);
         return productRepository.findAllByOrderByCreatedAtDesc(paging).map(product -> {
@@ -65,12 +65,6 @@ public class ProductService {
             return ProductListResponse.of(product, starRating);
         });
     }
-
-//    public Page<Product> findAllProduct(int page) {
-//        PageRequest paging = PageRequest.of(page, 12);
-//        return productRepository.findAll(paging);
-//    }
-
 
     @Transactional
     public Product retrieve(long productId) {
@@ -85,9 +79,9 @@ public class ProductService {
 //                .collect(Collectors.toList());
 //    }
 
-    public Optional<Product> findProduct(long i) {
-        return productRepository.findById(i);
-    }
+//    public Optional<Product> findProduct(long i) {
+//        return productRepository.findById(i);
+//    }
 
 
 //    public ReservationDateResponse reservationDate(int productId) {
@@ -96,10 +90,7 @@ public class ProductService {
 //                        new RuntimeException("해당 ProductId(" + productId + ") 에 대한 예약날짜가 없습니다.")));
 //        return (ReservationDateResponse) productOrder.stream().map(ReservationDateResponse::of)
 //                .collect(Collectors.toList());
-//
 //    }
-
-
 
 
 

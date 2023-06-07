@@ -34,6 +34,7 @@ public class CouponService {
     }
 
     // 2. 사용가능한 쿠폰 목록 조회
+    @Transactional
     public List<AvailableCouponResponse> retrieveAvailableCouponList(Member member) {
         return couponIssueRepository.findAllByMember(member).stream()
                 .filter(coupon -> LocalDateTime.now().isBefore(coupon.getExpiredAt())) // 만료된거 제외

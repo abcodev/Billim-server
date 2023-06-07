@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface SavedPointRepository extends JpaRepository<SavedPoint, Long> {
 
-	@Query("SELECT sp FROM SavedPoint sp WHERE sp.member.id = :memberId "
+	@Query("SELECT sp FROM SavedPoint sp WHERE sp.member.memberId = :memberId "
 			+ "AND sp.expiredAt >= current_timestamp ORDER BY sp.expiredAt DESC")
 	List<SavedPoint> findAllNotExpired(@Param("memberId") long memberId);
 

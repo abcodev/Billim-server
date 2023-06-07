@@ -1,6 +1,7 @@
 package com.web.billim.coupon.dto;
 
 import com.web.billim.coupon.domain.CouponIssue;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ApiModel(value = "사용가능한 쿠폰")
 public class AvailableCouponResponse {
 
 	@ApiModelProperty(value = "쿠폰 발급번호")
