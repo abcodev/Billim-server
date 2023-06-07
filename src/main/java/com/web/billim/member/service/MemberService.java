@@ -1,10 +1,16 @@
 package com.web.billim.member.service;
 
 import com.web.billim.coupon.dto.AvailableCouponResponse;
+import com.web.billim.common.dto.EmailAuthRequest;
+import com.web.billim.common.dto.EmailRequest;
+import com.web.billim.common.handler.TokenExpiredException;
+import com.web.billim.common.service.EmailService;
 import com.web.billim.coupon.repository.CouponRepository;
 import com.web.billim.coupon.service.CouponService;
 import com.web.billim.infra.ImageUploadService;
+import com.web.billim.jwt.JwtTokenRedisService;
 import com.web.billim.member.domain.Member;
+import com.web.billim.member.dto.request.FindIdRequest;
 import com.web.billim.member.dto.request.MemberSignupRequest;
 //import com.web.billim.member.dto.response.FindIdResponse;
 import com.web.billim.member.dto.response.MemberInfoResponse;
@@ -27,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -38,6 +45,9 @@ public class MemberService {
     private final PointService pointService;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtTokenRedisService jwtTokenRedisService;
+
+    private final EmailService emailService;
 
 
     public Map<String, String> validateHandling(BindingResult bindingResult) {
@@ -69,6 +79,29 @@ public class MemberService {
 //                .map(FindIdResponse::from)
 //                .orElse(new FindIdResponse());
 //    }
+
+    public void certifyEmail(EmailRequest request) {
+        validateDuplicated(request.getEmail());
+        String authToken = UUID.randomUUID().toString();
+        jwtTokenRedisService.saveEmailToken(request.getEmail(),authToken);
+        emailService.sendMail(request.getEmail(),authToken);
+    }
+
+    public void validateDuplicated(String email){
+        if(memberRepository.existsByEmail(email)){
+            throw new RuntimeException("이미 사용중인 이메일입니다.");
+        }
+    }
+
+    public void confirmEmail(EmailAuthRequest emailAuthRequest) {
+        if(!jwtTokenRedisService.findByEmail(emailAuthRequest.getEmail())
+                .equals(emailAuthRequest.getAuthToken())){
+            throw new RuntimeException("인증번호가 일치하지 않습니다.");
+
+        }
+    }
+
+
 
     public Member retrieve(long memberId) {
         return memberRepository.findById(memberId)

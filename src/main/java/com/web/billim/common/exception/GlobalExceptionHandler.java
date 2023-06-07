@@ -1,14 +1,18 @@
 package com.web.billim.common.exception;
 
+import com.web.billim.common.handler.TokenExpiredException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.validation.ConstraintViolationException;
 
-@ControllerAdvice
+@Slf4j
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
 	@ExceptionHandler(value = ConstraintViolationException.class)
@@ -29,4 +33,14 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.badRequest().body(new ErrorResponse("INVALID_INPUT", message.toString()));
 	}
 
+	@ExceptionHandler(value = {TokenExpiredException.class})
+	public ResponseEntity<com.web.billim.common.handler.ErrorResponse> handlerException(TokenExpiredException e){
+		return com.web.billim.common.handler.ErrorResponse.toResponseEntity(e.getErrorCode());
+	}
+
+	//  NotFoundException extends
+	//  UnAuthorizedException extends
+	//	BadRequestException extends
+	//	DuplicatedException extends
+	//	TokenException extends
 }

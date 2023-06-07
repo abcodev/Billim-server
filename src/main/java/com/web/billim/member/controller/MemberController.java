@@ -1,5 +1,7 @@
 package com.web.billim.member.controller;
 
+import com.web.billim.common.dto.EmailAuthRequest;
+import com.web.billim.common.dto.EmailRequest;
 import com.web.billim.common.validation.CheckIdValidator;
 import com.web.billim.common.validation.CheckNickNameValidator;
 import com.web.billim.common.validation.CheckPasswordValidator;
@@ -8,9 +10,9 @@ import com.web.billim.member.dto.request.MemberSignupRequest;
 import com.web.billim.member.dto.response.MemberInfoResponse;
 import com.web.billim.member.service.MemberService;
 import com.web.billim.product.domain.Product;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -51,15 +53,37 @@ public class MemberController {
                                            BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors()) {
-            // 유효성 검사에서 걸린 경우
-            // 2. 어디가 잘 못 됬는지 알려준다.
-            // valid_~ 형태의 String 으로 반환해줌
             Map<String, String> validatorResult = memberService.validateHandling(bindingResult);
             return new ResponseEntity<>(validatorResult, HttpStatus.OK);
         }
         memberService.signUp(memberSignupRequest);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @ApiOperation(value ="*이메일인증 링크 발송", notes = "해당 이메일에 인증번호 발송")
+    @ApiImplicitParam(name = "email",dataType = "EmailRequest")
+    @PostMapping("/send/email")
+    public ResponseEntity<?> sendEmail(@RequestBody EmailRequest request){
+        memberService.certifyEmail(request);
+        return ResponseEntity.ok(200);
+    }
+
+    @ApiOperation(value = "*이메일인증 코드 확인", notes = "클라이언트가 링크를 클릭시 해당 APi로 연결")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "email", value = "인증할 이메일"),
+            @ApiImplicitParam(name = "certifyCode", value = "인증번호")
+    })
+    @GetMapping("/confirm/email")
+    public ResponseEntity<?> confirmEmail(@RequestBody EmailAuthRequest emailAuthRequest){
+        memberService.confirmEmail(emailAuthRequest);
+        return ResponseEntity.ok(200);
+    }
+
+
+
+
+
+
 
     // 로그아웃
 

@@ -9,12 +9,10 @@ import com.web.billim.security.dto.LoginAuthenticationToken;
 import com.web.billim.jwt.dto.RedisJwt;
 import com.web.billim.jwt.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -24,19 +22,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
-import java.util.List;
 
 @Slf4j
 public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
-
     private final JwtUtils jwtUtils;
-
     private final JwtTokenRedisService jwtTokenRedisService;
-
-
 
     public LoginAuthenticationFilter(AuthenticationManager authenticationManager, JwtUtils jwtUtils, JwtTokenRedisService jwtTokenRedisService) {
         this.authenticationManager = authenticationManager;
@@ -44,16 +36,12 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
         this.jwtTokenRedisService = jwtTokenRedisService;
         setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/auth/login", "POST"));
     }
-
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException{
         LoginRequest loginRequest = obtainEmailPassword(request);
         LoginAuthenticationToken loginAuthenticationToken = new LoginAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword());
         return authenticationManager.authenticate(loginAuthenticationToken);
     }
-
-
-
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
@@ -63,7 +51,7 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
         MemberGrade memberGrade = (MemberGrade) authResult.getAuthorities().stream().findFirst().orElseThrow();
         log.info("등급"+memberGrade);
         String accessToken  = jwtUtils.createAccessToken(memberId,memberGrade);
-        String refreshToken = jwtUtils.createRefreshToken(memberId);
+        String refreshToken = jwtUtils.createRefreshToken();
         RedisJwt redisJwt = new RedisJwt(1,refreshToken);
         jwtTokenRedisService.saveToken(redisJwt);
 
@@ -74,6 +62,10 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
         response.getWriter().write(jsonToken);
     }
 
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+
+    }
 
     private LoginRequest obtainEmailPassword(HttpServletRequest request) {
             try {
