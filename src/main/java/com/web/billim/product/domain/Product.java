@@ -29,6 +29,7 @@ public class Product extends JpaEntity {
     private Long productId;
 
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")
+//    @ManyToOne(fetch = FetchType.LAZY)
     @ManyToOne(fetch = FetchType.LAZY)
     @ApiModelProperty(value = "상품 카테고리")
     private ProductCategory productCategory;

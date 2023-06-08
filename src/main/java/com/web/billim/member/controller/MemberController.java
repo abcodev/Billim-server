@@ -43,7 +43,7 @@ public class MemberController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity memberSignUp (@Valid @RequestBody MemberSignupRequest memberSignupRequest,
+    public ResponseEntity<Map<String,String>> memberSignUp (@Valid @RequestBody MemberSignupRequest memberSignupRequest,
                                            BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors()) {
@@ -78,10 +78,6 @@ public class MemberController {
 
 
     // 로그아웃
-
-
-
-
     // 아이디 찾기
 //    @PostMapping("/findId")
 //    public ResponseEntity<FindIdResponse> findId(FindIdRequest findIdRequest) {
@@ -140,18 +136,9 @@ public class MemberController {
 //        memberService.updateNickname(memberId, nickname);
 //        return ResponseEntity.ok().build();
 //    }
-
-
     // 소셜 연동
-
-
     // 회원 차단
-
-
-
     // 회원 탈퇴
-
-
 }
 
 

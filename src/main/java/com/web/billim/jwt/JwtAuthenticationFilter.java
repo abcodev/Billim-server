@@ -1,6 +1,7 @@
 package com.web.billim.jwt;
 
 import com.web.billim.jwt.dto.JwtAuthenticationToken;
+import com.web.billim.security.SecurityFilterSkipMatcher;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.AuthenticationException;
@@ -21,10 +22,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final AuthenticationManager authenticationManager;
 
+    private final SecurityFilterSkipMatcher securityFilterSkipMatcher;
 
 
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager){
+
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, SecurityFilterSkipMatcher securityFilterSkipMatcher){
         this.authenticationManager = authenticationManager;
+        this.securityFilterSkipMatcher = securityFilterSkipMatcher;
     }
 
     @Override
@@ -45,7 +49,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private String resolveToken(HttpServletRequest request, String header){
         String bearerToken = request.getHeader(header);
-        if(bearerToken != null && bearerToken.startsWith("Bearer-")){
+        if(bearerToken != null && bearerToken.startsWith("Bearer ")){
             return bearerToken.substring(7);
         }
         return null;
@@ -53,14 +57,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-
-        String[] excludePath = {
-                "/","product/list","product/detail/**","product/category","/member/signup",
-                "/v3/api-docs", "/configuration/ui", "/swagger-resources/**",
-                "/configuration/security", "/swagger-ui.html/**", "/swagger-ui/**", "/webjars/**", "/swagger/**"
-                ,"/auth/reIssue/token","/member/send/email"
-        };
-        String path = request.getRequestURI();
-        return Arrays.stream(excludePath).anyMatch(path::startsWith);
+        return securityFilterSkipMatcher.shouldSkipFilter(request);
     }
 }
