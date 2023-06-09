@@ -16,5 +16,7 @@ public interface OrderRepository extends JpaRepository<ProductOrder, Long> {
     List<ProductOrder> findAllByProductAndEndAtAfter(Product product, LocalDate now);
     Optional<ProductOrder> findByMemberAndStatus(Member member, ProductOrderStatus status);
     Optional<ProductOrder> findByProductAndStatus(Product product, ProductOrderStatus status);
+
+    Optional<List<ProductOrder>> findAllByMember_memberId(long memberId);
 }
 

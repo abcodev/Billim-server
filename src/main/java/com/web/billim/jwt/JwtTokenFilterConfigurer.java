@@ -1,7 +1,7 @@
 package com.web.billim.jwt;
 
 import com.web.billim.security.LoginAuthenticationFilter;
-
+import com.web.billim.security.SecurityFilterSkipMatcher;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,22 +14,23 @@ public class JwtTokenFilterConfigurer extends SecurityConfigurerAdapter<DefaultS
     private final AuthenticationManager authenticationManager;
     private final JwtTokenRedisService jwtTokenRedisService;
 
-    public JwtTokenFilterConfigurer(JwtUtils jwtUtils, AuthenticationManager authenticationManager,
-                                    JwtTokenRedisService jwtTokenRedisService
-    ) {
+    private final SecurityFilterSkipMatcher securityFilterSkipMatcher;
+
+
+    public JwtTokenFilterConfigurer(JwtUtils jwtUtils, AuthenticationManager authenticationManager, JwtTokenRedisService jwtTokenRedisService, SecurityFilterSkipMatcher securityFilterSkipMatcher) {
         this.jwtUtils = jwtUtils;
         this.authenticationManager = authenticationManager;
         this.jwtTokenRedisService = jwtTokenRedisService;
-
+        this.securityFilterSkipMatcher = securityFilterSkipMatcher;
     }
 
     @Override
-    public void configure(HttpSecurity builder) {
+    public void configure(HttpSecurity builder){
 
-        LoginAuthenticationFilter loginAuthenticationFilter = new LoginAuthenticationFilter(authenticationManager, jwtUtils, jwtTokenRedisService);
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager);
+        LoginAuthenticationFilter loginAuthenticationFilter = new LoginAuthenticationFilter(authenticationManager, jwtUtils,jwtTokenRedisService);
+        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, securityFilterSkipMatcher);
 
-        builder.addFilterBefore(loginAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        builder.addFilterBefore(loginAuthenticationFilter,UsernamePasswordAuthenticationFilter.class);
         builder.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

@@ -4,6 +4,8 @@ import com.web.billim.member.domain.Member;
 import com.web.billim.member.service.MemberService;
 import com.web.billim.order.domain.ProductOrder;
 import com.web.billim.order.dto.OrderCommand;
+import com.web.billim.order.dto.response.MyOrderHistory;
+import com.web.billim.order.dto.response.MyOrderHistoryListResponse;
 import com.web.billim.order.dto.response.PaymentInfoResponse;
 import com.web.billim.order.repository.OrderRepository;
 import com.web.billim.order.type.ProductOrderStatus;
@@ -16,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -64,5 +67,15 @@ public class OrderService {
         // 3. 결제정보 생성
         PaymentCommand paymentCommand = new PaymentCommand(member, order, orderCommand.getCouponIssueId(), orderCommand.getUsedPoint());
         return paymentService.payment(paymentCommand);
+    }
+
+    @Transactional
+    public MyOrderHistoryListResponse findMyOrder(long memberId) {
+       List<ProductOrder> productOrders= orderRepository.findAllByMember_memberId(memberId)
+               .orElseThrow(()-> new EntityNotFoundException("구매하신 상품이 없습니다."));
+        List<MyOrderHistory> myOrderHistories = productOrders.stream()
+                .map(MyOrderHistory::from)
+                .collect(Collectors.toList());
+       return new MyOrderHistoryListResponse(myOrderHistories);
     }
 }

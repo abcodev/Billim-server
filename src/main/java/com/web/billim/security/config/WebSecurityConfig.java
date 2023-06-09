@@ -2,6 +2,7 @@ package com.web.billim.security.config;
 
 import com.web.billim.jwt.JwtTokenRedisService;
 import com.web.billim.jwt.JwtAuthenticationProvider;
+import com.web.billim.security.SecurityFilterSkipMatcher;
 import com.web.billim.security.UsernamPasswordAuthenticationProvider;
 import com.web.billim.jwt.JwtTokenFilterConfigurer;
 import com.web.billim.jwt.JwtUtils;
@@ -31,9 +32,12 @@ public class WebSecurityConfig {
 
     private final JwtTokenRedisService jwtTokenRedisService;
 
+    private final SecurityFilterSkipMatcher securityFilterSkipMatcher;
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(AuthenticationManager authenticationManager,HttpSecurity http) throws Exception{
+
         http.csrf().disable()
                 .formLogin().disable()
                 .httpBasic().disable()
@@ -47,7 +51,7 @@ public class WebSecurityConfig {
                 .antMatchers("/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .apply(new JwtTokenFilterConfigurer(jwtUtils, authenticationManager,jwtTokenRedisService));
+                .apply(new JwtTokenFilterConfigurer(jwtUtils, authenticationManager,jwtTokenRedisService, securityFilterSkipMatcher));
         return http.build();
     }
 

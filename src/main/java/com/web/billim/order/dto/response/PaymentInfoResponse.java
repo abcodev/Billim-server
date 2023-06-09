@@ -9,11 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PaymentInfoResponse {
-
 	private String name;
 	private String merchantUid;
 	private long amount;
-
 	public static PaymentInfoResponse from(Payment savedPayment) {
 		return new PaymentInfoResponse(
 			savedPayment.getProductOrder().getProduct().getProductName(),
@@ -21,5 +19,4 @@ public class PaymentInfoResponse {
 			savedPayment.getTotalAmount()
 		);
 	}
-
 }
