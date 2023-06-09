@@ -7,6 +7,9 @@ import com.web.billim.coupon.dto.CouponRegisterCommand;
 import com.web.billim.coupon.repository.CouponIssueRepository;
 import com.web.billim.coupon.repository.CouponRepository;
 import com.web.billim.member.domain.Member;
+import com.web.billim.member.repository.MemberRepository;
+import com.web.billim.member.service.MemberService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CouponService {
 
+    private final MemberRepository memberRepository;
     private final CouponRepository couponRepository;
     private final CouponIssueRepository couponIssueRepository;
 
@@ -35,7 +39,8 @@ public class CouponService {
 
     // 2. 사용가능한 쿠폰 목록 조회
     @Transactional
-    public List<AvailableCouponResponse> retrieveAvailableCouponList(Member member) {
+    public List<AvailableCouponResponse> retrieveAvailableCouponList(long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow();
         return couponIssueRepository.findAllByMember(member).stream()
                 .filter(coupon -> LocalDateTime.now().isBefore(coupon.getExpiredAt())) // 만료된거 제외
                 .map(AvailableCouponResponse::from) // CouponIssue -> AvailableCouponResponse

@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -14,6 +13,18 @@ import javax.validation.ConstraintViolationException;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+	@ExceptionHandler(DuplicateEmailException.class)
+	public ResponseEntity<ErrorResponse> handleDuplicateEmailException(DuplicateEmailException ex) {
+		ErrorResponse response = ErrorResponse.from(ex);
+		return ResponseEntity.status(ex.getErrorCode().getHttpStatus()).body(response);
+	}
+
+	@ExceptionHandler(BusinessException.class)
+	public ResponseEntity<ErrorResponse> handleBusinessException(NotFoundResourceException ex) {
+		ErrorResponse response = ErrorResponse.from(ex);
+		return ResponseEntity.status(ex.getErrorCode().getHttpStatus()).body(response);
+	}
 
 	@ExceptionHandler(value = ConstraintViolationException.class)
 	public ResponseEntity<ErrorResponse> handleValidationException(ConstraintViolationException ex) {

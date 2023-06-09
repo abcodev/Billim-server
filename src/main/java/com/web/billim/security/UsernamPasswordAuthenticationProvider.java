@@ -14,8 +14,7 @@ public class UsernamPasswordAuthenticationProvider implements AuthenticationProv
     private final PasswordEncoder passwordEncoder;
 
     public UsernamPasswordAuthenticationProvider(UserDetailServiceImpl userDetailService,
-                                                 PasswordEncoder passwordEncoder
-    ) {
+                                                 PasswordEncoder passwordEncoder) {
         this.userDetailService = userDetailService;
         this.passwordEncoder = passwordEncoder;
     }

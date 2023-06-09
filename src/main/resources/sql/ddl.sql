@@ -64,7 +64,7 @@ CREATE TABLE `product_order`
     `product_order_id` bigint primary key auto_increment COMMENT '대여번호',
     `product_id`       bigint                                                          NOT NULL COMMENT '상품번호',
     `member_id`        bigint                                                          NOT NULL COMMENT '구매회원번호',
-    `status`           varchar(10)                                                     NOT NULL COMMENT '대여상태', # 대여중, 예약중, 취소
+    `status`           varchar(100)                                                    NOT NULL COMMENT '대여상태', # 대여중, 예약중, 취소
     `start_at`         timestamp                                                       NOT NULL COMMENT '시작일',
     `end_at`           timestamp                                                       NOT NULL COMMENT '종료일',
     `buyer_name`       varchar(100)                                                    NULL COMMENT '구매자이름',

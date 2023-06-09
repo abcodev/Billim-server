@@ -1,5 +1,6 @@
 package com.web.billim.product.service;
 
+import com.web.billim.common.exception.NotFoundResourceException;
 import com.web.billim.infra.ImageUploadService;
 import com.web.billim.member.domain.Member;
 import com.web.billim.member.repository.MemberRepository;
@@ -69,7 +70,7 @@ public class ProductService {
     @Transactional
     public Product retrieve(long productId) {
         return productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("해당 ProductId(" + productId + ") 에 대한 상품정보가 없습니다."));
+                .orElseThrow(() -> new NotFoundResourceException(Product.class));
     }
 
 

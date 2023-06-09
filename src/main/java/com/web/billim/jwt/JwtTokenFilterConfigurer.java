@@ -1,6 +1,7 @@
 package com.web.billim.jwt;
 
 import com.web.billim.security.LoginAuthenticationFilter;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,8 +14,9 @@ public class JwtTokenFilterConfigurer extends SecurityConfigurerAdapter<DefaultS
     private final AuthenticationManager authenticationManager;
     private final JwtTokenRedisService jwtTokenRedisService;
 
-
-    public JwtTokenFilterConfigurer(JwtUtils jwtUtils, AuthenticationManager authenticationManager, JwtTokenRedisService jwtTokenRedisService) {
+    public JwtTokenFilterConfigurer(JwtUtils jwtUtils, AuthenticationManager authenticationManager,
+                                    JwtTokenRedisService jwtTokenRedisService
+    ) {
         this.jwtUtils = jwtUtils;
         this.authenticationManager = authenticationManager;
         this.jwtTokenRedisService = jwtTokenRedisService;
@@ -22,12 +24,12 @@ public class JwtTokenFilterConfigurer extends SecurityConfigurerAdapter<DefaultS
     }
 
     @Override
-    public void configure(HttpSecurity builder){
+    public void configure(HttpSecurity builder) {
 
-        LoginAuthenticationFilter loginAuthenticationFilter = new LoginAuthenticationFilter(authenticationManager, jwtUtils,jwtTokenRedisService);
+        LoginAuthenticationFilter loginAuthenticationFilter = new LoginAuthenticationFilter(authenticationManager, jwtUtils, jwtTokenRedisService);
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager);
 
-        builder.addFilterBefore(loginAuthenticationFilter,UsernamePasswordAuthenticationFilter.class);
+        builder.addFilterBefore(loginAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         builder.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

@@ -3,6 +3,7 @@ package com.web.billim.infra.s3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.web.billim.common.exception.FailedImageUploadException;
 import com.web.billim.infra.ImageUploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Objects;
 
 @Service
@@ -25,19 +28,21 @@ public class AmazonS3ImageUploadService implements ImageUploadService {
 
 	@Override
 	public String upload(MultipartFile image, String path) {
+		File convertFile = new File(Objects.requireNonNull(image.getOriginalFilename()));
 		try {
-			File convertFile = new File(Objects.requireNonNull(image.getOriginalFilename()));
 			if (convertFile.createNewFile()) {
 				try (FileOutputStream fos = new FileOutputStream(convertFile)) {
 					fos.write(image.getBytes());
 				}
 			}
-			String fileName = path + "/" + image.getOriginalFilename();
+			long timestamp = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+			String fileName = path + "/" + timestamp + "_" + image.getOriginalFilename();
 			String uploadUrl = this.put(convertFile, fileName);
 			convertFile.delete();
 			return uploadUrl;
-		} catch (IOException ex) {
-			throw new RuntimeException("이미지 업로드 실패");
+		} catch (Exception ex) { // 에러의 전환 (회피, 회복)
+			convertFile.delete();
+			throw new FailedImageUploadException(ex);
 		}
 	}
 
@@ -47,7 +52,8 @@ public class AmazonS3ImageUploadService implements ImageUploadService {
 	}
 
 	private String put(File file, String fileName) {
-		amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, file).withCannedAcl(CannedAccessControlList.PublicRead));
+		amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, file)
+				.withCannedAcl(CannedAccessControlList.PublicRead));
 		return amazonS3Client.getUrl(bucket, fileName).toString();
 	}
 

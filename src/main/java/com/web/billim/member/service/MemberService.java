@@ -2,6 +2,7 @@ package com.web.billim.member.service;
 
 import com.web.billim.common.dto.EmailAuthRequest;
 import com.web.billim.common.dto.EmailRequest;
+import com.web.billim.common.exception.DuplicateEmailException;
 import com.web.billim.common.service.EmailService;
 import com.web.billim.coupon.repository.CouponRepository;
 import com.web.billim.coupon.service.CouponService;
@@ -81,7 +82,7 @@ public class MemberService {
 
     public void validateDuplicated(String email){
         if(memberRepository.existsByEmail(email)){
-            throw new RuntimeException("이미 사용중인 이메일입니다.");
+            throw new DuplicateEmailException();
         }
     }
 
@@ -92,8 +93,6 @@ public class MemberService {
 
         }
     }
-
-
 
     public Member retrieve(long memberId) {
         return memberRepository.findById(memberId)
@@ -108,20 +107,20 @@ public class MemberService {
 
 
     @Transactional
-	public void updateProfileImage(long memberId, MultipartFile profileImage) {
+    public void updateProfileImage(long memberId, MultipartFile profileImage) {
         String imageUrl = imageUploadService.upload(profileImage, "profile");
 
         // Member Entity 조회해 -> 조회된 Entity 는 영속상태
         // JPA 는 트랜잭션이 시작될때 영속성 컨텍스트(Persistence Context)를 만든다.
         // JPA 는 트랜잭션이 끝날때 영속상태로 관리되고 있는 Entity 의 값이 변경되었으면,
-        // 그걸 감지해서 자동으로 UPDATE 쿼리문을 날려준다.
+        // 그걸 감지해서 자동으로 UPDATE 쿼리문을 날려줌
         memberRepository.findById(memberId)
-            .ifPresent(member -> {
-                member.updateProfileImage(imageUrl);
-                memberRepository.save(member);
-                // 바꾼 member 를 save 안해도 이 코드가 잘 돌아가는 이유 -> JPA 변경감지
-            });
-	}
+                .ifPresent(member -> {
+                    member.updateProfileImage(imageUrl);
+                    memberRepository.save(member);
+                    // 바꾼 member 를 save 안해도 이 코드가 잘 돌아가는 이유 -> JPA 변경감지
+                });
+    }
 
 //    @Transactional
 //    public void updateAddress(long memberId, String address) {

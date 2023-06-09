@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -43,8 +44,8 @@ public class MemberController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity memberSignUp (@Valid @RequestBody MemberSignupRequest memberSignupRequest,
-                                           BindingResult bindingResult
+    public ResponseEntity<Map<String, String>> memberSignUp (@Valid @RequestBody MemberSignupRequest memberSignupRequest,
+                                                             BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors()) {
             Map<String, String> validatorResult = memberService.validateHandling(bindingResult);
@@ -73,10 +74,6 @@ public class MemberController {
         return ResponseEntity.ok(200);
     }
 
-
-
-
-
     // 로그아웃
 
 
@@ -94,14 +91,16 @@ public class MemberController {
 
     @ApiOperation(value = "내 정보 조회" , notes = "회원 정보 수정시 내 정보 조회")
     @GetMapping("/info")
-    public ResponseEntity<MemberInfoResponse> memberInfo(long memberId) {
+    public ResponseEntity<MemberInfoResponse> memberInfo(@AuthenticationPrincipal long memberId) {
         return ResponseEntity.ok().build();
     }
 
 
     @ApiOperation(value = "프로필 이미지 변경")
+    @ApiImplicitParam(name = "profileImage", value = "MultipartFile 프로필 사진")
     @PutMapping(value = "/profile-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> updateProfileImage(long memberId, MultipartFile profileImage) {
+    public ResponseEntity<Void> updateProfileImage(@AuthenticationPrincipal long memberId,
+                                                   MultipartFile profileImage) {
         memberService.updateProfileImage(memberId, profileImage);
         return ResponseEntity.ok().build();
     }

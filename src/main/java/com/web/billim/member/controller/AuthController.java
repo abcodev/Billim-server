@@ -14,7 +14,6 @@ public class AuthController {
 
     private final JwtService jwtService;
 
-
     @GetMapping("/test")
     public ResponseEntity<String> test1(){
         String test = "check";

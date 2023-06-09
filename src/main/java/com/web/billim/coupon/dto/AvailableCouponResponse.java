@@ -1,5 +1,6 @@
 package com.web.billim.coupon.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.web.billim.coupon.domain.CouponIssue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -25,14 +26,15 @@ public class AvailableCouponResponse {
 	private long rate;
 
 	@ApiModelProperty(value = "쿠폰 소멸일")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSS")
 	private LocalDateTime expiredAt;
 
 	public static AvailableCouponResponse from(CouponIssue coupon) {
 		return new AvailableCouponResponse(
-			coupon.getId(),
-			coupon.getCoupon().getName(),
-			coupon.getCoupon().getRate(),
-			coupon.getExpiredAt()
+				coupon.getId(),
+				coupon.getCoupon().getName(),
+				coupon.getCoupon().getRate(),
+				coupon.getExpiredAt()
 		);
 	}
 
