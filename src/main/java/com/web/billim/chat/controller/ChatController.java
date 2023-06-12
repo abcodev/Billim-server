@@ -25,7 +25,6 @@ import com.web.billim.chat.service.ChatRoomService;
 import lombok.RequiredArgsConstructor;
 
 // FE -> sock.js 라이브러리
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/chat")
@@ -37,14 +36,12 @@ public class ChatController {
 	private final SimpMessagingTemplate messagingTemplate;
 	private final ChatRoomService chatRoomService;
 
-	//
 	@ApiOperation(value = "처음 채팅방 생성", notes = "구매자가 처음으로 채팅방을 생성한다.")
 	@PostMapping("/room/{productId}")
 	public ResponseEntity<ChatRoomResponse> generateChatRoom(@PathVariable long productId, @AuthenticationPrincipal long memberId) {
 		return ResponseEntity.ok(chatRoomService.generateIfAbsent(memberId, productId));
 	}
 
-	//
 	@ApiOperation(value = "productId에 따른 채팅방 목록", notes = "해당 상품에 대한 채팅방 전체 목록을 가져온다.")
 	@GetMapping("/rooms/{productId}")
 	public ResponseEntity<List<ChatRoomAndPreviewResponse>> retrieveAllProductChatRoom(@PathVariable long productId) {
@@ -65,7 +62,6 @@ public class ChatController {
 		return ResponseEntity.ok(chatRoomService.retrieveAllChatMessage(chatRoomId));
 	}
 
-	//
 	@ApiOperation(value = "채팅 text 전송", notes = "텍스트 형식의 채팅을 보낸다")
 	@MessageMapping("/send/text")
 	public void sendMessage(SendTextMessageRequest req) {
@@ -74,7 +70,6 @@ public class ChatController {
 		messagingTemplate.convertAndSend(MESSAGE_BROKER_SUBSCRIBE_PREFIX + "/chat/" + req.getChatRoomId(), message);
 	}
 
-	//
 	@ApiOperation(value = "채팅 이미지 전송", notes = "이미지 형식의 채팅을 보낸다")
 	@MessageMapping("/send/image")
 	public void sendMessage(SendImageMessageRequest req) {
@@ -89,6 +84,7 @@ public class ChatController {
 	 */
 
 	// 차단하기
+
 
 	// 채팅방 나가기
 

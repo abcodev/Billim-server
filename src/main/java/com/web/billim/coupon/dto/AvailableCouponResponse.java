@@ -25,7 +25,7 @@ public class AvailableCouponResponse {
 	@ApiModelProperty(value = "쿠폰 할인율")
 	private long rate;
 
-	@ApiModelProperty(value = "쿠폰 소멸일")
+	@ApiModelProperty(value = "쿠폰 소멸일자")
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSS")
 	private LocalDateTime expiredAt;
 

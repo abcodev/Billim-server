@@ -1,6 +1,6 @@
 package com.web.billim.common.exception;
 
-import com.web.billim.common.handler.TokenExpiredException;
+import com.web.billim.common.exception.handler.TokenExpiredException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -45,8 +45,8 @@ public class GlobalExceptionHandler {
 	}
 
 	@ExceptionHandler(value = {TokenExpiredException.class})
-	public ResponseEntity<com.web.billim.common.handler.ErrorResponse> handlerException(TokenExpiredException e){
-		return com.web.billim.common.handler.ErrorResponse.toResponseEntity(e.getErrorCode());
+	public ResponseEntity<com.web.billim.common.exception.handler.ErrorResponse> handlerException(TokenExpiredException e){
+		return com.web.billim.common.exception.handler.ErrorResponse.toResponseEntity(e.getErrorCode());
 	}
 
 	//  NotFoundException extends

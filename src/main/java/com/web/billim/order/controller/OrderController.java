@@ -22,23 +22,24 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/order")
 public class OrderController {
+
     private final OrderService orderService;
     private final ProductService productService;
     private final PointService pointService;
-    @ApiOperation(value = "주문")
-    @PostMapping("/order")
-    public ResponseEntity<PaymentInfoResponse> order(@RequestBody OrderCommand command,
-                                                     @AuthenticationPrincipal long memberId
+
+    @ApiOperation(value = "상품 주문")
+    @PostMapping("/")
+    public ResponseEntity<PaymentInfoResponse> order(
+            @RequestBody OrderCommand command,
+            @AuthenticationPrincipal long memberId
     ) {
         PaymentInfoResponse resp = orderService.order(memberId, command);
         return ResponseEntity.ok(resp);
     }
 
-    @ApiOperation(value = "주분내역상품")
-    @GetMapping("/order/my")
-    public ResponseEntity<MyOrderHistoryListResponse> myOrder(
-            @AuthenticationPrincipal long memberId
-    ){
+    @ApiOperation(value = "나의 상품 주문 내역")
+    @GetMapping("/my/list")
+    public ResponseEntity<MyOrderHistoryListResponse> myOrder(@AuthenticationPrincipal long memberId){
         return ResponseEntity.ok(orderService.findMyOrder(memberId));
     }
 }

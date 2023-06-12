@@ -1,6 +1,6 @@
 package com.web.billim.common.exception;
 
-import com.web.billim.common.handler.ErrorCode;
+import com.web.billim.common.exception.handler.ErrorCode;
 
 public abstract class BusinessException extends RuntimeException {
 	// RuntimeException 을 발생시키면 메세지에 의존해야하므로 상황에 맞는 에러를 발생시켜줘야함

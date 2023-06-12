@@ -1,19 +1,17 @@
 package com.web.billim.jwt;
 
-import com.web.billim.common.handler.TokenExpiredException;
-import com.web.billim.jwt.dto.ReIssueTokenRequest;
+import com.web.billim.common.exception.handler.TokenExpiredException;
 import com.web.billim.jwt.dto.RedisJwt;
 import com.web.billim.member.domain.Member;
 import com.web.billim.member.dto.response.ReIssueTokenResponse;
 import com.web.billim.member.repository.MemberRepository;
-import com.web.billim.security.domain.UserDetailsEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import static com.web.billim.common.handler.ErrorCode.INVALID_REFRESH_TOKEN;
-import static com.web.billim.common.handler.ErrorCode.MEMBER_NOT_FOUND;
+import static com.web.billim.common.exception.handler.ErrorCode.INVALID_REFRESH_TOKEN;
+import static com.web.billim.common.exception.handler.ErrorCode.MEMBER_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor

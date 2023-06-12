@@ -47,7 +47,6 @@ public class ProductController {
         return ResponseEntity.ok(resp);
     }
 
-
     @ApiOperation(value = "전체 상품목록 조회", notes = "전체 상품목록조회, 페이징")
     @GetMapping("/list")
     public ResponseEntity<Page<ProductListResponse>> productList(
@@ -73,21 +72,18 @@ public class ProductController {
         return ResponseEntity.ok(dates);
     }
 
-    @ApiOperation(value = "*상품 카테고리 목록", notes = "상품 전체 카테고리 목록 조회")
+    @ApiOperation(value = "*상품 카테고리 목록", notes = "상품 카테고리 목록 조회")
     @GetMapping("/category")
     public ResponseEntity<List<ProductCategory>> productEnroll() {
         List<ProductCategory> categoryList = productService.categoryList();
         return ResponseEntity.ok(categoryList);
     }
 
-
     @ApiOperation(value = "상품 등록")
-    @ApiImplicitParams(
-            @ApiImplicitParam(name = "name", value = "상품명")
-    )
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Product> registerProduct(@ModelAttribute @Valid ProductRegisterRequest request,
-                                                   @AuthenticationPrincipal long memberId
+    public ResponseEntity<Product> registerProduct(
+            @ModelAttribute @Valid ProductRegisterRequest request,
+            @AuthenticationPrincipal long memberId
     ) {
         request.setRegisterMember(memberId);
         return ResponseEntity.ok(productService.register(request));

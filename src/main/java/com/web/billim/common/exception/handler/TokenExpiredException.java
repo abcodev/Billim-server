@@ -1,8 +1,5 @@
-package com.web.billim.common.handler;
+package com.web.billim.common.exception.handler;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Header;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

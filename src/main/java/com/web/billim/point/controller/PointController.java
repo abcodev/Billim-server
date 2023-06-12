@@ -25,14 +25,12 @@ public class PointController {
      *   2. 적립금 내역 조회 (적립, 사용)
      */
 
-	//
-	@ApiOperation(value = "사용 가능한 적립금 금액 조회")
+	@ApiOperation(value = "사용 가능 적립금 금액", notes = "나의 사용 가능한 적림금 총 금액을 조회")
 	@GetMapping("/available")
 	public ResponseEntity<Long> retrieveAvailablePoint(@RequestParam long memberId) {
 		long availablePoint = pointService.retrieveAvailablePoint(memberId);
 		return ResponseEntity.ok(availablePoint);
 	}
 
-    // 적립금 내역 조회
 
 }

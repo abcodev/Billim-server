@@ -73,7 +73,7 @@ public class OrderService {
     public MyOrderHistoryListResponse findMyOrder(long memberId) {
        List<ProductOrder> productOrders= orderRepository.findAllByMember_memberId(memberId)
                .orElseThrow(()-> new EntityNotFoundException("구매하신 상품이 없습니다."));
-        List<MyOrderHistory> myOrderHistories = productOrders.stream()
+       List<MyOrderHistory> myOrderHistories = productOrders.stream()
                 .map(MyOrderHistory::from)
                 .collect(Collectors.toList());
        return new MyOrderHistoryListResponse(myOrderHistories);

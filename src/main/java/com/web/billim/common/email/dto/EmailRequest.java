@@ -1,4 +1,4 @@
-package com.web.billim.common.dto;
+package com.web.billim.common.email.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -25,7 +24,6 @@ public class CouponController {
     @ApiOperation(value = "내 쿠폰 목록 조회", notes = "내가 쿠폰 목록 중 현재 사용가능한 쿠폰 목록 조회")
     @GetMapping("/list")
     public ResponseEntity<List<AvailableCouponResponse>> myCouponList(@AuthenticationPrincipal long memberId) {
-        System.out.println("TEST : " + memberId);
         return ResponseEntity.ok(couponService.retrieveAvailableCouponList(memberId));
     }
 

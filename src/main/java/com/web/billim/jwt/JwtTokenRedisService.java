@@ -1,14 +1,14 @@
 package com.web.billim.jwt;
 
-import com.web.billim.common.domain.RedisEmail;
-import com.web.billim.common.handler.TokenExpiredException;
-import com.web.billim.common.repository.RedisEmailRepository;
+import com.web.billim.common.email.domain.RedisEmail;
+import com.web.billim.common.exception.handler.TokenExpiredException;
+import com.web.billim.common.email.repository.RedisEmailRepository;
 import com.web.billim.jwt.dto.RedisJwt;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import static com.web.billim.common.handler.ErrorCode.MISMATCH_REFRESH_TOKEN;
+import static com.web.billim.common.exception.handler.ErrorCode.MISMATCH_REFRESH_TOKEN;
 
 @Service
 @RequiredArgsConstructor

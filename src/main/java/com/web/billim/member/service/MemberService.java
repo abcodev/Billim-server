@@ -1,16 +1,15 @@
 package com.web.billim.member.service;
 
-import com.web.billim.common.dto.EmailAuthRequest;
-import com.web.billim.common.dto.EmailRequest;
+import com.web.billim.common.email.dto.EmailAuthRequest;
+import com.web.billim.common.email.dto.EmailRequest;
 import com.web.billim.common.exception.DuplicateEmailException;
-import com.web.billim.common.service.EmailService;
+import com.web.billim.common.email.service.EmailService;
 import com.web.billim.coupon.repository.CouponRepository;
 import com.web.billim.coupon.service.CouponService;
 import com.web.billim.infra.ImageUploadService;
 import com.web.billim.jwt.JwtTokenRedisService;
 import com.web.billim.member.domain.Member;
 import com.web.billim.member.dto.request.MemberSignupRequest;
-import com.web.billim.member.dto.response.MemberInfoResponse;
 import com.web.billim.member.repository.MemberRepository;
 import com.web.billim.point.dto.AddPointCommand;
 import com.web.billim.point.service.PointService;
@@ -24,9 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -42,7 +39,6 @@ public class MemberService {
     private final JwtTokenRedisService jwtTokenRedisService;
     private final EmailService emailService;
 
-
     public Map<String, String> validateHandling(BindingResult bindingResult) {
         Map<String, String> validatorResult = new HashMap<>();
 
@@ -57,6 +53,7 @@ public class MemberService {
     public void signUp(MemberSignupRequest memberSignupRequest) {
         memberSignupRequest.PasswordChange(passwordEncoder);
         Member member = memberRepository.save(memberSignupRequest.toEntity());
+
         // 쿠폰 주기
         couponRepository.findByName("회원가입 쿠폰")
                 .map(coupon -> couponService.issueCoupon(member, coupon))
@@ -66,12 +63,6 @@ public class MemberService {
         AddPointCommand command = new AddPointCommand(member, 1000, LocalDateTime.now().plusDays(365));
         pointService.addPoint(command);
     }
-
-//    public FindIdResponse findId(FindIdRequest findIdRequest) {
-//        return memberRepository.findByNameAndEmail(findIdRequest.getName(), findIdRequest.getEmail())
-//                .map(FindIdResponse::from)
-//                .orElse(new FindIdResponse());
-//    }
 
     public void certifyEmail(EmailRequest request) {
         validateDuplicated(request.getEmail());
@@ -90,7 +81,6 @@ public class MemberService {
         if(!jwtTokenRedisService.findByEmail(emailAuthRequest.getEmail())
                 .equals(emailAuthRequest.getAuthToken())){
             throw new RuntimeException("인증번호가 일치하지 않습니다.");
-
         }
     }
 
@@ -99,48 +89,41 @@ public class MemberService {
                 .orElseThrow(() -> new RuntimeException("해당 사용자(" + memberId + ") 를 찾을 수 없습니다."));
     }
 
-    public List<MemberInfoResponse> findMemberInfo(long memberId) {
-        return memberRepository.findById(memberId).stream()
-                .map(MemberInfoResponse::from)
-                .collect(Collectors.toList());
-    }
-
-
     @Transactional
     public void updateProfileImage(long memberId, MultipartFile profileImage) {
         String imageUrl = imageUploadService.upload(profileImage, "profile");
-
-        // Member Entity 조회해 -> 조회된 Entity 는 영속상태
-        // JPA 는 트랜잭션이 시작될때 영속성 컨텍스트(Persistence Context)를 만든다.
-        // JPA 는 트랜잭션이 끝날때 영속상태로 관리되고 있는 Entity 의 값이 변경되었으면,
-        // 그걸 감지해서 자동으로 UPDATE 쿼리문을 날려줌
         memberRepository.findById(memberId)
                 .ifPresent(member -> {
                     member.updateProfileImage(imageUrl);
                     memberRepository.save(member);
-                    // 바꾼 member 를 save 안해도 이 코드가 잘 돌아가는 이유 -> JPA 변경감지
                 });
     }
 
-//    @Transactional
-//    public void updateAddress(long memberId, String address) {
-//        memberRepository.findById(memberId)
-//                .ifPresent(member -> {
-//                    member.updateAddress(address);
-//                    memberRepository.save(member);
-//                });
-//    }
+    @Transactional
+    public void updateAddress(long memberId, String address) {
+        memberRepository.findById(memberId)
+                .ifPresent(member -> {
+                    member.updateAddress(address);
+                    memberRepository.save(member);
+                });
+    }
 
-//    public void updateNickname(long memberId, String nickname) {
-//        if (memberRepository.existsByNickname(nickname)) {
-//            throw new RuntimeException("중복된 닉네임 입니다.");
-//        }
-//        memberRepository.findById(memberId)
-//                .ifPresent(member -> {
-//                    member.updateNickname(nickname);
-//                    memberRepository.save(member);
-//                });
-//    }
+    @Transactional
+    public void updateNickname(long memberId, String nickname) {
+        if (memberRepository.existsByNickname(nickname)) {
+            throw new RuntimeException("중복된 닉네임 입니다.");
+        }
+        memberRepository.findById(memberId)
+                .ifPresent(member -> {
+                    member.updateNickname(nickname);
+                    memberRepository.save(member);
+                });
+    }
+
+    @Transactional
+    public boolean checkDuplicateNickname(String nickname) {
+        return memberRepository.existsByNickname(nickname);
+    }
 
 }
 

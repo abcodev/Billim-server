@@ -1,8 +1,7 @@
-package com.web.billim.common.handler;
+package com.web.billim.common.exception.handler;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.http.ResponseEntity;
 
 @Getter

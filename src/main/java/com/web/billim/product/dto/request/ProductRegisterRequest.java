@@ -2,6 +2,7 @@ package com.web.billim.product.dto.request;
 
 import com.web.billim.product.type.TradeMethod;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,9 +24,11 @@ public class ProductRegisterRequest {
 
     private long memberId;
 
+    @ApiModelProperty(value = "상품명")
     @NotEmpty
     private String name;
 
+    @ApiModelProperty(value = "상품 설명")
     @NotEmpty
     private String detail;
 

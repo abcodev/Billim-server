@@ -1,6 +1,6 @@
 package com.web.billim.common.exception;
 
-import com.web.billim.common.handler.ErrorCode;
+import com.web.billim.common.exception.handler.ErrorCode;
 
 public class NotFoundResourceException extends BusinessException {
 

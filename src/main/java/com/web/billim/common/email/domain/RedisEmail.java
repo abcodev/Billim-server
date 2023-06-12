@@ -1,4 +1,4 @@
-package com.web.billim.common.domain;
+package com.web.billim.common.email.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

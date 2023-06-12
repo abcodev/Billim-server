@@ -10,7 +10,7 @@ public class SecurityFilterSkipMatcher{
 
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
     private final String[] excludedPaths = {
-            "/**",
+//            "/**",
             //"/product/list", "/product/detail/**", "/product/category", "/member/signup",
             //            "/member/send/email",
 

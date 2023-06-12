@@ -13,11 +13,7 @@ public abstract class AbstractValidator<T> implements Validator {
     @SuppressWarnings("unchecked")
     @Override
     public void validate(Object target, Errors errors){
-        try{
-            doValidate((T) target,errors);
-        }catch (RuntimeException e){
-            throw e;
-        }
+        doValidate((T) target,errors);
     }
     protected abstract void doValidate(final T dto, final Errors errors);
 }

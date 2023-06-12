@@ -1,4 +1,4 @@
-package com.web.billim.common.swagger;
+package com.web.billim.common.config.swagger;
 
 import com.fasterxml.classmate.TypeResolver;
 import com.web.billim.security.dto.LoginRequest;
@@ -24,7 +24,6 @@ public class SwaggerConfig {
 
     @Bean
     public Docket swaggerApi(){
-
 
         return new Docket(DocumentationType.OAS_30)
                 .select()

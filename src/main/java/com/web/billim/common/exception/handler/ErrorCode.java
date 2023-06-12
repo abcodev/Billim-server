@@ -1,4 +1,4 @@
-package com.web.billim.common.handler;
+package com.web.billim.common.exception.handler;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,7 +29,8 @@ public enum ErrorCode {
 
     /* 409 CONFLICT : Resource 의 현재 상태와 충돌. 보통 중복된 데이터 존재 */
     DUPLICATE_RESOURCE(CONFLICT, "데이터가 이미 존재합니다"),
-    DUPLICATE_EMAIL(CONFLICT, "중복된 이메일입니다."),
+    DUPLICATE_EMAIL(CONFLICT, "중복된 이메일 입니다."),
+    DUPLICATE_NICKNAME(CONFLICT, "중복된 닉네임 입니다."),
 
 
     /* INTERNAL_SERVER_ERROR */
