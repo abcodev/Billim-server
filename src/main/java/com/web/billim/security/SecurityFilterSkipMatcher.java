@@ -16,7 +16,7 @@ public class SecurityFilterSkipMatcher{
             
             "/v3/api-docs", "/configuration/ui", "/swagger-resources/**",
             "/configuration/security", "/swagger-ui.html/**", "/swagger-ui/**", "/webjars/**", "/swagger/**",
-            "/auth/reIssue/token", "/product/register"
+            "/auth/reIssue/token"
     };
     public boolean shouldSkipFilter(HttpServletRequest request) {
         String path = request.getRequestURI();

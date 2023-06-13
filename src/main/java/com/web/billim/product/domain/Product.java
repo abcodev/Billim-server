@@ -61,6 +61,10 @@ public class Product extends JpaEntity {
         return Arrays.stream(tradeMethod.split(",")).map(TradeMethod::valueOf).collect(Collectors.toList());
     }
 
+    public String mainImage(){
+        return images.get(0).getUrl();
+    }
+
     public static Product generateNewProduct(ProductRegisterRequest request, ProductCategory category, Member member, List<ImageProduct> images) {
         return Product.builder()
                 .productCategory(category)

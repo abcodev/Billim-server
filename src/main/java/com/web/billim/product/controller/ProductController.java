@@ -6,6 +6,7 @@ import com.web.billim.product.domain.ProductCategory;
 import com.web.billim.product.dto.request.InterestRequest;
 import com.web.billim.product.dto.request.ProductRegisterRequest;
 import com.web.billim.product.dto.response.MostProductList;
+import com.web.billim.product.dto.response.MyInterestProductList;
 import com.web.billim.product.dto.response.ProductDetailResponse;
 import com.web.billim.product.dto.response.ProductListResponse;
 import com.web.billim.product.repository.ProductRepository;
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -129,15 +131,21 @@ public class ProductController {
 
     // 상품 삭제
 
+    @ApiOperation(value = "관심상품 등록/삭제", notes = "true 관심상품등록, false 관심등록삭제")
+    @PostMapping("/interest")
+    public ResponseEntity<HttpStatus> saveOrDeleteInterest(
+            @AuthenticationPrincipal long memberId,
+            @RequestBody InterestRequest interestRequest
+    ){
+        productInterestService.saveOrDeleteInterest(memberId,interestRequest);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
 
-
-//    @PostMapping("/my/interest")
-//    public ResponseEntity<?> myInterestProduct(@AuthenticationPrincipal long memberId,
-//                                               @ModelAttribute InterestRequest interestRequest
-//                                               ){
-//        productInterestService.myInterestProduct(memberId,interestRequest);
-//
-//        return
-//    }
+    @GetMapping("/my/interestList")
+    public ResponseEntity<MyInterestProductList> myInterestProductList(
+            @AuthenticationPrincipal long memberId
+    ){
+        return ResponseEntity.ok(productInterestService.myInterestProductList(memberId));
+    }
 }
 

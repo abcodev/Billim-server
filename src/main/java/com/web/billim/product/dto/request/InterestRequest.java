@@ -12,6 +12,4 @@ public class InterestRequest {
 
     private long productId;
     private Boolean interest;
-
-
 }
