@@ -40,9 +40,7 @@ public class ProductController {
     private final ProductService productService;
     private final OrderService orderService;
     private final ProductRepository productRepository;
-
     private final ProductRedisService productRedisService;
-
     private final ProductInterestService productInterestService;
 
     @ApiOperation(value = "상품 등록")
@@ -108,8 +106,6 @@ public class ProductController {
         productRedisService.saveProduct(productId);
         return ResponseEntity.ok(200);
     }
-
-
 
 
     @ApiOperation(value = "상품 예약된 날짜 조회", notes = "예약중이어서 이용할 수 없는 날짜 조회")
