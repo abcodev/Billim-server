@@ -14,6 +14,7 @@ import com.web.billim.product.domain.Product;
 import com.web.billim.product.domain.ProductCategory;
 import com.web.billim.product.dto.request.ProductRegisterRequest;
 import com.web.billim.product.dto.response.ProductDetailResponse;
+import com.web.billim.product.dto.response.MostProductList;
 import com.web.billim.product.dto.response.ProductListResponse;
 import com.web.billim.product.repository.ImageProductRepository;
 import com.web.billim.product.repository.ProductCategoryRepository;
@@ -80,12 +81,21 @@ public class ProductService {
         return ProductDetailResponse.of(product, alreadyDates);
     }
 
-    //    public List<MyProductSalesResponse> myProduceSales(User user) {
+    public List<MostProductList> findMostPopularProduct(List<Long> mostProductLists) {
+       List<MostProductList> mostProduct = productRepository.findAllByProductIdIn(mostProductLists)
+               .orElseThrow()
+               .stream().map(MostProductList::from)
+               .collect(Collectors.toList());
+       return mostProduct;
+    }
+
+
+//    public List<MyProductSalesResponse> myProduceSales(User user) {
 //        return productRepository.findByMember_memberId(user.getMemberId()).stream()
 //                .map(MyProductSalesResponse::of)
 //                .collect(Collectors.toList());
 //    }
-//
+
 //    public Optional<Product> findProduct(long i) {
 //        return productRepository.findById(i);
 //    }
