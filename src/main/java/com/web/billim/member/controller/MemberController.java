@@ -8,6 +8,7 @@ import com.web.billim.common.validation.CheckPasswordValidator;
 import com.web.billim.member.dto.request.UpdateAddressRequest;
 import com.web.billim.member.dto.request.MemberSignupRequest;
 import com.web.billim.member.dto.request.UpdateNicknameRequest;
+import com.web.billim.member.dto.response.MyPageInfoResponse;
 import com.web.billim.member.dto.response.UpdateInfoResponse;
 import com.web.billim.member.service.MemberService;
 import io.swagger.annotations.ApiImplicitParams;
@@ -26,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -85,17 +87,18 @@ public class MemberController {
 
 
 
-
-    // 마이페이지 클릭시 호출 (내 프로필, 정보, 내 쿠폰, 적립금, 리뷰 조회)
+    //
+    @ApiOperation(value = "마이페이지 헤더 정보 조회", notes = "내 프로필, 쿠폰, 적립금, 작성가능한 리뷰 조회")
     @GetMapping("/my/page")
-    public ResponseEntity<?> myPageHeader(@AuthenticationPrincipal long memberId) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Optional<MyPageInfoResponse>> myPageInfo(@AuthenticationPrincipal long memberId) {
+        Optional<MyPageInfoResponse> resp = memberService.retrieveMyPageInfo(memberId);
+        return ResponseEntity.ok(resp);
     }
 
     @ApiOperation(value = "*내 회원정보 조회" , notes = "회원 정보 수정 시 내 정보 조회")
     @GetMapping("/my/info")
     public ResponseEntity<UpdateInfoResponse> updateMemberInfo(@AuthenticationPrincipal long memberId) {
-        return ResponseEntity.ok(memberService.retrieveMemberPage(memberId));
+        return ResponseEntity.ok(memberService.retrieveUpdateInfoPage(memberId));
     }
 
     @ApiOperation(value = "*프로필 이미지 변경", notes = "회원 정보 수정 시 프로필 이미지 변경")
@@ -105,27 +108,25 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @ApiOperation(value = "주소 변경", notes = "회원 정보 수정 시 주소 변경 저장")
+    @ApiOperation(value = "*주소 변경", notes = "회원 정보 수정 시 주소 변경 저장")
     @PutMapping("/my/address")
     public ResponseEntity<Void> updateAddress(@AuthenticationPrincipal long memberId, @RequestBody UpdateAddressRequest updateAddressRequest) {
         memberService.updateAddress(memberId, updateAddressRequest);
         return ResponseEntity.ok().build();
     }
 
-    @ApiOperation(value = "닉네임 변경", notes = "회원 정보 수정 시 닉네임 변경 저장")
+    @ApiOperation(value = "*닉네임 변경", notes = "회원 정보 수정 시 닉네임 변경 저장")
     @PutMapping("/my/nickname")
     public ResponseEntity<Void> updateNickname(@AuthenticationPrincipal long memberId, @RequestBody UpdateNicknameRequest updateNicknameRequest) {
         memberService.updateNickname(memberId, updateNicknameRequest);
         return ResponseEntity.ok().build();
     }
 
-    @ApiOperation(value = "닉네임 중복 확인", notes = "닉네임 중복시 true")
+    @ApiOperation(value = "*닉네임 중복 확인", notes = "닉네임 중복시 true")
     @GetMapping("/check/nickname")
     public ResponseEntity<Boolean> checkDuplicateNickname(@RequestParam String nickname) {
         return ResponseEntity.ok(memberService.checkDuplicateNickname(nickname));
     }
-
-
 
 
     // 비밀번호 재설정

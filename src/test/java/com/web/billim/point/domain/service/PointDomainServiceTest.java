@@ -3,7 +3,6 @@ package com.web.billim.point.domain.service;
 import com.web.billim.member.domain.Member;
 import com.web.billim.point.domain.SavedPoint;
 import com.web.billim.point.repository.SavedPointRepository;
-import com.web.billim.point.service.PointDomainService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

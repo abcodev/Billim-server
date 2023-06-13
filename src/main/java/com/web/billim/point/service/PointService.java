@@ -5,6 +5,8 @@ import com.web.billim.payment.domain.Payment;
 import com.web.billim.payment.domain.PointUsedHistory;
 import com.web.billim.payment.repository.PointUsedHistoryRepository;
 import com.web.billim.point.domain.SavedPoint;
+import com.web.billim.point.domain.service.PointDomainService;
+import com.web.billim.point.domain.service.PointHistoryDomainService;
 import com.web.billim.point.dto.AddPointCommand;
 import com.web.billim.point.dto.PointResponse;
 import com.web.billim.point.repository.SavedPointRepository;

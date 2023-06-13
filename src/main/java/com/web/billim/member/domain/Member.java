@@ -33,14 +33,13 @@ public class Member extends JpaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private long memberId;
+
     private String email;
-
     private String password;
-
     private String name;
-
     private String nickname;
     private String address;
+
     @Enumerated(EnumType.STRING)
     private MemberGrade grade;
 

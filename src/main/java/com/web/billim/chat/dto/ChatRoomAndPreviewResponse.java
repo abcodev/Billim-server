@@ -43,9 +43,6 @@ public class ChatRoomAndPreviewResponse {
 	@ApiModelProperty(value = "최신 채팅 시간")
 	private LocalDateTime latestMessageTime;
 
-	// ChatRoomAndPreviewResponse 를 ResponseEntity 에 담아서 응답을 보냈음
-	// 그런데 지금 응답으로 받아본건 JSON 포맷의 데이터.
-	// 이 매핑작업을 해주는게 Spring. -> Jackson Library
 	public static ChatRoomAndPreviewResponse of(ChatRoom chatRoom, ChatMessage latestMessage, int unreadCount) {
 		ChatRoomAndPreviewResponseBuilder builder = ChatRoomAndPreviewResponse.builder()
 			.chatRoomId(chatRoom.getId())

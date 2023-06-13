@@ -4,6 +4,7 @@ import com.web.billim.common.email.dto.EmailAuthRequest;
 import com.web.billim.common.email.dto.EmailRequest;
 import com.web.billim.common.exception.DuplicatedException;
 import com.web.billim.common.email.service.EmailService;
+import com.web.billim.common.exception.NotFoundException;
 import com.web.billim.common.exception.handler.ErrorCode;
 import com.web.billim.coupon.repository.CouponRepository;
 import com.web.billim.coupon.service.CouponService;
@@ -13,11 +14,13 @@ import com.web.billim.member.domain.Member;
 import com.web.billim.member.dto.request.MemberSignupRequest;
 import com.web.billim.member.dto.request.UpdateAddressRequest;
 import com.web.billim.member.dto.request.UpdateNicknameRequest;
+import com.web.billim.member.dto.response.MyPageInfoResponse;
 import com.web.billim.member.dto.response.UpdateInfoResponse;
 import com.web.billim.member.repository.MemberRepository;
 import com.web.billim.point.dto.AddPointCommand;
 import com.web.billim.point.service.PointService;
 
+import com.web.billim.product.dto.response.ProductListResponse;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,6 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -78,10 +82,6 @@ public class MemberService {
 	}
 
 	public void validateDuplicated(String email) {
-		// 예외를 처리하는 법
-		//  1. 회복
-		//  2. 전환
-		//  3. 회피
 		if (memberRepository.existsByEmail(email)) {
 			throw new DuplicatedException(ErrorCode.DUPLICATE_EMAIL);
 		}
@@ -94,17 +94,25 @@ public class MemberService {
 		}
 	}
 
-	@Transactional
-	public UpdateInfoResponse retrieveMemberPage(long memberId) {
-		return memberRepository.findById(memberId)
-			.map(UpdateInfoResponse::from)
-			.orElseThrow(() -> new RuntimeException("해당 사용자(" + memberId + ") 를 찾을 수 없습니다."));
-	}
-
 	// Domain Service
 	public Member retrieve(long memberId) {
 		return memberRepository.findById(memberId)
-			.orElseThrow(() -> new RuntimeException("해당 사용자(" + memberId + ") 를 찾을 수 없습니다."));
+				.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+	}
+
+	@Transactional
+	public UpdateInfoResponse retrieveUpdateInfoPage(long memberId) {
+		return memberRepository.findById(memberId)
+				.map(UpdateInfoResponse::from)
+				.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+	}
+
+	@Transactional
+	public Optional<MyPageInfoResponse> retrieveMyPageInfo(long memberId) {
+		return memberRepository.findById(memberId).map(member -> {
+			long availableAmount = pointService.retrieveAvailablePoint(memberId);
+			return MyPageInfoResponse.of(member, availableAmount);
+		});
 	}
 
 	@Transactional

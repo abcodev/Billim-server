@@ -74,16 +74,14 @@ public class ChatController {
 		messagingTemplate.convertAndSend(MESSAGE_BROKER_SUBSCRIBE_PREFIX + "/chat/" + req.getChatRoomId(), message);
 	}
 
-	// 차단하기
-
-
-
-
 	// 채팅방 나가기
+	@ApiOperation(value = "채팅방 나가기", notes = "채팅방을 나가면 상대방에게 채팅방 나갔다는 시스템 메세지가 전송됨")
 	@DeleteMapping("/room/{chatRoomId}")
 	public void exitChatRoom(@AuthenticationPrincipal long memberId, @PathVariable long chatRoomId) {
 		chatRoomService.exit(memberId, chatRoomId);
 	}
+
+	// 차단하기
 
 }
 

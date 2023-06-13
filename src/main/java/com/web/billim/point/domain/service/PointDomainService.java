@@ -1,4 +1,4 @@
-package com.web.billim.point.service;
+package com.web.billim.point.domain.service;
 
 import com.web.billim.member.domain.Member;
 import com.web.billim.point.domain.SavedPoint;

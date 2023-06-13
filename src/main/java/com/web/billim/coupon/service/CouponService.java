@@ -10,6 +10,7 @@ import com.web.billim.member.domain.Member;
 import com.web.billim.member.repository.MemberRepository;
 import com.web.billim.member.service.MemberService;
 
+import com.web.billim.point.domain.SavedPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,5 +59,6 @@ public class CouponService {
         }
         couponIssue.use();
     }
+
 
 }

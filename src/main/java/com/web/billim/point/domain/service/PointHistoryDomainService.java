@@ -1,4 +1,4 @@
-package com.web.billim.point.service;
+package com.web.billim.point.domain.service;
 
 import com.web.billim.payment.domain.Payment;
 import com.web.billim.payment.domain.PointUsedHistory;

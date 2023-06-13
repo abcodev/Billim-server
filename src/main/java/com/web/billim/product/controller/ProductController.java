@@ -35,6 +35,16 @@ public class ProductController {
     private final OrderService orderService;
     private final ProductRepository productRepository;
 
+    @ApiOperation(value = "상품 등록")
+    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Product> registerProduct(
+            @ModelAttribute @Valid ProductRegisterRequest request,
+            @AuthenticationPrincipal long memberId
+    ) {
+        request.setRegisterMember(memberId);
+        return ResponseEntity.ok().build();
+    }
+
     @Transactional
     @GetMapping("/search/{keyword}")
     public ResponseEntity<Page<ProductListResponse>> test(
@@ -86,15 +96,7 @@ public class ProductController {
         return ResponseEntity.ok(categoryList);
     }
 
-    @ApiOperation(value = "상품 등록")
-    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Product> registerProduct(
-            @ModelAttribute @Valid ProductRegisterRequest request,
-            @AuthenticationPrincipal long memberId
-    ) {
-        request.setRegisterMember(memberId);
-        return ResponseEntity.ok().build();
-    }
+
 
     // 상품 수정
 
