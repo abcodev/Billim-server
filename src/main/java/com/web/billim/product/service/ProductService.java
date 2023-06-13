@@ -11,6 +11,7 @@ import com.web.billim.product.domain.ImageProduct;
 import com.web.billim.product.domain.Product;
 import com.web.billim.product.domain.ProductCategory;
 import com.web.billim.product.dto.request.ProductRegisterRequest;
+import com.web.billim.product.dto.response.MostProductList;
 import com.web.billim.product.dto.response.ProductListResponse;
 import com.web.billim.product.repository.ImageProductRepository;
 import com.web.billim.product.repository.ProductCategoryRepository;
@@ -71,6 +72,14 @@ public class ProductService {
     public Product retrieve(long productId) {
         return productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundResourceException(Product.class));
+    }
+
+    public List<MostProductList> findMostPopularProduct(List<Long> mostProductLists) {
+       List<MostProductList> mostProduct = productRepository.findAllByProductIdIn(mostProductLists)
+               .orElseThrow()
+               .stream().map(MostProductList::from)
+               .collect(Collectors.toList());
+       return mostProduct;
     }
 
 

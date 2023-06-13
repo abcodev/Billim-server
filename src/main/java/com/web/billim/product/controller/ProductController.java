@@ -3,10 +3,14 @@ package com.web.billim.product.controller;
 import com.web.billim.order.service.OrderService;
 import com.web.billim.product.domain.Product;
 import com.web.billim.product.domain.ProductCategory;
+import com.web.billim.product.dto.request.InterestRequest;
 import com.web.billim.product.dto.request.ProductRegisterRequest;
+import com.web.billim.product.dto.response.MostProductList;
 import com.web.billim.product.dto.response.ProductDetailResponse;
 import com.web.billim.product.dto.response.ProductListResponse;
 import com.web.billim.product.repository.ProductRepository;
+import com.web.billim.product.service.ProductInterestService;
+import com.web.billim.product.service.ProductRedisService;
 import com.web.billim.product.service.ProductService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -22,8 +26,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.nio.file.LinkOption;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -34,6 +40,10 @@ public class ProductController {
     private final ProductService productService;
     private final OrderService orderService;
     private final ProductRepository productRepository;
+
+    private final ProductRedisService productRedisService;
+
+    private final ProductInterestService productInterestService;
 
     @Transactional
     @GetMapping("/search/{keyword}")
@@ -61,9 +71,28 @@ public class ProductController {
     @GetMapping("/detail/{productId}")
     public ResponseEntity<ProductDetailResponse> productDetail(@PathVariable("productId") long productId) {
         Product product = productService.retrieve(productId);
+        productRedisService.saveProduct(productId);
         List<LocalDate> alreadyDates = orderService.reservationDate(product);
         return ResponseEntity.ok(ProductDetailResponse.of(product, alreadyDates));
     }
+
+    @ApiOperation(value = "인기 상품 조회",notes = "사람들이 많이 본 상품 사진 리스트")
+    @GetMapping("/most/popular")
+    public ResponseEntity<List<MostProductList>> mostProductList(){
+        return ResponseEntity.ok(productRedisService.rankPopularProduct());
+    }
+
+
+    @GetMapping("/product/test")
+    public ResponseEntity<?> productTest(
+    ){
+        long productId = 1;
+        productRedisService.saveProduct(productId);
+        return ResponseEntity.ok(200);
+    }
+
+
+
 
     @ApiOperation(value = "상품 예약된 날짜 조회", notes = "예약중이어서 이용할 수 없는 날짜 조회")
     @GetMapping("/date/{productId}")
@@ -93,5 +122,13 @@ public class ProductController {
         return ResponseEntity.ok(productService.register(request));
     }
 
+//    @PostMapping("/my/interest")
+//    public ResponseEntity<?> myInterestProduct(@AuthenticationPrincipal long memberId,
+//                                               @ModelAttribute InterestRequest interestRequest
+//                                               ){
+//        productInterestService.myInterestProduct(memberId,interestRequest);
+//
+//        return
+//    }
 }
 

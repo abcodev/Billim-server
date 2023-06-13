@@ -13,7 +13,6 @@ public class SecurityFilterSkipMatcher{
             "/**",
             //"/product/list", "/product/detail/**", "/product/category", "/member/signup",
             //            "/member/send/email",
-
             
             "/v3/api-docs", "/configuration/ui", "/swagger-resources/**",
             "/configuration/security", "/swagger-ui.html/**", "/swagger-ui/**", "/webjars/**", "/swagger/**",

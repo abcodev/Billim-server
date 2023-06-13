@@ -1,10 +1,8 @@
 package com.web.billim.product.domain;
 
 import com.web.billim.member.domain.Member;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.web.billim.product.dto.request.InterestRequest;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -13,6 +11,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Table(name = "product_interest")
 @Getter
+@Builder
 public class ProductInterest {
 
     @Id

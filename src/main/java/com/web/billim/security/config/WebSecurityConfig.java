@@ -25,15 +25,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfig {
-
     private final JwtUtils jwtUtils;
-
     private final UserDetailServiceImpl userDetailsService;
-
     private final JwtTokenRedisService jwtTokenRedisService;
-
     private final SecurityFilterSkipMatcher securityFilterSkipMatcher;
-
 
     @Bean
     public SecurityFilterChain securityFilterChain(AuthenticationManager authenticationManager,HttpSecurity http) throws Exception{
