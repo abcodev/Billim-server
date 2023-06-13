@@ -7,14 +7,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.web.billim.common.domain.JpaEntity;
 import com.web.billim.member.domain.Member;
 import com.web.billim.product.domain.Product;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,13 +36,35 @@ public class ChatRoom extends JpaEntity {
 	private Product product;
 
 	@ManyToOne
-	@JoinColumn(name = "member_id", referencedColumnName = "member_id")
+	@JoinColumn(name = "seller_id", referencedColumnName = "member_id")
+	private Member seller;
+
+	@ManyToOne
+	@JoinColumn(name = "buyer_id", referencedColumnName = "member_id")
 	private Member buyer;
 
 	public static ChatRoom of(Member member, Product product) {
 		return ChatRoom.builder()
 			.product(product)
+			.seller(product.getMember())
 			.buyer(member)
 			.build();
 	}
+
+	public boolean isSellerExit() {
+		return seller == null;
+	}
+
+	public Member exit(long memberId) {
+		Member exitMember = null;
+		if (seller.getMemberId() == memberId) {
+			exitMember = seller;
+			seller = null;
+		} else if (buyer.getMemberId() == memberId) {
+			exitMember = buyer;
+			buyer = null;
+		}
+		return exitMember;
+	}
+
 }

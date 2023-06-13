@@ -12,6 +12,7 @@ import javax.persistence.Table;
 
 import com.web.billim.common.domain.JpaEntity;
 import com.web.billim.member.type.MemberGrade;
+import com.web.billim.product.domain.Product;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -39,7 +40,6 @@ public class Member extends JpaEntity {
     private String name;
 
     private String nickname;
-
     private String address;
     @Enumerated(EnumType.STRING)
     private MemberGrade grade;

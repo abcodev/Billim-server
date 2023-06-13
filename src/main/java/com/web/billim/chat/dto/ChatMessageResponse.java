@@ -42,7 +42,7 @@ public class ChatMessageResponse {
 	public static ChatMessageResponse from(ChatMessage chatMessage) {
 		return ChatMessageResponse.builder()
 			.messageId(chatMessage.getId())
-			.senderId(chatMessage.getSender().getMemberId())
+			.senderId(chatMessage.getType() != ChatMessageType.SYSTEM ? chatMessage.getSender().getMemberId() : -1)
 			.type(chatMessage.getType())
 			.message(chatMessage.getMessage())
 			.imageUrl(chatMessage.getImageUrl())
@@ -53,11 +53,11 @@ public class ChatMessageResponse {
 }
 
 /*
- *  NULL 인 필드는 JSON 필드로 포함하지 말아라
- *   {
- *		imageUrl: null
- *   }
- *   {
- *
- *   }
- */
+	NULL 인 필드는 JSON 필드로 포함하지 말아라
+	{
+		imageUrl: null
+	}
+	{
+
+	}
+*/

@@ -162,7 +162,8 @@ CREATE TABLE `chat_room`
 (
     `chat_room_id` bigint primary key auto_increment COMMENT '채팅방번호',
     `product_id`   bigint                                                          NOT NULL COMMENT '상품번호',
-    `member_id`    bigint                                                          NOT NULL COMMENT '구매회원번호',
+    `seller_id`    bigint                                                          NULL COMMENT '판매회원번호',
+    `buyer_id`     bigint                                                          NULL COMMENT '구매회원번호',
     `created_at`   timestamp default current_timestamp                             NOT NULL COMMENT '생성일자',
     `updated_at`   timestamp default current_timestamp on update current_timestamp NOT NULL COMMENT '업데이트일자'
 );
@@ -173,8 +174,8 @@ CREATE TABLE `chat_message`
 (
     `chat_message_id` bigint primary key auto_increment COMMENT '메세지번호',
     `chat_room_id`    bigint                                                          NOT NULL COMMENT '채팅방번호',
-    `member_id`       bigint                                                          NOT NULL COMMENT '발신회원번호',
-    `message_type`    varchar(64)                                                     NOT NULL COMMENT '메시지 종류(IMAGE,TEXT)',
+    `member_id`       bigint                                                          NULL COMMENT '발신회원번호',
+    `message_type`    varchar(64)                                                     NOT NULL COMMENT '메시지 종류(IMAGE,TEXT,SYSTEM)',
     `message`         varchar(2000)                                                   NULL COMMENT '채팅메세지',
     `image_url`       varchar(2000)                                                   NULL COMMENT '이미지',
     `read_yn`         varchar(10)                                                     NOT NULL COMMENT '읽음여부',

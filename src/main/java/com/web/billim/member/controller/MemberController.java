@@ -5,13 +5,14 @@ import com.web.billim.common.email.dto.EmailRequest;
 import com.web.billim.common.validation.CheckIdValidator;
 import com.web.billim.common.validation.CheckNickNameValidator;
 import com.web.billim.common.validation.CheckPasswordValidator;
-import com.web.billim.member.domain.Member;
+import com.web.billim.member.dto.request.UpdateAddressRequest;
 import com.web.billim.member.dto.request.MemberSignupRequest;
-import com.web.billim.member.dto.response.MemberInfoResponse;
+import com.web.billim.member.dto.request.UpdateNicknameRequest;
+import com.web.billim.member.dto.response.UpdateInfoResponse;
 import com.web.billim.member.service.MemberService;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -68,7 +69,8 @@ public class MemberController {
     @ApiOperation(value = "*이메일인증 코드 확인", notes = "클라이언트가 링크를 클릭시 해당 APi로 연결")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "email", value = "인증할 이메일"),
-            @ApiImplicitParam(name = "certifyCode", value = "인증번호")})
+            @ApiImplicitParam(name = "certifyCode", value = "인증번호")
+    })
     @GetMapping("/confirm/email")
     public ResponseEntity<?> confirmEmail(@RequestBody EmailAuthRequest emailAuthRequest){
         memberService.confirmEmail(emailAuthRequest);
@@ -85,15 +87,15 @@ public class MemberController {
 
 
     // 마이페이지 클릭시 호출 (내 프로필, 정보, 내 쿠폰, 적립금, 리뷰 조회)
-
-
-
+    @GetMapping("/my/page")
+    public ResponseEntity<?> myPageHeader(@AuthenticationPrincipal long memberId) {
+        return ResponseEntity.ok().build();
+    }
 
     @ApiOperation(value = "*내 회원정보 조회" , notes = "회원 정보 수정 시 내 정보 조회")
     @GetMapping("/my/info")
-    public ResponseEntity<MemberInfoResponse> memberInfo(@AuthenticationPrincipal long memberId) {
-        Member member = memberService.retrieve(memberId);
-        return ResponseEntity.ok(MemberInfoResponse.from(member));
+    public ResponseEntity<UpdateInfoResponse> updateMemberInfo(@AuthenticationPrincipal long memberId) {
+        return ResponseEntity.ok(memberService.retrieveMemberPage(memberId));
     }
 
     @ApiOperation(value = "*프로필 이미지 변경", notes = "회원 정보 수정 시 프로필 이미지 변경")
@@ -105,15 +107,15 @@ public class MemberController {
 
     @ApiOperation(value = "주소 변경", notes = "회원 정보 수정 시 주소 변경 저장")
     @PutMapping("/my/address")
-    public ResponseEntity<Void> updateAddress(@AuthenticationPrincipal long memberId, @RequestParam String address) {
-        memberService.updateAddress(memberId, address);
+    public ResponseEntity<Void> updateAddress(@AuthenticationPrincipal long memberId, @RequestBody UpdateAddressRequest updateAddressRequest) {
+        memberService.updateAddress(memberId, updateAddressRequest);
         return ResponseEntity.ok().build();
     }
 
     @ApiOperation(value = "닉네임 변경", notes = "회원 정보 수정 시 닉네임 변경 저장")
     @PutMapping("/my/nickname")
-    public ResponseEntity<Void> updateNickname(@AuthenticationPrincipal long memberId, @RequestParam String nickname) {
-        memberService.updateNickname(memberId, nickname);
+    public ResponseEntity<Void> updateNickname(@AuthenticationPrincipal long memberId, @RequestBody UpdateNicknameRequest updateNicknameRequest) {
+        memberService.updateNickname(memberId, updateNicknameRequest);
         return ResponseEntity.ok().build();
     }
 
@@ -147,7 +149,6 @@ public class MemberController {
 //        memberService.updatePassword(memberId, newPassword);
 //        return null;
 //    }
-
 
 
 

@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class OrderCommand {
 
-	private int productId;
+	private long productId;
 	private LocalDate startAt;
 	private LocalDate endAt;
 	private int couponIssueId;

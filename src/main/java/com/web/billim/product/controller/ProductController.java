@@ -56,19 +56,26 @@ public class ProductController {
         return ResponseEntity.ok(productList);
     }
 
+    /*
+        JPA 의 Persistence Context - 1차 캐시, 지연 로딩, 변경 감지,,,
+         1. Persistence Context 는 임시 공간
+         2. 만들어지는 시점 : Transaction 이 시작될 때
+         3. 사라지는 시점 : Transaction 이 끝날 때
+     */
     @ApiOperation(value = "상품 상세정보", notes = "productId에 따른 상품 상세정보 & 이미 예약되어 이용할 수 없는 날짜")
     @GetMapping("/detail/{productId}")
     public ResponseEntity<ProductDetailResponse> productDetail(@PathVariable("productId") long productId) {
-        Product product = productService.retrieve(productId);
-        List<LocalDate> alreadyDates = orderService.reservationDate(product);
-        return ResponseEntity.ok(ProductDetailResponse.of(product, alreadyDates));
+        ProductDetailResponse resp = productService.retrieveDetail(productId);
+        // 비영속
+        // Product product = productService.retrieve(productId);
+        // List<LocalDate> alreadyDates = orderService.reservationDate(product);
+        return ResponseEntity.ok(resp);
     }
 
     @ApiOperation(value = "상품 예약된 날짜 조회", notes = "예약중이어서 이용할 수 없는 날짜 조회")
     @GetMapping("/date/{productId}")
     public ResponseEntity<List<LocalDate>> alreadyReservedDate(@PathVariable("productId") long productId) {
-        Product product = productService.retrieve(productId);
-        List<LocalDate> dates = orderService.reservationDate(product);
+        List<LocalDate> dates = orderService.reservationDate(productId);
         return ResponseEntity.ok(dates);
     }
 
@@ -86,8 +93,15 @@ public class ProductController {
             @AuthenticationPrincipal long memberId
     ) {
         request.setRegisterMember(memberId);
-        return ResponseEntity.ok(productService.register(request));
+        return ResponseEntity.ok().build();
     }
+
+    // 상품 수정
+
+
+    // 상품 삭제
+
+
 
 }
 

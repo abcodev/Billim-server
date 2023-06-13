@@ -57,11 +57,13 @@ public class IamPortClient {
 
 }
 
-// 결제 버튼 누르기
-// 1. 서버 갔다와서 (ajax 호출)
-// 2. 나온 결과로 IamPort API 호출
+/*
+	결제 버튼 누르기
+	1. 서버 갔다와서 (ajax 호출)
+	2. 나온 결과로 IamPort API 호출
 
-// fun() {
-//    1. ajax 서버 호출 (/order)
-//    2. ajax success callback 에서 서버에서 준 data 를 활용해서 IamPort API 호출
-// }
+	fun() {
+    	1. ajax 서버 호출 (/order)
+    	2. ajax success callback 에서 서버에서 준 data 를 활용해서 IamPort API 호출
+	}
+*/

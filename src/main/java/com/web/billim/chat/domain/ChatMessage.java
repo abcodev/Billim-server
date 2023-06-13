@@ -40,7 +40,7 @@ public class ChatMessage extends JpaEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "member_id", referencedColumnName = "member_id")
-	private Member sender;
+	private Member sender; // null
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "message_type")
@@ -67,7 +67,16 @@ public class ChatMessage extends JpaEntity {
 			.chatRoom(chatRoom)
 			.sender(sender)
 			.type(ChatMessageType.TEXT)
-			.imageUrl(message)
+			.message(message)
+			.read(false)
+			.build();
+	}
+
+	public static ChatMessage ofSystem(ChatRoom chatRoom, String message) {
+		return ChatMessage.builder()
+			.chatRoom(chatRoom)
+			.type(ChatMessageType.SYSTEM)
+			.message(message)
 			.read(false)
 			.build();
 	}

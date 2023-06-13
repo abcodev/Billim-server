@@ -13,7 +13,6 @@ public class JwtTokenFilterConfigurer extends SecurityConfigurerAdapter<DefaultS
     private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenRedisService jwtTokenRedisService;
-
     private final SecurityFilterSkipMatcher securityFilterSkipMatcher;
 
 

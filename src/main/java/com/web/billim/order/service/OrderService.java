@@ -13,7 +13,7 @@ import com.web.billim.order.util.LocalDateHelper;
 import com.web.billim.payment.dto.PaymentCommand;
 import com.web.billim.payment.service.PaymentService;
 import com.web.billim.product.domain.Product;
-import com.web.billim.product.service.ProductService;
+import com.web.billim.product.domain.service.ProductDomainService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,11 +28,12 @@ import java.util.stream.Collectors;
 public class OrderService {
 
     private final MemberService memberService;
-    private final ProductService productService;
     private final PaymentService paymentService;
     private final OrderRepository orderRepository;
+    private final ProductDomainService productDomainService;
 
-    public List<LocalDate> reservationDate(Product product) {
+    public List<LocalDate> reservationDate(long productId) {
+        Product product = productDomainService.find(productId);
         List<ProductOrder> orderList = orderRepository.findAllByProductAndEndAtAfter(product,LocalDate.now());
 
         return orderList.stream()
@@ -48,18 +49,18 @@ public class OrderService {
 
         // 1. 해당 사용자가 주문중인게 있는지 확인
         orderRepository.findByMemberAndStatus(member, ProductOrderStatus.IN_PROGRESS)
-                .ifPresent(order -> {
-                    throw new RuntimeException("해당 사용자가 이미 주문중인 거래가 있습니다.");
-                });
+            .ifPresent(order -> {
+                throw new RuntimeException("해당 사용자가 이미 주문중인 거래가 있습니다.");
+            });
 
         // 2. 다른 사용자가 해당 Product 의 해당 기간을 결제중인게 있는지 확인
-        Product product = productService.retrieve(orderCommand.getProductId());
+        Product product = productDomainService.find(orderCommand.getProductId());
         orderRepository.findByProductAndStatus(product, ProductOrderStatus.IN_PROGRESS)
-                .ifPresent(order -> {
-                    if (LocalDateHelper.checkDuplicatedPeriod(order.getPeriod(), orderCommand.getPeriod())) {
-                        throw new RuntimeException("해당 제품은 다른 사용자가 거래중입니다.");
-                    }
-                });
+            .ifPresent(order -> {
+                if (LocalDateHelper.checkDuplicatedPeriod(order.getPeriod(), orderCommand.getPeriod())) {
+                    throw new RuntimeException("해당 제품은 다른 사용자가 거래중입니다.");
+                }
+            });
 
         // 2. 주문정보 생성
         ProductOrder order = orderRepository.save(ProductOrder.generateNewOrder(member, product, orderCommand));

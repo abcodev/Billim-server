@@ -1,6 +1,6 @@
 package com.web.billim.jwt;
 
-import com.web.billim.common.exception.handler.TokenExpiredException;
+import com.web.billim.common.exception.TokenExpiredException;
 import com.web.billim.jwt.dto.RedisJwt;
 import com.web.billim.member.domain.Member;
 import com.web.billim.member.dto.response.ReIssueTokenResponse;

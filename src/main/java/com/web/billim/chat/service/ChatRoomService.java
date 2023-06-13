@@ -50,11 +50,16 @@ public class ChatRoomService {
 			.collect(Collectors.toList());
 	}
 
-	public ChatMessageResponse sendText(SendTextMessageRequest req) {
-		Member sender = memberRepository.findById(req.getSenderId()).orElseThrow();
+	public ChatMessageResponse sendText(SendTextMessageRequest req, boolean isSystem) {
 		ChatRoom chatRoom = chatRoomRepository.findById(req.getChatRoomId()).orElseThrow();
+		ChatMessage message = null;
 
-		ChatMessage message = ChatMessage.ofText(sender, chatRoom, req.getMessage());
+		if (isSystem) {
+			message = ChatMessage.ofSystem(chatRoom, req.getMessage());
+		} else {
+			Member sender = memberRepository.findById(req.getSenderId()).orElseThrow();
+			message = ChatMessage.ofText(sender, chatRoom, req.getMessage());
+		}
 		ChatMessage saved = chatMessageRepository.save(message);
 		return ChatMessageResponse.from(saved);
 	}
@@ -73,7 +78,8 @@ public class ChatRoomService {
 
 	@Transactional(readOnly = true)
 	public List<ChatRoomAndPreviewResponse> retrieveAllByProductId(long productId) {
-		return chatRoomRepository.findByProductId(productId).stream()
+		return chatRoomRepository.findAllByProductId(productId).stream()
+			.filter(chatRoom -> !chatRoom.isSellerExit())
 			.map(chatRoom -> {
 				ChatMessage latestMessage = chatMessageRepository.findTopByChatRoomOrderByCreatedAtDesc(chatRoom);
 				int unreadCount = chatMessageRepository.calculateUnreadCount(chatRoom, chatRoom.getProduct().getMember());
@@ -82,8 +88,26 @@ public class ChatRoomService {
 			.collect(Collectors.toList());
 	}
 
+	@Transactional(readOnly = true)
 	public List<ChatRoomAndPreviewResponse> retrieveAllJoined(long memberId) {
-		return List.of();
+		return chatRoomRepository.findAllByBuyerId(memberId).stream()
+			.map(chatRoom -> {
+				ChatMessage latestMessage = chatMessageRepository.findTopByChatRoomOrderByCreatedAtDesc(chatRoom);
+				// TODO : Preview 가 상대가 아니라 내거가 나옴
+				int unreadCount = chatMessageRepository.calculateUnreadCount(chatRoom, chatRoom.getProduct().getMember());
+				return ChatRoomAndPreviewResponse.of(chatRoom, latestMessage, unreadCount);
+			})
+			.collect(Collectors.toList());
+	}
+
+	@Transactional
+	public void exit(long memberId, long chatRoomId) {
+		chatRoomRepository.findById(chatRoomId)
+			.ifPresent(chatRoom -> {
+				// Dirty Checking
+				Member exitMember = chatRoom.exit(memberId);
+				this.sendText(SendTextMessageRequest.ofExitMessage(chatRoom, exitMember), true);
+			});
 	}
 
 	// 1. 네트워크 굳이 한번 더 타? FE -> AWS, FE -> BE -> AWS?
