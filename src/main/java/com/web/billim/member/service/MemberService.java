@@ -108,11 +108,12 @@ public class MemberService {
 	}
 
 	@Transactional
-	public Optional<MyPageInfoResponse> retrieveMyPageInfo(long memberId) {
+	public MyPageInfoResponse retrieveMyPageInfo(long memberId) {
 		return memberRepository.findById(memberId).map(member -> {
 			long availableAmount = pointService.retrieveAvailablePoint(memberId);
+			int availableCouponCount = couponService.retrieveAvailableCouponList(memberId).size();
 			return MyPageInfoResponse.of(member, availableAmount);
-		});
+		}).orElseThrow();
 	}
 
 	@Transactional

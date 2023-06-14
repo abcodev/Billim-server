@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProductInterestService {
     private final ProductInterestRepository productInterestRepository;
-
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
 
@@ -35,9 +34,10 @@ public class ProductInterestService {
                     .build();
             productInterestRepository.save(productInterest);
         }else{
-            ProductInterest productInterest =productInterestRepository.findByMemberAndProduct(member,product)
-                    .orElseThrow();
-            productInterestRepository.delete(productInterest);
+            productInterestRepository.deleteByMemberAndProduct(member, product);
+//            ProductInterest productInterest = productInterestRepository.findByMemberAndProduct(member, product)
+//                    .orElseThrow();
+//            productInterestRepository.delete(productInterest);
         }
     }
 

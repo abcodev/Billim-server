@@ -61,7 +61,6 @@ public class MemberController {
     }
 
     @ApiOperation(value ="*이메일인증 링크 발송", notes = "해당 이메일에 인증 링크 발송")
-    @ApiImplicitParam(name = "email",dataType = "EmailRequest")
     @PostMapping("/send/email")
     public ResponseEntity<?> sendEmail(@RequestBody EmailRequest request){
         memberService.certifyEmail(request);
@@ -69,10 +68,6 @@ public class MemberController {
     }
 
     @ApiOperation(value = "*이메일인증 코드 확인", notes = "클라이언트가 링크를 클릭시 해당 APi로 연결")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "email", value = "인증할 이메일"),
-            @ApiImplicitParam(name = "certifyCode", value = "인증번호")
-    })
     @GetMapping("/confirm/email")
     public ResponseEntity<?> confirmEmail(@RequestBody EmailAuthRequest emailAuthRequest){
         memberService.confirmEmail(emailAuthRequest);
@@ -90,8 +85,8 @@ public class MemberController {
     //
     @ApiOperation(value = "마이페이지 헤더 정보 조회", notes = "내 프로필, 쿠폰, 적립금, 작성가능한 리뷰 조회")
     @GetMapping("/my/page")
-    public ResponseEntity<Optional<MyPageInfoResponse>> myPageInfo(@AuthenticationPrincipal long memberId) {
-        Optional<MyPageInfoResponse> resp = memberService.retrieveMyPageInfo(memberId);
+    public ResponseEntity<MyPageInfoResponse> myPageInfo(@AuthenticationPrincipal long memberId) {
+        MyPageInfoResponse resp = memberService.retrieveMyPageInfo(memberId);
         return ResponseEntity.ok(resp);
     }
 

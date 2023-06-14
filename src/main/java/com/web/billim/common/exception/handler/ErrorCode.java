@@ -24,6 +24,7 @@ public enum ErrorCode {
     /* 404 NOT_FOUND : Resource 를 찾을 수 없음 */
     MEMBER_NOT_FOUND(NOT_FOUND, "해당 사용자 정보를 찾을 수 없습니다"),
     PRODUCT_NOT_FOUND(NOT_FOUND, "상품정보를 찾을 수 없습니다"),
+    CATEGORY_NOT_FOUND(NOT_FOUND, "상품 카테고리 정보를 찾을 수 없습니다."),
     REFRESH_TOKEN_NOT_FOUND(NOT_FOUND, "로그아웃 된 사용자입니다"),
     RESOURCE_NOT_FOUND(NOT_FOUND, "리소스를 찾을 수 없습니다."),
 

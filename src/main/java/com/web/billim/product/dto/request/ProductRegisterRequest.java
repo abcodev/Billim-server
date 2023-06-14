@@ -26,7 +26,7 @@ public class ProductRegisterRequest {
     private long memberId;
 
     @ApiModelProperty(value = "상품명")
-    @NotEmpty(message = "상품명은 필수정보입니다.")
+    @NotEmpty(message = "상품명은 필수정보입니다!")
     private String name;
 
     @ApiModelProperty(value = "상품 설명")
