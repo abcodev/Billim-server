@@ -14,11 +14,9 @@ public class ProductRedisService {
 
     private final RedisTemplate<String,String > redisTemplate;
 
-    private final ProductService productService;
 
-    public ProductRedisService(RedisTemplate<String,String> redisTemplate, ProductService productService) {
+    public ProductRedisService(RedisTemplate<String,String> redisTemplate) {
         this.redisTemplate = redisTemplate;
-        this.productService = productService;
     }
 
     public void saveProduct(long productId) {
@@ -26,17 +24,14 @@ public class ProductRedisService {
     }
 
     @Transactional
-    public List<MostProductList> rankPopularProduct(){
+    public List<Long> rankPopularProduct(){
         ObjectMapper objectMapper = new ObjectMapper();
         List<Long> mostProductLists = objectMapper.convertValue(
                 Objects.requireNonNull(
                         redisTemplate.opsForZSet().
                                 reverseRange("product", 0, 4)), new TypeReference<List<Long>>() {});
-        return productService.findMostPopularProduct(mostProductLists);
+        return mostProductLists;
     }
-
-
-
 }
 
 

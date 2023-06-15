@@ -80,7 +80,7 @@ public class ProductController {
     @ApiOperation(value = "인기 상품 조회",notes = "사람들이 많이 본 상품 사진 리스트")
     @GetMapping("/list/most/popular")
     public ResponseEntity<List<MostProductList>> mostProductList(){
-        return ResponseEntity.ok(productRedisService.rankPopularProduct());
+        return ResponseEntity.ok(productService.findMostPopularProduct());
     }
 
 
@@ -101,7 +101,6 @@ public class ProductController {
     @GetMapping("/detail/{productId}")
     public ResponseEntity<ProductDetailResponse> productDetail(@PathVariable("productId") long productId) {
         ProductDetailResponse resp = productService.retrieveDetail(productId);
-        productRedisService.saveProduct(productId);
         // 비영속
         // Product product = productService.retrieve(productId);
         // List<LocalDate> alreadyDates = orderService.reservationDate(product);
@@ -122,19 +121,7 @@ public class ProductController {
         List<LocalDate> dates = orderService.reservationDate(productId);
         return ResponseEntity.ok(dates);
     }
-
-    @ApiOperation(value = "*상품 카테고리 목록", notes = "상품 카테고리 목록 조회")
-    @GetMapping("/category")
-    public ResponseEntity<List<ProductCategory>> productEnroll() {
-        List<ProductCategory> categoryList = productService.categoryList();
-        return ResponseEntity.ok(categoryList);
-    }
-
-
-
     // 상품 수정
-
-
     // 상품 삭제
 
     @ApiOperation(value = "관심상품 등록/삭제", notes = "true 관심상품등록, false 관심등록삭제")

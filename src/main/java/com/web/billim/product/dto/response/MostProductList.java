@@ -19,12 +19,9 @@ public class MostProductList {
     private String productName;
 
     public static MostProductList from(Product product){
-        List<ImageProduct> images = product.getImages();
-        String imageUrl = (images !=null && !images.isEmpty()) ? images.get(0).getUrl() : null;
-
         return MostProductList.builder()
                 .productId(product.getProductId())
-                .imageUrl(imageUrl)
+                .imageUrl(product.mainImage())
                 .productName(product.getProductName())
                 .build();
     }
