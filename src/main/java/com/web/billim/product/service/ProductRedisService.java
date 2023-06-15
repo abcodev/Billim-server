@@ -21,9 +21,8 @@ public class ProductRedisService {
         this.productService = productService;
     }
 
-
     public void saveProduct(long productId) {
-        redisTemplate.opsForZSet().incrementScore("MOST_POPULAR_PRODUCT",String.valueOf(productId),1);
+        redisTemplate.opsForZSet().incrementScore("MOST_POPULAR_PRODUCT", String.valueOf(productId), 1);
     }
 
     @Transactional
@@ -35,6 +34,9 @@ public class ProductRedisService {
                                 reverseRange("product", 0, 4)), new TypeReference<List<Long>>() {});
         return productService.findMostPopularProduct(mostProductLists);
     }
+
+
+
 }
 
 

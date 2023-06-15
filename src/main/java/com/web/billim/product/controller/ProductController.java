@@ -52,7 +52,7 @@ public class ProductController {
             @AuthenticationPrincipal long memberId
     ) {
         request.setRegisterMember(memberId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(productService.register(request));
     }
 
     @Transactional
@@ -109,8 +109,7 @@ public class ProductController {
     }
 
     @GetMapping("/product/test")
-    public ResponseEntity<?> productTest(
-    ){
+    public ResponseEntity<?> productTest(){
         long productId = 1;
         productRedisService.saveProduct(productId);
         return ResponseEntity.ok(200);
@@ -124,10 +123,18 @@ public class ProductController {
         return ResponseEntity.ok(dates);
     }
 
+    @ApiOperation(value = "*상품 카테고리 목록", notes = "상품 카테고리 목록 조회")
+    @GetMapping("/category")
+    public ResponseEntity<List<ProductCategory>> productEnroll() {
+        List<ProductCategory> categoryList = productService.categoryList();
+        return ResponseEntity.ok(categoryList);
+    }
 
 
 
     // 상품 수정
+
+
     // 상품 삭제
 
     @ApiOperation(value = "관심상품 등록/삭제", notes = "true 관심상품등록, false 관심등록삭제")

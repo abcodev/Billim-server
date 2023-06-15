@@ -97,8 +97,8 @@ public class MemberController {
     //
     @ApiOperation(value = "마이페이지 헤더 정보 조회", notes = "내 프로필, 쿠폰, 적립금, 작성가능한 리뷰 조회")
     @GetMapping("/my/page")
-    public ResponseEntity<Optional<MyPageInfoResponse>> myPageInfo(@AuthenticationPrincipal long memberId) {
-        Optional<MyPageInfoResponse> resp = memberService.retrieveMyPageInfo(memberId);
+    public ResponseEntity<MyPageInfoResponse> myPageInfo(@AuthenticationPrincipal long memberId) {
+        MyPageInfoResponse resp = memberService.retrieveMyPageInfo(memberId);
         return ResponseEntity.ok(resp);
     }
 

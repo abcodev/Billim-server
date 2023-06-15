@@ -44,9 +44,9 @@ public class ProductService {
     @Transactional
     public Product register(ProductRegisterRequest request) {
         Member registerMember = memberRepository.findById(request.getMemberId())
-                .orElseThrow(() -> new RuntimeException("해당 사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
         ProductCategory productCategory = productCategoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("해당 카테고리를 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundException(ErrorCode.CATEGORY_NOT_FOUND));
 
         // 1. 이미지 저장
         List<ImageProduct> images = request.getImages().stream().map(image -> {
@@ -77,16 +77,25 @@ public class ProductService {
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
         List<LocalDate> alreadyDates = orderService.reservationDate(productId);
+//        productRedisService.saveProduct(productId);
         return ProductDetailResponse.of(product, alreadyDates);
     }
 
     public List<MostProductList> findMostPopularProduct(List<Long> mostProductLists) {
-       List<MostProductList> mostProduct = productRepository.findAllByProductIdIn(mostProductLists)
-               .orElseThrow()
-               .stream().map(MostProductList::from)
-               .collect(Collectors.toList());
-       return mostProduct;
+        return productRepository.findAllByProductIdIn(mostProductLists)
+                .orElseThrow()
+                .stream().map(MostProductList::from)
+                .collect(Collectors.toList());
     }
+
+
+//    public List<MostProductList> findMostPopularProduct() {
+//        List<Long> popularRank = productRedisService.rankPopularProduct();
+//        return productRepository.findAllByProductIdIn(popularRank)
+//                .stream().map(MostProductList::from)
+//                .collect(Collectors.toList());
+//    }
+
 
 
 //    public List<MyProductSalesResponse> myProduceSales(User user) {
@@ -95,9 +104,6 @@ public class ProductService {
 //                .collect(Collectors.toList());
 //    }
 
-//    public Optional<Product> findProduct(long i) {
-//        return productRepository.findById(i);
-//    }
 
 
 //    public ReservationDateResponse reservationDate(int productId) {

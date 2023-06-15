@@ -71,8 +71,7 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
             try {
                 InputStream requestBody = request.getInputStream();
                 ObjectMapper objectMapper = new ObjectMapper();
-                LoginRequest loginRequest = objectMapper.readValue(requestBody, LoginRequest.class);
-                return loginRequest;
+                return objectMapper.readValue(requestBody, LoginRequest.class);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

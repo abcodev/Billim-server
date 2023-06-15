@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProductInterestService {
     private final ProductInterestRepository productInterestRepository;
-
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
 

@@ -15,6 +15,16 @@ import javax.validation.ConstraintViolationException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+	@ExceptionHandler(BusinessException.class)
+	public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException ex) {
+		return ErrorResponse.toResponseEntity(ex.getErrorCode());
+	}
+
+	@ExceptionHandler(value = {TokenExpiredException.class})
+	public ResponseEntity<ErrorResponse> handlerException(TokenExpiredException e){
+		return ErrorResponse.toResponseEntity(e.getErrorCode());
+	}
+
 	@ExceptionHandler(value = ConstraintViolationException.class)
 	public ResponseEntity<ErrorResponse> handleValidationException(ConstraintViolationException ex) {
 		StringBuilder message = new StringBuilder("잘못된 사용자 입력이 있습니다.\n");
@@ -31,16 +41,6 @@ public class GlobalExceptionHandler {
 			message.append(" - ").append(error.getDefaultMessage()).append("\n");
 		});
 		return ErrorResponse.toResponseEntity(ErrorCode.INVALIDATION_INPUT, message.toString());
-	}
-
-	@ExceptionHandler(value = {TokenExpiredException.class})
-	public ResponseEntity<ErrorResponse> handlerException(TokenExpiredException e){
-		return ErrorResponse.toResponseEntity(e.getErrorCode());
-	}
-
-	@ExceptionHandler(BusinessException.class)
-	public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException ex) {
-		return ErrorResponse.toResponseEntity(ex.getErrorCode());
 	}
 
 }

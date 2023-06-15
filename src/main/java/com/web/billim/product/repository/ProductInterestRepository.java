@@ -20,5 +20,6 @@ public interface ProductInterestRepository extends JpaRepository<ProductInterest
     Optional<List<ProductInterest>> findAllByMember_memberId(long memberId);
 
     @Modifying
+    @Transactional
     void deleteByMemberAndProduct(Member member, Product product);
 }

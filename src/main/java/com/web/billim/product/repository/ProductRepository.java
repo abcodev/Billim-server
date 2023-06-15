@@ -26,6 +26,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Optional<List<Product>> findAllByProductIdIn(List<Long> mostProductLists);
 
+//    List<Product> findAllByProductIdIn(List<Long> mostProductLists);
+
+
 //    @Query(value = "SELECT * FROM product ORDER BY product_id DESC", nativeQuery = true)
 //    Page<Product> findAllOrderByCreatedAtDesc(Pageable paging);
 

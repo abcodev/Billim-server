@@ -38,8 +38,15 @@ public class OrderController {
     }
 
     @ApiOperation(value = "나의 상품 주문 내역")
-    @GetMapping("/my/list")
-    public ResponseEntity<MyOrderHistoryListResponse> myOrder(@AuthenticationPrincipal long memberId){
+    @GetMapping("/my/purchase/list")
+    public ResponseEntity<MyOrderHistoryListResponse> myOrder(@AuthenticationPrincipal long memberId) {
         return ResponseEntity.ok(orderService.findMyOrder(memberId));
     }
+
+    @GetMapping("/my/sell/list")
+    public ResponseEntity<?> mySellList(@AuthenticationPrincipal long memberId) {
+        return ResponseEntity.ok().build();
+    }
+
+
 }
