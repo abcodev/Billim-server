@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ProductInterestRepository extends JpaRepository<ProductInterest,Long> {
+public interface ProductInterestRepository extends JpaRepository<ProductInterest, Long> {
 
     Optional<ProductInterest> findByMemberAndProduct(Member member, Product product);
 

@@ -19,7 +19,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Page<Product> findAllByOrderByCreatedAtDesc(Pageable paging);
 
-    // Fetch Join (JPA 개념)
     @Query("SELECT p FROM Product p "
         + "WHERE p.productName like %:keyword% OR p.detail like %:keyword% ORDER BY p.createdAt DESC")
     Page<Product> findAllByKeyword(@Param("keyword") String keyword, Pageable pageable);

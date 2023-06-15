@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ProductService {
+
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
     private final ProductCategoryRepository productCategoryRepository;
@@ -95,15 +96,6 @@ public class ProductService {
 //                .stream().map(MostProductList::from)
 //                .collect(Collectors.toList());
 //    }
-
-
-
-//    public List<MyProductSalesResponse> myProduceSales(User user) {
-//        return productRepository.findByMember_memberId(user.getMemberId()).stream()
-//                .map(MyProductSalesResponse::of)
-//                .collect(Collectors.toList());
-//    }
-
 
 
 //    public ReservationDateResponse reservationDate(int productId) {

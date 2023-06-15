@@ -88,9 +88,6 @@ public class ProductController {
     public ResponseEntity<ProductDetailResponse> productDetail(@PathVariable("productId") long productId) {
         ProductDetailResponse resp = productService.retrieveDetail(productId);
         productRedisService.saveProduct(productId);
-        // 비영속
-        // Product product = productService.retrieve(productId);
-        // List<LocalDate> alreadyDates = orderService.reservationDate(product);
         return ResponseEntity.ok(resp);
     }
 
@@ -114,7 +111,6 @@ public class ProductController {
         return ResponseEntity.ok(200);
     }
 
-
     @ApiOperation(value = "상품 예약된 날짜 조회", notes = "예약중이어서 이용할 수 없는 날짜 조회")
     @GetMapping("/date/{productId}")
     public ResponseEntity<List<LocalDate>> alreadyReservedDate(@PathVariable("productId") long productId) {
@@ -128,7 +124,6 @@ public class ProductController {
         List<ProductCategory> categoryList = productService.categoryList();
         return ResponseEntity.ok(categoryList);
     }
-
 
 
     // 상품 수정

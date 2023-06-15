@@ -35,9 +35,6 @@ public class ProductInterestService {
             productInterestRepository.save(productInterest);
         }else{
             productInterestRepository.deleteByMemberAndProduct(member, product);
-//            ProductInterest productInterest = productInterestRepository.findByMemberAndProduct(member, product)
-//                    .orElseThrow();
-//            productInterestRepository.delete(productInterest);
         }
     }
 
