@@ -25,8 +25,10 @@ public class ProductInterestService {
 
     @Transactional
     public void saveOrDeleteInterest(long memberId, InterestRequest interestRequest) {
-        Member member = memberRepository.findById(memberId).orElseThrow();
-        Product product = productRepository.findById(interestRequest.getProductId()).orElseThrow();
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow();
+        Product product = productRepository.findById(interestRequest.getProductId())
+                .orElseThrow();
         if(interestRequest.getInterest()){
             ProductInterest productInterest = ProductInterest.builder()
                     .product(product)
@@ -34,7 +36,7 @@ public class ProductInterestService {
                     .build();
             productInterestRepository.save(productInterest);
         }else{
-            productInterestRepository.deleteByMemberAndProduct(member, product);
+            productInterestRepository.deleteByMemberAndProduct(member,product);
         }
     }
 

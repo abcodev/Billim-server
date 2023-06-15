@@ -33,7 +33,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ProductService {
-
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
     private final ProductCategoryRepository productCategoryRepository;
@@ -41,6 +40,7 @@ public class ProductService {
     private final OrderService orderService;
     private final ImageUploadService imageUploadService;
     private final ReviewService reviewService;
+    private final ProductRedisService productRedisService;
 
     @Transactional
     public Product register(ProductRegisterRequest request) {
@@ -78,25 +78,15 @@ public class ProductService {
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
         List<LocalDate> alreadyDates = orderService.reservationDate(productId);
-//        productRedisService.saveProduct(productId);
+        productRedisService.saveProduct(productId);
         return ProductDetailResponse.of(product, alreadyDates);
     }
 
-    public List<MostProductList> findMostPopularProduct(List<Long> mostProductLists) {
-        return productRepository.findAllByProductIdIn(mostProductLists)
-                .orElseThrow()
+    public List<MostProductList> findMostPopularProduct() {
+         return productRepository.findAllByProductIdIn(productRedisService.rankPopularProduct())
                 .stream().map(MostProductList::from)
                 .collect(Collectors.toList());
     }
-
-
-//    public List<MostProductList> findMostPopularProduct() {
-//        List<Long> popularRank = productRedisService.rankPopularProduct();
-//        return productRepository.findAllByProductIdIn(popularRank)
-//                .stream().map(MostProductList::from)
-//                .collect(Collectors.toList());
-//    }
-
 
 //    public ReservationDateResponse reservationDate(int productId) {
 //        Optional<ProductOrder> productOrder = Optional.ofNullable(orderRepository.findByProductId(productId)

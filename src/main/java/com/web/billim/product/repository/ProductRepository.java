@@ -23,7 +23,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
         + "WHERE p.productName like %:keyword% OR p.detail like %:keyword% ORDER BY p.createdAt DESC")
     Page<Product> findAllByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
-    Optional<List<Product>> findAllByProductIdIn(List<Long> mostProductLists);
+    List<Product> findAllByProductIdIn(List<Long> mostProductLists);
 
 //    List<Product> findAllByProductIdIn(List<Long> mostProductLists);
 

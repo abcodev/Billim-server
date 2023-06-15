@@ -28,5 +28,4 @@ public class MyInterestProduct {
                 .price(productInterest.getProduct().getPrice())
                 .build();
     }
-
 }

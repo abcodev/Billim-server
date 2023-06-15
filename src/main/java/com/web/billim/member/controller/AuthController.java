@@ -14,12 +14,6 @@ public class AuthController {
 
     private final JwtService jwtService;
 
-    @GetMapping("/test")
-    public ResponseEntity<String> test1(){
-        String test = "check";
-        return ResponseEntity.ok(test);
-    }
-
     @PostMapping("/reIssue/token")
     public ResponseEntity<?> reIssueToken(@RequestBody ReIssueTokenRequest req){
         String accessToken = req.getAccessToken();
