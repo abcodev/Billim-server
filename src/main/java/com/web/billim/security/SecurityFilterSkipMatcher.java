@@ -10,9 +10,11 @@ public class SecurityFilterSkipMatcher{
 
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
     private final String[] excludedPaths = {
-//            "/**",
-            //"/product/list", "/product/detail/**", "/product/category", "/member/signup",
-            //            "/member/send/email",
+            "/member/email/**",
+            "/member/signup",
+            "/member/check/nickname",
+            "/product/list/**",
+            "/product/detail/**",
             
             "/v3/api-docs", "/configuration/ui", "/swagger-resources/**",
             "/configuration/security", "/swagger-ui.html/**", "/swagger-ui/**", "/webjars/**", "/swagger/**",

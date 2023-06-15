@@ -60,9 +60,16 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @ApiOperation(value = "*닉네임 중복 확인", notes = "닉네임 중복시 true")
+    @GetMapping("/check/nickname")
+    public ResponseEntity<Boolean> checkDuplicateNickname(@RequestParam String nickname) {
+        return ResponseEntity.ok(memberService.checkDuplicateNickname(nickname));
+    }
+
+
     @ApiOperation(value ="*이메일인증 링크 발송", notes = "해당 이메일에 인증 링크 발송")
     @ApiImplicitParam(name = "email",dataType = "EmailRequest")
-    @PostMapping("/send/email")
+    @PostMapping("/email/send")
     public ResponseEntity<?> sendEmail(@RequestBody EmailRequest request){
         memberService.certifyEmail(request);
         return ResponseEntity.ok(200);
@@ -73,7 +80,7 @@ public class MemberController {
             @ApiImplicitParam(name = "email", value = "인증할 이메일"),
             @ApiImplicitParam(name = "certifyCode", value = "인증번호")
     })
-    @GetMapping("/confirm/email")
+    @GetMapping("/email/confirm")
     public ResponseEntity<?> confirmEmail(@RequestBody EmailAuthRequest emailAuthRequest){
         memberService.confirmEmail(emailAuthRequest);
         return ResponseEntity.ok(200);
@@ -122,11 +129,7 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @ApiOperation(value = "*닉네임 중복 확인", notes = "닉네임 중복시 true")
-    @GetMapping("/check/nickname")
-    public ResponseEntity<Boolean> checkDuplicateNickname(@RequestParam String nickname) {
-        return ResponseEntity.ok(memberService.checkDuplicateNickname(nickname));
-    }
+
 
 
     // 비밀번호 재설정

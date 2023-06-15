@@ -62,7 +62,7 @@ public class Product extends JpaEntity {
     }
 
     public String mainImage(){
-        return images.get(0).getUrl();
+        return this.images.get(0).getUrl();
     }
 
     public static Product generateNewProduct(ProductRegisterRequest request, ProductCategory category, Member member, List<ImageProduct> images) {

@@ -56,7 +56,7 @@ public class ProductController {
     }
 
     @Transactional
-    @GetMapping("/search/{keyword}")
+    @GetMapping("/list/search/{keyword}")
     public ResponseEntity<Page<ProductListResponse>> test(
         @PathVariable String keyword,
         @RequestParam(required = false, defaultValue = "0", value = "page") int page
@@ -77,6 +77,20 @@ public class ProductController {
         return ResponseEntity.ok(productList);
     }
 
+    @ApiOperation(value = "인기 상품 조회",notes = "사람들이 많이 본 상품 사진 리스트")
+    @GetMapping("/list/most/popular")
+    public ResponseEntity<List<MostProductList>> mostProductList(){
+        return ResponseEntity.ok(productRedisService.rankPopularProduct());
+    }
+
+
+    @ApiOperation(value = "*상품 카테고리 목록", notes = "상품 카테고리 목록 조회")
+    @GetMapping("/list/category")
+    public ResponseEntity<List<ProductCategory>> productEnroll() {
+        List<ProductCategory> categoryList = productService.categoryList();
+        return ResponseEntity.ok(categoryList);
+    }
+
     /*
         JPA 의 Persistence Context - 1차 캐시, 지연 로딩, 변경 감지,,,
          1. Persistence Context 는 임시 공간
@@ -94,13 +108,6 @@ public class ProductController {
         return ResponseEntity.ok(resp);
     }
 
-    @ApiOperation(value = "인기 상품 조회",notes = "사람들이 많이 본 상품 사진 리스트")
-    @GetMapping("/most/popular")
-    public ResponseEntity<List<MostProductList>> mostProductList(){
-        return ResponseEntity.ok(productRedisService.rankPopularProduct());
-    }
-
-
     @GetMapping("/product/test")
     public ResponseEntity<?> productTest(
     ){
@@ -111,24 +118,16 @@ public class ProductController {
 
 
     @ApiOperation(value = "상품 예약된 날짜 조회", notes = "예약중이어서 이용할 수 없는 날짜 조회")
-    @GetMapping("/date/{productId}")
+    @GetMapping("/detail/date/{productId}")
     public ResponseEntity<List<LocalDate>> alreadyReservedDate(@PathVariable("productId") long productId) {
         List<LocalDate> dates = orderService.reservationDate(productId);
         return ResponseEntity.ok(dates);
     }
 
-    @ApiOperation(value = "*상품 카테고리 목록", notes = "상품 카테고리 목록 조회")
-    @GetMapping("/category")
-    public ResponseEntity<List<ProductCategory>> productEnroll() {
-        List<ProductCategory> categoryList = productService.categoryList();
-        return ResponseEntity.ok(categoryList);
-    }
 
 
 
     // 상품 수정
-
-
     // 상품 삭제
 
     @ApiOperation(value = "관심상품 등록/삭제", notes = "true 관심상품등록, false 관심등록삭제")
