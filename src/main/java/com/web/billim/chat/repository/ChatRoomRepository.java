@@ -13,13 +13,13 @@ import com.web.billim.chat.domain.ChatRoom;
 @Repository
 public interface ChatRoomRepository extends CrudRepository<ChatRoom, Long> {
 
-	@Query("SELECT cr FROM ChatRoom cr WHERE cr.product.productId = :productId AND cr.buyer.memberId = :memberId")
-	Optional<ChatRoom> findByProductIdAndMemberId(@Param("productId") long productId, @Param("memberId") long memberId);
+	@Query("SELECT cr FROM ChatRoom cr WHERE cr.product.productId = :productId AND cr.buyer.memberId = :buyerId")
+	Optional<ChatRoom> findByProductIdAndBuyerId(@Param("productId") long productId, @Param("buyerId") long buyerId);
 
 	@Query("SELECT cr FROM ChatRoom cr WHERE cr.product.productId = :productId")
 	List<ChatRoom> findAllByProductId(@Param("productId") long productId);
 
-	@Query("SELECT cr FROM ChatRoom cr WHERE cr.buyer.memberId = :buyerId")
-	List<ChatRoom> findAllByBuyerId(@Param("buyerId") long buyerId);
+	@Query("SELECT cr FROM ChatRoom cr WHERE cr.buyer.memberId = :buyerId AND cr.buyerJoined = true")
+	List<ChatRoom> findAllJoinedByBuyerId(@Param("buyerId") long buyerId);
 
 }

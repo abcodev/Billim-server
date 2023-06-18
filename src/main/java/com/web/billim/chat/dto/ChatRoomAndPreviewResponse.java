@@ -1,10 +1,8 @@
 package com.web.billim.chat.dto;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.web.billim.chat.domain.ChatMessage;
 import com.web.billim.chat.domain.ChatRoom;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -41,22 +39,39 @@ public class ChatRoomAndPreviewResponse {
 	private String latestMessage;
 
 	@ApiModelProperty(value = "최신 채팅 시간")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
 	private LocalDateTime latestMessageTime;
 
-	public static ChatRoomAndPreviewResponse of(ChatRoom chatRoom, ChatMessage latestMessage, int unreadCount) {
+	public static ChatRoomAndPreviewResponse forSeller(ChatRoom chatRoom, ChatMessagePreview preview) {
 		ChatRoomAndPreviewResponseBuilder builder = ChatRoomAndPreviewResponse.builder()
 			.chatRoomId(chatRoom.getId())
 			.receiverId(chatRoom.getBuyer().getMemberId())
 			.receiverNickname(chatRoom.getBuyer().getNickname())
 			.receiverProfileImageUrl(chatRoom.getBuyer().getProfileImageUrl())
-			.unreadCount(unreadCount);
+			.unreadCount(preview.getUnreadCount());
 
-		if (latestMessage != null) {
-			builder = builder.latestMessageTime(latestMessage.getCreatedAt())
-				.latestMessage(latestMessage.getMessage());
+		if (preview.getLatestMessage() != null) {
+			builder = builder.latestMessageTime(preview.getLatestMessageTime())
+				.latestMessage(preview.getLatestMessage());
 		}
 		return builder.build();
 	}
+
+	public static ChatRoomAndPreviewResponse forBuyer(ChatRoom chatRoom, ChatMessagePreview preview) {
+		ChatRoomAndPreviewResponseBuilder builder = ChatRoomAndPreviewResponse.builder()
+			.chatRoomId(chatRoom.getId())
+			.receiverId(chatRoom.getSeller().getMemberId())
+			.receiverNickname(chatRoom.getSeller().getNickname())
+			.receiverProfileImageUrl(chatRoom.getSeller().getProfileImageUrl())
+			.unreadCount(preview.getUnreadCount());
+
+		if (preview.getLatestMessage() != null) {
+			builder = builder.latestMessageTime(preview.getLatestMessageTime())
+				.latestMessage(preview.getLatestMessage());
+		}
+		return builder.build();
+	}
+
 }
 
 /*

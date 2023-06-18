@@ -2,6 +2,7 @@ package com.web.billim.chat.dto;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.web.billim.chat.domain.ChatMessage;
 import com.web.billim.chat.type.ChatMessageType;
@@ -31,13 +32,11 @@ public class ChatMessageResponse {
 	@ApiModelProperty(value = "채팅 내용")
 	private String message;
 
-	@ApiModelProperty(value = "채팅 사진 이미지 주소")
-	private String imageUrl;
-
 	@ApiModelProperty(value = "채팅 읽음 여부")
 	private boolean isRead;
 
 	@ApiModelProperty(value = "채팅 보낸 날짜")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
 	private LocalDateTime sendAt;
 
 	public static ChatMessageResponse from(ChatMessage chatMessage) {
@@ -46,7 +45,6 @@ public class ChatMessageResponse {
 			.senderId(chatMessage.getType() != ChatMessageType.SYSTEM ? chatMessage.getSender().getMemberId() : -1)
 			.type(chatMessage.getType())
 			.message(chatMessage.getMessage())
-			.imageUrl(chatMessage.getImageUrl())
 			.isRead(chatMessage.isRead())
 			.sendAt(chatMessage.getCreatedAt())
 			.build();

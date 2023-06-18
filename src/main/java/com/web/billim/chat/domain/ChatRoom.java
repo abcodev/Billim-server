@@ -39,32 +39,45 @@ public class ChatRoom extends JpaEntity {
 	@JoinColumn(name = "seller_id", referencedColumnName = "member_id")
 	private Member seller;
 
+	@Column(name = "seller_joined_yn")
+	private boolean sellerJoined;
+
 	@ManyToOne
 	@JoinColumn(name = "buyer_id", referencedColumnName = "member_id")
 	private Member buyer;
+
+	@Column(name = "buyer_joined_yn")
+	private boolean buyerJoined;
 
 	public static ChatRoom of(Member member, Product product) {
 		return ChatRoom.builder()
 			.product(product)
 			.seller(product.getMember())
+			.sellerJoined(true)
 			.buyer(member)
+			.buyerJoined(true)
 			.build();
 	}
 
-	public boolean isSellerExit() {
-		return seller == null;
+	public Member exit(long memberId) {
+		if (seller.getMemberId() == memberId) {
+			sellerJoined = false;
+			return seller;
+		} else if (buyer.getMemberId() == memberId) {
+			buyerJoined = false;
+			return buyer;
+		}
+		throw new RuntimeException("채팅방에 참여중이지 않은 사용자입니다.");
 	}
 
-	public Member exit(long memberId) {
-		Member exitMember = null;
-		if (seller.getMemberId() == memberId) {
-			exitMember = seller;
-			seller = null;
-		} else if (buyer.getMemberId() == memberId) {
-			exitMember = buyer;
-			buyer = null;
-		}
-		return exitMember;
+	public ChatRoom reJoin() {
+		this.buyerJoined = true;
+		this.sellerJoined = true;
+		return this;
+	}
+
+	public boolean checkEmpty() {
+		return this.sellerJoined && this.buyerJoined;
 	}
 
 }

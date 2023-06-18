@@ -6,12 +6,11 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.web.billim.chat.domain.ChatMessage;
 import com.web.billim.chat.domain.ChatRoom;
+import com.web.billim.chat.dto.ChatMessagePreview;
 import com.web.billim.chat.dto.ChatMessageResponse;
 import com.web.billim.chat.dto.ChatRoomAndPreviewResponse;
 import com.web.billim.chat.dto.ChatRoomResponse;
-import com.web.billim.chat.dto.SendImageMessageRequest;
 import com.web.billim.chat.dto.SendTextMessageRequest;
 import com.web.billim.chat.repository.ChatMessageRepository;
 import com.web.billim.chat.repository.ChatRoomRepository;
@@ -27,14 +26,17 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ChatRoomService {
 
+	private final ChatMessageService chatMessageService;
 	private final ChatRoomRepository chatRoomRepository;
 	private final ChatMessageRepository chatMessageRepository;
 	private final MemberRepository memberRepository;
 	private final ProductRepository productRepository;
 	private final ImageUploadService imageUploadService;
 
-	public ChatRoomResponse generateIfAbsent(long memberId, long productId) {
-		ChatRoom chatRoom = chatRoomRepository.findByProductIdAndMemberId(productId, memberId)
+	@Transactional
+	public ChatRoomResponse joinChatRoom(long memberId, long productId) {
+		ChatRoom chatRoom = chatRoomRepository.findByProductIdAndBuyerId(productId, memberId)
+			.map(ChatRoom::reJoin)
 			.orElseGet(() -> {
 				Member member = memberRepository.findById(memberId).orElseThrow();
 				Product product = productRepository.findById(productId).orElseThrow();
@@ -43,6 +45,7 @@ public class ChatRoomService {
 		return ChatRoomResponse.from(chatRoom);
 	}
 
+	// 채팅 메시지를 읽어올 때 데이터가 너무 많아서 성능이슈가 발생할 수 있다면 페이징 처리를 통한 스크롤 구현을 고려
 	public List<ChatMessageResponse> retrieveAllChatMessage(long chatRoomId) {
 		ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow();
 		return chatMessageRepository.findAllByChatRoom(chatRoom).stream()
@@ -50,64 +53,37 @@ public class ChatRoomService {
 			.collect(Collectors.toList());
 	}
 
-	public ChatMessageResponse sendText(SendTextMessageRequest req, boolean isSystem) {
-		ChatRoom chatRoom = chatRoomRepository.findById(req.getChatRoomId()).orElseThrow();
-		ChatMessage message = null;
-
-		if (isSystem) {
-			message = ChatMessage.ofSystem(chatRoom, req.getMessage());
-		} else {
-			Member sender = memberRepository.findById(req.getSenderId()).orElseThrow();
-			message = ChatMessage.ofText(sender, chatRoom, req.getMessage());
-		}
-		ChatMessage saved = chatMessageRepository.save(message);
-		return ChatMessageResponse.from(saved);
-	}
-
-	public ChatMessageResponse sendImage(SendImageMessageRequest req) {
-		Member sender = memberRepository.findById(req.getSenderId()).orElseThrow();
-		ChatRoom chatRoom = chatRoomRepository.findById(req.getChatRoomId()).orElseThrow();
-
-		// TODO : FE 에서 Upload 해서 URL 만 넘겨주는 상황이라면 빠지게 될 코드
-		// 	      서버에서 업로드 해야한다면 추가되어야 할 코드
-		// String imageUrl = imageUploadService.upload(req.getImageUrl(), "chat_" + req.getChatRoomId());
-		ChatMessage message = ChatMessage.ofImage(sender, chatRoom, req.getImageUrl());
-		ChatMessage saved = chatMessageRepository.save(message);
-		return ChatMessageResponse.from(saved);
-	}
-
 	@Transactional(readOnly = true)
 	public List<ChatRoomAndPreviewResponse> retrieveAllByProductId(long productId) {
 		return chatRoomRepository.findAllByProductId(productId).stream()
-			.filter(chatRoom -> !chatRoom.isSellerExit())
+			.filter(ChatRoom::isSellerJoined)
 			.map(chatRoom -> {
-				ChatMessage latestMessage = chatMessageRepository.findTopByChatRoomOrderByCreatedAtDesc(chatRoom);
-				int unreadCount = chatMessageRepository.calculateUnreadCount(chatRoom, chatRoom.getProduct().getMember());
-				return ChatRoomAndPreviewResponse.of(chatRoom, latestMessage, unreadCount);
+				ChatMessagePreview preview = chatMessageService.retrieveChatMessagePreview(chatRoom);
+				return ChatRoomAndPreviewResponse.forSeller(chatRoom, preview);
 			})
 			.collect(Collectors.toList());
 	}
 
 	@Transactional(readOnly = true)
-	public List<ChatRoomAndPreviewResponse> retrieveAllJoined(long memberId) {
-		return chatRoomRepository.findAllByBuyerId(memberId).stream()
+	public List<ChatRoomAndPreviewResponse> retrieveAllJoined(long buyerId) {
+		return chatRoomRepository.findAllJoinedByBuyerId(buyerId).stream()
 			.map(chatRoom -> {
-				ChatMessage latestMessage = chatMessageRepository.findTopByChatRoomOrderByCreatedAtDesc(chatRoom);
-				// TODO : Preview 가 상대가 아니라 내거가 나옴
-				int unreadCount = chatMessageRepository.calculateUnreadCount(chatRoom, chatRoom.getProduct().getMember());
-				return ChatRoomAndPreviewResponse.of(chatRoom, latestMessage, unreadCount);
+				ChatMessagePreview preview = chatMessageService.retrieveChatMessagePreview(chatRoom);
+				return ChatRoomAndPreviewResponse.forBuyer(chatRoom, preview);
 			})
 			.collect(Collectors.toList());
 	}
 
 	@Transactional
 	public void exit(long memberId, long chatRoomId) {
-		chatRoomRepository.findById(chatRoomId)
-			.ifPresent(chatRoom -> {
-				// Dirty Checking
-				Member exitMember = chatRoom.exit(memberId);
-				this.sendText(SendTextMessageRequest.ofExitMessage(chatRoom, exitMember), true);
-			});
+		chatRoomRepository.findById(chatRoomId).ifPresent(chatRoom -> {
+			Member exitMember = chatRoom.exit(memberId);  // Dirty Checking
+			if (chatRoom.checkEmpty()) {
+				chatRoomRepository.delete(chatRoom);
+			} else {
+				chatMessageService.sendSystem(SendTextMessageRequest.ofExitMessage(chatRoom, exitMember));
+			}
+		});
 	}
 
 	// 1. 네트워크 굳이 한번 더 타? FE -> AWS, FE -> BE -> AWS?

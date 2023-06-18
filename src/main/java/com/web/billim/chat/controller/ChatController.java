@@ -21,6 +21,7 @@ import com.web.billim.chat.dto.ChatRoomAndPreviewResponse;
 import com.web.billim.chat.dto.ChatRoomResponse;
 import com.web.billim.chat.dto.SendImageMessageRequest;
 import com.web.billim.chat.dto.SendTextMessageRequest;
+import com.web.billim.chat.service.ChatMessageService;
 import com.web.billim.chat.service.ChatRoomService;
 
 import lombok.RequiredArgsConstructor;
@@ -35,43 +36,49 @@ public class ChatController {
 	// MessageHandler 를 API Handler 처럼 Controller 에 등록할 수 있음
 	private final SimpMessagingTemplate messagingTemplate;
 	private final ChatRoomService chatRoomService;
+	private final ChatMessageService chatMessageService;
 
-	@ApiOperation(value = "처음 채팅방 생성", notes = "구매자가 처음으로 채팅방을 생성한다.")
-	@PostMapping("/room/{productId}")
-	public ResponseEntity<ChatRoomResponse> generateChatRoom(@PathVariable long productId, @AuthenticationPrincipal long memberId) {
-		return ResponseEntity.ok(chatRoomService.generateIfAbsent(memberId, productId));
+	// Q. 구매자가 나간 상품에 대해서 다시 채팅방을 만들 수 있는가?
+	// 판매자가 보는 구매자가 결제한 목록
+	// TODO : 기존 채팅방이 유지되는거니까 다시 입장 했을 때 "~님이 입장했습니다" 시스템 메시지 보내도록.
+	@ApiOperation(value = "처음 채팅방 생성", notes = "구매자가 처음으로 채팅방을 없으면 생성하고, 있으면 그냥 입장한다.")
+	@PostMapping("/room/product/{productId}")
+	public ResponseEntity<ChatRoomResponse> joinChatRoomForBuyer(@PathVariable long productId, @AuthenticationPrincipal long memberId) {
+		return ResponseEntity.ok(chatRoomService.joinChatRoom(memberId, productId));
 	}
 
-	@ApiOperation(value = "판매자의 productId 에 따른 채팅방 목록", notes = "해당 상품에 대한 채팅방 전체 목록을 가져온다.")
-	@GetMapping("/rooms/{productId}")
-	public ResponseEntity<List<ChatRoomAndPreviewResponse>> retrieveAllProductChatRoom(@PathVariable long productId) {
-		return ResponseEntity.ok(chatRoomService.retrieveAllByProductId(productId));
+	/**
+	 * 	1. 구매자와 판매자가 채팅방 A 에 있었다.
+	 * 	2. 구매자가 채팅방 A 를 나온다.
+	 * 	3. 판매자는 여전히 채팅방 A 에 참여해있다.
+	 * 	4. 구매자가 다시 판매자에게 채팅을 요청해 채팅방 B 가 만들어진다.
+	 * 	5. 판매자가 그 판매관리 쪽에서 그 사용자에게 채팅방을 열려고 하면,
+	 * 	6. 결과가 2개가 나온다.
+	 */
+	@PostMapping("/room/product/{productId}/{buyerId}")
+	public ResponseEntity<ChatRoomResponse> joinChatRoomForSeller(@PathVariable long productId, @PathVariable long buyerId) {
+		return ResponseEntity.ok(chatRoomService.joinChatRoom(buyerId, productId));
 	}
 
 	@ApiOperation(value = "구매자의 채팅방 목록 조회", notes = "자신의 채팅방 목록 전체 조회")
 	@GetMapping("/rooms")
-	public ResponseEntity<List<ChatRoomAndPreviewResponse>> retrieveAllMyChatRoom(@AuthenticationPrincipal long memberId) {
-		return ResponseEntity.ok(chatRoomService.retrieveAllJoined(memberId));
+	public ResponseEntity<List<ChatRoomAndPreviewResponse>> retrieveAllMyChatRoom(@AuthenticationPrincipal long buyerId) {
+		return ResponseEntity.ok(chatRoomService.retrieveAllJoined(buyerId));
 	}
 
+	// Jenkins 서버
+	// Spring Boot 서버
+	@ApiOperation(value = "판매자의 productId 에 따른 채팅방 목록", notes = "해당 상품에 대한 채팅방 전체 목록을 가져온다.")
+	@GetMapping("/rooms/product/{productId}")
+	public ResponseEntity<List<ChatRoomAndPreviewResponse>> retrieveAllProductChatRoom(@PathVariable long productId) {
+		return ResponseEntity.ok(chatRoomService.retrieveAllByProductId(productId));
+	}
+
+	// TODO : 나간 후 다시 재입장했을 때 나가기 전 메시지 가리기 필요
 	@ApiOperation(value = "채팅방 들어갔을 때 채팅 내용 조회", notes = "채팅방 들어갔을 때 전체 채팅 목록을 불러온다.")
 	@GetMapping("/messages/{chatRoomId}")
 	public ResponseEntity<List<ChatMessageResponse>> retrieveAllChatMessage(@PathVariable long chatRoomId) {
 		return ResponseEntity.ok(chatRoomService.retrieveAllChatMessage(chatRoomId));
-	}
-
-	@ApiOperation(value = "채팅 text 전송", notes = "텍스트 형식의 채팅을 보낸다")
-	@MessageMapping("/send/text")
-	public void sendMessage(SendTextMessageRequest req) {
-		ChatMessageResponse message = chatRoomService.sendText(req, false);
-		messagingTemplate.convertAndSend(MESSAGE_BROKER_SUBSCRIBE_PREFIX + "/chat/" + req.getChatRoomId(), message);
-	}
-
-	@ApiOperation(value = "채팅 이미지 전송", notes = "이미지 형식의 채팅을 보낸다")
-	@MessageMapping("/send/image")
-	public void sendMessage(SendImageMessageRequest req) {
-		ChatMessageResponse message = chatRoomService.sendImage(req);
-		messagingTemplate.convertAndSend(MESSAGE_BROKER_SUBSCRIBE_PREFIX + "/chat/" + req.getChatRoomId(), message);
 	}
 
 	// 채팅방 나가기
@@ -82,6 +89,19 @@ public class ChatController {
 	}
 
 	// 차단하기
+	@ApiOperation(value = "채팅 text 전송", notes = "텍스트 형식의 채팅을 보낸다")
+	@MessageMapping("/send/text")
+	public void sendMessage(SendTextMessageRequest req) {
+		ChatMessageResponse message = chatMessageService.sendText(req);
+		messagingTemplate.convertAndSend(MESSAGE_BROKER_SUBSCRIBE_PREFIX + "/chat/" + req.getChatRoomId(), message);
+	}
+
+	@ApiOperation(value = "채팅 이미지 전송", notes = "이미지 형식의 채팅을 보낸다")
+	@MessageMapping("/send/image")
+	public void sendMessage(SendImageMessageRequest req) {
+		ChatMessageResponse message = chatMessageService.sendImage(req);
+		messagingTemplate.convertAndSend(MESSAGE_BROKER_SUBSCRIBE_PREFIX + "/chat/" + req.getChatRoomId(), message);
+	}
 
 }
 
