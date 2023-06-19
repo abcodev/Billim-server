@@ -36,6 +36,7 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
         this.jwtTokenRedisService = jwtTokenRedisService;
         setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/auth/login", "POST"));
     }
+
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException{
         LoginRequest loginRequest = obtainEmailPassword(request);
