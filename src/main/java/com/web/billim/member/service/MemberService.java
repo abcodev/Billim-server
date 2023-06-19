@@ -46,7 +46,7 @@ public class MemberService {
 	private final PointService pointService;
 	private final MemberRepository memberRepository;
 	private final PasswordEncoder passwordEncoder;
-	private final JwtTokenRedisService jwtTokenRedisService;
+	private final MemberRedisService memberRedisService;
 	private final EmailService emailService;
 
 	public Map<String, String> validateHandling(BindingResult bindingResult) {
@@ -77,7 +77,7 @@ public class MemberService {
 	public void certifyEmail(EmailRequest request) {
 		validateDuplicated(request.getEmail());
 		String authToken = UUID.randomUUID().toString();
-		jwtTokenRedisService.saveEmailToken(request.getEmail(), authToken);
+		memberRedisService.saveEmailToken(request.getEmail(), authToken);
 		emailService.sendMail(request.getEmail(), authToken);
 	}
 
@@ -88,7 +88,7 @@ public class MemberService {
 	}
 
 	public void confirmEmail(EmailAuthRequest emailAuthRequest) {
-		if (!jwtTokenRedisService.findByEmail(emailAuthRequest.getEmail())
+		if (!memberRedisService.findByEmail(emailAuthRequest.getEmail())
 			.equals(emailAuthRequest.getAuthToken())) {
 			throw new RuntimeException("인증번호가 일치하지 않습니다.");
 		}

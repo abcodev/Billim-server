@@ -63,10 +63,6 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
         response.getWriter().write(jsonToken);
     }
 
-    @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-
-    }
 
     private LoginRequest obtainEmailPassword(HttpServletRequest request) {
             try {

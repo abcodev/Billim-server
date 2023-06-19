@@ -66,9 +66,8 @@ public class MemberController {
         return ResponseEntity.ok(memberService.checkDuplicateNickname(nickname));
     }
 
-
     @ApiOperation(value ="*이메일인증 링크 발송", notes = "해당 이메일에 인증 링크 발송")
-    @ApiImplicitParam(name = "email",dataType = "EmailRequest")
+    @ApiImplicitParam(name = "email", value = "이메일")
     @PostMapping("/email/send")
     public ResponseEntity<?> sendEmail(@RequestBody EmailRequest request){
         memberService.certifyEmail(request);
@@ -87,13 +86,7 @@ public class MemberController {
     }
 
     // 로그아웃
-
-
-
     // 비밀번호 찾기
-
-
-
     //
     @ApiOperation(value = "마이페이지 헤더 정보 조회", notes = "내 프로필, 쿠폰, 적립금, 작성가능한 리뷰 조회")
     @GetMapping("/my/page")

@@ -2,6 +2,7 @@ package com.web.billim.common.exception.handler;
 
 import com.web.billim.common.exception.BusinessException;
 import com.web.billim.common.exception.TokenExpiredException;
+import com.web.billim.common.exception.UnAuthorizedException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -17,6 +18,11 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(BusinessException.class)
 	public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException ex) {
+		return ErrorResponse.toResponseEntity(ex.getErrorCode());
+	}
+
+	@ExceptionHandler(UnAuthorizedException.class)
+	public ResponseEntity<ErrorResponse> handleUnAuthorizedException(UnAuthorizedException ex){
 		return ErrorResponse.toResponseEntity(ex.getErrorCode());
 	}
 
