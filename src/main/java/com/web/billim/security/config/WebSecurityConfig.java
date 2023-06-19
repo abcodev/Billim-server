@@ -25,7 +25,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfig {
-//    private final CorsConfig corsConfig;
+    private final CorsConfig corsConfig;
     private final JwtUtils jwtUtils;
     private final UserDetailServiceImpl userDetailsService;
     private final JwtTokenRedisService jwtTokenRedisService;
@@ -38,6 +38,8 @@ public class WebSecurityConfig {
                 .csrf().disable()
                 .formLogin().disable()
                 .httpBasic().disable()
+                .cors()
+                .and()
 //                .cors().disable()
                 // cors 가 막히면 서로 다른 출처를 가진 Application 이 서로의 Resource 에 접근을 아예 못하도록 하기 때문에 저렇게 disable 로 해놓으면 안된다
 
@@ -51,7 +53,7 @@ public class WebSecurityConfig {
                 .anyRequest().authenticated()
 
                 .and()
-//                .addFilter(corsConfig.corsFilter())
+                .addFilter(corsConfig.corsFilter())
                 .apply(new JwtTokenFilterConfigurer(jwtUtils, authenticationManager,jwtTokenRedisService, securityFilterSkipMatcher));
         return http.build();
     }
