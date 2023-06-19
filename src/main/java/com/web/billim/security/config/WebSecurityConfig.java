@@ -25,7 +25,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfig {
-//    private final CorsConfig corsConfig;
+    private final CorsConfig corsConfig;
     private final JwtUtils jwtUtils;
     private final UserDetailServiceImpl userDetailsService;
     private final JwtTokenRedisService jwtTokenRedisService;
@@ -49,7 +49,7 @@ public class WebSecurityConfig {
                 .anyRequest().authenticated()
 
                 .and()
-//                .addFilter(corsConfig.corsFilter())
+                .addFilter(corsConfig.corsFilter())
                 .apply(new JwtTokenFilterConfigurer(jwtUtils, authenticationManager,jwtTokenRedisService, securityFilterSkipMatcher));
         return http.build();
     }

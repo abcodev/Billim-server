@@ -1,3 +1,4 @@
+/*
 package com.web.billim.security.config;
 
 import org.springframework.context.annotation.Configuration;
@@ -19,3 +20,4 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowedMethods("*");
     }
 }
+*/
