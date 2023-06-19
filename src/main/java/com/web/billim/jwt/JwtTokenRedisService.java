@@ -16,7 +16,6 @@ import static com.web.billim.common.exception.handler.ErrorCode.MISMATCH_REFRESH
 public class JwtTokenRedisService {
 
     private final JwtTokenRedisRepository jwtTokenRedisRepository;
-    private final RedisEmailRepository redisEmailRepository;
 
     public  RedisJwt compareToken(long memberId) {
         RedisJwt redisJwt = jwtTokenRedisRepository.findById(String.valueOf(memberId))
@@ -31,16 +30,5 @@ public class JwtTokenRedisService {
     public void deleteRefreshToken(long memberId) {
         jwtTokenRedisRepository.deleteById(String.valueOf(memberId));
         log.info(memberId+"토큰 삭제 완료");
-    }
-
-    public void saveEmailToken(String email, String authToken) {
-        RedisEmail redisEmail = new RedisEmail(email,authToken);
-        redisEmailRepository.save(redisEmail);
-    }
-
-    public String findByEmail(String email) {
-        RedisEmail redisEmail = redisEmailRepository.findById(email)
-                .orElseThrow();
-        return redisEmail.getVerifyCode();
     }
 }
