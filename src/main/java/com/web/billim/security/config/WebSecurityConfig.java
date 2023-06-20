@@ -35,6 +35,9 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(AuthenticationManager authenticationManager,HttpSecurity http) throws Exception{
 
         http
+                .cors()
+
+                .and()
                 .csrf().disable()
                 .formLogin().disable()
                 .httpBasic().disable()
