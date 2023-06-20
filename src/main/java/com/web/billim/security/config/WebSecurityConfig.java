@@ -9,10 +9,8 @@ import com.web.billim.jwt.JwtUtils;
 
 import com.web.billim.security.UserDetailServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.Ordered;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,7 +22,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,7 +31,6 @@ import java.util.List;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfig {
-//    private final CorsConfig corsConfig;
     private final JwtUtils jwtUtils;
     private final UserDetailServiceImpl userDetailsService;
     private final JwtTokenRedisService jwtTokenRedisService;
@@ -60,7 +56,6 @@ public class WebSecurityConfig {
                 .anyRequest().authenticated()
 
                 .and()
-//                .addFilter(corsConfig.corsFilter())
                 .apply(new JwtTokenFilterConfigurer(jwtUtils, authenticationManager,jwtTokenRedisService, securityFilterSkipMatcher));
         return http.build();
     }
@@ -76,21 +71,6 @@ public class WebSecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
-//    @Bean
-//    public FilterRegistrationBean<CorsFilter> corsFilterRegistrationBean() {
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        CorsConfiguration config = new CorsConfiguration();
-//        config.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-//        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-//        config.setAllowedHeaders(Arrays.asList("*"));
-//        config.setAllowCredentials(true);
-//        source.registerCorsConfiguration("/**", config);
-//
-//        FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(new CorsFilter(source));
-//        bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
-//        return bean;
-//    }
 
     @Bean
     public AuthenticationManager configureAuthenticationManager(HttpSecurity http) throws Exception {
