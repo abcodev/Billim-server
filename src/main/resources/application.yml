@@ -36,4 +36,4 @@ spring:
 
 logging:
   level:
-    org.springframework.web.cors: DEBUG
+    org.springframework.web.cors: INFO
