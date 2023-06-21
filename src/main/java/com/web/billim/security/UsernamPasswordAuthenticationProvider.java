@@ -4,13 +4,9 @@ import com.web.billim.common.exception.handler.ErrorCode;
 import com.web.billim.security.domain.UserDetailsEntity;
 import com.web.billim.security.dto.LoginAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import static com.web.billim.common.exception.handler.ErrorCode.DISCORD_PASSWORD;
-import static com.web.billim.common.exception.handler.ErrorCode.MEMBER_NOT_FOUND;
 
 
 public class UsernamPasswordAuthenticationProvider implements AuthenticationProvider {
@@ -32,7 +28,7 @@ public class UsernamPasswordAuthenticationProvider implements AuthenticationProv
         if(user != null && this.passwordEncoder.matches(password, user.getPassword())){
             return new LoginAuthenticationToken(user.getAuthorities(),user.getMemberId());
         }else {
-            throw new UnAuthorizedException(DISCORD_PASSWORD);
+            throw new UnAuthorizedException(ErrorCode.DISCORD_PASSWORD);
         }
     }
     @Override

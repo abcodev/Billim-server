@@ -23,6 +23,7 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(UnAuthorizedException.class)
 	public ResponseEntity<ErrorResponse> handleUnAuthorizedException(UnAuthorizedException ex){
+		log.info("핸들러 잘 실행이 되니?");
 		return ErrorResponse.toResponseEntity(ex.getErrorCode());
 	}
 
@@ -48,5 +49,4 @@ public class GlobalExceptionHandler {
 		});
 		return ErrorResponse.toResponseEntity(ErrorCode.INVALIDATION_INPUT, message.toString());
 	}
-
 }

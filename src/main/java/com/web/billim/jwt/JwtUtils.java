@@ -95,5 +95,4 @@ public class JwtUtils implements InitializingBean {
 		}
 		return false;
 	}
-
 }

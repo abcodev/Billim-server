@@ -1,6 +1,8 @@
 package com.web.billim.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.web.billim.common.exception.UnAuthorizedException;
+import com.web.billim.common.exception.handler.ErrorResponse;
 import com.web.billim.jwt.JwtTokenRedisService;
 import com.web.billim.member.type.MemberGrade;
 import com.web.billim.security.dto.LoginRequest;
@@ -9,6 +11,7 @@ import com.web.billim.security.dto.LoginAuthenticationToken;
 import com.web.billim.jwt.dto.RedisJwt;
 import com.web.billim.jwt.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
@@ -63,6 +66,19 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
         response.getWriter().write(jsonToken);
     }
 
+//    @Override
+//    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+//        if (failed.getCause() instanceof UnAuthorizedException) {
+//            UnAuthorizedException unAuthorizedException = (UnAuthorizedException) failed.getCause();
+//            ErrorResponse errorResponse = ErrorResponse.toResponseEntity(unAuthorizedException.getErrorCode()).getBody();
+//            response.setStatus(errorResponse.getCode().equals(HttpStatus.UNAUTHORIZED.name()) ? HttpStatus.UNAUTHORIZED.value() : HttpStatus.INTERNAL_SERVER_ERROR.value());
+//            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+//            ObjectMapper objectMapper = new ObjectMapper();
+//            response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
+//        } else {
+//            super.unsuccessfulAuthentication(request, response, failed);
+//        }
+//    }
 
     private LoginRequest obtainEmailPassword(HttpServletRequest request) {
             try {
