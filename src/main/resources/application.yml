@@ -7,7 +7,7 @@ spring:
 
   datasource:
     url: jdbc:mysql://localhost:3306/billim
-#    url : jdbc:mysql://database-billim.cupp7ovusokk.ap-northeast-2.rds.amazonaws.com:3306
+#    url : jdbc:mysql://database-billim.cupp7ovusokk.ap-northeast-2.rds.amazonaws.com:3306/billimDB
     username: admin
     password: admin123
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -36,4 +36,4 @@ spring:
 
 logging:
   level:
-    root: INFO
+    org.springframework.web.cors: INFO

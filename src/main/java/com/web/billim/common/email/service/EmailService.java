@@ -2,6 +2,8 @@ package com.web.billim.common.email.service;
 
 import com.web.billim.common.exception.BadRequestException;
 import com.web.billim.common.exception.handler.ErrorCode;
+import com.web.billim.member.dto.TemporaryPasswordDto;
+import com.web.billim.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,6 +11,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
@@ -19,6 +22,7 @@ import javax.mail.internet.MimeMessage;
 @RequiredArgsConstructor
 public class EmailService {
     private final JavaMailSender javaMailSender;
+    private final MemberRepository memberRepository;
 
     @Value("${spring.mail.username}")
     private String billimEmail;
@@ -60,7 +64,50 @@ public class EmailService {
             helper.setFrom(new InternetAddress(billimEmail, "BILLIM"));
             javaMailSender.send(message);
         }catch (Exception e){
+            System.out.println(e);
             throw new BadRequestException(ErrorCode.EMAIL_SEND_FAILED);
         }
     }
+
+    @Transactional
+    public void sendTempPassword(TemporaryPasswordDto temporaryPasswordDto) {
+
+        char[] charSet = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
+                'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
+
+        StringBuilder tempPassword = new StringBuilder();
+
+        int idx = 0;
+        for (int i = 0; i < 10; i++) {
+            idx = (int) (charSet.length * Math.random());
+            tempPassword.append(charSet[idx]);
+        }
+
+        try {
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            String emailContent = "<div style='margin: 20px;'>" +
+                    "<h1>안녕하세요, BILLIM입니다.</h1>" +
+                    "<br>" +
+                    "<p>임시 비밀번호</p>" +
+                    "<br>" +
+                    "<p>"+ tempPassword +"</p>" +
+                    "</div>" +
+                    "</div>";
+            helper.setTo(temporaryPasswordDto.getEmail());
+            helper.setSubject("BILLIM 임시비밀번호 입니다");
+            helper.setText(emailContent, true);
+            helper.setFrom(new InternetAddress("duatjgkr123@gmail.com", "BILLIM"));
+
+            javaMailSender.send(message);
+        }catch (Exception e){
+            System.out.println(e);
+            throw new BadRequestException(ErrorCode.EMAIL_SEND_FAILED);
+        }
+
+    }
+
+
+
 }

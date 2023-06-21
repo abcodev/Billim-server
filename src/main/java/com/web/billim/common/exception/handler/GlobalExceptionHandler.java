@@ -21,11 +21,10 @@ public class GlobalExceptionHandler {
 		return ErrorResponse.toResponseEntity(ex.getErrorCode());
 	}
 
-	@ExceptionHandler(UnAuthorizedException.class)
-	public ResponseEntity<ErrorResponse> handleUnAuthorizedException(UnAuthorizedException ex){
-		log.info("핸들러 잘 실행이 되니?");
-		return ErrorResponse.toResponseEntity(ex.getErrorCode());
-	}
+	// @ExceptionHandler(UnAuthorizedException.class)
+	// public ResponseEntity<ErrorResponse> handleUnAuthorizedException(UnAuthorizedException ex){
+	// 	return ErrorResponse.toResponseEntity(ex.getErrorCode());
+	// }
 
 	@ExceptionHandler(value = {TokenExpiredException.class})
 	public ResponseEntity<ErrorResponse> handlerException(TokenExpiredException e){
@@ -49,4 +48,5 @@ public class GlobalExceptionHandler {
 		});
 		return ErrorResponse.toResponseEntity(ErrorCode.INVALIDATION_INPUT, message.toString());
 	}
+
 }

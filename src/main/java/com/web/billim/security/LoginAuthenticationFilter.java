@@ -1,8 +1,6 @@
 package com.web.billim.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.web.billim.common.exception.UnAuthorizedException;
-import com.web.billim.common.exception.handler.ErrorResponse;
 import com.web.billim.jwt.JwtTokenRedisService;
 import com.web.billim.member.type.MemberGrade;
 import com.web.billim.security.dto.LoginRequest;
@@ -11,7 +9,6 @@ import com.web.billim.security.dto.LoginAuthenticationToken;
 import com.web.billim.jwt.dto.RedisJwt;
 import com.web.billim.jwt.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
@@ -25,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 @Slf4j
 public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFilter {

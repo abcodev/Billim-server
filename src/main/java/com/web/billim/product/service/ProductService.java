@@ -5,9 +5,6 @@ import com.web.billim.common.exception.handler.ErrorCode;
 import com.web.billim.infra.ImageUploadService;
 import com.web.billim.member.domain.Member;
 import com.web.billim.member.repository.MemberRepository;
-import com.web.billim.order.domain.ProductOrder;
-import com.web.billim.order.dto.response.ReservationDateResponse;
-import com.web.billim.order.repository.OrderRepository;
 import com.web.billim.order.service.OrderService;
 import com.web.billim.product.domain.ImageProduct;
 import com.web.billim.product.domain.Product;
@@ -86,6 +83,11 @@ public class ProductService {
          return productRepository.findAllByProductIdIn(productRedisService.rankPopularProduct())
                 .stream().map(MostProductList::from)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void delete(long productId) {
+        productRepository.deleteById(productId);
     }
 
 //    public ReservationDateResponse reservationDate(int productId) {
