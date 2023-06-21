@@ -2,18 +2,19 @@ package com.web.billim.member.controller;
 
 import com.web.billim.common.email.dto.EmailAuthRequest;
 import com.web.billim.common.email.dto.EmailRequest;
+import com.web.billim.common.email.service.EmailService;
 import com.web.billim.common.validation.CheckIdValidator;
 import com.web.billim.common.validation.CheckNickNameValidator;
 import com.web.billim.common.validation.CheckPasswordValidator;
-import com.web.billim.member.dto.request.UpdateAddressRequest;
-import com.web.billim.member.dto.request.MemberSignupRequest;
-import com.web.billim.member.dto.request.UpdateNicknameRequest;
+import com.web.billim.member.dto.TemporaryPasswordDto;
+import com.web.billim.member.dto.request.*;
 import com.web.billim.member.dto.response.MyPageInfoResponse;
 import com.web.billim.member.dto.response.UpdateInfoResponse;
 import com.web.billim.member.service.MemberService;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.models.auth.In;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -33,7 +34,6 @@ import java.util.Optional;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/member")
-//@CrossOrigin(origins = "http://localhost:3000")
 public class MemberController {
 
     private final MemberService memberService;
@@ -48,6 +48,7 @@ public class MemberController {
         binder.addValidators(checkPasswordValidator);
     }
 
+    @ApiOperation(value = "회원 가입")
     @PostMapping("/signup")
     public ResponseEntity<Map<String, String>> memberSignUp (
             @Valid @RequestBody MemberSignupRequest memberSignupRequest,
@@ -61,69 +62,81 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @ApiOperation(value = "*닉네임 중복 확인", notes = "닉네임 중복시 true")
+    @ApiOperation(value = "닉네임 중복 확인", notes = "닉네임 중복시 true")
     @GetMapping("/check/nickname")
     public ResponseEntity<Boolean> checkDuplicateNickname(@RequestParam String nickname) {
         return ResponseEntity.ok(memberService.checkDuplicateNickname(nickname));
     }
 
-    @ApiOperation(value ="*이메일인증 링크 발송", notes = "해당 이메일에 인증 링크 발송")
-    @ApiImplicitParam(name = "email", value = "이메일")
+    @ApiOperation(value ="이메일인증 링크 발송", notes = "해당 이메일에 인증 링크 발송")
     @PostMapping("/email/send")
-    public ResponseEntity<?> sendEmail(@RequestBody EmailRequest request){
+    public ResponseEntity<Integer> sendEmail(@RequestBody EmailRequest request){
         memberService.certifyEmail(request);
         return ResponseEntity.ok(200);
     }
 
-    @ApiOperation(value = "*이메일인증 코드 확인", notes = "클라이언트가 링크를 클릭시 해당 APi로 연결")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "email", value = "인증할 이메일"),
-            @ApiImplicitParam(name = "certifyCode", value = "인증번호")
-    })
+    @ApiOperation(value = "이메일인증 코드 확인", notes = "클라이언트가 링크를 클릭시 해당 APi로 연결")
     @GetMapping("/email/confirm")
-    public ResponseEntity<?> confirmEmail(@RequestBody EmailAuthRequest emailAuthRequest){
+    public ResponseEntity<Integer> confirmEmail(@RequestBody EmailAuthRequest emailAuthRequest){
         memberService.confirmEmail(emailAuthRequest);
         return ResponseEntity.ok(200);
     }
 
     // 로그아웃
+
+
     // 비밀번호 찾기
-    //
-    @ApiOperation(value = "마이페이지 헤더 정보 조회", notes = "내 프로필, 쿠폰, 적립금, 작성가능한 리뷰 조회")
+//    @PostMapping("/email/find/password")
+//    public ResponseEntity<HttpStatus> findPassword(@RequestBody TemporaryPasswordDto temporaryPasswordDto) {
+//        memberService.findPassword(temporaryPasswordDto);
+//        return ResponseEntity.ok(HttpStatus.OK);
+//    }
+
+
+
+
+    @ApiOperation(value = "*마이페이지 헤더 정보 조회", notes = "내 프로필, 쿠폰, 적립금, 작성가능한 리뷰 조회")
     @GetMapping("/my/page")
     public ResponseEntity<MyPageInfoResponse> myPageInfo(@AuthenticationPrincipal long memberId) {
         MyPageInfoResponse resp = memberService.retrieveMyPageInfo(memberId);
         return ResponseEntity.ok(resp);
     }
 
-    @ApiOperation(value = "*내 회원정보 조회" , notes = "회원 정보 수정 시 내 정보 조회")
+    @ApiOperation(value = "내 회원정보 조회" , notes = "회원 정보 수정 시 내 정보 조회")
     @GetMapping("/my/info")
     public ResponseEntity<UpdateInfoResponse> updateMemberInfo(@AuthenticationPrincipal long memberId) {
         return ResponseEntity.ok(memberService.retrieveUpdateInfoPage(memberId));
     }
 
-    @ApiOperation(value = "*프로필 이미지 변경", notes = "회원 정보 수정 시 프로필 이미지 변경")
+    @ApiOperation(value = "회원정보 프로필 이미지 변경", notes = "회원 정보 수정 시 프로필 이미지 변경")
     @PutMapping(value = "/my/profile-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> updateProfileImage(@AuthenticationPrincipal long memberId, MultipartFile profileImage) {
+    public ResponseEntity<Void> updateProfileImage(
+            @AuthenticationPrincipal long memberId,
+            MultipartFile profileImage
+    ) {
         memberService.updateProfileImage(memberId, profileImage);
         return ResponseEntity.ok().build();
     }
 
-    @ApiOperation(value = "*주소 변경", notes = "회원 정보 수정 시 주소 변경 저장")
+    @ApiOperation(value = "회원정보 주소 변경", notes = "회원 정보 수정 시 주소 변경 저장")
     @PutMapping("/my/address")
-    public ResponseEntity<Void> updateAddress(@AuthenticationPrincipal long memberId, @RequestBody UpdateAddressRequest updateAddressRequest) {
+    public ResponseEntity<Void> updateAddress(
+            @AuthenticationPrincipal long memberId,
+            @RequestBody UpdateAddressRequest updateAddressRequest
+    ) {
         memberService.updateAddress(memberId, updateAddressRequest);
         return ResponseEntity.ok().build();
     }
 
-    @ApiOperation(value = "*닉네임 변경", notes = "회원 정보 수정 시 닉네임 변경 저장")
+    @ApiOperation(value = "회원정보 닉네임 변경", notes = "회원 정보 수정 시 닉네임 변경 저장")
     @PutMapping("/my/nickname")
-    public ResponseEntity<Void> updateNickname(@AuthenticationPrincipal long memberId, @RequestBody UpdateNicknameRequest updateNicknameRequest) {
+    public ResponseEntity<Void> updateNickname(
+            @AuthenticationPrincipal long memberId,
+            @RequestBody UpdateNicknameRequest updateNicknameRequest
+    ) {
         memberService.updateNickname(memberId, updateNicknameRequest);
         return ResponseEntity.ok().build();
     }
-
-
 
 
     // 비밀번호 재설정
@@ -142,12 +155,11 @@ public class MemberController {
 //    @PutMapping("/my/password")
 //    public ResponseEntity<Void> updatePassword(
 //            @AuthenticationPrincipal long memberId,
-//            @RequestParam String currentPassword, @RequestParam String newPassword
+//            @RequestBody UpdatePasswordRequest updatePasswordRequest
 //    ) {
-//        memberService.updatePassword(memberId, newPassword);
+//        memberService.updatePassword(memberId);
 //        return null;
 //    }
-
 
 
     // 소셜 연동

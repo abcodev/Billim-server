@@ -4,6 +4,7 @@ import static com.web.billim.chat.config.ChatConfig.*;
 
 import java.util.List;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -38,10 +39,8 @@ public class ChatController {
 	private final ChatRoomService chatRoomService;
 	private final ChatMessageService chatMessageService;
 
-	// Q. 구매자가 나간 상품에 대해서 다시 채팅방을 만들 수 있는가?
-	// 판매자가 보는 구매자가 결제한 목록
 	// TODO : 기존 채팅방이 유지되는거니까 다시 입장 했을 때 "~님이 입장했습니다" 시스템 메시지 보내도록.
-	@ApiOperation(value = "처음 채팅방 생성", notes = "구매자가 처음으로 채팅방을 없으면 생성하고, 있으면 그냥 입장한다.")
+	@ApiOperation(value = "구매자가 채팅방 생성", notes = "구매자가 처음으로 채팅방을 없으면 생성하고, 있으면 그냥 입장한다.")
 	@PostMapping("/room/product/{productId}")
 	public ResponseEntity<ChatRoomResponse> joinChatRoomForBuyer(@PathVariable long productId, @AuthenticationPrincipal long memberId) {
 		return ResponseEntity.ok(chatRoomService.joinChatRoom(memberId, productId));
@@ -55,6 +54,7 @@ public class ChatController {
 	 * 	5. 판매자가 그 판매관리 쪽에서 그 사용자에게 채팅방을 열려고 하면,
 	 * 	6. 결과가 2개가 나온다.
 	 */
+	@ApiOperation(value = "판매자가 채팅방 생성", notes = "판매자가가 판매목록에서 채팅방 생성한다.")
 	@PostMapping("/room/product/{productId}/{buyerId}")
 	public ResponseEntity<ChatRoomResponse> joinChatRoomForSeller(@PathVariable long productId, @PathVariable long buyerId) {
 		return ResponseEntity.ok(chatRoomService.joinChatRoom(buyerId, productId));
@@ -66,8 +66,6 @@ public class ChatController {
 		return ResponseEntity.ok(chatRoomService.retrieveAllJoined(buyerId));
 	}
 
-	// Jenkins 서버
-	// Spring Boot 서버
 	@ApiOperation(value = "판매자의 productId 에 따른 채팅방 목록", notes = "해당 상품에 대한 채팅방 전체 목록을 가져온다.")
 	@GetMapping("/rooms/product/{productId}")
 	public ResponseEntity<List<ChatRoomAndPreviewResponse>> retrieveAllProductChatRoom(@PathVariable long productId) {
@@ -89,6 +87,8 @@ public class ChatController {
 	}
 
 	// 차단하기
+
+
 	@ApiOperation(value = "채팅 text 전송", notes = "텍스트 형식의 채팅을 보낸다")
 	@MessageMapping("/send/text")
 	public void sendMessage(SendTextMessageRequest req) {
@@ -104,8 +104,3 @@ public class ChatController {
 	}
 
 }
-
-/*
-	1. FE 에서 S3 저장소에 사진을 업로드하고 URL 만 서버로 주는 것.
-	2. ByteCode 로 인코딩해서 전송해주는 방법.
-*/

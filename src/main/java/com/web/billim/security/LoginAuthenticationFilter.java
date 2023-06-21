@@ -1,6 +1,8 @@
 package com.web.billim.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.web.billim.common.exception.AuthenticationBusinessException;
+import com.web.billim.common.exception.handler.ErrorResponse;
 import com.web.billim.jwt.JwtTokenRedisService;
 import com.web.billim.member.type.MemberGrade;
 import com.web.billim.security.dto.LoginRequest;
@@ -22,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 @Slf4j
 public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -63,6 +66,21 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
         response.getWriter().write(jsonToken);
     }
 
+    // @Override
+    // protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+    //     if (failed instanceof AuthenticationBusinessException) {
+    //         AuthenticationBusinessException ex = (AuthenticationBusinessException) failed;
+    //         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+    //         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+    //
+    //         try (OutputStream outputStream = response.getOutputStream()) {
+    //             new ObjectMapper().writeValue(outputStream, ErrorResponse.toResponseEntity(ex.getErrorCode()).getBody());
+    //             outputStream.flush();
+    //         }
+    //     } else {
+    //         super.unsuccessfulAuthentication(request, response, failed);
+    //     }
+    // }
 
     private LoginRequest obtainEmailPassword(HttpServletRequest request) {
             try {

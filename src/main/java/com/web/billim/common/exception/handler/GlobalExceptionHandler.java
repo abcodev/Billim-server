@@ -21,10 +21,10 @@ public class GlobalExceptionHandler {
 		return ErrorResponse.toResponseEntity(ex.getErrorCode());
 	}
 
-	@ExceptionHandler(UnAuthorizedException.class)
-	public ResponseEntity<ErrorResponse> handleUnAuthorizedException(UnAuthorizedException ex){
-		return ErrorResponse.toResponseEntity(ex.getErrorCode());
-	}
+	// @ExceptionHandler(UnAuthorizedException.class)
+	// public ResponseEntity<ErrorResponse> handleUnAuthorizedException(UnAuthorizedException ex){
+	// 	return ErrorResponse.toResponseEntity(ex.getErrorCode());
+	// }
 
 	@ExceptionHandler(value = {TokenExpiredException.class})
 	public ResponseEntity<ErrorResponse> handlerException(TokenExpiredException e){

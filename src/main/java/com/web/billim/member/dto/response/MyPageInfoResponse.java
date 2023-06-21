@@ -18,9 +18,12 @@ import java.time.LocalDateTime;
 public class MyPageInfoResponse {
 
     private long memberId;
+
     private String nickname;
+
     @Enumerated(EnumType.STRING)
     private MemberGrade grade;
+
     private String profileImageUrl;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSS")
@@ -29,9 +32,9 @@ public class MyPageInfoResponse {
     @ApiModelProperty(value = "사용가능한 적립금 총 금액")
     private long availableAmount;
 
-    private long availableCoupon;
+    private long availableCouponCount;
 
-    public static MyPageInfoResponse of(Member member, long availableAmount) {
+    public static MyPageInfoResponse of(Member member, long availableAmount, long availableCouponCount) {
         return MyPageInfoResponse.builder()
                 .memberId(member.getMemberId())
                 .nickname(member.getNickname())
@@ -39,6 +42,7 @@ public class MyPageInfoResponse {
                 .profileImageUrl(member.getProfileImageUrl())
                 .createAt(member.getCreatedAt())
                 .availableAmount(availableAmount)
+                .availableCouponCount(availableCouponCount)
                 .build();
     }
 

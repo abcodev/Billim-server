@@ -11,6 +11,7 @@ import com.web.billim.coupon.service.CouponService;
 import com.web.billim.infra.ImageUploadService;
 import com.web.billim.jwt.JwtTokenRedisService;
 import com.web.billim.member.domain.Member;
+import com.web.billim.member.dto.TemporaryPasswordDto;
 import com.web.billim.member.dto.request.MemberSignupRequest;
 import com.web.billim.member.dto.request.UpdateAddressRequest;
 import com.web.billim.member.dto.request.UpdateNicknameRequest;
@@ -74,6 +75,11 @@ public class MemberService {
 		pointService.addPoint(command);
 	}
 
+	@Transactional
+	public boolean checkDuplicateNickname(String nickname) {
+		return memberRepository.existsByNickname(nickname);
+	}
+
 	public void certifyEmail(EmailRequest request) {
 		validateDuplicated(request.getEmail());
 		String authToken = UUID.randomUUID().toString();
@@ -112,7 +118,7 @@ public class MemberService {
 		return memberRepository.findById(memberId).map(member -> {
 			long availableAmount = pointService.retrieveAvailablePoint(memberId);
 			int availableCouponCount = couponService.retrieveAvailableCouponList(memberId).size();
-			return MyPageInfoResponse.of(member, availableAmount);
+			return MyPageInfoResponse.of(member, availableAmount, availableCouponCount);
 		}).orElseThrow();
 	}
 
@@ -147,15 +153,19 @@ public class MemberService {
 			});
 	}
 
-	@Transactional
-	public boolean checkDuplicateNickname(String nickname) {
-		return memberRepository.existsByNickname(nickname);
-	}
-
+//	@Transactional
+//	public void findPassword(TemporaryPasswordDto temporaryPasswordDto) {
+//		// 일치하는 회원정보 확인
+////		if(memberRepository.existsByEmailAndName(temporaryPasswordDto.getEmail(), temporaryPasswordDto.getName())) {
+////			throw new NotFoundException(ErrorCode.MEMBER_NOT_FOUND);
+////		}
+//		memberRepository.findByEmailAndName(temporaryPasswordDto.getEmail(), temporaryPasswordDto.getName())
+//				.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+//
+// 		// 임시 비밀번호 전송
+//		emailService.sendTempPassword(temporaryPasswordDto);
+//
+//		// 임시 비밀번호로 비밀번호 저장
+//
+//	}
 }
-
-// A 라는 사용자가 a, b, c 라는 상품을 올린다.
-// B 라는 사용자가 a 도 채팅, b 도 채팅, c 도 채팅을 열었다.
-// B 라는 사용자가 a 채팅창에서 차단
-// 그러면 b, c 채팅방에선 어떻게될까?
-//  -> 구매중인 목록이 있으면 차단 못하게..?

@@ -26,11 +26,10 @@ public class ProductRedisService {
     @Transactional
     public List<Long> rankPopularProduct(){
         ObjectMapper objectMapper = new ObjectMapper();
-        List<Long> mostProductLists = objectMapper.convertValue(
+        return objectMapper.convertValue(
                 Objects.requireNonNull(
                         redisTemplate.opsForZSet().
                                 reverseRange("product", 0, 4)), new TypeReference<List<Long>>() {});
-        return mostProductLists;
     }
 }
 
