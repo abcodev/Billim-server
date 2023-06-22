@@ -86,13 +86,11 @@ public class MemberController {
 
 
     // 비밀번호 찾기
-//    @PostMapping("/email/find/password")
-//    public ResponseEntity<HttpStatus> findPassword(@RequestBody TemporaryPasswordDto temporaryPasswordDto) {
-//        memberService.findPassword(temporaryPasswordDto);
-//        return ResponseEntity.ok(HttpStatus.OK);
-//    }
-
-
+    @PostMapping("/email/find/password")
+    public ResponseEntity<Void> findPassword(@RequestBody TemporaryPasswordDto temporaryPasswordDto) {
+        memberService.findPassword(temporaryPasswordDto);
+        return ResponseEntity.ok().build();
+    }
 
 
     @ApiOperation(value = "*마이페이지 헤더 정보 조회", notes = "내 프로필, 쿠폰, 적립금, 작성가능한 리뷰 조회")

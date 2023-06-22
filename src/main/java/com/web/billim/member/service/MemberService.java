@@ -75,6 +75,7 @@ public class MemberService {
 		pointService.addPoint(command);
 	}
 
+	// 닉네임 중복 확인
 	@Transactional
 	public boolean checkDuplicateNickname(String nickname) {
 		return memberRepository.existsByNickname(nickname);
@@ -153,19 +154,18 @@ public class MemberService {
 			});
 	}
 
-//	@Transactional
-//	public void findPassword(TemporaryPasswordDto temporaryPasswordDto) {
-//		// 일치하는 회원정보 확인
-////		if(memberRepository.existsByEmailAndName(temporaryPasswordDto.getEmail(), temporaryPasswordDto.getName())) {
-////			throw new NotFoundException(ErrorCode.MEMBER_NOT_FOUND);
-////		}
-//		memberRepository.findByEmailAndName(temporaryPasswordDto.getEmail(), temporaryPasswordDto.getName())
-//				.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
-//
-// 		// 임시 비밀번호 전송
-//		emailService.sendTempPassword(temporaryPasswordDto);
-//
-//		// 임시 비밀번호로 비밀번호 저장
-//
-//	}
+	@Transactional
+	public void findPassword(TemporaryPasswordDto temporaryPasswordDto) {
+		// 일치하는 회원정보 확인
+		memberRepository.findByEmailAndName(temporaryPasswordDto.getEmail(), temporaryPasswordDto.getName())
+				.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+
+ 		// 임시 비밀번호 전송
+		emailService.sendTempPassword(temporaryPasswordDto);
+
+		// 임시 비밀번호로 비밀번호 업데이트
+
+
+	}
+
 }
