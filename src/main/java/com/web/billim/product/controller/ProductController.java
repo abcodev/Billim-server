@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -62,7 +61,6 @@ public class ProductController {
             .map(product -> ProductListResponse.of(product, 5.0));
         return ResponseEntity.ok(resp);
     }
-
 
     @ApiOperation(value = "*전체 상품목록 조회", notes = "전체 상품목록조회, 페이징")
     @GetMapping("/list")
@@ -124,12 +122,12 @@ public class ProductController {
 
     @ApiOperation(value = "관심상품 등록/삭제", notes = "true 관심상품등록, false 관심등록삭제")
     @PostMapping("/interest")
-    public ResponseEntity<HttpStatus> saveOrDeleteInterest(
+    public ResponseEntity<Void> saveOrDeleteInterest(
             @AuthenticationPrincipal long memberId,
             @RequestBody InterestRequest interestRequest
     ){
         productInterestService.saveOrDeleteInterest(memberId,interestRequest);
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/my/interestList")
@@ -138,5 +136,13 @@ public class ProductController {
     ){
         return ResponseEntity.ok(productInterestService.myInterestProductList(memberId));
     }
+
+
+    // 판매중인 상품 목록 조회
+
+
+    // 판매중인 상품 클릭시 상세정보 조회
+
+
 }
 

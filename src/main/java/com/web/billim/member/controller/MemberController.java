@@ -56,7 +56,7 @@ public class MemberController {
     ) {
         if (bindingResult.hasErrors()) {
             Map<String, String> validatorResult = memberService.validateHandling(bindingResult);
-            return new ResponseEntity<>(validatorResult, HttpStatus.OK);
+            return new ResponseEntity<>(validatorResult, HttpStatus.BAD_REQUEST);
         }
         memberService.signUp(memberSignupRequest);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -76,7 +76,7 @@ public class MemberController {
     }
 
     @ApiOperation(value = "이메일인증 코드 확인", notes = "클라이언트가 링크를 클릭시 해당 APi로 연결")
-    @GetMapping("/email/confirm")
+    @PostMapping("/email/confirm")
     public ResponseEntity<Integer> confirmEmail(@RequestBody EmailAuthRequest emailAuthRequest){
         memberService.confirmEmail(emailAuthRequest);
         return ResponseEntity.ok(200);
@@ -86,6 +86,7 @@ public class MemberController {
 
 
     // 비밀번호 찾기
+    @ApiOperation(value = "*비밀번호 찾기", notes = "이메일, 이름 입력시 해당 이메일로 임시 비밀번호가 전송")
     @PostMapping("/email/find/password")
     public ResponseEntity<Void> findPassword(@RequestBody TemporaryPasswordDto temporaryPasswordDto) {
         memberService.findPassword(temporaryPasswordDto);

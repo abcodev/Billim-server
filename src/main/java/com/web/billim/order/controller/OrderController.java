@@ -27,7 +27,7 @@ public class OrderController {
     private final ProductService productService;
     private final PointService pointService;
 
-    @ApiOperation(value = "상품 주문")
+    @ApiOperation(value = "*상품 주문")
     @PostMapping("/")
     public ResponseEntity<PaymentInfoResponse> order(
             @RequestBody OrderCommand command,
@@ -44,9 +44,10 @@ public class OrderController {
     }
 
     @GetMapping("/my/sell/list")
-    public ResponseEntity<?> mySellList(@AuthenticationPrincipal long memberId) {
+    public ResponseEntity<Void> mySellList(@AuthenticationPrincipal long memberId) {
         return ResponseEntity.ok().build();
     }
+
 
 
 }
