@@ -43,10 +43,9 @@ public class OrderController {
         return ResponseEntity.ok(orderService.findMyOrder(memberId));
     }
 
-    @GetMapping("/my/sell/list")
-    public ResponseEntity<Void> mySellList(@AuthenticationPrincipal long memberId) {
-        return ResponseEntity.ok().build();
-    }
+
+
+
 
 
 

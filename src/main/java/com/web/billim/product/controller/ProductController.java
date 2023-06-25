@@ -107,20 +107,24 @@ public class ProductController {
     }
 
     // 상품 수정
+    @PutMapping("/update")
+    public ResponseEntity<Void> updateProduct(@AuthenticationPrincipal long memberId) {
+        return ResponseEntity.ok().build();
+    }
 
 
 
     // 상품삭제
-//    @DeleteMapping("/delete")
-//    public ResponseEntity<HttpStatus> deleteProduct(
-//            @AuthenticationPrincipal long memberId,
-//            @RequestParam("productId") long productId) {
-//        productService.delete(productId);
-//        return ResponseEntity.ok(HttpStatus.OK);
-//    }
+    @DeleteMapping("/delete")
+    public ResponseEntity<Void> deleteProduct(
+            @AuthenticationPrincipal long memberId,
+            @RequestParam("productId") long productId) {
+        productService.delete(productId);
+        return ResponseEntity.ok().build();
+    }
 
 
-    @ApiOperation(value = "관심상품 등록/삭제", notes = "true 관심상품등록, false 관심등록삭제")
+    @ApiOperation(value = "관심상품 등록, 삭제", notes = "true 관심상품등록, false 관심등록삭제")
     @PostMapping("/interest")
     public ResponseEntity<Void> saveOrDeleteInterest(
             @AuthenticationPrincipal long memberId,
@@ -130,18 +134,21 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
+    //
     @GetMapping("/my/interestList")
-    public ResponseEntity<MyInterestProductList> myInterestProductList(
-            @AuthenticationPrincipal long memberId
-    ){
+    public ResponseEntity<MyInterestProductList> myInterestProductList(@AuthenticationPrincipal long memberId){
         return ResponseEntity.ok(productInterestService.myInterestProductList(memberId));
     }
 
 
     // 판매중인 상품 목록 조회
+    @GetMapping("/my/sell/list")
+    public ResponseEntity<?> mySellList(@AuthenticationPrincipal long memberId) {
+        return ResponseEntity.ok().build();
+    }
 
 
-    // 판매중인 상품 클릭시 상세정보 조회
+    // 판매중인 상품 클릭시 판매 주문 내역 조회
 
 
 }

@@ -62,7 +62,7 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @ApiOperation(value = "닉네임 중복 확인", notes = "닉네임 중복시 true")
+    @ApiOperation(value = "닉네임 중복 확인", notes = "true 닉네임 중복")
     @GetMapping("/check/nickname")
     public ResponseEntity<Boolean> checkDuplicateNickname(@RequestParam String nickname) {
         return ResponseEntity.ok(memberService.checkDuplicateNickname(nickname));
@@ -70,19 +70,20 @@ public class MemberController {
 
     @ApiOperation(value ="이메일인증 링크 발송", notes = "해당 이메일에 인증 링크 발송")
     @PostMapping("/email/send")
-    public ResponseEntity<Integer> sendEmail(@RequestBody EmailRequest request){
+    public ResponseEntity<Void> sendEmail(@RequestBody EmailRequest request){
         memberService.certifyEmail(request);
-        return ResponseEntity.ok(200);
+        return ResponseEntity.ok().build();
     }
 
     @ApiOperation(value = "이메일인증 코드 확인", notes = "클라이언트가 링크를 클릭시 해당 APi로 연결")
     @PostMapping("/email/confirm")
-    public ResponseEntity<Integer> confirmEmail(@RequestBody EmailAuthRequest emailAuthRequest){
+    public ResponseEntity<Void> confirmEmail(@RequestBody EmailAuthRequest emailAuthRequest){
         memberService.confirmEmail(emailAuthRequest);
-        return ResponseEntity.ok(200);
+        return ResponseEntity.ok().build();
     }
 
     // 로그아웃
+
 
 
     // 비밀번호 찾기
@@ -92,7 +93,6 @@ public class MemberController {
         memberService.findPassword(temporaryPasswordDto);
         return ResponseEntity.ok().build();
     }
-
 
     @ApiOperation(value = "*마이페이지 헤더 정보 조회", notes = "내 프로필, 쿠폰, 적립금, 작성가능한 리뷰 조회")
     @GetMapping("/my/page")
