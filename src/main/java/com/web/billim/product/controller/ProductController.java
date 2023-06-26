@@ -155,6 +155,7 @@ public class ProductController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    @ApiOperation(value = "상품 리뷰리스트", notes = "상품디테일에서 리뷰리스트 가져오기")
     @GetMapping("/review/list")
     public ResponseEntity<List<ProductReviewList>> reviewList(@RequestParam long productId){
         return ResponseEntity.ok(reviewService.reviewList(productId));
