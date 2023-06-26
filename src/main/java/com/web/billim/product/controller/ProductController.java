@@ -99,7 +99,6 @@ public class ProductController {
     }
 
 
-    @ApiOperation(value = "상품 예약된 날짜 조회", notes = "예약중이어서 이용할 수 없는 날짜 조회")
     @GetMapping("/detail/date/{productId}")
     public ResponseEntity<List<LocalDate>> alreadyReservedDate(@PathVariable("productId") long productId) {
         List<LocalDate> dates = orderService.reservationDate(productId);
@@ -111,7 +110,6 @@ public class ProductController {
     public ResponseEntity<Void> updateProduct(@AuthenticationPrincipal long memberId) {
         return ResponseEntity.ok().build();
     }
-
 
 
     // 상품삭제

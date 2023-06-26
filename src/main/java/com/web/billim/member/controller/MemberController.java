@@ -2,7 +2,6 @@ package com.web.billim.member.controller;
 
 import com.web.billim.common.email.dto.EmailAuthRequest;
 import com.web.billim.common.email.dto.EmailRequest;
-import com.web.billim.common.email.service.EmailService;
 import com.web.billim.common.validation.CheckIdValidator;
 import com.web.billim.common.validation.CheckNickNameValidator;
 import com.web.billim.common.validation.CheckPasswordValidator;
@@ -11,10 +10,7 @@ import com.web.billim.member.dto.request.*;
 import com.web.billim.member.dto.response.MyPageInfoResponse;
 import com.web.billim.member.dto.response.UpdateInfoResponse;
 import com.web.billim.member.service.MemberService;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.models.auth.In;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -28,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 @RestController

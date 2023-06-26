@@ -28,18 +28,18 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(value = ConstraintViolationException.class)
 	public ResponseEntity<ErrorResponse> handleValidationException(ConstraintViolationException ex) {
-		StringBuilder message = new StringBuilder("잘못된 사용자 입력이 있습니다.\n");
+		StringBuilder message = new StringBuilder("잘못된 사용자 입력이 있습니다.");
 		ex.getConstraintViolations().forEach(error -> {
-			message.append(" - ").append(error.getMessage()).append("\n");
+			message.append(" - ").append(error.getMessage());
 		});
 		return ErrorResponse.toResponseEntity(ErrorCode.INVALIDATION_INPUT, message.toString());
 	}
 
 	@ExceptionHandler(value = {MethodArgumentNotValidException.class, BindException.class})
 	public ResponseEntity<ErrorResponse> handleValidationException(BindException ex) {
-		StringBuilder message = new StringBuilder("잘못된 사용자 입력이 있습니다.\n");
+		StringBuilder message = new StringBuilder("잘못된 사용자 입력이 있습니다.");
 		ex.getBindingResult().getFieldErrors().forEach(error -> {
-			message.append(" - ").append(error.getDefaultMessage()).append("\n");
+			message.append(" - ").append(error.getDefaultMessage());
 		});
 		return ErrorResponse.toResponseEntity(ErrorCode.INVALIDATION_INPUT, message.toString());
 	}

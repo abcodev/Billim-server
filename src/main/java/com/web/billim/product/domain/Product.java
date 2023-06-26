@@ -78,5 +78,22 @@ public class Product extends JpaEntity {
                 .build();
     }
 
+
+//    public static Product generateNewProduct(ProductRegisterRequest request, ProductCategory category, Member member, List<ImageProduct> images) {
+//        return Product.builder()
+//                .productCategory(category)
+//                .member(member)
+//                .productName(request.getName())
+//                .detail(request.getDetail())
+//                .price(request.getPrice())
+//                .tradeMethod(request.getTradeMethods().stream().map(Objects::toString).collect(Collectors.joining(",")))
+//                .place(request.getPlace())
+//                .images(images)
+//                .build();
+//    }
+
+
+
+
 }
 

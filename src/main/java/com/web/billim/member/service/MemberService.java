@@ -118,7 +118,7 @@ public class MemberService {
 	public MyPageInfoResponse retrieveMyPageInfo(long memberId) {
 		return memberRepository.findById(memberId).map(member -> {
 			long availableAmount = pointService.retrieveAvailablePoint(memberId);
-			int availableCouponCount = couponService.retrieveAvailableCouponList(memberId).size();
+			long availableCouponCount = couponService.retrieveAvailableCouponList(memberId).size();
 			return MyPageInfoResponse.of(member, availableAmount, availableCouponCount);
 		}).orElseThrow();
 	}

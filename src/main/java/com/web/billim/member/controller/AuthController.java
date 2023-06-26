@@ -3,6 +3,7 @@ package com.web.billim.member.controller;
 import com.web.billim.jwt.JwtService;
 import com.web.billim.jwt.dto.ReIssueTokenRequest;
 import com.web.billim.member.dto.response.ReIssueTokenResponse;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ public class AuthController {
 
     private final JwtService jwtService;
 
+    @ApiOperation(value = "AccessToken 재발급")
     @PostMapping("/reIssue/token")
     public ResponseEntity<?> reIssueToken(@RequestBody ReIssueTokenRequest req){
         String accessToken = req.getAccessToken();
