@@ -91,13 +91,6 @@ public class ProductController {
         return ResponseEntity.ok(resp);
     }
 
-    @GetMapping("/product/test")
-    public ResponseEntity<?> productTest(){
-        long productId = 1;
-        productRedisService.saveProduct(productId);
-        return ResponseEntity.ok(200);
-    }
-
 
     @GetMapping("/detail/date/{productId}")
     public ResponseEntity<List<LocalDate>> alreadyReservedDate(@PathVariable("productId") long productId) {
