@@ -41,6 +41,10 @@ public class ReviewService {
 				.orElseThrow(()-> new NotFoundException(ErrorCode.ORDER_NOT_FOUND));
 		long result = orders - reviews;
 		return result;
+
+//		long orders = orderService.numberOfOrders(memberId);
+//		long reviews = reviewRepository.countByMemberId(memberId);
+//		return orders - reviews;
 	}
 
 	public List<ProductReviewList> reviewList(long productId) {

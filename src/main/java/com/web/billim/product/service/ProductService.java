@@ -43,8 +43,7 @@ public class ProductService {
     public Product register(ProductRegisterRequest request) {
         Member registerMember = memberRepository.findById(request.getMemberId())
                 .orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
-//        ProductCategory productCategory = productCategoryRepository.findById(request.getCategoryId())
-        ProductCategory productCategory = (ProductCategory) productCategoryRepository.findByCategoryName(request.getCategory())
+        ProductCategory productCategory = productCategoryRepository.findByCategoryName(request.getCategory())
                 .orElseThrow(() -> new NotFoundException(ErrorCode.CATEGORY_NOT_FOUND));
 
         // 1. 이미지 저장
