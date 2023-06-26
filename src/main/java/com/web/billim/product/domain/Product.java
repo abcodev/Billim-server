@@ -65,20 +65,6 @@ public class Product extends JpaEntity {
         return this.images.get(0).getUrl();
     }
 
-    public static Product generateNewProduct(ProductRegisterRequest request, ProductCategory category, Member member, List<ImageProduct> images) {
-        return Product.builder()
-                .productCategory(category)
-                .member(member)
-                .productName(request.getName())
-                .detail(request.getDetail())
-                .price(request.getPrice())
-                .tradeMethod(request.getTradeMethods().stream().map(Objects::toString).collect(Collectors.joining(",")))
-                .tradeArea(request.getTradeArea())
-                .images(images)
-                .build();
-    }
-
-
 //    public static Product generateNewProduct(ProductRegisterRequest request, ProductCategory category, Member member, List<ImageProduct> images) {
 //        return Product.builder()
 //                .productCategory(category)
@@ -87,10 +73,24 @@ public class Product extends JpaEntity {
 //                .detail(request.getDetail())
 //                .price(request.getPrice())
 //                .tradeMethod(request.getTradeMethods().stream().map(Objects::toString).collect(Collectors.joining(",")))
-//                .place(request.getPlace())
+//                .tradeArea(request.getTradeArea())
 //                .images(images)
 //                .build();
 //    }
+
+
+    public static Product generateNewProduct(ProductRegisterRequest request, ProductCategory category, Member member, List<ImageProduct> images) {
+        return Product.builder()
+                .productCategory(category)
+                .member(member)
+                .productName(request.getRentalProduct())
+                .detail(request.getDescription())
+                .price(request.getRentalFee())
+                .tradeMethod(request.getTradeMethods().stream().map(Objects::toString).collect(Collectors.joining(",")))
+                .tradeArea(request.getPlace())
+                .images(images)
+                .build();
+    }
 
 
 

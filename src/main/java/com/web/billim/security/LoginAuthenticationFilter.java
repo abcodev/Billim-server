@@ -66,23 +66,6 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
         response.getWriter().write(jsonToken);
     }
 
-//     @Override
-//     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-//         if (failed instanceof AuthenticationBusinessException) {
-//             AuthenticationBusinessException ex = (AuthenticationBusinessException) failed;
-//             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-//
-//             try (OutputStream outputStream = response.getOutputStream()) {
-//                 new ObjectMapper().writeValue(outputStream, ErrorResponse.toResponseEntity(ex.getErrorCode()).getBody());
-//                 outputStream.flush();
-//             }
-//         } else {
-//             super.unsuccessfulAuthentication(request, response, failed);
-//         }
-//     }
-
-
     private LoginRequest obtainEmailPassword(HttpServletRequest request) {
             try {
                 InputStream requestBody = request.getInputStream();
