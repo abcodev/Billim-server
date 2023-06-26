@@ -11,7 +11,6 @@ import com.web.billim.security.dto.LoginAuthenticationToken;
 import com.web.billim.jwt.dto.RedisJwt;
 import com.web.billim.jwt.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
@@ -82,6 +81,7 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
     //         super.unsuccessfulAuthentication(request, response, failed);
     //     }
     // }
+
 
     private LoginRequest obtainEmailPassword(HttpServletRequest request) {
             try {

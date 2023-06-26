@@ -16,7 +16,7 @@ public class AuthController {
 
     private final JwtService jwtService;
 
-    @ApiOperation(value = "AccessToken 재발급")
+    @ApiOperation(value = "accessToken 재발급",notes = "accessToken 만료 응답 받았을시, refreshToken 을 통해 accessToken 을 재발급 요청")
     @PostMapping("/reIssue/token")
     public ResponseEntity<?> reIssueToken(@RequestBody ReIssueTokenRequest req){
         String accessToken = req.getAccessToken();

@@ -7,12 +7,14 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import java.time.LocalDateTime;
 
 @ApiModel(value = "마이페이지 회원 정보")
+@Setter
 @Getter
 @Builder
 public class MyPageInfoResponse {
@@ -33,6 +35,8 @@ public class MyPageInfoResponse {
     private long availableAmount;
 
     private long availableCouponCount;
+
+    private long availableReview;
 
     public static MyPageInfoResponse of(Member member, long availableAmount, long availableCouponCount) {
         return MyPageInfoResponse.builder()

@@ -12,7 +12,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.web.billim.common.exception.AuthenticationBusinessException;
 import com.web.billim.common.exception.handler.ErrorResponse;
@@ -35,5 +34,4 @@ public class AuthenticationFailureEntryPoint implements AuthenticationEntryPoint
 			new SimpleUrlAuthenticationFailureHandler().onAuthenticationFailure(request, response, failed);
 		}
 	}
-
 }

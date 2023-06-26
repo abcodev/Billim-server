@@ -22,6 +22,7 @@ import com.web.billim.point.dto.AddPointCommand;
 import com.web.billim.point.service.PointService;
 
 import com.web.billim.product.dto.response.ProductListResponse;
+import com.web.billim.product.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.crypto.password.PasswordEncoder;

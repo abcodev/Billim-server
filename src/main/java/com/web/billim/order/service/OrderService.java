@@ -1,5 +1,7 @@
 package com.web.billim.order.service;
 
+import com.web.billim.common.exception.NotFoundException;
+import com.web.billim.common.exception.handler.ErrorCode;
 import com.web.billim.member.domain.Member;
 import com.web.billim.member.service.MemberService;
 import com.web.billim.order.domain.ProductOrder;
@@ -78,5 +80,16 @@ public class OrderService {
                 .map(MyOrderHistory::from)
                 .collect(Collectors.toList());
        return new MyOrderHistoryListResponse(myOrderHistories);
+    }
+
+    public ProductOrder findByOrder(long orderId) {
+        ProductOrder productOrder = orderRepository.findById(orderId)
+                .orElseThrow();
+        return productOrder;
+    }
+
+    public long numberOfOrders(long memberId) {
+        return orderRepository.countByMember_memberId(memberId)
+                .orElseThrow(()-> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
     }
 }

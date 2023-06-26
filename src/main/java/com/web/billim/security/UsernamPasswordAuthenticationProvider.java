@@ -5,6 +5,7 @@ import com.web.billim.common.exception.handler.ErrorCode;
 import com.web.billim.security.domain.UserDetailsEntity;
 import com.web.billim.security.dto.LoginAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;

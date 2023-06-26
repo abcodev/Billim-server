@@ -60,8 +60,7 @@ public class EmailService {
             helper.setTo(email);
             helper.setSubject("BILLIM 이메일 인증링크 입니다");
             helper.setText(emailContent, true);
-            helper.setFrom(new InternetAddress("duatjgkr123@gmail.com", "BILLIM"));
-
+            helper.setFrom(new InternetAddress(billimEmail, "BILLIM"));
             javaMailSender.send(message);
         }catch (Exception e){
             System.out.println(e);
@@ -99,10 +98,8 @@ public class EmailService {
             helper.setTo(temporaryPasswordDto.getEmail());
             helper.setSubject("BILLIM 임시 비밀번호 안내");
             helper.setText(emailContent, true);
-            helper.setFrom(new InternetAddress("duatjgkr123@gmail.com", "BILLIM"));
             helper.setFrom(new InternetAddress(billimEmail, "BILLIM"));
             javaMailSender.send(message);
-
         }catch (Exception e){
             System.out.println(e);
             throw new BadRequestException(ErrorCode.EMAIL_SEND_FAILED);
