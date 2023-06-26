@@ -152,18 +152,18 @@ public class ProductController {
 
     @ApiOperation(value = "이용한 상품 후기 불러오기", notes = "작성한 후기,작성해야하는 후기를 불러옴")
     @GetMapping("/my/product/review/")
-    public ResponseEntity<?> myProductReview(@AuthenticationPrincipal long memberId){
+    public ResponseEntity<Void> myProductReview(@AuthenticationPrincipal long memberId){
         reviewService.findMyProductReview(memberId);
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
     @ApiOperation(value = "리뷰 작성하기" , notes = "리뷰 작성하기 입니다. productId를 넘겨주세요.")
     @PostMapping("/review/write")
-    public ResponseEntity<?> productWrite(
+    public ResponseEntity<Void> productWrite(
             @RequestBody ReviewWriteRequest reviewWriteRequest
     ){
         reviewService.productReviewWrite(reviewWriteRequest);
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
     @ApiOperation(value = "상품 리뷰리스트", notes = "상품디테일에서 리뷰리스트 가져오기")

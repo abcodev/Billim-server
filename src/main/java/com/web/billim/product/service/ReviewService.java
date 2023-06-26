@@ -19,14 +19,13 @@ import java.util.stream.Collectors;
 public class ReviewService {
 
 	private final ReviewRepository reviewRepository;
-
 	private final OrderService orderService;
 
-//	public double calculateStarRating(long productId) {
-//		return reviewRepository.findAllByProductId(productId).stream()
-//			.collect(Collectors.summarizingLong(Review::getStarRating))
-//			.getAverage();
-//	}
+	public double calculateStarRating(long productId) {
+		return reviewRepository.findAllByProductId(productId).stream()
+			.collect(Collectors.summarizingLong(Review::getStarRating))
+			.getAverage();
+	}
 
 	public void findMyProductReview(long memberId) {
 	}

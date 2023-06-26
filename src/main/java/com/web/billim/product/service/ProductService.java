@@ -37,6 +37,7 @@ public class ProductService {
     private final OrderService orderService;
     private final ImageUploadService imageUploadService;
     private final ProductRedisService productRedisService;
+    private final ReviewService reviewService;
 
     @Transactional
     public Product register(ProductRegisterRequest request) {
@@ -61,14 +62,14 @@ public class ProductService {
         return productCategoryRepository.findAll();
     }
 
-//    @Transactional
-//    public Page<ProductListResponse> findAllProduct(int page) {
-//        PageRequest paging = PageRequest.of(page, 20);
-//        return productRepository.findAllByOrderByCreatedAtDesc(paging).map(product -> {
-//            double starRating = reviewService.calculateStarRating(product.getProductId());
-//            return ProductListResponse.of(product, starRating);
-//        });
-//    }
+    @Transactional
+    public Page<ProductListResponse> findAllProduct(int page) {
+        PageRequest paging = PageRequest.of(page, 20);
+        return productRepository.findAllByOrderByCreatedAtDesc(paging).map(product -> {
+            double starRating = reviewService.calculateStarRating(product.getProductId());
+            return ProductListResponse.of(product, starRating);
+        });
+    }
 
     @Transactional
     public ProductDetailResponse retrieveDetail(long productId) {
@@ -89,6 +90,8 @@ public class ProductService {
     public void delete(long productId) {
         productRepository.deleteById(productId);
     }
+
+
 
 //    public ReservationDateResponse reservationDate(int productId) {
 //        Optional<ProductOrder> productOrder = Optional.ofNullable(orderRepository.findByProductId(productId)
