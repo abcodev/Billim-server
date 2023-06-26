@@ -22,6 +22,7 @@ import com.web.billim.point.dto.AddPointCommand;
 import com.web.billim.point.service.PointService;
 
 import com.web.billim.product.dto.response.ProductListResponse;
+import com.web.billim.product.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -117,7 +118,7 @@ public class MemberService {
 	public MyPageInfoResponse retrieveMyPageInfo(long memberId) {
 		return memberRepository.findById(memberId).map(member -> {
 			long availableAmount = pointService.retrieveAvailablePoint(memberId);
-			int availableCouponCount = couponService.retrieveAvailableCouponList(memberId).size();
+			long availableCouponCount = couponService.retrieveAvailableCouponList(memberId).size();
 			return MyPageInfoResponse.of(member, availableAmount, availableCouponCount);
 		}).orElseThrow();
 	}

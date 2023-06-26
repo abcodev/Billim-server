@@ -28,16 +28,13 @@ public class MyOrderHistory {
 
 
     public static MyOrderHistory from(ProductOrder productOrder){
-        List<ImageProduct> images = productOrder.getProduct().getImages();
-        String imageUrl = (images !=null && !images.isEmpty()) ? images.get(0).getUrl() : null;
-
         return MyOrderHistory.builder()
                 .orderId(productOrder.getOrderId())
                 .productId(productOrder.getProduct().getProductId())
                 .sellId(productOrder.getProduct().getMember().getMemberId())
                 .productName(productOrder.getProduct().getProductName())
                 .price(productOrder.getPrice())
-                .imageUrl(imageUrl)
+                .imageUrl(productOrder.getProduct().mainImage())
                 .status(productOrder.getStatus())
                 .orderTime(productOrder.getStartAt())
                 .build();

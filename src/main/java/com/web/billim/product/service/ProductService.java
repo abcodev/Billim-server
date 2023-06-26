@@ -36,7 +36,6 @@ public class ProductService {
     private final ImageProductRepository imageProductRepository;
     private final OrderService orderService;
     private final ImageUploadService imageUploadService;
-    private final ReviewService reviewService;
     private final ProductRedisService productRedisService;
 
     @Transactional
@@ -61,14 +60,14 @@ public class ProductService {
         return productCategoryRepository.findAll();
     }
 
-    @Transactional
-    public Page<ProductListResponse> findAllProduct(int page) {
-        PageRequest paging = PageRequest.of(page, 20);
-        return productRepository.findAllByOrderByCreatedAtDesc(paging).map(product -> {
-            double starRating = reviewService.calculateStarRating(product.getProductId());
-            return ProductListResponse.of(product, starRating);
-        });
-    }
+//    @Transactional
+//    public Page<ProductListResponse> findAllProduct(int page) {
+//        PageRequest paging = PageRequest.of(page, 20);
+//        return productRepository.findAllByOrderByCreatedAtDesc(paging).map(product -> {
+//            double starRating = reviewService.calculateStarRating(product.getProductId());
+//            return ProductListResponse.of(product, starRating);
+//        });
+//    }
 
     @Transactional
     public ProductDetailResponse retrieveDetail(long productId) {

@@ -59,6 +59,4 @@ public class CouponService {
         }
         couponIssue.use();
     }
-
-
 }

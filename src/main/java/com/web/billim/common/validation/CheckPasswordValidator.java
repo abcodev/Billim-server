@@ -8,8 +8,8 @@ import org.springframework.validation.Errors;
 public class CheckPasswordValidator extends AbstractValidator<MemberSignupRequest> {
     @Override
     protected void doValidate(MemberSignupRequest dto, Errors errors) {
-        if(!dto.getPassword().equals(dto.getPassword2())){
-            errors.rejectValue("password2","비밀번호 일치 오류","비밀번호가 일치하지 않습니다.");
+        if(!dto.getPassword().equals(dto.getConfirmPassword())){
+            errors.rejectValue("confirmPassword","비밀번호 일치 오류","비밀번호가 일치하지 않습니다.");
         }
     }
 }

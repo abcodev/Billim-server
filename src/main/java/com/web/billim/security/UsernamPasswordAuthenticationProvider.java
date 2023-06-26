@@ -10,8 +10,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import static com.web.billim.common.exception.handler.ErrorCode.DISCORD_PASSWORD;
-import static com.web.billim.common.exception.handler.ErrorCode.MEMBER_NOT_FOUND;
 
 
 public class UsernamPasswordAuthenticationProvider implements AuthenticationProvider {

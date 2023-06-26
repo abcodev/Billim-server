@@ -11,6 +11,7 @@ import com.web.billim.member.dto.request.*;
 import com.web.billim.member.dto.response.MyPageInfoResponse;
 import com.web.billim.member.dto.response.UpdateInfoResponse;
 import com.web.billim.member.service.MemberService;
+import com.web.billim.product.service.ReviewService;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiImplicitParam;
@@ -40,6 +41,7 @@ public class MemberController {
     private final CheckIdValidator checkIdValidator;
     private final CheckNickNameValidator checkNickNameValidator;
     private final CheckPasswordValidator checkPasswordValidator;
+    private final ReviewService reviewService;
 
     @InitBinder
     public void validatorBinder(WebDataBinder binder) {
@@ -56,7 +58,7 @@ public class MemberController {
     ) {
         if (bindingResult.hasErrors()) {
             Map<String, String> validatorResult = memberService.validateHandling(bindingResult);
-            return new ResponseEntity<>(validatorResult, HttpStatus.OK);
+            return new ResponseEntity<>(validatorResult, HttpStatus.BAD_REQUEST);
         }
         memberService.signUp(memberSignupRequest);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -70,16 +72,16 @@ public class MemberController {
 
     @ApiOperation(value ="이메일인증 링크 발송", notes = "해당 이메일에 인증 링크 발송")
     @PostMapping("/email/send")
-    public ResponseEntity<Integer> sendEmail(@RequestBody EmailRequest request){
+    public ResponseEntity<Void> sendEmail(@RequestBody EmailRequest request){
         memberService.certifyEmail(request);
-        return ResponseEntity.ok(200);
+        return ResponseEntity.ok().build();
     }
 
     @ApiOperation(value = "이메일인증 코드 확인", notes = "클라이언트가 링크를 클릭시 해당 APi로 연결")
     @GetMapping("/email/confirm")
     public ResponseEntity<Integer> confirmEmail(@RequestBody EmailAuthRequest emailAuthRequest){
         memberService.confirmEmail(emailAuthRequest);
-        return ResponseEntity.ok(200);
+        return ResponseEntity.ok().build();
     }
 
     // 로그아웃
@@ -99,6 +101,8 @@ public class MemberController {
     @GetMapping("/my/page")
     public ResponseEntity<MyPageInfoResponse> myPageInfo(@AuthenticationPrincipal long memberId) {
         MyPageInfoResponse resp = memberService.retrieveMyPageInfo(memberId);
+        long availableReview = reviewService.myReviewNoCount(memberId);
+        resp.setAvailableReview(availableReview);
         return ResponseEntity.ok(resp);
     }
 
@@ -163,16 +167,8 @@ public class MemberController {
 
 
     // 소셜 연동
-
-
-
     // 회원 차단
-
-
-
     // 회원 탈퇴
-
-
 }
 
 
