@@ -8,7 +8,6 @@ import com.web.billim.jwt.JwtTokenFilterConfigurer;
 import com.web.billim.jwt.JwtUtils;
 
 import com.web.billim.security.UserDetailServiceImpl;
-import com.web.billim.security.handler.AuthenticationFailureEntryPoint;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -37,7 +36,7 @@ public class WebSecurityConfig {
     private final UserDetailServiceImpl userDetailsService;
     private final JwtTokenRedisService jwtTokenRedisService;
     private final SecurityFilterSkipMatcher securityFilterSkipMatcher;
-    private final AuthenticationFailureEntryPoint authenticationFailureEntryPoint;
+//    private final AuthenticationFailureEntryPoint authenticationFailureEntryPoint;
 
     @Bean
     public SecurityFilterChain securityFilterChain(AuthenticationManager authenticationManager,HttpSecurity http) throws Exception{
@@ -59,7 +58,7 @@ public class WebSecurityConfig {
                 .anyRequest().authenticated()
 
                 .and()
-                .apply(new JwtTokenFilterConfigurer(jwtUtils, authenticationManager,jwtTokenRedisService, securityFilterSkipMatcher, authenticationFailureEntryPoint));
+                .apply(new JwtTokenFilterConfigurer(jwtUtils, authenticationManager,jwtTokenRedisService, securityFilterSkipMatcher));
 
         return http.build();
     }
