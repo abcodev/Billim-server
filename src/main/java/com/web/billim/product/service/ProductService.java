@@ -74,14 +74,14 @@ public class ProductService {
     @Transactional
     public ProductDetailResponse retrieveDetail(long productId) {
         Product product = productRepository.findById(productId)
-            .orElseThrow(() -> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
         List<LocalDate> alreadyDates = orderService.reservationDate(productId);
         productRedisService.saveProduct(productId);
         return ProductDetailResponse.of(product, alreadyDates);
     }
 
     public List<MostProductList> findMostPopularProduct() {
-         return productRepository.findAllByProductIdIn(productRedisService.rankPopularProduct())
+        return productRepository.findAllByProductIdIn(productRedisService.rankPopularProduct())
                 .stream().map(MostProductList::from)
                 .collect(Collectors.toList());
     }
@@ -100,6 +100,8 @@ public class ProductService {
 //        return (ReservationDateResponse) productOrder.stream().map(ReservationDateResponse::of)
 //                .collect(Collectors.toList());
 //    }
+
+
 
 }
 

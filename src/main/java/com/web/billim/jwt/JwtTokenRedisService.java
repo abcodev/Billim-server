@@ -1,6 +1,8 @@
 package com.web.billim.jwt;
 
+import com.web.billim.common.email.domain.RedisEmail;
 import com.web.billim.common.exception.TokenExpiredException;
+import com.web.billim.common.email.repository.RedisEmailRepository;
 import com.web.billim.jwt.dto.RedisJwt;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

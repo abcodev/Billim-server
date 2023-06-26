@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.security.SecureRandom;
 import java.util.UUID;
 
 @Slf4j
@@ -108,26 +107,6 @@ public class EmailService {
 
     public String getTempPassword(){
         return UUID.randomUUID().toString().replace("-", "").substring(0,12);
-
-//        SecureRandom random = new SecureRandom();
-//        StringBuilder tempPassword = new StringBuilder();
-//        for (int i = 0; i < 10; i++) {
-//            int rcd = random.nextInt(4);
-//            if (rcd == 0) {
-//                int randomNum = random.nextInt(10);
-//                tempPassword.append(randomNum);
-//            } else if (rcd == 1) {
-//                char randomChar = (char) (random.nextInt(26) + 65);
-//                tempPassword.append(randomChar);
-//            } else if (rcd == 2){
-//                char randomChar = (char) (random.nextInt(26) + 97);
-//                tempPassword.append(randomChar);
-//            } else {
-//                char randomChar = (char) (random.nextInt(33) + 38);
-//                tempPassword.append(randomChar);
-//            }
-//        }
-//        return tempPassword.toString();
     }
 
 }

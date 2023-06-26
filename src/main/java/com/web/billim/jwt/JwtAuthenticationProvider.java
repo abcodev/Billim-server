@@ -19,11 +19,10 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String jwt = (String) authentication.getCredentials();
-//        String ase = ((JwtAuthenticationToken)authentication).getPrincipal();
-        if (jwt != null && jwtUtils.tokenValidation(jwt)) { // 토큰 값이 없지 않고, 토큰유효성 검사 메서드를 통과한 경우
+        if (jwt != null && jwtUtils.tokenValidation(jwt)) {
             return jwtUtils.getAuthentication(jwt);
         }
-        throw  new BadCredentialsException("Invalid JWT token");
+        throw new BadCredentialsException("Invalid JWT token");
     }
 
     @Override
