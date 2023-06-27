@@ -43,8 +43,7 @@ public class ProductService {
     public Product register(ProductRegisterRequest request) {
         Member registerMember = memberRepository.findById(request.getMemberId())
                 .orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
-        ProductCategory productCategory = productCategoryRepository.findById(request.getCategoryId())
-//        ProductCategory productCategory = (ProductCategory) productCategoryRepository.findByCategoryName(request.getCategory())
+        ProductCategory productCategory = productCategoryRepository.findByCategoryName(request.getCategory())
                 .orElseThrow(() -> new NotFoundException(ErrorCode.CATEGORY_NOT_FOUND));
 
         // 1. 이미지 저장
@@ -74,14 +73,14 @@ public class ProductService {
     @Transactional
     public ProductDetailResponse retrieveDetail(long productId) {
         Product product = productRepository.findById(productId)
-            .orElseThrow(() -> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
         List<LocalDate> alreadyDates = orderService.reservationDate(productId);
         productRedisService.saveProduct(productId);
         return ProductDetailResponse.of(product, alreadyDates);
     }
 
     public List<MostProductList> findMostPopularProduct() {
-         return productRepository.findAllByProductIdIn(productRedisService.rankPopularProduct())
+        return productRepository.findAllByProductIdIn(productRedisService.rankPopularProduct())
                 .stream().map(MostProductList::from)
                 .collect(Collectors.toList());
     }
@@ -100,6 +99,8 @@ public class ProductService {
 //        return (ReservationDateResponse) productOrder.stream().map(ReservationDateResponse::of)
 //                .collect(Collectors.toList());
 //    }
+
+
 
 }
 

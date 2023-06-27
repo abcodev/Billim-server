@@ -14,9 +14,11 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
 
     @Query("SELECT count(r) FROM Review r WHERE r.productOrder.member.memberId = :memberId ")
     Optional<Long> countByMemberId(long memberId);
+//    Long countByMemberId(@Param("memberId") long memberId); // 요거 안하면 에러나는걸로 아는데,,
 
     @Query("SELECT r FROM Review r WHERE r.productOrder.product.productId = :productId")
     List<Review> findAllByProductId(long productId);
+//    List<Review> findAllByProductId(@Param("productId") long productId);
 
 //	@Query("SELECT r FROM Review r WHERE r.product.id = :productId")
 //	List<Review> findAllByProductId(@Param("productId") long productId);

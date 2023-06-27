@@ -159,7 +159,7 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
-    @ApiOperation(value = "상품 리뷰리스트", notes = "상품디테일에서 리뷰리스트 가져오기")
+    @ApiOperation(value = "상품 리뷰 리스트", notes = "상품 디테일에서 리뷰리스트 가져오기")
     @GetMapping("/review/list")
     public ResponseEntity<List<ProductReviewList>> reviewList(@RequestParam long productId){
         return ResponseEntity.ok(reviewService.reviewList(productId));

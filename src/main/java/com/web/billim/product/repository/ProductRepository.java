@@ -31,7 +31,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 //    @Query(value = "SELECT * FROM product ORDER BY product_id DESC", nativeQuery = true)
 //    Page<Product> findAllOrderByCreatedAtDesc(Pageable paging);
 
-//     JPQL
 //     @Query("SELECT p FROM Product p WHERE p.member.memberId = :memberId")
 //     List<Product> findByMemberId(@Param("memberId") int memberId);
 
