@@ -43,16 +43,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }catch (AuthenticationException authenticationException){
                 SecurityContextHolder.clearContext();
 
-//                response.setStatus(401);
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                 try (OutputStream outputStream = response.getOutputStream()) {
                     new ObjectMapper().writeValue(outputStream, authenticationException.getMessage());
                     outputStream.flush();
                 }
-
             }
-//        filterChain.doFilter(request,response);
     }
 
     private String resolveToken(HttpServletRequest request){

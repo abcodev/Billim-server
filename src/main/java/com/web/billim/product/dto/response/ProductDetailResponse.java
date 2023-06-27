@@ -1,6 +1,7 @@
 package com.web.billim.product.dto.response;
 
 import com.web.billim.member.domain.Member;
+import com.web.billim.member.type.MemberGrade;
 import com.web.billim.product.domain.ImageProduct;
 import com.web.billim.product.domain.Product;
 import com.web.billim.product.type.TradeMethod;
@@ -25,7 +26,13 @@ public class ProductDetailResponse {
     private String detail;
     @ApiModelProperty("대여료(/일)")
     private long price;
-    private Member member;
+
+//    private Member member;
+    private long sellerMemberId;
+    private String sellerNickname;
+    private String sellerGrade;
+    private String sellerProfileImage;
+
     @ApiModelProperty("상품 이미지 url")
     private List<String> imageUrls;
     @ApiModelProperty("거래 방법")
@@ -37,7 +44,11 @@ public class ProductDetailResponse {
         return ProductDetailResponse.builder()
                 .productId(product.getProductId())
                 .productName(product.getProductName())
-                .member(product.getMember())
+//                .member(product.getMember())
+                .sellerMemberId(product.getMember().getMemberId())
+                .sellerNickname(product.getMember().getNickname())
+                .sellerGrade(product.getMember().getGrade().getAuthority())
+                .sellerProfileImage(product.getMember().getProfileImageUrl())
                 .detail(product.getDetail())
                 .price(product.getPrice())
                 .imageUrls(
