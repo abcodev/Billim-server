@@ -1,8 +1,10 @@
 package com.web.billim.jwt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.web.billim.jwt.dto.JwtAuthenticationToken;
 import com.web.billim.security.SecurityFilterSkipMatcher;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,11 +15,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Arrays;
 
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-
     public static final String AUTHORIZATION_HEADER = "Authorization";
 
     private final AuthenticationManager authenticationManager;
@@ -37,16 +39,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             try {
                 JwtAuthenticationToken jwtAuthenticationToken = (JwtAuthenticationToken) authenticationManager.authenticate(new JwtAuthenticationToken(jwt));
                 if(jwtAuthenticationToken.isAuthenticated()) {
-                    if (!(request.getRequestURI().equals("/auth/reIssue/token"))) {
-                        SecurityContextHolder.getContext().setAuthentication(jwtAuthenticationToken);
-                    }
+                    SecurityContextHolder.getContext().setAuthentication(jwtAuthenticationToken);
                 }
-            }catch (AuthenticationException authenticationException){
+                filterChain.doFilter(request,response);
+            } catch (AuthenticationException authenticationException){
                 SecurityContextHolder.clearContext();
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                try (OutputStream outputStream = response.getOutputStream()) {
+                    new ObjectMapper().writeValue(outputStream, authenticationException.getMessage());
+                    outputStream.flush();
+                }
             }
-        filterChain.doFilter(request,response);
     }
-
     private String resolveToken(HttpServletRequest request, String header){
         String bearerToken = request.getHeader(header);
         if(bearerToken != null && bearerToken.startsWith("Bearer ")){
@@ -54,7 +59,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         return null;
     }
-
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         return securityFilterSkipMatcher.shouldSkipFilter(request);
