@@ -107,7 +107,8 @@ public class ProductController {
 
     // 상품 수정
     @PutMapping("/update")
-    public ResponseEntity<Void> updateProduct(@AuthenticationPrincipal long memberId) {
+    public ResponseEntity<Void> updateProduct(@RequestParam("productId") long productId) {
+        productService.update(productId);
         return ResponseEntity.ok().build();
     }
 
@@ -115,7 +116,6 @@ public class ProductController {
     // 상품삭제
     @DeleteMapping("/delete")
     public ResponseEntity<Void> deleteProduct(
-            @AuthenticationPrincipal long memberId,
             @RequestParam("productId") long productId) {
         productService.delete(productId);
         return ResponseEntity.ok().build();
@@ -138,16 +138,18 @@ public class ProductController {
         return ResponseEntity.ok(productInterestService.myInterestProductList(memberId));
     }
 
-
     // 판매중인 상품 목록 조회
     @GetMapping("/my/sell/list")
-    public ResponseEntity<?> mySellList(@AuthenticationPrincipal long memberId) {
+    public ResponseEntity<?> mySellList() {
         return ResponseEntity.ok().build();
     }
 
 
     // 판매중인 상품 클릭시 판매 주문 내역 조회
-
+    @GetMapping("/my/sell/detail")
+    public ResponseEntity<?> mySellDetail() {
+        return ResponseEntity.ok().build();
+    }
 
 
     @ApiOperation(value = "이용한 상품 후기 불러오기", notes = "작성한 후기,작성해야하는 후기를 불러옴")

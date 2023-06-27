@@ -90,6 +90,11 @@ public class ProductService {
         productRepository.deleteById(productId);
     }
 
+    @Transactional
+    public void update(long productId) {
+
+
+    }
 
 
 //    public ReservationDateResponse reservationDate(int productId) {
