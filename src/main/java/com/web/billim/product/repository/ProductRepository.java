@@ -13,15 +13,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, Long>, ProductQueryDslRepository {
 
     List<Product> findByMember_memberId(long memberId);
 
     Page<Product> findAllByOrderByCreatedAtDesc(Pageable paging);
 
-    @Query("SELECT p FROM Product p "
-        + "WHERE p.productName like %:keyword% OR p.detail like %:keyword% ORDER BY p.createdAt DESC")
-    Page<Product> findAllByKeyword(@Param("keyword") String keyword, Pageable pageable);
+    // @Query("SELECT p FROM Product p "
+    //     + "WHERE p.productName like %:keyword% OR p.detail like %:keyword% ORDER BY p.createdAt DESC")
+    // Page<Product> findAllByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
     List<Product> findAllByProductIdIn(List<Long> mostProductLists);
 
