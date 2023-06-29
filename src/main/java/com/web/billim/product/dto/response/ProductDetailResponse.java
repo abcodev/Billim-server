@@ -1,5 +1,6 @@
 package com.web.billim.product.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.web.billim.product.domain.ImageProduct;
 import com.web.billim.product.domain.Product;
 import com.web.billim.product.type.TradeMethod;
@@ -36,6 +37,7 @@ public class ProductDetailResponse {
     @ApiModelProperty("거래 방법")
     private List<TradeMethod> tradeMethods;
     @ApiModelProperty("이미 예약된 날짜")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private List<LocalDate> alreadyDates;
 
     @ApiModelProperty("상품 후기")

@@ -45,7 +45,6 @@ public class ChatRoomService {
 		return ChatRoomResponse.from(chatRoom);
 	}
 
-	// 채팅 메시지를 읽어올 때 데이터가 너무 많아서 성능이슈가 발생할 수 있다면 페이징 처리를 통한 스크롤 구현을 고려
 	public List<ChatMessageResponse> retrieveAllChatMessage(long chatRoomId) {
 		ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow();
 		return chatMessageRepository.findAllByChatRoom(chatRoom).stream()
