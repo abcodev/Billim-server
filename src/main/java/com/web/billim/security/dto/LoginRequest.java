@@ -16,6 +16,4 @@ public class LoginRequest {
     private String email;
     @ApiModelProperty(value = "Password", required = true)
     private String password;
-
-
 }

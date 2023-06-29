@@ -30,22 +30,16 @@ public enum ErrorCode {
     REFRESH_TOKEN_NOT_FOUND(NOT_FOUND, "로그아웃 된 사용자입니다"),
     RESOURCE_NOT_FOUND(NOT_FOUND, "리소스를 찾을 수 없습니다."),
 
-
-
+    
     /* 409 CONFLICT : Resource 의 현재 상태와 충돌. 보통 중복된 데이터 존재 */
     DUPLICATE_RESOURCE(CONFLICT, "데이터가 이미 존재합니다"),
     DUPLICATE_EMAIL(CONFLICT, "중복된 이메일 입니다."),
     DUPLICATE_NICKNAME(CONFLICT, "중복된 닉네임 입니다."),
 
-
     /* INTERNAL_SERVER_ERROR */
     IMAGE_UPLOAD_FAILED(INTERNAL_SERVER_ERROR, "이미지 업로드에 실패했습니다."),
     EMAIL_SEND_FAILED(INTERNAL_SERVER_ERROR,"이메일 전송을 실패하였습니다.");
 
-
     private final HttpStatus httpStatus;
     private final String message;
-
-
-
 }

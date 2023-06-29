@@ -31,18 +31,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String jwt = resolveToken(request);
+        String jwt = resolveToken(request,AUTHORIZATION_HEADER);
             try {
                 JwtAuthenticationToken jwtAuthenticationToken = (JwtAuthenticationToken) authenticationManager.authenticate(new JwtAuthenticationToken(jwt));
                 if(jwtAuthenticationToken.isAuthenticated()) {
-                    if (!(request.getRequestURI().equals("/auth/reIssue/token"))) {
-                        SecurityContextHolder.getContext().setAuthentication(jwtAuthenticationToken);
-                    }
+                    SecurityContextHolder.getContext().setAuthentication(jwtAuthenticationToken);
                 }
                 filterChain.doFilter(request,response);
-            }catch (AuthenticationException authenticationException){
+            } catch (AuthenticationException authenticationException){
                 SecurityContextHolder.clearContext();
-
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                 try (OutputStream outputStream = response.getOutputStream()) {
@@ -52,8 +49,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
     }
 
-    private String resolveToken(HttpServletRequest request){
-        String bearerToken = request.getHeader(JwtAuthenticationFilter.AUTHORIZATION_HEADER);
+    private String resolveToken(HttpServletRequest request, String header){
+        String bearerToken = request.getHeader(header);
         if(bearerToken != null && bearerToken.startsWith("Bearer ")){
             return bearerToken.substring(7);
         }

@@ -84,8 +84,10 @@ public class ProductController {
     @GetMapping("/detail/{productId}")
     public ResponseEntity<ProductDetailResponse> productDetail(@PathVariable("productId") long productId) {
         ProductDetailResponse resp = productService.retrieveDetail(productId);
+        resp.setProductReviewLists(reviewService.reviewList(productId));
         return ResponseEntity.ok(resp);
     }
+
 
     @GetMapping("/detail/date/{productId}")
     public ResponseEntity<List<LocalDate>> alreadyReservedDate(@PathVariable("productId") long productId) {
