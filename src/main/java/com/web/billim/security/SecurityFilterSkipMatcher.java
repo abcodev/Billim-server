@@ -8,7 +8,9 @@ import java.util.Arrays;
 public class SecurityFilterSkipMatcher{
 
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
+
     private final String[] excludedPaths = {
+            "/",
             "/member/email/**",
             "/member/signup",
             "/member/check/nickname",
@@ -19,9 +21,11 @@ public class SecurityFilterSkipMatcher{
             "/configuration/security", "/swagger-ui.html/**", "/swagger-ui/**", "/webjars/**", "/swagger/**",
             "/auth/reIssue/token"
     };
+
     public boolean shouldSkipFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
         return Arrays.stream(excludedPaths)
                 .anyMatch(pattern -> pathMatcher.match(pattern, path));
     }
+
 }

@@ -20,7 +20,7 @@ public class JwtTokenRedisService {
     public  RedisJwt compareToken(long memberId) {
         RedisJwt redisJwt = jwtTokenRedisRepository.findById(String.valueOf(memberId))
                 .orElseThrow(()-> new TokenExpiredException(MISMATCH_REFRESH_TOKEN));
-        log.info("리프레시 트큰 값: "+redisJwt.getRefreshToken());
+        log.info("리프레시 토큰 값: "+redisJwt.getRefreshToken());
         return redisJwt;
     }
     public void saveToken(RedisJwt redisJwt){

@@ -1,8 +1,10 @@
 package com.web.billim.jwt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.web.billim.jwt.dto.JwtAuthenticationToken;
 import com.web.billim.security.SecurityFilterSkipMatcher;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
-
 
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
