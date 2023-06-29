@@ -9,12 +9,14 @@ import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
+@Setter
 @Builder
 public class ProductDetailResponse {
 
@@ -39,6 +41,9 @@ public class ProductDetailResponse {
     private List<TradeMethod> tradeMethods;
     @ApiModelProperty("이미 예약된 날짜")
     private List<LocalDate> alreadyDates;
+
+    @ApiModelProperty("상품 후기")
+    private List<ProductReviewList> productReviewLists;
 
     public static ProductDetailResponse of(Product product, List<LocalDate> alreadyDates){
         return ProductDetailResponse.builder()
