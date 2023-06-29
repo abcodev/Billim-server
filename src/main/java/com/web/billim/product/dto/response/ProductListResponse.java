@@ -16,7 +16,6 @@ public class ProductListResponse {
 
     private long productId;
     private String productName;
-//    private ProductCategory productCategory;
     private String categoryName;
     private String detail;
     private long price;
