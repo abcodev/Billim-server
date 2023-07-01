@@ -1,12 +1,9 @@
 package com.web.billim.product.dto.response;
 
-import com.web.billim.member.domain.Member;
-import com.web.billim.member.type.MemberGrade;
 import com.web.billim.product.domain.ImageProduct;
 import com.web.billim.product.domain.Product;
 import com.web.billim.product.type.TradeMethod;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.annotations.ApiOperation;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,7 +26,6 @@ public class ProductDetailResponse {
     @ApiModelProperty("대여료(/일)")
     private long price;
 
-//    private Member member;
     private long sellerMemberId;
     private String sellerNickname;
     private String sellerGrade;
@@ -46,14 +42,14 @@ public class ProductDetailResponse {
     private List<ProductReviewList> productReviewLists;
 
     public static ProductDetailResponse of(Product product, List<LocalDate> alreadyDates){
+        var member = product.getMember();
         return ProductDetailResponse.builder()
                 .productId(product.getProductId())
                 .productName(product.getProductName())
-//                .member(product.getMember())
-                .sellerMemberId(product.getMember().getMemberId())
-                .sellerNickname(product.getMember().getNickname())
-                .sellerGrade(product.getMember().getGrade().getAuthority())
-                .sellerProfileImage(product.getMember().getProfileImageUrl())
+                .sellerMemberId(member.getMemberId())
+                .sellerNickname(member.getNickname())
+                .sellerGrade(member.getGrade().getAuthority())
+                .sellerProfileImage(member.getProfileImageUrl())
                 .detail(product.getDetail())
                 .price(product.getPrice())
                 .imageUrls(

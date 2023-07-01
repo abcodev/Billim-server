@@ -61,4 +61,9 @@ public class Member extends JpaEntity {
     public void updateNickname(String nickname) {
         this.nickname = nickname;
     }
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
+
 }

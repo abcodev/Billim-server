@@ -2,7 +2,6 @@ package com.web.billim.product.dto.response;
 
 import com.web.billim.product.domain.ImageProduct;
 import com.web.billim.product.domain.Product;
-import com.web.billim.product.domain.ProductCategory;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,7 +27,6 @@ public class ProductListResponse {
         return ProductListResponse.builder()
                 .productId(product.getProductId())
                 .productName(product.getProductName())
-//                .productCategory(product.getProductCategory())
                 .categoryName(product.getProductCategory().getCategoryName())
                 .detail(product.getDetail())
                 .price(product.getPrice())

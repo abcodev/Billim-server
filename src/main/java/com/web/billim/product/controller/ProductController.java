@@ -50,41 +50,37 @@ public class ProductController {
         return ResponseEntity.ok(productService.register(request));
     }
 
+    @ApiOperation(value = "*전체 상품목록 조회 & 검색 & 페이징", notes = "전체 상품목록 조회, 카테고리별 검색, 키워드 검색, 페이징 처리")
     @Transactional
-    @GetMapping("/list/search/{keyword}")
-    public ResponseEntity<Page<ProductListResponse>> test(
-            @PathVariable String keyword,
-            @RequestParam(required = false, defaultValue = "0", value = "page") int page
+    @GetMapping("/list/search")
+    public ResponseEntity<Page<ProductListResponse>> productList(
+            @RequestParam(required = false, defaultValue = "") String category,
+            @RequestParam(required = false, defaultValue = "") String keyword,
+            @RequestParam(required = false, defaultValue = "1", value = "page") int page
     ) {
-        PageRequest paging = PageRequest.of(page, 20);
-        Page<ProductListResponse> resp = productRepository.findAllByKeyword(keyword, paging)
+        PageRequest paging = PageRequest.of(page - 1, 20);
+        Page<ProductListResponse> resp = productRepository.findAllByKeyword(category, keyword, paging)
             .map(product -> ProductListResponse.of(product, 5.0));
         return ResponseEntity.ok(resp);
     }
 
-    @ApiOperation(value = "*전체 상품목록 조회", notes = "전체 상품목록조회, 페이징")
-    @GetMapping("/list")
-    public ResponseEntity<Page<ProductListResponse>> productList(
-            @RequestParam(required = false, defaultValue = "0", value = "page") int page
-    ) {
-        Page<ProductListResponse> productList = productService.findAllProduct(page);
-        return ResponseEntity.ok(productList);
-    }
 
-    @ApiOperation(value = "*인기 상품 조회",notes = "사람들이 많이 본 상품 사진 리스트")
-    @GetMapping("/list/most/popular")
-    public ResponseEntity<List<MostProductList>> mostProductList(){
-        return ResponseEntity.ok(productService.findMostPopularProduct());
-    }
+//    @GetMapping("/list")
+//    public ResponseEntity<Page<ProductListResponse>> productAllList(
+//            @RequestParam(required = false, defaultValue = "0", value = "page") int page
+//    ) {
+//        Page<ProductListResponse> productList = productService.findAllProduct(page);
+//        return ResponseEntity.ok(productList);
+//    }
+//
 
-    @ApiOperation(value = "상품 카테고리 목록", notes = "상품 카테고리 목록 조회")
     @GetMapping("/list/category")
     public ResponseEntity<List<ProductCategory>> productEnroll() {
         List<ProductCategory> categoryList = productService.categoryList();
         return ResponseEntity.ok(categoryList);
     }
 
-    @ApiOperation(value = "*상품 상세정보", notes = "productId에 따른 상품 상세정보 & 이미 예약되어 이용할 수 없는 날짜")
+    @ApiOperation(value = "상품 상세정보", notes = "productId에 따른 상품 상세정보 & 이미 예약되어 이용할 수 없는 날짜")
     @GetMapping("/detail/{productId}")
     public ResponseEntity<ProductDetailResponse> productDetail(@PathVariable("productId") long productId) {
         ProductDetailResponse resp = productService.retrieveDetail(productId);
@@ -115,6 +111,12 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
+    @ApiOperation(value = "*인기 상품 조회",notes = "사람들이 많이 본 상품 사진 리스트")
+    @GetMapping("/list/most/popular")
+    public ResponseEntity<List<MostProductList>> mostProductList(){
+        return ResponseEntity.ok(productService.findMostPopularProduct());
+    }
+
 
     @ApiOperation(value = "관심상품 등록, 삭제", notes = "true 관심상품등록, false 관심등록삭제")
     @PostMapping("/interest")
@@ -127,6 +129,7 @@ public class ProductController {
     }
 
     //
+    @ApiOperation(value = "마이페이지 관심목록 조회")
     @GetMapping("/my/interestList")
     public ResponseEntity<MyInterestProductList> myInterestProductList(@AuthenticationPrincipal long memberId){
         return ResponseEntity.ok(productInterestService.myInterestProductList(memberId));

@@ -5,7 +5,7 @@ import com.web.billim.common.email.dto.EmailRequest;
 import com.web.billim.common.validation.CheckIdValidator;
 import com.web.billim.common.validation.CheckNickNameValidator;
 import com.web.billim.common.validation.CheckPasswordValidator;
-import com.web.billim.member.dto.TemporaryPasswordDto;
+import com.web.billim.member.dto.FindPasswordRequest;
 import com.web.billim.member.dto.request.*;
 import com.web.billim.member.dto.response.MyPageInfoResponse;
 import com.web.billim.member.dto.response.UpdateInfoResponse;
@@ -86,8 +86,8 @@ public class MemberController {
     // 비밀번호 찾기
     @ApiOperation(value = "*비밀번호 찾기", notes = "이메일, 이름 입력시 해당 이메일로 임시 비밀번호가 전송")
     @PostMapping("/email/find/password")
-    public ResponseEntity<Void> findPassword(@RequestBody TemporaryPasswordDto temporaryPasswordDto) {
-        memberService.findPassword(temporaryPasswordDto);
+    public ResponseEntity<Void> findPassword(@RequestBody FindPasswordRequest findPasswordRequest) {
+        memberService.findPassword(findPasswordRequest);
         return ResponseEntity.ok().build();
     }
 
