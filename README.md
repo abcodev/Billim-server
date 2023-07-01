@@ -5,6 +5,7 @@
 # 기획
 1:1 물건 공유 및 결제 시스템을 제공하는 웹 사이트
 
+<br>
 
 # 참여
 |Back-End|Back-End|Front-End|
@@ -12,18 +13,23 @@
 |장현정 | 염서학 | 심지현 |
 | <a href="https://github.com/HyunjeongJang">@HyunjeongJang</a> | <a href="https://github.com/YEOMCODING">@YEOMCODING</a> | <a href="https://github.com/jh0neee"> @jh0neee</a> |
 
+<br>
+
 # 프로젝트 구조
 <img width="1134" alt="스크린샷 2023-06-30 오후 4 51 29" src="https://github.com/HyunjeongJang/Billim-server/assets/113197284/8fbe3f67-3f28-4a78-8585-2c885c09a605">
 
+<br>
 
+# Layered Architecture
+### DDD
 
-<!--# 아키텍쳐 구조 -->
+<br>
 
 # 트러블 슈팅
 
 ## LazyLoading
 
-### Open Session In View - false
+### Open In View - false
 
 - **리소스 측면**
 Open In View true 일 경우 Api를 반환하는 시점까지 영속성 컨텍스트를 유지하고 데이터베이스 커넥션 또한 유지 된다 → 리소스 낭비 (규모가 커지면 리소스 부족으로 인해 장애가 생겼을 때 누수 지점을 찾는게 어려워진다.)
@@ -33,9 +39,9 @@ Open In View true 일 경우 Api를 반환하는 시점까지 영속성 컨텍�
 
 ### JPA Persistence Context 의 관계
 
-Open In View 는 JPA Persistence Context 가 살아있을 때만 가능한데 트랜잭션을 벗어나면 해당 컨텍스트를 없애버려서 Lazy Loading이 불가능해진다.
+Lazy Loading은 JPA Persistence Context 가 살아있을 때만 가능한데 트랜잭션을 벗어나면 해당 컨텍스트를 없애버려서 Lazy Loading이 불가능해진다.
 
-1. 트랜잭션 범위를 통해 해결 , 트랜잭션의 범위 지정은 @Transactional 어노테이션을 이용한 선언형 방식으로 지연조회 시점까지 세션을 유지한다.
+1. 트랜잭션 범위를 통해 해결. 트랜잭션의 범위 지정은 @Transactional 어노테이션을 이용한 선언형 방식으로 지연조회 시점까지 세션을 유지한다.
 2. 트랜잭션 범위를 벗어나기 전에 별도 DTO 로 매핑하는 과정을 통해 proxy 객체를 실체화함으로서 Lazy Loading을 해버리는 방식이 필요하다.
 
 ## S3 Bucket 이미지 업로드 하는 이유
