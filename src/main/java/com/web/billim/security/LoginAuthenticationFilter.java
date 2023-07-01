@@ -1,8 +1,6 @@
 package com.web.billim.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.web.billim.common.exception.AuthenticationBusinessException;
-import com.web.billim.common.exception.handler.ErrorResponse;
 import com.web.billim.jwt.JwtTokenRedisService;
 import com.web.billim.member.type.MemberGrade;
 import com.web.billim.security.dto.LoginRequest;
@@ -24,7 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 @Slf4j
 public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -67,13 +64,14 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
     }
 
     private LoginRequest obtainEmailPassword(HttpServletRequest request) {
-            try {
-                InputStream requestBody = request.getInputStream();
-                ObjectMapper objectMapper = new ObjectMapper();
-                return objectMapper.readValue(requestBody, LoginRequest.class);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+        try {
+            InputStream requestBody = request.getInputStream();
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.readValue(requestBody, LoginRequest.class);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+    }
+
 }
 

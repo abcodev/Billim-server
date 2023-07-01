@@ -32,9 +32,6 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/chat")
 public class ChatController {
 
-	// 웹소켓 STOMP 테스트
-	// Spring STOMP
-	// MessageHandler 를 API Handler 처럼 Controller 에 등록할 수 있음
 	private final SimpMessagingTemplate messagingTemplate;
 	private final ChatRoomService chatRoomService;
 	private final ChatMessageService chatMessageService;

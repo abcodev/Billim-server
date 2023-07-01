@@ -33,6 +33,7 @@ import java.util.List;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfig {
+
     private final JwtUtils jwtUtils;
     private final UserDetailServiceImpl userDetailsService;
     private final JwtTokenRedisService jwtTokenRedisService;
@@ -97,6 +98,5 @@ public class WebSecurityConfig {
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
-
 
 }

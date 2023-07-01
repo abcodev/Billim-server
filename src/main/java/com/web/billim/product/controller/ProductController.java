@@ -84,17 +84,16 @@ public class ProductController {
 
 
     // 상품 수정
-    @PutMapping("/update")
-    public ResponseEntity<Void> updateProduct(@RequestParam("productId") long productId) {
+    @PutMapping("/update/{productId}")
+    public ResponseEntity<Void> updateProduct(@PathVariable("productId") long productId) {
         productService.update(productId);
         return ResponseEntity.ok().build();
     }
 
 
     // 상품삭제
-    @DeleteMapping("/delete")
-    public ResponseEntity<Void> deleteProduct(
-            @RequestParam("productId") long productId) {
+    @DeleteMapping("/delete/{productId}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable("productId") long productId) {
         productService.delete(productId);
         return ResponseEntity.ok().build();
     }
@@ -124,13 +123,13 @@ public class ProductController {
 
     // 판매중인 상품 목록 조회
     @GetMapping("/my/sell/list")
-    public ResponseEntity<?> mySellList() {
+    public ResponseEntity<Void> mySellList() {
         return ResponseEntity.ok().build();
     }
 
     // 판매중인 상품 클릭시 판매 주문 내역 조회
     @GetMapping("/my/sell/detail")
-    public ResponseEntity<?> mySellDetail() {
+    public ResponseEntity<Void> mySellDetail() {
         return ResponseEntity.ok().build();
     }
 

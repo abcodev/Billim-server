@@ -152,15 +152,11 @@ public class MemberService {
 
 	@Transactional
 	public void findPassword(FindPasswordRequest req) {
-		// 일치하는 회원정보 확인
 		Member member = memberRepository.findByEmailAndName(req.getEmail(), req.getName())
 				.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
-
- 		// 임시 비밀번호 전송 , 임시 비밀번호 만들고
 		String tempPassword = emailService.sendTempPassword(req);
-
-		// 임시 비밀번호로 비밀번호 업데이트
-		member.changePassword(tempPassword);
+		String encodedPassword = passwordEncoder.encode(tempPassword);
+		member.changePassword(encodedPassword);
 		// Dirty Checking
 //		memberRepository.save(member);
 	}
