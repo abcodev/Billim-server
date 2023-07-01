@@ -9,7 +9,6 @@ import com.web.billim.product.dto.request.ReviewWriteRequest;
 import com.web.billim.product.dto.response.*;
 import com.web.billim.product.repository.ProductRepository;
 import com.web.billim.product.service.ProductInterestService;
-import com.web.billim.product.service.ProductRedisService;
 import com.web.billim.product.service.ProductService;
 import com.web.billim.product.service.ReviewService;
 import io.swagger.annotations.ApiOperation;
@@ -36,7 +35,6 @@ public class ProductController {
     private final ProductService productService;
     private final OrderService orderService;
     private final ProductRepository productRepository;
-    private final ProductRedisService productRedisService;
     private final ProductInterestService productInterestService;
     private final ReviewService reviewService;
 
@@ -50,7 +48,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.register(request));
     }
 
-    @ApiOperation(value = "*전체 상품목록 조회 & 검색 & 페이징", notes = "전체 상품목록 조회, 카테고리별 검색, 키워드 검색, 페이징 처리")
+    @ApiOperation(value = "*전체 상품목록 조회, 검색, 페이징", notes = "전체 상품목록 조회, 카테고리별 검색, 키워드 검색, 페이징 처리")
     @Transactional
     @GetMapping("/list/search")
     public ResponseEntity<Page<ProductListResponse>> productList(
@@ -60,19 +58,9 @@ public class ProductController {
     ) {
         PageRequest paging = PageRequest.of(page - 1, 20);
         Page<ProductListResponse> resp = productRepository.findAllByKeyword(category, keyword, paging)
-            .map(product -> ProductListResponse.of(product, 5.0));
+            .map(product -> ProductListResponse.of(product, reviewService.calculateStarRating(product.getProductId())));
         return ResponseEntity.ok(resp);
     }
-
-
-//    @GetMapping("/list")
-//    public ResponseEntity<Page<ProductListResponse>> productAllList(
-//            @RequestParam(required = false, defaultValue = "0", value = "page") int page
-//    ) {
-//        Page<ProductListResponse> productList = productService.findAllProduct(page);
-//        return ResponseEntity.ok(productList);
-//    }
-//
 
     @GetMapping("/list/category")
     public ResponseEntity<List<ProductCategory>> productEnroll() {
@@ -88,12 +76,12 @@ public class ProductController {
         return ResponseEntity.ok(resp);
     }
 
-
     @GetMapping("/detail/date/{productId}")
     public ResponseEntity<List<LocalDate>> alreadyReservedDate(@PathVariable("productId") long productId) {
         List<LocalDate> dates = orderService.reservationDate(productId);
         return ResponseEntity.ok(dates);
     }
+
 
     // 상품 수정
     @PutMapping("/update")
@@ -113,34 +101,32 @@ public class ProductController {
 
     @ApiOperation(value = "*인기 상품 조회",notes = "사람들이 많이 본 상품 사진 리스트")
     @GetMapping("/list/most/popular")
-    public ResponseEntity<List<MostProductList>> mostProductList(){
+    public ResponseEntity<List<MostProductList>> mostProductList() {
         return ResponseEntity.ok(productService.findMostPopularProduct());
     }
-
 
     @ApiOperation(value = "관심상품 등록, 삭제", notes = "true 관심상품등록, false 관심등록삭제")
     @PostMapping("/interest")
     public ResponseEntity<Void> saveOrDeleteInterest(
             @AuthenticationPrincipal long memberId,
             @RequestBody InterestRequest interestRequest
-    ){
+    ) {
         productInterestService.saveOrDeleteInterest(memberId,interestRequest);
         return ResponseEntity.ok().build();
     }
 
-    //
     @ApiOperation(value = "마이페이지 관심목록 조회")
     @GetMapping("/my/interestList")
-    public ResponseEntity<MyInterestProductList> myInterestProductList(@AuthenticationPrincipal long memberId){
+    public ResponseEntity<MyInterestProductList> myInterestProductList(@AuthenticationPrincipal long memberId) {
         return ResponseEntity.ok(productInterestService.myInterestProductList(memberId));
     }
+
 
     // 판매중인 상품 목록 조회
     @GetMapping("/my/sell/list")
     public ResponseEntity<?> mySellList() {
         return ResponseEntity.ok().build();
     }
-
 
     // 판매중인 상품 클릭시 판매 주문 내역 조회
     @GetMapping("/my/sell/detail")
@@ -149,26 +135,25 @@ public class ProductController {
     }
 
 
-    @ApiOperation(value = "이용한 상품 후기 불러오기", notes = "작성한 후기,작성해야하는 후기를 불러옴")
+    @ApiOperation(value = "회원이 이용한 상품 리뷰 불러오기", notes = "마이페이지 헤더에서 리뷰 클릭시 작성한 후기, 작성 해야하는 리뷰를 불러옴")
     @GetMapping("/my/product/review/")
-    public ResponseEntity<Void> myProductReview(@AuthenticationPrincipal long memberId){
+    public ResponseEntity<Void> myProductReview(@AuthenticationPrincipal long memberId) {
         reviewService.findMyProductReview(memberId);
         return ResponseEntity.ok().build();
     }
 
-    @ApiOperation(value = "리뷰 작성하기" , notes = "리뷰 작성하기 입니다. productId를 넘겨주세요.")
+    @ApiOperation(value = "리뷰 작성하기" , notes = "리뷰 작성하기, productId를 넘겨주세요.")
     @PostMapping("/review/write")
-    public ResponseEntity<Void> productWrite(
-            @RequestBody ReviewWriteRequest reviewWriteRequest
-    ){
+    public ResponseEntity<Void> productWrite(@RequestBody ReviewWriteRequest reviewWriteRequest) {
         reviewService.productReviewWrite(reviewWriteRequest);
         return ResponseEntity.ok().build();
     }
 
 //    @ApiOperation(value = "상품 리뷰 리스트", notes = "상품 디테일에서 리뷰리스트 가져오기")
 //    @GetMapping("/review/list")
-//    public ResponseEntity<List<ProductReviewList>> reviewList(@RequestParam long productId){
+//    public ResponseEntity<List<ProductReviewList>> reviewList(@RequestParam long productId) {
 //        return ResponseEntity.ok(reviewService.reviewList(productId));
 //    }
+
 }
 

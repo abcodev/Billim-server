@@ -85,7 +85,4 @@ public class ChatRoomService {
 		});
 	}
 
-	// 1. 네트워크 굳이 한번 더 타? FE -> AWS, FE -> BE -> AWS?
-	// 2. BE 코드 테스트하기 너무 어려워짐
-
 }

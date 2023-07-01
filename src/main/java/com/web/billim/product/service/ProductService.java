@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ProductService {
+
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
     private final ProductCategoryRepository productCategoryRepository;
@@ -75,8 +76,9 @@ public class ProductService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
         List<LocalDate> alreadyDates = orderService.reservationDate(productId);
+        double starRating = reviewService.calculateStarRating(product.getProductId());
         productRedisService.saveProduct(productId);
-        return ProductDetailResponse.of(product, alreadyDates);
+        return ProductDetailResponse.of(product, alreadyDates, starRating);
     }
 
     public List<MostProductList> findMostPopularProduct() {
@@ -92,7 +94,6 @@ public class ProductService {
 
     @Transactional
     public void update(long productId) {
-
 
     }
 

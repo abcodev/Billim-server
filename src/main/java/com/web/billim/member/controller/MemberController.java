@@ -67,24 +67,19 @@ public class MemberController {
 
     @ApiOperation(value ="이메일인증 링크 발송", notes = "해당 이메일에 인증 링크 발송")
     @PostMapping("/email/send")
-    public ResponseEntity<Void> sendEmail(@RequestBody EmailRequest request){
+    public ResponseEntity<Void> sendEmail(@RequestBody EmailRequest request) {
         memberService.certifyEmail(request);
         return ResponseEntity.ok().build();
     }
 
     @ApiOperation(value = "이메일인증 코드 확인", notes = "클라이언트가 링크를 클릭시 해당 APi로 연결")
     @PostMapping("/email/confirm")
-    public ResponseEntity<Void> confirmEmail(@RequestBody EmailAuthRequest emailAuthRequest){
+    public ResponseEntity<Void> confirmEmail(@RequestBody EmailAuthRequest emailAuthRequest) {
         memberService.confirmEmail(emailAuthRequest);
         return ResponseEntity.ok().build();
     }
 
-    // 로그아웃
-
-
-
-    // 비밀번호 찾기
-    @ApiOperation(value = "*비밀번호 찾기", notes = "이메일, 이름 입력시 해당 이메일로 임시 비밀번호가 전송")
+    @ApiOperation(value = "*비밀번호 찾기", notes = "이메일, 이름 입력시 해당 이메일로 임시 비밀번호 전송")
     @PostMapping("/email/find/password")
     public ResponseEntity<Void> findPassword(@RequestBody FindPasswordRequest findPasswordRequest) {
         memberService.findPassword(findPasswordRequest);
@@ -137,7 +132,6 @@ public class MemberController {
     }
 
 
-    // 비밀번호 재설정
     /*
      * 비밀번호 재설정
      *   1. 기존 패스워드, 변경할 패스워드, 변경할 패스워드 확인을 받는다.
@@ -150,14 +144,11 @@ public class MemberController {
      *      4-4. passwordEncoder.matches(평문, 암호화 된거)
      *   5. 변경할 패스워드로 Member 의 password 업데이트.
      */
-//    @PutMapping("/my/password")
-//    public ResponseEntity<Void> updatePassword(
-//            @AuthenticationPrincipal long memberId,
-//            @RequestBody UpdatePasswordRequest updatePasswordRequest
-//    ) {
-//        memberService.updatePassword(memberId);
-//        return null;
-//    }
+    // 비밀번호 재설정
+    @PutMapping("/my/password")
+    public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal long memberId) {
+        return ResponseEntity.ok().build();
+    }
 
 
     // 소셜 연동
