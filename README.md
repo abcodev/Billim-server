@@ -67,6 +67,11 @@ Open In View true 일 경우 Api를 반환하는 시점까지 영속성 컨텍�
 
 <br>
 
+# Swagger API 명세서
+<img width="1848" alt="스크린샷 2023-07-01 오후 8 17 47" src="https://github.com/HyunjeongJang/Billim-server/assets/113197284/02c1a7f8-615c-4ba8-bf57-766da642b3fd">
+
+
+
 # 참여
 |Back-End|Back-End|Front-End|
 |:---:|:---:|:---:|
