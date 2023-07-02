@@ -6,28 +6,13 @@
 
 <br>
 
-# 사용 기술
-|기술|버전|
-|:----:|:----:|
-|JAVA|11|
-|Spring Boot|2.7.12|
-|Spring Security||
-|JPA||
-|QueryDSL-JPA||
-|MYSQL|8.0.32|
-|Swagger|3.0.0|
-
-<br>
-
 # 프로젝트 구조
-<img width="1134" alt="스크린샷 2023-06-30 오후 4 51 29" src="https://github.com/HyunjeongJang/Billim-server/assets/113197284/8fbe3f67-3f28-4a78-8585-2c885c09a605">
+<!--<img width="1134" alt="스크린샷 2023-06-30 오후 4 51 29" src="https://github.com/HyunjeongJang/Billim-server/assets/113197284/8fbe3f67-3f28-4a78-8585-2c885c09a605">-->
+
+<img width="1213" alt="스크린샷 2023-07-02 오후 8 16 54" src="https://github.com/HyunjeongJang/Billim-server/assets/113197284/a18ecf17-f9cc-4712-99f5-b0260ba01b1e">
+
 
 <br>
-
-# Layered Architecture
-### DDD
-
-<img width="480" alt="스크린샷 2023-07-01 오후 8 22 46" src="https://github.com/HyunjeongJang/Billim-server/assets/113197284/552c6192-280a-4a11-af36-3e2cb744e313">
 
 # 구현 기능
  
@@ -37,6 +22,9 @@
 |상품|상품 CRUD / 상품 검색 - 카테고리 & 키워드 |
 |주문 및 결제|상품 예약 날짜 조회 / 상품 예약 및 결제 시스템 - PortOne 연동|
 |채팅|판매자 구매자 간 1:1 채팅 / 회원 차단|
+
+<br>
+
 
 
 
@@ -56,15 +44,26 @@ Open In View true 일 경우 Api를 반환하는 시점까지 영속성 컨텍�
 
 ### JPA Persistence Context 의 관계
 
-Lazy Loading은 JPA Persistence Context 가 살아있을 때만 가능한데 트랜잭션을 벗어나면 해당 컨텍스트를 없애버려서 Lazy Loading이 불가능해진다.
+* Lazy Loading 는 JPA Persistence Context 가 살아있을 때만 가능한데 트랜잭션을 벗어나면 해당 컨텍스트를 없애버려서 Lazy Loading이 불가능해진다.
+→ Proxy Initialize 에러발생
 
-1. 트랜잭션 범위를 통해 해결. 트랜잭션의 범위 지정은 @Transactional 어노테이션을 이용한 선언형 방식으로 지연조회 시점까지 세션을 유지한다.
-2. 트랜잭션 범위를 벗어나기 전에 별도 DTO 로 매핑하는 과정을 통해 proxy 객체를 실체화함으로서 Lazy Loading을 해버리는 방식이 필요하다.
+* 트랜잭션 범위를 통해 해결 : 트랜잭션의 범위 지정은 @Transactional 어노테이션을 이용한 선언형 방식으로 지연조회 시점까지 JPA Persistence Context 를 유지한다.
+* 트랜잭션 범위를 벗어나기 전에 별도 DTO 로 매핑하는 과정을 통해 해결 : proxy 객체를 실체화함으로서 Lazy Loading을 해버리는 방식이 필요하다.
 
-## S3 Bucket 이미지 업로드 하는 이유
+<!-- ### Entity 객체를 DTO에 그대로 넣으면 안되는 이유
 
-1. 이전 프로젝트 Ec2 배포 경험으로 파일 업로드, 다운로드를 웹 서버에서 직접 관리하는것이 많은 문제가 있는것을 깨달았다. 파일 업로드, 다운로드는 디스크에 접근해야 하는데 접근 경로와 관리 비용이 많이 들게 된다.
-2. 서버 사용자가 많아지면, 하나의 서버로 처리할 수 있는 요청은 제한이 있기 때문에 느려지게 된다. 서버에 이미지를 저장하면서 서버 사용자가 많아지면, 세션도 httpSession 같은 경우에는컴퓨터 메모리에 저장하기 때문에 컴퓨터가 여러개 되는 환경에서 이 세션을 공유할 수가 없게 된다. 대응할 수 있는 방법으로는 Scale-Out(컴퓨터 개수 늘리기) , Scale-Up(성능 up) 이 있는데 Scale-Out 을 고려 하여 S3를 도입하였다. S3 자체가 수천 대 이상의 성능이 좋은 웹 서버로 구성되어 있어서 EC2로 구축했을 때 처럼 Auto Scaling이나 Load Balancing에 신경쓰지 않아도 된다.
+* DTO에 Entity 객체를 그대로 넣으려고 하면 Proxy 에러가 발생한다. 예를들어 Product가 조회될 때 Member, Category 는 Lazy Loading 설정을 했기 때문에 우선적으로 사용하지 않는다면 그 자리를 Proxy 객체가 차지하고 있다. 해당 필드를 참조하는 시점에 Proxy 객체가 실제 데이터베이스에서 정보를 가져오게 되는데 Proxy 객체가 사용자가 조회한 데이터를 반환해준다. 하지만 Proxy 객체가 없어지고 그 자리를 Entity 가 차지하는게 아니기 때문에 해당 객체를 Controller 에서 반환하려고 한다면, 객체를 JSON 으로 파싱하는 과정에서 에러가 발생한다. -->
+
+
+## S3 Bucket 이미지 업로드
+
+* 이전 프로젝트 Ec2 배포 경험으로 파일 업로드, 다운로드를 웹 서버에서 직접 관리하는것이 많은 문제가 있는것을 깨달았다. 파일 업,다운로드는 디스크에 접근해야 하는데 접근 경로와 관리 비용이 많이 들게 된다.
+* 또한 서버 사용자가 많아지면, 하나의 서버로 처리할 수 있는 요청은 제한이 있기 때문에 느려지게 된다. 대응할 수 있는 방법으로는 Scale-Out(컴퓨터 개수 늘리기) , Scale-Up(성능 up) 이 있는데 Scale-Out 을 도입했다. Scale-Out 도입하면서 생긴 문제로는 서버에 이미지를 저장하면서 서버 사용자가 많아졌을 때 확장된 서버들이 해당 이미지를 공유할수 없게 된다. 이러한 문제를 해결하기 위해 이미지를 Spring 서버에 직접 저장하는 것이 아닌 외부에 저장하려고 S3를도입하였다.
+
+<br>
+
+# Layered Architecture
+<img width="1405" alt="스크린샷 2023-07-02 오후 8 10 54" src="https://github.com/HyunjeongJang/Billim-server/assets/113197284/8422d035-8b2c-4ebb-9db3-0c022c7c4471">
 
 <br>
 
