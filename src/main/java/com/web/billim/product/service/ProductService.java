@@ -1,6 +1,7 @@
 package com.web.billim.product.service;
 
 import com.web.billim.common.exception.NotFoundException;
+import com.web.billim.common.exception.UnAuthorizedException;
 import com.web.billim.common.exception.handler.ErrorCode;
 import com.web.billim.infra.ImageUploadService;
 import com.web.billim.member.domain.Member;
@@ -17,8 +18,10 @@ import com.web.billim.product.repository.ImageProductRepository;
 import com.web.billim.product.repository.ProductCategoryRepository;
 import com.web.billim.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.authenticator.SpnegoAuthenticator;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +33,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ProductService {
+
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
     private final ProductCategoryRepository productCategoryRepository;
@@ -75,8 +79,9 @@ public class ProductService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
         List<LocalDate> alreadyDates = orderService.reservationDate(productId);
+        double starRating = reviewService.calculateStarRating(product.getProductId());
         productRedisService.saveProduct(productId);
-        return ProductDetailResponse.of(product, alreadyDates);
+        return ProductDetailResponse.of(product, alreadyDates, starRating);
     }
 
     public List<MostProductList> findMostPopularProduct() {
@@ -86,18 +91,36 @@ public class ProductService {
     }
 
     @Transactional
-    public void delete(long productId) {
-        productRepository.deleteById(productId);
+    public void update(long productId) {
+
     }
 
     @Transactional
-    public void update(long productId) {
+    public void delete(long memberId, long productId) {
+//        Product product = productRepository.findById(productId)
+//                .orElseThrow(() -> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
+//        if (product.getMember().getMemberId() != memberId) {
+//            throw new UnAuthorizedException(ErrorCode.INVALID_AUTH_TOKEN);
+//        }
+//        productRepository.deleteById(productId);
 
+
+        Product product = productRepository.findById(productId)
+            .filter(p -> p.getMember().getMemberId() == memberId)
+            .orElseThrow(() -> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
+        productRepository.delete(product);
 
     }
 
+	public Page<ProductListResponse> search(String category, String keyword, PageRequest paging) {
+        return  productRepository.findAllByKeyword(category, keyword, paging)
+                .map(product -> {
+                    double starRating = reviewService.calculateStarRating(product.getProductId());
+                    return ProductListResponse.of(product, starRating);
+                });
+	}
 
-//    public ReservationDateResponse reservationDate(int productId) {
+	//    public ReservationDateResponse reservationDate(int productId) {
 //        Optional<ProductOrder> productOrder = Optional.ofNullable(orderRepository.findByProductId(productId)
 //                .orElseThrow(() ->
 //                        new RuntimeException("해당 ProductId(" + productId + ") 에 대한 예약날짜가 없습니다.")));

@@ -10,7 +10,6 @@ public class LoginAuthenticationToken extends AbstractAuthenticationToken {
     private final Object principal;
     private final String password;
 
-
     // 로그인 filter -> provider , 인증 전
     public LoginAuthenticationToken(Object principal, String password){
         super(null);
@@ -18,7 +17,6 @@ public class LoginAuthenticationToken extends AbstractAuthenticationToken {
         this.password = password;
         setAuthenticated(false);
     }
-
 
     // provider -> filter 인증 후 / true
     public LoginAuthenticationToken(Collection<? extends GrantedAuthority> authorities, Object principal) {

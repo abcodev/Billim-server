@@ -9,7 +9,6 @@ import reactor.util.annotation.Nullable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class InterestRequest {
-
     private long productId;
     private Boolean interest;
 }

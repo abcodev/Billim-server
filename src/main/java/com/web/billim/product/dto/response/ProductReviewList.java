@@ -15,13 +15,9 @@ import java.time.LocalDateTime;
 public class ProductReviewList {
 
     private long reviewId;
-
     private String nickname;
-
     private String profileImageUrl;
-
     private String content;
-
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSS")
     private LocalDateTime createdDate;
 
@@ -34,4 +30,5 @@ public class ProductReviewList {
                 .createdDate(review.getCreatedAt())
                 .build();
     }
+
 }

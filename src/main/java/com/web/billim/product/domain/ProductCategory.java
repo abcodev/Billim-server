@@ -10,7 +10,6 @@ import javax.persistence.*;
 @Table(name = "product_category")
 @Getter
 public class ProductCategory {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")

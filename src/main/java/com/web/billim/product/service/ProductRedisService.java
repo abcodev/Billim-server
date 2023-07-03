@@ -28,7 +28,7 @@ public class ProductRedisService {
         return objectMapper.convertValue(
                 Objects.requireNonNull(
                         redisTemplate.opsForZSet().
-                                reverseRange("product", 0, 4)), new TypeReference<List<Long>>() {});
+                                reverseRange("MOST_POPULAR_PRODUCT", 0, 4)), new TypeReference<List<Long>>() {});
     }
 }
 
