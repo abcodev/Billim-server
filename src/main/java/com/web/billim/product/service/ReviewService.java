@@ -39,8 +39,7 @@ public class ReviewService {
 		long orders = orderService.numberOfOrders(memberId);
 		long reviews = reviewRepository.countByMemberId(memberId)
 				.orElseThrow(()-> new NotFoundException(ErrorCode.ORDER_NOT_FOUND));
-		long result = orders - reviews;
-		return result;
+		return orders - reviews;
 
 //		long orders = orderService.numberOfOrders(memberId);
 //		long reviews = reviewRepository.countByMemberId(memberId);
@@ -48,11 +47,10 @@ public class ReviewService {
 	}
 
 	public List<ProductReviewList> reviewList(long productId) {
-		List<ProductReviewList> productReviewLists  = reviewRepository.findAllByProductId(productId)
+		return reviewRepository.findAllByProductId(productId)
 				.stream()
 				.map(ProductReviewList::of)
 				.collect(Collectors.toList());
-		return productReviewLists;
 	}
 
 }
