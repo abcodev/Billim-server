@@ -4,10 +4,10 @@ import org.springframework.stereotype.Service;
 
 import com.web.billim.chat.domain.ChatMessage;
 import com.web.billim.chat.domain.ChatRoom;
-import com.web.billim.chat.dto.ChatMessagePreview;
-import com.web.billim.chat.dto.ChatMessageResponse;
-import com.web.billim.chat.dto.SendImageMessageRequest;
-import com.web.billim.chat.dto.SendTextMessageRequest;
+import com.web.billim.chat.dto.response.ChatMessagePreview;
+import com.web.billim.chat.dto.response.ChatMessageResponse;
+import com.web.billim.chat.dto.request.SendImageMessageRequest;
+import com.web.billim.chat.dto.request.SendTextMessageRequest;
 import com.web.billim.chat.repository.ChatMessageRepository;
 import com.web.billim.chat.repository.ChatRoomRepository;
 import com.web.billim.member.domain.Member;

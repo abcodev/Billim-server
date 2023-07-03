@@ -1,6 +1,4 @@
-package com.web.billim.chat.dto;
-
-import java.util.Optional;
+package com.web.billim.chat.dto.request;
 
 import com.web.billim.chat.domain.ChatRoom;
 import com.web.billim.member.domain.Member;

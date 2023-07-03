@@ -2,7 +2,7 @@ package com.web.billim.common.email.service;
 
 import com.web.billim.common.exception.BadRequestException;
 import com.web.billim.common.exception.handler.ErrorCode;
-import com.web.billim.member.dto.TemporaryPasswordDto;
+import com.web.billim.member.dto.request.FindPasswordRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +10,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -20,6 +19,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class EmailService {
+
     private final JavaMailSender javaMailSender;
 
     @Value("${spring.mail.username}")
@@ -69,8 +69,7 @@ public class EmailService {
         this.send(email, "BILLIM 이메일 인증링크 입니다", emailContent);
     }
 
-    @Transactional
-    public void sendTempPassword(TemporaryPasswordDto temporaryPasswordDto) {
+    public String sendTempPassword(FindPasswordRequest findPasswordRequest) {
         String tempPassword = getTempPassword();
         String emailContent =
                 "<html>" +
@@ -89,7 +88,8 @@ public class EmailService {
                         "</body>" +
                         "</html>";
 
-        this.send(temporaryPasswordDto.getEmail(), "BILLIM 임시 비밀번호 안내", emailContent);
+        this.send(findPasswordRequest.getEmail(), "BILLIM 임시 비밀번호 안내", emailContent);
+        return tempPassword;
     }
 
     public String getTempPassword(){

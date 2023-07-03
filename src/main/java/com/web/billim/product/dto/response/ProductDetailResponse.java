@@ -1,12 +1,9 @@
 package com.web.billim.product.dto.response;
 
-import com.web.billim.member.domain.Member;
-import com.web.billim.member.type.MemberGrade;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.web.billim.product.domain.ImageProduct;
 import com.web.billim.product.domain.Product;
 import com.web.billim.product.type.TradeMethod;
-import io.swagger.annotations.ApiModelProperty;
-import io.swagger.annotations.ApiOperation;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,49 +17,46 @@ import java.util.stream.Collectors;
 @Builder
 public class ProductDetailResponse {
 
-    @ApiModelProperty("상품 고유번호")
-    private long productId;
-    @ApiModelProperty("상품명")
-    private String productName;
-    @ApiModelProperty("상품 상세설명")
-    private String detail;
-    @ApiModelProperty("대여료(/일)")
-    private long price;
-
-//    private Member member;
     private long sellerMemberId;
     private String sellerNickname;
     private String sellerGrade;
     private String sellerProfileImage;
 
-    @ApiModelProperty("상품 이미지 url")
-    private List<String> imageUrls;
-    @ApiModelProperty("거래 방법")
+    private long productId;
+    private String productName;
+    private String detail;
+    private long price;
     private List<TradeMethod> tradeMethods;
-    @ApiModelProperty("이미 예약된 날짜")
+    private String place;
+    private List<String> imageUrls;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private List<LocalDate> alreadyDates;
 
-    @ApiModelProperty("상품 후기")
     private List<ProductReviewList> productReviewLists;
+    private double starRating;
 
-    public static ProductDetailResponse of(Product product, List<LocalDate> alreadyDates){
+    public static ProductDetailResponse of(Product product, List<LocalDate> alreadyDates, double starRating){
+        var member = product.getMember();
         return ProductDetailResponse.builder()
+                .sellerMemberId(member.getMemberId())
+                .sellerNickname(member.getNickname())
+                .sellerGrade(member.getGrade().getAuthority())
+                .sellerProfileImage(member.getProfileImageUrl())
                 .productId(product.getProductId())
                 .productName(product.getProductName())
-//                .member(product.getMember())
-                .sellerMemberId(product.getMember().getMemberId())
-                .sellerNickname(product.getMember().getNickname())
-                .sellerGrade(product.getMember().getGrade().getAuthority())
-                .sellerProfileImage(product.getMember().getProfileImageUrl())
                 .detail(product.getDetail())
                 .price(product.getPrice())
+                .tradeMethods(product.getTradeMethods())
+                .place(product.getTradeArea())
                 .imageUrls(
                         product.getImages().stream()
                                 .map(ImageProduct::getUrl)
                                 .collect(Collectors.toList())
                 )
-                .tradeMethods(product.getTradeMethods())
                 .alreadyDates(alreadyDates)
+                .starRating(starRating)
                 .build();
     }
+
 }

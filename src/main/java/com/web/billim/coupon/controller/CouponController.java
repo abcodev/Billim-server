@@ -21,7 +21,7 @@ public class CouponController {
 
     private final CouponService couponService;
 
-    @ApiOperation(value = "내 쿠폰 목록 조회", notes = "내가 쿠폰 목록 중 현재 사용가능한 쿠폰 목록 조회")
+    @ApiOperation(value = "회원 쿠폰 목록 조회", notes = "마이페이지 쿠폰 클릭시 현재 사용가능한 쿠폰 목록 조회")
     @GetMapping("/list")
     public ResponseEntity<List<AvailableCouponResponse>> myCouponList(@AuthenticationPrincipal long memberId) {
         return ResponseEntity.ok(couponService.retrieveAvailableCouponList(memberId));

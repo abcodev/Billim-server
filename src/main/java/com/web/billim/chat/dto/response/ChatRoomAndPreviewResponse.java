@@ -1,4 +1,4 @@
-package com.web.billim.chat.dto;
+package com.web.billim.chat.dto.response;
 
 import java.time.LocalDateTime;
 

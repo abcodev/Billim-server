@@ -34,4 +34,5 @@ public class AuthenticationFailureEntryPoint implements AuthenticationEntryPoint
 			new SimpleUrlAuthenticationFailureHandler().onAuthenticationFailure(request, response, failed);
 		}
 	}
+
 }

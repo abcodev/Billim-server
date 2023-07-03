@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.web.billim.chat.domain.ChatRoom;
-import com.web.billim.chat.dto.ChatMessagePreview;
-import com.web.billim.chat.dto.ChatMessageResponse;
-import com.web.billim.chat.dto.ChatRoomAndPreviewResponse;
-import com.web.billim.chat.dto.ChatRoomResponse;
-import com.web.billim.chat.dto.SendTextMessageRequest;
+import com.web.billim.chat.dto.response.ChatMessagePreview;
+import com.web.billim.chat.dto.response.ChatMessageResponse;
+import com.web.billim.chat.dto.response.ChatRoomAndPreviewResponse;
+import com.web.billim.chat.dto.response.ChatRoomResponse;
+import com.web.billim.chat.dto.request.SendTextMessageRequest;
 import com.web.billim.chat.repository.ChatMessageRepository;
 import com.web.billim.chat.repository.ChatRoomRepository;
 import com.web.billim.infra.ImageUploadService;
@@ -45,7 +45,6 @@ public class ChatRoomService {
 		return ChatRoomResponse.from(chatRoom);
 	}
 
-	// 채팅 메시지를 읽어올 때 데이터가 너무 많아서 성능이슈가 발생할 수 있다면 페이징 처리를 통한 스크롤 구현을 고려
 	public List<ChatMessageResponse> retrieveAllChatMessage(long chatRoomId) {
 		ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow();
 		return chatMessageRepository.findAllByChatRoom(chatRoom).stream()
@@ -85,8 +84,5 @@ public class ChatRoomService {
 			}
 		});
 	}
-
-	// 1. 네트워크 굳이 한번 더 타? FE -> AWS, FE -> BE -> AWS?
-	// 2. BE 코드 테스트하기 너무 어려워짐
 
 }

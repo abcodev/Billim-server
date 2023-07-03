@@ -16,11 +16,9 @@ import java.time.LocalDateTime;
 public class JpaEntity {
 
     @CreatedDate
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSS")
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @LastModifiedDate
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSS")
     private LocalDateTime updatedAt = LocalDateTime.now();
 
 }

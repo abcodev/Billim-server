@@ -1,4 +1,4 @@
-package com.web.billim.chat.dto;
+package com.web.billim.chat.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

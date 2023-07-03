@@ -5,13 +5,14 @@ import com.web.billim.common.email.dto.EmailRequest;
 import com.web.billim.common.exception.DuplicatedException;
 import com.web.billim.common.email.service.EmailService;
 import com.web.billim.common.exception.NotFoundException;
+import com.web.billim.common.exception.UnAuthorizedException;
 import com.web.billim.common.exception.handler.ErrorCode;
 import com.web.billim.coupon.repository.CouponRepository;
 import com.web.billim.coupon.service.CouponService;
 import com.web.billim.infra.ImageUploadService;
-import com.web.billim.jwt.JwtTokenRedisService;
 import com.web.billim.member.domain.Member;
-import com.web.billim.member.dto.TemporaryPasswordDto;
+import com.web.billim.member.dto.request.FindPasswordRequest;
+import com.web.billim.member.dto.UpdatePasswordCommand;
 import com.web.billim.member.dto.request.MemberSignupRequest;
 import com.web.billim.member.dto.request.UpdateAddressRequest;
 import com.web.billim.member.dto.request.UpdateNicknameRequest;
@@ -21,8 +22,6 @@ import com.web.billim.member.repository.MemberRepository;
 import com.web.billim.point.dto.AddPointCommand;
 import com.web.billim.point.service.PointService;
 
-import com.web.billim.product.dto.response.ProductListResponse;
-import com.web.billim.product.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,7 +34,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -76,7 +74,6 @@ public class MemberService {
 		pointService.addPoint(command);
 	}
 
-	// 닉네임 중복 확인
 	@Transactional
 	public boolean checkDuplicateNickname(String nickname) {
 		return memberRepository.existsByNickname(nickname);
@@ -156,16 +153,28 @@ public class MemberService {
 	}
 
 	@Transactional
-	public void findPassword(TemporaryPasswordDto temporaryPasswordDto) {
-		// 일치하는 회원정보 확인
-		memberRepository.findByEmailAndName(temporaryPasswordDto.getEmail(), temporaryPasswordDto.getName())
+	public void findPassword(FindPasswordRequest req) {
+		Member member = memberRepository.findByEmailAndName(req.getEmail(), req.getName())
 				.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+		String tempPassword = emailService.sendTempPassword(req);
+		String encodedPassword = passwordEncoder.encode(tempPassword);
+		member.changePassword(encodedPassword);
+		// Dirty Checking
+//		memberRepository.save(member);
+	}
 
- 		// 임시 비밀번호 전송
-		emailService.sendTempPassword(temporaryPasswordDto);
+	@Transactional
+	public void updatePassword(UpdatePasswordCommand command) {
 
-		// 임시 비밀번호로 비밀번호 업데이트
+		Member member = memberRepository.findById(command.getMemberId())
+			.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 
+		if (!passwordEncoder.matches(command.getPassword(), member.getPassword())) {
+			throw new UnAuthorizedException(ErrorCode.MISMATCH_PASSWORD);
+		}
+		// member.validatePassword(passwordEncoder, command.getPassword());
+		String encodedPassword = passwordEncoder.encode(command.getNewPassword());
+		member.changePassword(encodedPassword);
 	}
 
 }

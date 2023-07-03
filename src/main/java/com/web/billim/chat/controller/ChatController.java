@@ -4,7 +4,6 @@ import static com.web.billim.chat.config.ChatConfig.*;
 
 import java.util.List;
 
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -17,11 +16,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.web.billim.chat.dto.ChatMessageResponse;
-import com.web.billim.chat.dto.ChatRoomAndPreviewResponse;
-import com.web.billim.chat.dto.ChatRoomResponse;
-import com.web.billim.chat.dto.SendImageMessageRequest;
-import com.web.billim.chat.dto.SendTextMessageRequest;
+import com.web.billim.chat.dto.response.ChatMessageResponse;
+import com.web.billim.chat.dto.response.ChatRoomAndPreviewResponse;
+import com.web.billim.chat.dto.response.ChatRoomResponse;
+import com.web.billim.chat.dto.request.SendImageMessageRequest;
+import com.web.billim.chat.dto.request.SendTextMessageRequest;
 import com.web.billim.chat.service.ChatMessageService;
 import com.web.billim.chat.service.ChatRoomService;
 
@@ -32,9 +31,6 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/chat")
 public class ChatController {
 
-	// 웹소켓 STOMP 테스트
-	// Spring STOMP
-	// MessageHandler 를 API Handler 처럼 Controller 에 등록할 수 있음
 	private final SimpMessagingTemplate messagingTemplate;
 	private final ChatRoomService chatRoomService;
 	private final ChatMessageService chatMessageService;
