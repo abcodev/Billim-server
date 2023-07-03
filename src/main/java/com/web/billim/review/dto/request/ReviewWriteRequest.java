@@ -1,7 +1,7 @@
-package com.web.billim.product.dto.request;
+package com.web.billim.review.dto.request;
 
 import com.web.billim.order.domain.ProductOrder;
-import com.web.billim.product.domain.Review;
+import com.web.billim.review.domain.Review;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.web.billim.product.dto.response;
+package com.web.billim.review.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
