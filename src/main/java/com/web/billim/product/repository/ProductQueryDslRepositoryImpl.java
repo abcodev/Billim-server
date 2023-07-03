@@ -1,5 +1,7 @@
 package com.web.billim.product.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
@@ -23,10 +25,10 @@ public class ProductQueryDslRepositoryImpl implements ProductQueryDslRepository 
 	//     + "WHERE p.productName like %:keyword% OR p.detail like %:keyword% ORDER BY p.createdAt DESC")
 	@Override
 	public Page<Product> findAllByKeyword(String category, String keyword, Pageable pageable) {
-		var count = jpaQueryFactory.select(product.count())
+		var count = Optional.ofNullable(jpaQueryFactory.select(product.count())
 			.from(product)
 			.where(product.productName.contains(keyword).or(product.detail.contains(keyword)))
-			.fetchOne();
+			.fetchOne()).orElse(0L);
 
 		var productList = jpaQueryFactory.selectFrom(product)
 			.innerJoin(product.member).fetchJoin()

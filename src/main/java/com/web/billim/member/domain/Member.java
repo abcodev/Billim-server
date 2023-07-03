@@ -12,14 +12,12 @@ import javax.persistence.Table;
 
 import com.web.billim.common.domain.JpaEntity;
 import com.web.billim.member.type.MemberGrade;
-import com.web.billim.product.domain.Product;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -65,5 +63,4 @@ public class Member extends JpaEntity {
     public void changePassword(String password) {
         this.password = password;
     }
-
 }

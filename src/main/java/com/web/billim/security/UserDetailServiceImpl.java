@@ -26,4 +26,5 @@ public class UserDetailServiceImpl implements UserDetailsService {
         Member member = memberRepository.findById(memberId).orElseThrow();
         return new UserDetailsEntity(member);
     }
+
 }

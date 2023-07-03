@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class MostProductList {
+
     private long productId;
     private String imageUrl;
     private String productName;

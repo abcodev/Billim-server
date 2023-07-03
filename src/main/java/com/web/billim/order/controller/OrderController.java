@@ -27,7 +27,7 @@ public class OrderController {
     private final ProductService productService;
     private final PointService pointService;
 
-    @ApiOperation(value = "*상품 주문")
+    @ApiOperation(value = "상품 주문", notes = "상품 상세보기에서 주문시 호출")
     @PostMapping("/")
     public ResponseEntity<PaymentInfoResponse> order(
             @RequestBody OrderCommand command,
@@ -37,16 +37,10 @@ public class OrderController {
         return ResponseEntity.ok(resp);
     }
 
-    @ApiOperation(value = "나의 상품 주문 내역")
+    @ApiOperation(value = "마이페이지 상품 구매 내역", notes = "마이페이지 구매목록 조회")
     @GetMapping("/my/purchase/list")
     public ResponseEntity<MyOrderHistoryListResponse> myOrder(@AuthenticationPrincipal long memberId) {
         return ResponseEntity.ok(orderService.findMyOrder(memberId));
     }
-
-
-
-
-
-
 
 }

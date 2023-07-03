@@ -5,12 +5,14 @@ import com.web.billim.common.email.dto.EmailRequest;
 import com.web.billim.common.exception.DuplicatedException;
 import com.web.billim.common.email.service.EmailService;
 import com.web.billim.common.exception.NotFoundException;
+import com.web.billim.common.exception.UnAuthorizedException;
 import com.web.billim.common.exception.handler.ErrorCode;
 import com.web.billim.coupon.repository.CouponRepository;
 import com.web.billim.coupon.service.CouponService;
 import com.web.billim.infra.ImageUploadService;
 import com.web.billim.member.domain.Member;
-import com.web.billim.member.dto.FindPasswordRequest;
+import com.web.billim.member.dto.request.FindPasswordRequest;
+import com.web.billim.member.dto.UpdatePasswordCommand;
 import com.web.billim.member.dto.request.MemberSignupRequest;
 import com.web.billim.member.dto.request.UpdateAddressRequest;
 import com.web.billim.member.dto.request.UpdateNicknameRequest;
@@ -72,7 +74,6 @@ public class MemberService {
 		pointService.addPoint(command);
 	}
 
-	// 닉네임 중복 확인
 	@Transactional
 	public boolean checkDuplicateNickname(String nickname) {
 		return memberRepository.existsByNickname(nickname);
@@ -153,17 +154,27 @@ public class MemberService {
 
 	@Transactional
 	public void findPassword(FindPasswordRequest req) {
-		// 일치하는 회원정보 확인
 		Member member = memberRepository.findByEmailAndName(req.getEmail(), req.getName())
 				.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
-
- 		// 임시 비밀번호 전송 , 여기서 임시 비밀번호 만들고
 		String tempPassword = emailService.sendTempPassword(req);
-
-		// 임시 비밀번호로 비밀번호 업데이트
-		member.changePassword(tempPassword);
+		String encodedPassword = passwordEncoder.encode(tempPassword);
+		member.changePassword(encodedPassword);
 		// Dirty Checking
-		// memberRepository.save(member);
+//		memberRepository.save(member);
+	}
+
+	@Transactional
+	public void updatePassword(UpdatePasswordCommand command) {
+
+		Member member = memberRepository.findById(command.getMemberId())
+			.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+
+		if (!passwordEncoder.matches(command.getPassword(), member.getPassword())) {
+			throw new UnAuthorizedException(ErrorCode.MISMATCH_PASSWORD);
+		}
+		// member.validatePassword(passwordEncoder, command.getPassword());
+		String encodedPassword = passwordEncoder.encode(command.getNewPassword());
+		member.changePassword(encodedPassword);
 	}
 
 }
