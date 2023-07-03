@@ -5,7 +5,8 @@ import com.web.billim.common.email.dto.EmailRequest;
 import com.web.billim.common.validation.CheckIdValidator;
 import com.web.billim.common.validation.CheckNickNameValidator;
 import com.web.billim.common.validation.CheckPasswordValidator;
-import com.web.billim.member.dto.FindPasswordRequest;
+import com.web.billim.member.dto.request.FindPasswordRequest;
+import com.web.billim.member.dto.UpdatePasswordCommand;
 import com.web.billim.member.dto.request.*;
 import com.web.billim.member.dto.response.MyPageInfoResponse;
 import com.web.billim.member.dto.response.UpdateInfoResponse;
@@ -86,7 +87,7 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @ApiOperation(value = "*마이페이지 헤더 정보 조회", notes = "내 프로필, 쿠폰, 적립금, 작성가능한 리뷰 조회")
+    @ApiOperation(value = "마이페이지 헤더 정보 조회", notes = "내 프로필, 쿠폰, 적립금, 작성가능한 리뷰 조회")
     @GetMapping("/my/page")
     public ResponseEntity<MyPageInfoResponse> myPageInfo(@AuthenticationPrincipal long memberId) {
         MyPageInfoResponse resp = memberService.retrieveMyPageInfo(memberId);
@@ -111,7 +112,7 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @ApiOperation(value = "회원정보 주소 변경", notes = "회원 정보 수정 시 주소 변경 저장")
+    @ApiOperation(value = "회원정보 주소 변경", notes = "회원 정보 수정 시 주소 변경")
     @PutMapping("/my/address")
     public ResponseEntity<Void> updateAddress(
             @AuthenticationPrincipal long memberId,
@@ -121,7 +122,7 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @ApiOperation(value = "회원정보 닉네임 변경", notes = "회원 정보 수정 시 닉네임 변경 저장")
+    @ApiOperation(value = "회원정보 닉네임 변경", notes = "회원 정보 수정 시 닉네임 변경")
     @PutMapping("/my/nickname")
     public ResponseEntity<Void> updateNickname(
             @AuthenticationPrincipal long memberId,
@@ -131,9 +132,14 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    // 비밀번호 재설정
+    @ApiOperation(value = "비밀번호 재설정", notes = "회원 정보 수정 시 비밀번호 재설정")
     @PutMapping("/my/password")
-    public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal long memberId) {
+    public ResponseEntity<Void> updatePassword(
+            @AuthenticationPrincipal long memberId,
+            @RequestBody UpdatePasswordRequest req
+    ) {
+        UpdatePasswordCommand command = new UpdatePasswordCommand(memberId, req);
+        memberService.updatePassword(command);
         return ResponseEntity.ok().build();
     }
 

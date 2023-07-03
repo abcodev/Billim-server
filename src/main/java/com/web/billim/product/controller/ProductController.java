@@ -7,7 +7,6 @@ import com.web.billim.product.dto.request.InterestRequest;
 import com.web.billim.product.dto.request.ProductRegisterRequest;
 import com.web.billim.product.dto.request.ReviewWriteRequest;
 import com.web.billim.product.dto.response.*;
-import com.web.billim.product.repository.ProductRepository;
 import com.web.billim.product.service.ProductInterestService;
 import com.web.billim.product.service.ProductService;
 import com.web.billim.product.service.ReviewService;
@@ -34,7 +33,6 @@ public class ProductController {
 
     private final ProductService productService;
     private final OrderService orderService;
-    private final ProductRepository productRepository;
     private final ProductInterestService productInterestService;
     private final ReviewService reviewService;
 
@@ -42,13 +40,13 @@ public class ProductController {
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Product> registerProduct(
             @AuthenticationPrincipal long memberId,
-            @ModelAttribute @Valid ProductRegisterRequest request
+            @ModelAttribute @Valid ProductRegisterRequest req
     ) {
-        request.setRegisterMember(memberId);
-        return ResponseEntity.ok(productService.register(request));
+        req.setRegisterMember(memberId);
+        return ResponseEntity.ok(productService.register(req));
     }
 
-    @ApiOperation(value = "*전체 상품목록 조회, 검색, 페이징", notes = "전체 상품목록 조회, 카테고리별 검색, 키워드 검색, 페이징 처리")
+    @ApiOperation(value = "전체 상품목록 조회, 검색, 페이징", notes = "전체 상품목록 조회, 카테고리별 검색, 키워드 검색, 페이징 처리")
     @Transactional
     @GetMapping("/list/search")
     public ResponseEntity<Page<ProductListResponse>> productList(
@@ -57,13 +55,11 @@ public class ProductController {
             @RequestParam(required = false, defaultValue = "1", value = "page") int page
     ) {
         PageRequest paging = PageRequest.of(page - 1, 20);
-        Page<ProductListResponse> resp = productRepository.findAllByKeyword(category, keyword, paging)
-            .map(product -> ProductListResponse.of(product, reviewService.calculateStarRating(product.getProductId())));
-        return ResponseEntity.ok(resp);
+        return ResponseEntity.ok(productService.search(category, keyword, paging));
     }
 
     @GetMapping("/list/category")
-    public ResponseEntity<List<ProductCategory>> productEnroll() {
+    public ResponseEntity<List<ProductCategory>> productCategory() {
         List<ProductCategory> categoryList = productService.categoryList();
         return ResponseEntity.ok(categoryList);
     }
@@ -82,23 +78,28 @@ public class ProductController {
         return ResponseEntity.ok(dates);
     }
 
-
     // 상품 수정
     @PutMapping("/update/{productId}")
-    public ResponseEntity<Void> updateProduct(@PathVariable("productId") long productId) {
+    public ResponseEntity<Void> updateProduct(
+            @AuthenticationPrincipal long memberId,
+            @PathVariable("productId") long productId
+    ) {
         productService.update(productId);
         return ResponseEntity.ok().build();
     }
 
 
-    // 상품삭제
+    @ApiOperation(value = "상품 삭제", notes = "해당 회원이 작성한 상품 삭제")
     @DeleteMapping("/delete/{productId}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable("productId") long productId) {
-        productService.delete(productId);
+    public ResponseEntity<Void> deleteProduct(
+            @AuthenticationPrincipal long memberId,
+            @PathVariable("productId") long productId
+    ) {
+        productService.delete(memberId, productId);
         return ResponseEntity.ok().build();
     }
 
-    @ApiOperation(value = "*인기 상품 조회",notes = "사람들이 많이 본 상품 사진 리스트")
+    @ApiOperation(value = "*인기 상품 조회", notes = "사람들이 많이 본 상품 사진 리스트")
     @GetMapping("/list/most/popular")
     public ResponseEntity<List<MostProductList>> mostProductList() {
         return ResponseEntity.ok(productService.findMostPopularProduct());
@@ -110,7 +111,7 @@ public class ProductController {
             @AuthenticationPrincipal long memberId,
             @RequestBody InterestRequest interestRequest
     ) {
-        productInterestService.saveOrDeleteInterest(memberId,interestRequest);
+        productInterestService.saveOrDeleteInterest(memberId, interestRequest);
         return ResponseEntity.ok().build();
     }
 

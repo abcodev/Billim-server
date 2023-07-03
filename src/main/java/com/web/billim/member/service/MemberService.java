@@ -5,12 +5,14 @@ import com.web.billim.common.email.dto.EmailRequest;
 import com.web.billim.common.exception.DuplicatedException;
 import com.web.billim.common.email.service.EmailService;
 import com.web.billim.common.exception.NotFoundException;
+import com.web.billim.common.exception.UnAuthorizedException;
 import com.web.billim.common.exception.handler.ErrorCode;
 import com.web.billim.coupon.repository.CouponRepository;
 import com.web.billim.coupon.service.CouponService;
 import com.web.billim.infra.ImageUploadService;
 import com.web.billim.member.domain.Member;
-import com.web.billim.member.dto.FindPasswordRequest;
+import com.web.billim.member.dto.request.FindPasswordRequest;
+import com.web.billim.member.dto.UpdatePasswordCommand;
 import com.web.billim.member.dto.request.MemberSignupRequest;
 import com.web.billim.member.dto.request.UpdateAddressRequest;
 import com.web.billim.member.dto.request.UpdateNicknameRequest;
@@ -159,6 +161,20 @@ public class MemberService {
 		member.changePassword(encodedPassword);
 		// Dirty Checking
 //		memberRepository.save(member);
+	}
+
+	@Transactional
+	public void updatePassword(UpdatePasswordCommand command) {
+
+		Member member = memberRepository.findById(command.getMemberId())
+			.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+
+		if (!passwordEncoder.matches(command.getPassword(), member.getPassword())) {
+			throw new UnAuthorizedException(ErrorCode.MISMATCH_PASSWORD);
+		}
+		// member.validatePassword(passwordEncoder, command.getPassword());
+		String encodedPassword = passwordEncoder.encode(command.getNewPassword());
+		member.changePassword(encodedPassword);
 	}
 
 }
