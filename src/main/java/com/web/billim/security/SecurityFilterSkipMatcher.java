@@ -12,9 +12,11 @@ public class SecurityFilterSkipMatcher{
 
     private final String[] excludedPaths = {
             "/",
+            "/email/**",
             "/member/email/**",
             "/member/signup",
             "/member/check/nickname",
+            "/member/find/password",
             "/product/list/**",
             "/product/detail/**",
 

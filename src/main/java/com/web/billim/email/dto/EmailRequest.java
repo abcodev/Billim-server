@@ -1,4 +1,4 @@
-package com.web.billim.common.email.dto;
+package com.web.billim.email.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -11,6 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class EmailRequest {
-    @ApiModelProperty(value = "이메일")
     private  String email;
 }

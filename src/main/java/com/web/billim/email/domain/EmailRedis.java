@@ -1,4 +1,4 @@
-package com.web.billim.common.email.domain;
+package com.web.billim.email.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import org.springframework.data.redis.core.RedisHash;
 @NoArgsConstructor
 @Getter
 @RedisHash(value = "Email", timeToLive = 12000)
-public class RedisEmail {
+public class EmailRedis {
     @Id
     private String email;
     private String verifyCode;
