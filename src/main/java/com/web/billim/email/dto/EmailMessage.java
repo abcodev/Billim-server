@@ -1,5 +1,4 @@
-package com.web.billim.common.email.dto;
-
+package com.web.billim.email.dto;
 
 import lombok.Builder;
 import lombok.Data;
@@ -7,7 +6,6 @@ import lombok.Data;
 @Builder
 @Data
 public class EmailMessage {
-
     private String to;
     private String subject;
     private String message;

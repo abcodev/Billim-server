@@ -1,4 +1,4 @@
-package com.web.billim.common.email.service;
+package com.web.billim.email.service;
 
 import com.web.billim.common.exception.BadRequestException;
 import com.web.billim.common.exception.handler.ErrorCode;
@@ -18,7 +18,7 @@ import java.util.UUID;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class EmailService {
+public class EmailSendService {
 
     private final JavaMailSender javaMailSender;
 
@@ -80,7 +80,7 @@ public class EmailService {
                         "      <div style=\"max-width: 600px; margin: 0 auto; padding: 10px 0 20px; background-color: #ffffff;\">" +
                         "        <h2 style=\"font-family: 'NanumSquareNeoExtraBold'; font-size: 24px; margin: 16px 0 32px;\">임시 비밀번호 안내</h2>" +
                         "        <p style=\"margin-bottom: 20px; font-size: 15px; line-height: 1.5;\">" +
-                        "          안녕하세요. Billim 입니다.<br />" +
+                        "          안녕하세요. Billim 입니다. 임시비밀번호는 변경 후 사용해 주세요.<br />" +
                         "          임시 비밀번호<br />" + tempPassword +
                         "        </p>" +
                         "      </div>" +
