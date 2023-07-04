@@ -12,6 +12,7 @@ import com.web.billim.member.dto.response.MyPageInfoResponse;
 import com.web.billim.member.dto.response.UpdateInfoResponse;
 import com.web.billim.member.service.MemberService;
 import com.web.billim.product.service.ReviewService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -142,8 +143,6 @@ public class MemberController {
         memberService.updatePassword(command);
         return ResponseEntity.ok().build();
     }
-
-
     // 소셜 연동
 
 

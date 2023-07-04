@@ -22,7 +22,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         if (jwt != null && jwtUtils.tokenValidation(jwt)) {
             return jwtUtils.getAuthentication(jwt);
         }
-        throw new BadCredentialsException("Invalid JWT token");
+        return null;
     }
 
     @Override

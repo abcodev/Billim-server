@@ -51,12 +51,12 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
         String memberId = authResult.getPrincipal().toString();
         MemberGrade memberGrade = (MemberGrade) authResult.getAuthorities().stream().findFirst().orElseThrow();
         log.info("등급"+memberGrade);
-        String accessToken  = jwtUtils.createAccessToken(memberId,memberGrade);
+        String accessToken  = jwtUtils.createAccessToken(String.valueOf(memberId),memberGrade);
         String refreshToken = jwtUtils.createRefreshToken();
-        RedisJwt redisJwt = new RedisJwt(1,refreshToken);
+        RedisJwt redisJwt = new RedisJwt(Long.parseLong(memberId),refreshToken);
         jwtTokenRedisService.saveToken(redisJwt);
 
-        LoginResponse token = new LoginResponse(accessToken,refreshToken);
+        LoginResponse token = new LoginResponse(Long.parseLong(memberId),accessToken,refreshToken);
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonToken = objectMapper.writeValueAsString(token);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
