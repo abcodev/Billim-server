@@ -77,7 +77,16 @@ public class ProductController {
         return ResponseEntity.ok(dates);
     }
 
-    // 상품 수정
+    @ApiOperation(value = "상품 수정 기존 내용 조회", notes = "상품 수정시 기존 정보 조회")
+    @GetMapping("/update/{productId}")
+    public ResponseEntity<UpdateProductResponse> updateProductResponse(
+            @PathVariable("productId") long productId
+    ) {
+        UpdateProductResponse resp = productService.retrieveUpdateProduct(productId);
+        return ResponseEntity.ok(resp);
+    }
+
+    @ApiOperation(value = "*상품 수정")
     @PutMapping("/update/{productId}")
     public ResponseEntity<Void> updateProduct(
             @AuthenticationPrincipal long memberId,
@@ -87,7 +96,7 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
-    @ApiOperation(value = "상품 삭제", notes = "해당 회원이 작성한 상품 삭제")
+    @ApiOperation(value = "*상품 삭제", notes = "해당 회원이 작성한 상품 삭제")
     @DeleteMapping("/delete/{productId}")
     public ResponseEntity<Void> deleteProduct(
             @AuthenticationPrincipal long memberId,
