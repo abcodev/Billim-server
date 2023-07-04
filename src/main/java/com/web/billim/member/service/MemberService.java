@@ -1,9 +1,6 @@
 package com.web.billim.member.service;
 
-import com.web.billim.common.email.dto.EmailAuthRequest;
-import com.web.billim.common.email.dto.EmailRequest;
-import com.web.billim.common.exception.DuplicatedException;
-import com.web.billim.common.email.service.EmailService;
+import com.web.billim.email.service.EmailSendService;
 import com.web.billim.common.exception.NotFoundException;
 import com.web.billim.common.exception.UnAuthorizedException;
 import com.web.billim.common.exception.handler.ErrorCode;
@@ -34,7 +31,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -46,8 +42,7 @@ public class MemberService {
 	private final PointService pointService;
 	private final MemberRepository memberRepository;
 	private final PasswordEncoder passwordEncoder;
-	private final MemberRedisService memberRedisService;
-	private final EmailService emailService;
+	private final EmailSendService emailSendService;
 
 	public Map<String, String> validateHandling(BindingResult bindingResult) {
 		Map<String, String> validatorResult = new HashMap<>();
@@ -74,30 +69,10 @@ public class MemberService {
 		pointService.addPoint(command);
 	}
 
-	@Transactional
 	public boolean checkDuplicateNickname(String nickname) {
 		return memberRepository.existsByNickname(nickname);
 	}
 
-	public void certifyEmail(EmailRequest request) {
-		validateDuplicated(request.getEmail());
-		String authToken = UUID.randomUUID().toString();
-		memberRedisService.saveEmailToken(request.getEmail(), authToken);
-		emailService.sendMail(request.getEmail(), authToken);
-	}
-
-	public void validateDuplicated(String email) {
-		if (memberRepository.existsByEmail(email)) {
-			throw new DuplicatedException(ErrorCode.DUPLICATE_EMAIL);
-		}
-	}
-
-	public void confirmEmail(EmailAuthRequest emailAuthRequest) {
-		if (!memberRedisService.findByEmail(emailAuthRequest.getEmail())
-			.equals(emailAuthRequest.getAuthToken())) {
-			throw new RuntimeException("인증번호가 일치하지 않습니다.");
-		}
-	}
 
 	// Domain Service
 	public Member retrieve(long memberId) {
@@ -156,7 +131,7 @@ public class MemberService {
 	public void findPassword(FindPasswordRequest req) {
 		Member member = memberRepository.findByEmailAndName(req.getEmail(), req.getName())
 				.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
-		String tempPassword = emailService.sendTempPassword(req);
+		String tempPassword = emailSendService.sendTempPassword(req);
 		String encodedPassword = passwordEncoder.encode(tempPassword);
 		member.changePassword(encodedPassword);
 		// Dirty Checking

@@ -1,7 +1,5 @@
 package com.web.billim.member.controller;
 
-import com.web.billim.common.email.dto.EmailAuthRequest;
-import com.web.billim.common.email.dto.EmailRequest;
 import com.web.billim.common.validation.CheckIdValidator;
 import com.web.billim.common.validation.CheckNickNameValidator;
 import com.web.billim.common.validation.CheckPasswordValidator;
@@ -67,22 +65,8 @@ public class MemberController {
         return ResponseEntity.ok(memberService.checkDuplicateNickname(nickname));
     }
 
-    @ApiOperation(value ="이메일인증 링크 발송", notes = "해당 이메일에 인증 링크 발송")
-    @PostMapping("/email/send")
-    public ResponseEntity<Void> sendEmail(@RequestBody EmailRequest request) {
-        memberService.certifyEmail(request);
-        return ResponseEntity.ok().build();
-    }
-
-    @ApiOperation(value = "이메일인증 코드 확인", notes = "클라이언트가 링크를 클릭시 해당 APi로 연결")
-    @PostMapping("/email/confirm")
-    public ResponseEntity<Void> confirmEmail(@RequestBody EmailAuthRequest emailAuthRequest) {
-        memberService.confirmEmail(emailAuthRequest);
-        return ResponseEntity.ok().build();
-    }
-
     @ApiOperation(value = "비밀번호 찾기", notes = "이메일, 이름 입력시 해당 이메일로 임시 비밀번호 전송")
-    @PostMapping("/email/find/password")
+    @PostMapping("/find/password")
     public ResponseEntity<Void> findPassword(@RequestBody FindPasswordRequest req) {
         memberService.findPassword(req);
         return ResponseEntity.ok().build();
