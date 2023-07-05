@@ -38,6 +38,13 @@ public class ProductRegisterRequest {
     @NotEmpty(message = "이미지는 한 장 이상 첨부해 주세요.")
     private List<MultipartFile> images;
 
+//    @NotEmpty(message = "이미지는 한 장 이상 첨부해 주세요.")
+//    private MultipartFile image0;
+//    private MultipartFile image1;
+//    private MultipartFile image2;
+//    private MultipartFile image3;
+//    private MultipartFile image4;
+
     @NotEmpty(message = "거래 방법은 필수 입력 입니다.")
     private List<TradeMethod> tradeMethods;
 
