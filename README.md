@@ -7,9 +7,8 @@
 <br>
 
 # 프로젝트 구조
-<!--<img width="1134" alt="스크린샷 2023-06-30 오후 4 51 29" src="https://github.com/HyunjeongJang/Billim-server/assets/113197284/8fbe3f67-3f28-4a78-8585-2c885c09a605">-->
+<img width="1210" alt="스크린샷 2023-07-06 오전 12 37 28" src="https://github.com/HyunjeongJang/Billim-server/assets/113197284/13990774-5f1a-499c-8906-55e282c42f50">
 
-<img width="1213" alt="스크린샷 2023-07-02 오후 8 16 54" src="https://github.com/HyunjeongJang/Billim-server/assets/113197284/a18ecf17-f9cc-4712-99f5-b0260ba01b1e">
 
 
 <br>
