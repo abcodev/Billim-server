@@ -1,6 +1,6 @@
-package com.web.billim.product.repository;
+package com.web.billim.review.repository;
 
-import com.web.billim.product.domain.Review;
+import com.web.billim.review.domain.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,6 +18,5 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
 
 	@Query("SELECT r FROM Review r WHERE r.productOrder.product.productId = :productId")
 	List<Review> findAllByProductId(@Param("productId") long productId);
-
 
 }

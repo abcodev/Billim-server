@@ -37,8 +37,6 @@ public class MemberSignupRequest {
     @NotBlank(message = "주소는 필수 입력값입니다.")
     private String address;
 
-    public MemberSignupRequest(){}
-
     @Builder
     public Member toEntity() {
         return Member.builder()

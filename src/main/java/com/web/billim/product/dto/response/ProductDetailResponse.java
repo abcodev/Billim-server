@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.web.billim.product.domain.ImageProduct;
 import com.web.billim.product.domain.Product;
 import com.web.billim.product.type.TradeMethod;
+import com.web.billim.review.dto.response.ProductReviewList;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

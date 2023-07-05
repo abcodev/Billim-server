@@ -2,7 +2,6 @@ package com.web.billim.product.dto.request;
 
 import com.web.billim.product.type.TradeMethod;
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,16 +17,15 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class ProductUpdateRequest {
+public class UpdateProductRequest {
 
-    private String categoryName;
+    @NotEmpty(message = "카테고리는 필수 입력입니다.")
+    private String category;
 
-    @ApiModelProperty(value = "상품명")
     @NotEmpty(message = "상품명은 필수정보입니다.")
     private String rentalProduct;
 
-    @ApiModelProperty(value = "상품 설명")
-    @NotEmpty
+    @NotEmpty(message = "상품설명은 필수 입력입니다.")
     private String description;
 
     @Positive
@@ -35,10 +33,10 @@ public class ProductUpdateRequest {
     @Min(value = 100, message = "상품 금액은 100원 이상 입력되어야 합니다.")
     private Long rentalFee;
 
-    @NotEmpty
+    @NotEmpty(message = "이미지는 한 장 이상 첨부해 주세요.")
     private List<MultipartFile> images;
 
-    @NotEmpty
+    @NotEmpty(message = "거래 방법은 필수 입력 입니다.")
     private List<TradeMethod> tradeMethods;
 
     private String place;

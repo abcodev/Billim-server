@@ -5,11 +5,10 @@ import com.web.billim.product.domain.Product;
 import com.web.billim.product.domain.ProductCategory;
 import com.web.billim.product.dto.request.InterestRequest;
 import com.web.billim.product.dto.request.ProductRegisterRequest;
-import com.web.billim.product.dto.request.ReviewWriteRequest;
 import com.web.billim.product.dto.response.*;
 import com.web.billim.product.service.ProductInterestService;
 import com.web.billim.product.service.ProductService;
-import com.web.billim.product.service.ReviewService;
+import com.web.billim.review.service.ReviewService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -78,7 +77,16 @@ public class ProductController {
         return ResponseEntity.ok(dates);
     }
 
-    // 상품 수정
+    @ApiOperation(value = "상품 수정 기존 내용 조회", notes = "상품 수정시 기존 정보 조회")
+    @GetMapping("/update/{productId}")
+    public ResponseEntity<UpdateProductResponse> updateProductResponse(
+            @PathVariable("productId") long productId
+    ) {
+        UpdateProductResponse resp = productService.retrieveUpdateProduct(productId);
+        return ResponseEntity.ok(resp);
+    }
+
+    @ApiOperation(value = "*상품 수정")
     @PutMapping("/update/{productId}")
     public ResponseEntity<Void> updateProduct(
             @AuthenticationPrincipal long memberId,
@@ -88,7 +96,7 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
-    @ApiOperation(value = "상품 삭제", notes = "해당 회원이 작성한 상품 삭제")
+    @ApiOperation(value = "*상품 삭제", notes = "해당 회원이 작성한 상품 삭제")
     @DeleteMapping("/delete/{productId}")
     public ResponseEntity<Void> deleteProduct(
             @AuthenticationPrincipal long memberId,
@@ -132,27 +140,6 @@ public class ProductController {
     public ResponseEntity<Void> mySellDetail() {
         return ResponseEntity.ok().build();
     }
-
-
-    @ApiOperation(value = "회원이 이용한 상품 리뷰 불러오기", notes = "마이페이지 헤더에서 리뷰 클릭시 작성한 후기, 작성 해야하는 리뷰를 불러옴")
-    @GetMapping("/my/product/review/")
-    public ResponseEntity<Void> myProductReview(@AuthenticationPrincipal long memberId) {
-        reviewService.findMyProductReview(memberId);
-        return ResponseEntity.ok().build();
-    }
-
-    @ApiOperation(value = "리뷰 작성하기" , notes = "리뷰 작성하기, productId를 넘겨주세요.")
-    @PostMapping("/review/write")
-    public ResponseEntity<Void> productWrite(@RequestBody ReviewWriteRequest reviewWriteRequest) {
-        reviewService.productReviewWrite(reviewWriteRequest);
-        return ResponseEntity.ok().build();
-    }
-
-//    @ApiOperation(value = "상품 리뷰 리스트", notes = "상품 디테일에서 리뷰리스트 가져오기")
-//    @GetMapping("/review/list")
-//    public ResponseEntity<List<ProductReviewList>> reviewList(@RequestParam long productId) {
-//        return ResponseEntity.ok(reviewService.reviewList(productId));
-//    }
 
 }
 
