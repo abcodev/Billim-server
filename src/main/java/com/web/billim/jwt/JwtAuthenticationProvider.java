@@ -1,5 +1,7 @@
 package com.web.billim.jwt;
 
+import com.web.billim.common.exception.UnAuthorizedException;
+import com.web.billim.common.exception.handler.ErrorCode;
 import com.web.billim.jwt.dto.JwtAuthenticationToken;
 
 
@@ -18,11 +20,16 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+
         String jwt = (String) authentication.getCredentials();
-        if (jwt != null && jwtUtils.tokenValidation(jwt)) {
+        if(jwtUtils.tokenValidation(jwt)){
             return jwtUtils.getAuthentication(jwt);
+        } else if (jwt == null) {
+           return  null;
+        } else {
+            // 토큰이 null 이거나 유효성 검증을 통관 못했을 경우 예외 던질까?
+            return null;
         }
-        return null;
     }
 
     @Override

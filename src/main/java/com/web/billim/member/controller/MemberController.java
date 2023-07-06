@@ -127,17 +127,13 @@ public class MemberController {
         memberService.updatePassword(command);
         return ResponseEntity.ok().build();
     }
+
+
     // 소셜 연동
-
-
 
     // 회원 차단
 
-
-
     // 회원 탈퇴
-
-
 }
 
 
