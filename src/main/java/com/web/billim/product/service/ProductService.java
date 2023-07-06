@@ -9,6 +9,7 @@ import com.web.billim.order.service.OrderService;
 import com.web.billim.product.domain.ImageProduct;
 import com.web.billim.product.domain.Product;
 import com.web.billim.product.domain.ProductCategory;
+import com.web.billim.product.dto.ProductRegisterCommand;
 import com.web.billim.product.dto.request.ProductRegisterRequest;
 import com.web.billim.product.dto.response.ProductDetailResponse;
 import com.web.billim.product.dto.response.MostProductList;
@@ -31,7 +32,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ProductService {
-
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
     private final ProductCategoryRepository productCategoryRepository;
@@ -42,20 +42,20 @@ public class ProductService {
     private final ReviewService reviewService;
 
     @Transactional
-    public Product register(ProductRegisterRequest request) {
-        Member registerMember = memberRepository.findById(request.getMemberId())
+    public Product register(ProductRegisterCommand command) {
+        Member registerMember = memberRepository.findById(command.getMemberId())
                 .orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
-        ProductCategory productCategory = productCategoryRepository.findByCategoryName(request.getCategory())
+        ProductCategory productCategory = productCategoryRepository.findByCategoryName(command.getCategory())
                 .orElseThrow(() -> new NotFoundException(ErrorCode.CATEGORY_NOT_FOUND));
 
         // 1. 이미지 저장
-        List<ImageProduct> images = request.getImages().stream().map(image -> {
+        List<ImageProduct> images = command.getImages().stream().map(image -> {
             String url = imageUploadService.upload(image, "product");
             return imageProductRepository.save(ImageProduct.of(url));
         }).collect(Collectors.toList());
 
         // 2. Product 정보 데이터베이스에 저장 & 반환
-        Product product = Product.generateNewProduct(request, productCategory, registerMember, images);
+        Product product = Product.generateNewProduct(command, productCategory, registerMember, images);
         return productRepository.save(product);
     }
 
@@ -103,18 +103,11 @@ public class ProductService {
 
     @Transactional
     public void delete(long memberId, long productId) {
-//        Product product = productRepository.findById(productId)
-//                .orElseThrow(() -> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
-//        if (product.getMember().getMemberId() != memberId) {
-//            throw new UnAuthorizedException(ErrorCode.INVALID_AUTH_TOKEN);
-//        }
-//        productRepository.deleteById(productId);
-
         Product product = productRepository.findById(productId)
             .filter(p -> p.getMember().getMemberId() == memberId)
             .orElseThrow(() -> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
+        imageProductRepository.deleteAllInBatch(product.getImages());
         productRepository.delete(product);
-
     }
 
 	public Page<ProductListResponse> search(String category, String keyword, PageRequest paging) {

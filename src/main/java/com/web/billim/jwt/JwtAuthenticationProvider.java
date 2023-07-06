@@ -25,7 +25,6 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         }
         return null;
 
-
 //        try {
 //            if (jwt != null && jwtUtils.tokenValidation(jwt)) {
 //                // Long memberId = Long.parseLong(jwtUtils.getSubject(jwt));
@@ -40,7 +39,6 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 //        } catch (Exception e) {
 //            throw new BadCredentialsException("Invalid JWT token");
 //        }
-
 
     }
 

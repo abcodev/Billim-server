@@ -80,6 +80,7 @@ public class JwtUtils implements InitializingBean {
 
 	// token 검증
 	public Boolean tokenValidation(String token) {
+
 		try {
 			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
 			return true;
@@ -98,13 +99,10 @@ public class JwtUtils implements InitializingBean {
 		}
 
 
-
 //		try {
 //			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
 //			return true;
 //		} catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-//			// 1. 로그로 남기는 방법
-//			// 2. 이 객체를 cause 로써 상위 예외 객체에 포함시킨다.
 //			log.error("잘못된 JWT 서명입니다.", e);
 //			return false;
 //		} catch (UnsupportedJwtException e) {
@@ -114,8 +112,6 @@ public class JwtUtils implements InitializingBean {
 //			log.error("JWT 토큰이 잘못되었습니다.", e);
 //			return false;
 //		}
-
-
 
 	}
 

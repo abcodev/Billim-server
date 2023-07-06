@@ -83,8 +83,6 @@ public class ChatController {
 	}
 
 	// 차단하기
-
-
 	@ApiOperation(value = "채팅 text 전송", notes = "텍스트 형식의 채팅을 보낸다")
 	@MessageMapping("/send/text")
 	public void sendMessage(SendTextMessageRequest req) {
