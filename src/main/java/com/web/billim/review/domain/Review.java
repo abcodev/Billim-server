@@ -1,4 +1,4 @@
-package com.web.billim.product.domain;
+package com.web.billim.review.domain;
 
 import com.web.billim.common.domain.JpaEntity;
 import com.web.billim.order.domain.ProductOrder;

@@ -13,9 +13,11 @@ import com.web.billim.product.dto.request.ProductRegisterRequest;
 import com.web.billim.product.dto.response.ProductDetailResponse;
 import com.web.billim.product.dto.response.MostProductList;
 import com.web.billim.product.dto.response.ProductListResponse;
+import com.web.billim.product.dto.response.UpdateProductResponse;
 import com.web.billim.product.repository.ImageProductRepository;
 import com.web.billim.product.repository.ProductCategoryRepository;
 import com.web.billim.product.repository.ProductRepository;
+import com.web.billim.review.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -86,6 +88,14 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
+
+    @Transactional
+    public UpdateProductResponse retrieveUpdateProduct(long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
+        return UpdateProductResponse.of(product);
+    }
+
     @Transactional
     public void update(long productId) {
 
@@ -115,14 +125,15 @@ public class ProductService {
                 });
 	}
 
-	//    public ReservationDateResponse reservationDate(int productId) {
+
+
+    //    public ReservationDateResponse reservationDate(int productId) {
 //        Optional<ProductOrder> productOrder = Optional.ofNullable(orderRepository.findByProductId(productId)
 //                .orElseThrow(() ->
 //                        new RuntimeException("해당 ProductId(" + productId + ") 에 대한 예약날짜가 없습니다.")));
 //        return (ReservationDateResponse) productOrder.stream().map(ReservationDateResponse::of)
 //                .collect(Collectors.toList());
 //    }
-
 
 
 }
