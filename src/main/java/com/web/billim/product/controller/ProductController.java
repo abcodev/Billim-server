@@ -39,20 +39,15 @@ public class ProductController {
 	private final ProductInterestService productInterestService;
 	private final ReviewService reviewService;
 
-	@ApiOperation(value = "*상품 등록", notes = "이미지 한장씩 넘기는걸로 변경중")
+	@ApiOperation(value = "상품 등록", notes = "이미지 1장 부터 최대 5장까지 첨부 가능")
 	@PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Product> registerProduct(
 		@AuthenticationPrincipal long memberId,
 		@ModelAttribute @Valid ProductRegisterRequest req
 	) {
 		req.setRegisterMember(memberId);
-		System.out.println("1번" + req.getImage0());
-		System.out.println("2번" + req.getImage1());
-		System.out.println("3번" + req.getImage2());
-		System.out.println("4번" + req.getImage3());
-		System.out.println("5번" + req.getImage4());
 		ProductRegisterCommand command = new ProductRegisterCommand(req);
-		log.info("이미지 몇개로 넘어오니? " + command.getImages().size());
+		log.info("이미지 개수 :  " + command.getImages().size());
 		return ResponseEntity.ok(productService.register(command));
 	}
 
