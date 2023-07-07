@@ -33,6 +33,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/product")
 public class ProductController {
+
 	private final ProductService productService;
 	private final OrderService orderService;
 	private final ProductInterestService productInterestService;
@@ -45,7 +46,13 @@ public class ProductController {
 		@ModelAttribute @Valid ProductRegisterRequest req
 	) {
 		req.setRegisterMember(memberId);
+		System.out.println("1번" + req.getImage0());
+		System.out.println("2번" + req.getImage1());
+		System.out.println("3번" + req.getImage2());
+		System.out.println("4번" + req.getImage3());
+		System.out.println("5번" + req.getImage4());
 		ProductRegisterCommand command = new ProductRegisterCommand(req);
+		log.info("이미지 몇개로 넘어오니? " + command.getImages().size());
 		return ResponseEntity.ok(productService.register(command));
 	}
 

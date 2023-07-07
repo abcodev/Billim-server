@@ -9,11 +9,6 @@ import lombok.NoArgsConstructor;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -39,8 +34,8 @@ public class ProductRegisterCommand {
 		this.description = req.getDescription();
 		this.rentalFee = req.getRentalFee();
 		this.images = Stream.of(req.getImage0(), req.getImage1(), req.getImage2(), req.getImage3(), req.getImage4())
-			.filter(Objects::nonNull)
-			.collect(Collectors.toList());
+				.filter(Objects::nonNull)
+				.collect(Collectors.toList());
 		this.tradeMethods = req.getTradeMethods();
 		this.place = req.getPlace();
 	}

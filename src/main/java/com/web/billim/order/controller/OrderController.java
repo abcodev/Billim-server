@@ -28,7 +28,7 @@ public class OrderController {
     private final PointService pointService;
 
     @ApiOperation(value = "상품 주문", notes = "상품 상세보기에서 주문시 호출")
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<PaymentInfoResponse> order(
             @RequestBody OrderCommand command,
             @AuthenticationPrincipal long memberId

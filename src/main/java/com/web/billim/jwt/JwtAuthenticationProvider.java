@@ -27,9 +27,6 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
 //        try {
 //            if (jwt != null && jwtUtils.tokenValidation(jwt)) {
-//                // Long memberId = Long.parseLong(jwtUtils.getSubject(jwt));
-//                // UserDetailsEntity userDetails = userDetailsService.findByMemberId(memberId);
-//                // return new JwtAuthenticationToken(userDetails.getAuthorities(), userDetails.getMemberId());
 //                return jwtUtils.getAuthentication(jwt);
 //            } else {
 //                throw new BadCredentialsException("Invalid JWT token");
