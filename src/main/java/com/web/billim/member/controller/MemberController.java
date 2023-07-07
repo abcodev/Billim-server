@@ -130,15 +130,9 @@ public class MemberController {
 
     // 소셜 연동
 
-
-
     // 회원 차단
 
-
-
     // 회원 탈퇴
-
-
 }
 
 
