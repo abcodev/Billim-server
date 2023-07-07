@@ -24,6 +24,7 @@ public class ProductDetailResponse {
     private String sellerProfileImage;
 
     private long productId;
+    private String category;
     private String productName;
     private String detail;
     private long price;
@@ -45,6 +46,7 @@ public class ProductDetailResponse {
                 .sellerGrade(member.getGrade().getAuthority())
                 .sellerProfileImage(member.getProfileImageUrl())
                 .productId(product.getProductId())
+                .category(product.getProductCategory().getCategoryName())
                 .productName(product.getProductName())
                 .detail(product.getDetail())
                 .price(product.getPrice())

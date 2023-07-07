@@ -44,7 +44,6 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    // Lock
     @Transactional
     public PaymentInfoResponse order(long memberId, OrderCommand orderCommand) {
         Member member = memberService.retrieve(memberId);

@@ -80,6 +80,7 @@ public class JwtUtils implements InitializingBean {
 
 	// token 검증
 	public Boolean tokenValidation(String token) {
+
 		try {
 			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
 			return true;
@@ -96,5 +97,22 @@ public class JwtUtils implements InitializingBean {
 			log.error("JWT 토큰이 잘못되었습니다.");
 			return false;
 		}
+
+
+//		try {
+//			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+//			return true;
+//		} catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+//			log.error("잘못된 JWT 서명입니다.", e);
+//			return false;
+//		} catch (UnsupportedJwtException e) {
+//			log.error("지원하지 않는 JWT 토큰입니다.", e);
+//			return false;
+//		} catch (IllegalArgumentException e) {
+//			log.error("JWT 토큰이 잘못되었습니다.", e);
+//			return false;
+//		}
+
 	}
+
 }

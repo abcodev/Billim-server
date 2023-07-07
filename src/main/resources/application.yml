@@ -37,3 +37,16 @@ spring:
 logging:
   level:
     org.springframework.web.cors: INFO
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: fe-test
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/billim
+    username: admin
+    password: admin123
+    driver-class-name: com.mysql.cj.jdbc.Driver

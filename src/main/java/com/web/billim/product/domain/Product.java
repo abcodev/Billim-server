@@ -1,6 +1,7 @@
 package com.web.billim.product.domain;
 
 import com.web.billim.common.domain.JpaEntity;
+import com.web.billim.product.dto.ProductRegisterCommand;
 import com.web.billim.product.dto.request.ProductRegisterRequest;
 import com.web.billim.member.domain.Member;
 import com.web.billim.product.type.TradeMethod;
@@ -53,6 +54,7 @@ public class Product extends JpaEntity {
     private String tradeArea;
 
     @JoinColumn(name = "product_id")
+    // JPA 연관관계 매핑 기술이 도와주는 부분 (호불호)
     @OneToMany(fetch = FetchType.LAZY) // EAGER(즉시 로딩)
     @ApiModelProperty("상품 이미지 리스트 주소")
     private List<ImageProduct> images;
@@ -65,15 +67,15 @@ public class Product extends JpaEntity {
         return this.images.get(0).getUrl();
     }
 
-    public static Product generateNewProduct(ProductRegisterRequest request, ProductCategory category, Member member, List<ImageProduct> images) {
+    public static Product generateNewProduct(ProductRegisterCommand command, ProductCategory category, Member member, List<ImageProduct> images) {
         return Product.builder()
                 .productCategory(category)
                 .member(member)
-                .productName(request.getRentalProduct())
-                .detail(request.getDescription())
-                .price(request.getRentalFee())
-                .tradeMethod(request.getTradeMethods().stream().map(Objects::toString).collect(Collectors.joining(",")))
-                .tradeArea(request.getPlace())
+                .productName(command.getRentalProduct())
+                .detail(command.getDescription())
+                .price(command.getRentalFee())
+                .tradeMethod(command.getTradeMethods().stream().map(Objects::toString).collect(Collectors.joining(",")))
+                .tradeArea(command.getPlace())
                 .images(images)
                 .build();
     }

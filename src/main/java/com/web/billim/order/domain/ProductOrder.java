@@ -43,7 +43,6 @@ public class ProductOrder extends JpaEntity {
 
     private LocalDate endAt;
 
-    // VO
     @Embedded
     @AttributeOverrides({
             @AttributeOverride(name="name", column=@Column(name="buyer_name")),
@@ -85,5 +84,6 @@ public class ProductOrder extends JpaEntity {
     public void complete() {
         this.status = ProductOrderStatus.DONE;
     }
+
 }
 
