@@ -100,9 +100,9 @@ public class MemberController {
     @PutMapping("/my/address")
     public ResponseEntity<Void> updateAddress(
             @AuthenticationPrincipal long memberId,
-            @RequestBody UpdateAddressRequest updateAddressRequest
+            @RequestBody UpdateAddressRequest req
     ) {
-        memberService.updateAddress(memberId, updateAddressRequest);
+        memberService.updateAddress(memberId, req);
         return ResponseEntity.ok().build();
     }
 
@@ -110,9 +110,9 @@ public class MemberController {
     @PutMapping("/my/nickname")
     public ResponseEntity<Void> updateNickname(
             @AuthenticationPrincipal long memberId,
-            @RequestBody UpdateNicknameRequest updateNicknameRequest
+            @RequestBody UpdateNicknameRequest req
     ) {
-        memberService.updateNickname(memberId, updateNicknameRequest);
+        memberService.updateNickname(memberId, req);
         return ResponseEntity.ok().build();
     }
 

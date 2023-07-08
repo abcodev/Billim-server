@@ -12,7 +12,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderCommand {
-
 	private long productId;
 	private LocalDate startAt;
 	private LocalDate endAt;

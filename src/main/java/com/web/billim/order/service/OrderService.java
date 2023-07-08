@@ -20,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -63,10 +62,10 @@ public class OrderService {
                 }
             });
 
-        // 2. 주문정보 생성
+        // 3. 주문정보 생성
         ProductOrder order = orderRepository.save(ProductOrder.generateNewOrder(member, product, orderCommand));
 
-        // 3. 결제정보 생성
+        // 4. 결제정보 생성
         PaymentCommand paymentCommand = new PaymentCommand(member, order, orderCommand.getCouponIssueId(), orderCommand.getUsedPoint());
         return paymentService.payment(paymentCommand);
     }
@@ -74,7 +73,7 @@ public class OrderService {
     @Transactional
     public MyOrderHistoryListResponse findMyOrder(long memberId) {
        List<ProductOrder> productOrders= orderRepository.findAllByMember_memberId(memberId)
-               .orElseThrow(()-> new EntityNotFoundException("구매하신 상품이 없습니다."));
+               .orElseThrow(()-> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
        List<MyOrderHistory> myOrderHistories = productOrders.stream()
                 .map(MyOrderHistory::from)
                 .collect(Collectors.toList());
@@ -82,13 +81,13 @@ public class OrderService {
     }
 
     public ProductOrder findByOrder(long orderId) {
-        ProductOrder productOrder = orderRepository.findById(orderId)
+        return orderRepository.findById(orderId)
                 .orElseThrow();
-        return productOrder;
     }
 
     public long numberOfOrders(long memberId) {
         return orderRepository.countByMember_memberId(memberId)
                 .orElseThrow(()-> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
     }
+
 }

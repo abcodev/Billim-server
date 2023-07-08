@@ -22,8 +22,9 @@ public class PaymentController {
     @ApiOperation(value = "결제 성공")
     @ApiImplicitParam(name = "imp_uid", value = "")
     @GetMapping("/complete")
-    public ResponseEntity<Void> paymentComplete(@RequestParam("imp_uid") String impUid,
-                                                @RequestParam("merchant_uid") String merchantUid
+    public ResponseEntity<Void> paymentComplete(
+            @RequestParam("imp_uid") String impUid,
+            @RequestParam("merchant_uid") String merchantUid
     ) {
         paymentService.complete(impUid, merchantUid);
         return ResponseEntity.ok().build();

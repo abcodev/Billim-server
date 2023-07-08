@@ -10,11 +10,12 @@ import com.web.billim.product.domain.ImageProduct;
 import com.web.billim.product.domain.Product;
 import com.web.billim.product.domain.ProductCategory;
 import com.web.billim.product.dto.ProductRegisterCommand;
-import com.web.billim.product.dto.request.ProductRegisterRequest;
+import com.web.billim.product.dto.ProductUpdateCommand;
+import com.web.billim.product.dto.request.ProductUpdateRequest;
 import com.web.billim.product.dto.response.ProductDetailResponse;
 import com.web.billim.product.dto.response.MostProductList;
 import com.web.billim.product.dto.response.ProductListResponse;
-import com.web.billim.product.dto.response.UpdateProductResponse;
+import com.web.billim.product.dto.response.ProductUpdateResponse;
 import com.web.billim.product.repository.ImageProductRepository;
 import com.web.billim.product.repository.ProductCategoryRepository;
 import com.web.billim.product.repository.ProductRepository;
@@ -59,6 +60,25 @@ public class ProductService {
         return productRepository.save(product);
     }
 
+    @Transactional
+    public Product update(ProductUpdateCommand command) {
+        Member registerMember = memberRepository.findById(command.getMemberId())
+                .orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+
+        var productCategory = productCategoryRepository.findByCategoryName(command.getCategory())
+                .orElseThrow(() -> new NotFoundException(ErrorCode.CATEGORY_NOT_FOUND));
+
+        List<ImageProduct> images = command.getImages().stream().map(image -> {
+            String url = imageUploadService.upload(image, "product");
+            return imageProductRepository.save(ImageProduct.of(url));
+        }).collect(Collectors.toList());
+
+        Product product = Product.updateProduct(command, productCategory, registerMember, images);
+        return productRepository.save(product);
+    }
+
+
+
     public List<ProductCategory> categoryList() {
         return productCategoryRepository.findAll();
     }
@@ -90,16 +110,19 @@ public class ProductService {
 
 
     @Transactional
-    public UpdateProductResponse retrieveUpdateProduct(long productId) {
+    public ProductUpdateResponse retrieveUpdateProduct(long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
-        return UpdateProductResponse.of(product);
+        return ProductUpdateResponse.of(product);
     }
 
-    @Transactional
-    public void update(long productId) {
+//    public Product update(long memberId, ProductUpdateRequest req) {
+//
+//        return productRepository.save(memberId, product);
+//    }
 
-    }
+
+
 
     @Transactional
     public void delete(long memberId, long productId) {
@@ -117,6 +140,7 @@ public class ProductService {
                     return ProductListResponse.of(product, starRating);
                 });
 	}
+
 
 
 

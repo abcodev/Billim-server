@@ -24,8 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
 
     private final OrderService orderService;
-    private final ProductService productService;
-    private final PointService pointService;
 
     @ApiOperation(value = "상품 주문", notes = "상품 상세보기에서 주문시 호출")
     @PostMapping

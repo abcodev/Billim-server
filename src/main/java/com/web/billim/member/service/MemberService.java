@@ -108,22 +108,22 @@ public class MemberService {
 	}
 
 	@Transactional
-	public void updateAddress(long memberId, UpdateAddressRequest updateAddressRequest) {
+	public void updateAddress(long memberId, UpdateAddressRequest req) {
 		memberRepository.findById(memberId)
 			.ifPresent(member -> {
-				member.updateAddress(updateAddressRequest.getAddress());
+				member.updateAddress(req.getAddress());
 				memberRepository.save(member);
 			});
 	}
 
 	@Transactional
-	public void updateNickname(long memberId, UpdateNicknameRequest updateNicknameRequest) {
-		if (memberRepository.existsByNickname(updateNicknameRequest.getNickname())) {
+	public void updateNickname(long memberId, UpdateNicknameRequest req) {
+		if (memberRepository.existsByNickname(req.getNickname())) {
 			throw new RuntimeException("중복된 닉네임 입니다.");
 		}
 		memberRepository.findById(memberId)
 			.ifPresent(member -> {
-				member.updateNickname(updateNicknameRequest.getNickname());
+				member.updateNickname(req.getNickname());
 				memberRepository.save(member);
 			});
 	}
