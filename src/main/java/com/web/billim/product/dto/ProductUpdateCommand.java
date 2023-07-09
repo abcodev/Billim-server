@@ -39,4 +39,5 @@ public class ProductUpdateCommand {
         this.tradeMethods = req.getTradeMethods();
         this.place = req.getPlace();
     }
+
 }
