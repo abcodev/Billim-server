@@ -31,6 +31,56 @@
 
 # 트러블 슈팅
 
+<!-- ## QueryDSL
+
+### 이슈
+
+JPA 페이징 + 키워드 검색 넘길 때 Count 쿼리에서 Fetch Join을 사용하면,  Spring Data가 객체를 만들 때 만약 반환값이 Page 라면 쿼리를 2번 날리는데 첫 번째 Count 쿼리에도 Fetch Join이 적용되는 이슈가 발생하였다.
+
+### Paging + Fetch Join 을 했을 때 에러가 나는 이유
+
+- Fetch Join 을 써야하는 이유?
+    - “N + 1 문제” : Lazy Loading 을 사용한다. -> 그래서 발생한다?
+    - JPA 연관관계 상에서 연관관계에 대한 객체를 조회하기 위한 별도의 SQL 쿼리문이 날라가는 문제
+    - List<Member> 를 조회 -> Member 는 Product 를 1:N 연관관계로 가지고 있다.
+    - List<Member> 를 조회하는 쿼리 1번이 날아간다. (SELECT * FROM member WHERE ~)
+    - 그리고 그 연관관계를 가지는 Product 를 가져오기 위해서 List<Member> 의 size 만큼의 쿼리가 날아간다. (N번의 쿼리)
+    - 결국 많은 쿼리가 발생한다는것은 곧 DB 에 가해지는 부하에 직결되는 문제
+    - 이걸 해결하기 위한 방법으로 Fetch Join 을 사용함
+    - 반드시 Fetch Join 을 써야하는건 아니고 N+1 문제로 인해서 DB 성능에 이슈가 되는 케이스에만 적용
+- 두 가지를 동시에 적용해보았음
+- Page 객체를 반환하는 추상메소드를 만들면, 쿼리가 두번 (count 쿼리, select offset limit 쿼리) 날아가는데 , Fetch Join 을 적용하기 위해서 JPQL 을 사용했고, 그 과정에서 두가지 쿼리에 모두 Fetch Join 이 적용됐다. 그 결과 count 쿼리에도 Fetch Join 이 적용됐고 거기서 에러가 발생 하였다. 이 에러를 해결하기 위해서는 count 쿼리에는 Fetch Join 을 적용하지 말아야하고, select offset limit 쿼리에는 Fetch Join 을 적용해야한다.
+- 하지만, Spring Data JPA나 JPQL는 Repository에 대한 구현 객체를 내가 직접 개발하는게 아니라 자동으로 만들어주고 있기 때문에 직접적인 쿼리 튜닝이 어렵다. 따라서 그게 가능한 QueryDSL 을 적용 하게 되었다.
+
+### QueryDSL을 도입하게 된 이유
+
+JPA를 사용하면, Spring Data JPA에서 사용하는 Spring Data Repository는 내가 추상메소드만 만들어도 거기에 대한 구현체를 알아서 만들어준다. Spring Data 가 내가 만든 인터페이스의 추상메서드를 보고 적절한 객체를 만들어준다. JPQL을 우선적으로 사용해도 Spring Data Repository 규칙을 벗어날 수는 없다.
+
+즉, 기존 Spring Data JPA 를 사용할땐 쿼리를 직접 만드는게 아닌, 자동으로 만들어주는 부분이라 카운트 쿼리만Fetch Join을 사용안하도록 커스텀할수가없었고, 커스텀할수있는 QueryDSL 을 사용 하게 되었다.
+
+JPQL은 객체중심으로 쿼리문을 짜게 되어서, 직접 쿼리문을 작성 하다보니 오타가 나거나 잘못된 쿼리문을 작성했을때 컴파일 에러가 나지 않고, 실행하는 시점에만 런타임 에러가 발생하기 때문에 서비스 운영측면서 치명적이다.
+
+QueryDSL 을 사용하게 되면 메소드 체인 형태로 쿼리문을 작성하기 때문에 잘못된 쿼리에 대해서 런타임이 아니라 컴파일 시점에 에러를 식별할 수 있게 되었다.
+
+### JPA + QueryDSL 을 같이 사용하면서 객체지향 설계적인 측면에서 고려한점
+
+Service 입장에서는 Repository를 의존하면서 데이터베이스와 소통을 하고 있다. Service 는 사실Repository 의 구현 객체가 어떻게 생겼는지 관심이 없어야 한다 → Service 와 Repository 구현 객체간의 결합도 낮추기. Repository 구현 객체의 자율성 → 이걸 지키기 위해서 Repository 구현 객체에 캡슐화 적용
+
+Repository 입장에서는 자유로워야된다. Repository 내부에서 JPA 를 사용하다가 QueryDSL + JPA 로 내용을 바꾸더라도 상관없어야하고 아무한테도 영향안주는게 좋다. -> Repository 는 변경에 자유로운 객체다.
+
+Service 에서 데이터베이스에 정보를 요청하기 위해서 Repository 객체한테 요청하게 되고, Service 입장에서 조회해오는 데이터가 JPA 를 통해서 가져온 데이터인지, QueryDSL 을 통해서 가져온 데이터인지 알아야 하는건 아니다. 단지 Service 는 Repository 한테 요청을 할 뿐이고 그 응답만 올바르게 반환되길 기대한다.
+
+JPA, QueryDSL 을 통해서 데이터를 가져온다는 같은 구체적인 내용은  Service 가 이 사실을 알게되면 Service 와Repository 는 결합도가 매우 높아져 변경에 취약하게 된다.
+
+( 구체적인 것에 의존하면 변경이 전파될 확률이 높다 )
+
+그래서 추상화 타입인 Repository 인터페이스(고수준)만을 의존해서 변경이 전파될 확률을 낮춘다.
+
+따라서 캡슐화(구체적인걸 감추는 일)를 통해 Repository 가 JPA, QueryDSL 뭘 사용하는지 외부가 모르게 만들고자객체지향적인 구조를 고려하였다.
+
+-->
+
+
 ## LazyLoading
 
 ### Open In View - false
