@@ -1,6 +1,6 @@
 package com.web.billim.jwt;
 
-import com.web.billim.common.exception.TokenExpiredException;
+import com.web.billim.common.exception.JwtException;
 import com.web.billim.jwt.dto.RedisJwt;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ public class JwtTokenRedisService {
 
     public  RedisJwt compareToken(long memberId) {
         RedisJwt redisJwt = jwtTokenRedisRepository.findById(String.valueOf(memberId))
-                .orElseThrow(()-> new TokenExpiredException(MISMATCH_REFRESH_TOKEN));
+                .orElseThrow(()-> new JwtException(MISMATCH_REFRESH_TOKEN));
         log.info("리프레시 토큰 값: "+redisJwt.getRefreshToken());
         return redisJwt;
     }

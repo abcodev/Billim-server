@@ -1,5 +1,6 @@
 package com.web.billim.jwt;
 
+import com.web.billim.common.exception.handler.ErrorCode;
 import com.web.billim.jwt.dto.JwtAuthenticationToken;
 import com.web.billim.member.type.MemberGrade;
 import com.web.billim.security.domain.UserDetailsEntity;
@@ -7,10 +8,13 @@ import com.web.billim.security.UserDetailServiceImpl;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -83,18 +87,29 @@ public class JwtUtils implements InitializingBean {
 		try {
 			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
 			return true;
-		} catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-			log.error("잘못된 JWT 서명입니다.");
-			return false;
-		} catch (ExpiredJwtException e) {
-			log.error("만료된 JWT 토큰입니다.");
-			return false;
-		} catch (UnsupportedJwtException e) {
-			log.error("지원하지 않는 JWT 토큰입니다.");
-			return false;
-		} catch (IllegalArgumentException e) {
-			log.error("JWT 토큰이 잘못되었습니다.");
-			return false;
+		} catch (SignatureException e){
+			log.error("dddd");
+		} catch (SecurityException e){
+			log.error("테스트1");
+		} catch (MalformedJwtException e){
+			log.error("테스트2");
+		} catch (ExpiredJwtException e){
+			log.error("만료");
+		} catch (UnsupportedJwtException e){
+			log.error("테스트3");
+		} catch (IllegalArgumentException e){
+			log.error("테스트4");
 		}
+		return false;
+
+
+
+//		catch (ExpiredJwtException e){
+//			throw new JwtException(ErrorCode.EXPIRED_TOKEN);
+//		} catch (MalformedJwtException e){
+//			throw new JwtException(ErrorCode.WRONG_TYPE_TOKEN);
+//		} catch (SignatureException e){
+//			throw new JwtException(ErrorCode.UNKNOWN_ERROR);
+//		}
 	}
 }

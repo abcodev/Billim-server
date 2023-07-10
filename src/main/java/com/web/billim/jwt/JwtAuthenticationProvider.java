@@ -24,12 +24,8 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         String jwt = (String) authentication.getCredentials();
         if(jwtUtils.tokenValidation(jwt)){
             return jwtUtils.getAuthentication(jwt);
-        } else if (jwt == null) {
-           return  null;
-        } else {
-            // 토큰이 null 이거나 유효성 검증을 통관 못했을 경우 예외 던질까?
-            return null;
         }
+        return null;
     }
 
     @Override

@@ -56,7 +56,9 @@ public class WebSecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/**").permitAll()
                 .anyRequest().authenticated()
-
+//                .and()
+//                .exceptionHandling()
+//                .authenticationEntryPoint(authenticationFailureEntryPoint)
                 .and()
                 .apply(new JwtTokenFilterConfigurer(jwtUtils, authenticationManager,jwtTokenRedisService, securityFilterSkipMatcher, authenticationFailureEntryPoint));
 

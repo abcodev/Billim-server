@@ -20,6 +20,11 @@ public enum ErrorCode {
     INVALID_AUTH_TOKEN(UNAUTHORIZED, "권한 정보가 없는 토큰입니다"),
     UNAUTHORIZED_MEMBER(UNAUTHORIZED, "현재 내 계정 정보가 존재하지 않습니다"),
     MISMATCH_PASSWORD(UNAUTHORIZED,"아이디 또는 비밀번호가 일치하지 않습니다."),
+    EXPIRED_TOKEN(UNAUTHORIZED,"만료된 토큰입니다."),
+    UNSUPPORTED_TOKEN(UNAUTHORIZED,"변조된 토큰입니다."),
+    UNKNOWN_ERROR(UNAUTHORIZED,"토큰이 존재하지 않습니다."),
+    WRONG_TYPE_TOKEN(UNAUTHORIZED,"변조된 토큰입니다."),
+
 
 
     /* 404 NOT_FOUND : Resource 를 찾을 수 없음 */
