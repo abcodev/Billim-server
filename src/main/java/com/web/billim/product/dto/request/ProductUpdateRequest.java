@@ -38,6 +38,8 @@ public class ProductUpdateRequest {
     private long rentalFee;
 
 //    @NotEmpty(message = "이미지는 한 장 이상 첨부해 주세요.")
+    private List<String> deleteImages;
+
     private MultipartFile image0;
     private MultipartFile image1;
     private MultipartFile image2;

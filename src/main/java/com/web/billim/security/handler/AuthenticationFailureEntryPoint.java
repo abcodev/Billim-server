@@ -18,7 +18,6 @@ import com.web.billim.common.exception.handler.ErrorResponse;
 
 @Component
 public class AuthenticationFailureEntryPoint implements AuthenticationEntryPoint {
-
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
 		if (failed instanceof AuthenticationBusinessException) {

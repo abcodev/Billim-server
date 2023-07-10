@@ -51,17 +51,18 @@ public class ProductController {
         return ResponseEntity.ok(productService.register(command));
     }
 
-    @ApiOperation(value = "*상품 수정")
+    @ApiOperation(value = "상품 수정", notes = "삭제할 이미지 deleteImages, 새로운 이미지 MultipartFile")
     @PutMapping("/update")
-    public ResponseEntity<Product> updateProduct(
+    public ResponseEntity<Void> updateProduct(
             @AuthenticationPrincipal long memberId,
-            @ModelAttribute@Valid ProductUpdateRequest req
+            @ModelAttribute @Valid ProductUpdateRequest req
     ) {
         req.setRegisterMember(memberId);
         ProductUpdateCommand command = new ProductUpdateCommand(req);
-        return ResponseEntity.ok(productService.update(command));
+        productService.update(command);
+        return ResponseEntity.ok().build();
+//        return ResponseEntity.ok(productService.update(command));
     }
-
 
     @ApiOperation(value = "전체 상품목록 조회, 검색, 페이징", notes = "전체 상품목록 조회, 카테고리별 검색, 키워드 검색, 페이징 처리")
     @Transactional
@@ -103,16 +104,6 @@ public class ProductController {
         ProductUpdateResponse resp = productService.retrieveUpdateProduct(productId);
         return ResponseEntity.ok(resp);
     }
-
-//    @ApiOperation(value = "*상품 수정")
-//    @PutMapping("/update")
-//    public ResponseEntity<Void> updateProduct(
-//            @AuthenticationPrincipal long memberId,
-//			@ModelAttribute@Valid ProductUpdateRequest req
-//    ) {
-//        productService.update(req);
-//        return ResponseEntity.ok().build();
-//    }
 
     @ApiOperation(value = "상품 삭제", notes = "해당 회원이 작성한 상품 및 상품 이미지 삭제")
     @DeleteMapping("/delete/{productId}")

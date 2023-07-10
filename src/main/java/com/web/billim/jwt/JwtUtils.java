@@ -28,14 +28,13 @@ public class JwtUtils implements InitializingBean {
 	private Key key;
 
 	public JwtUtils(@Value("${jwt.secret}") String secretKey,
-		@Value("${jwt.access-time}") long ACCESS_TIME,
-		@Value("${jwt.refresh-time}") long REFRESH_TIME,
-		UserDetailServiceImpl userDetailsService) {
+					@Value("${jwt.access-time}") long ACCESS_TIME,
+					@Value("${jwt.refresh-time}") long REFRESH_TIME,
+					UserDetailServiceImpl userDetailsService) {
 		this.secretKey = secretKey;
 		this.ACCESS_TIME = ACCESS_TIME;
 		this.REFRESH_TIME = REFRESH_TIME;
 		this.userDetailsService = userDetailsService;
-
 	}
 
 	@Override
@@ -80,39 +79,22 @@ public class JwtUtils implements InitializingBean {
 
 	// token 검증
 	public Boolean tokenValidation(String token) {
-
 		try {
 			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
 			return true;
 		} catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-			log.error("잘못된 JWT 서명입니다.");
+			log.error("잘못된 JWT 서명입니다.", e);
 			return false;
 		} catch (ExpiredJwtException e) {
-			log.error("만료된 JWT 토큰입니다.");
+			log.error("만료된 JWT 토큰입니다.", e);
 			return false;
 		} catch (UnsupportedJwtException e) {
-			log.error("지원하지 않는 JWT 토큰입니다.");
+			log.error("지원하지 않는 JWT 토큰입니다.", e);
 			return false;
 		} catch (IllegalArgumentException e) {
-			log.error("JWT 토큰이 잘못되었습니다.");
+			log.error("JWT 토큰이 잘못되었습니다.", e);
 			return false;
 		}
-
-
-//		try {
-//			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-//			return true;
-//		} catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-//			log.error("잘못된 JWT 서명입니다.", e);
-//			return false;
-//		} catch (UnsupportedJwtException e) {
-//			log.error("지원하지 않는 JWT 토큰입니다.", e);
-//			return false;
-//		} catch (IllegalArgumentException e) {
-//			log.error("JWT 토큰이 잘못되었습니다.", e);
-//			return false;
-//		}
-
 	}
 
 }

@@ -3,7 +3,6 @@ package com.web.billim.product.domain;
 import com.web.billim.common.domain.JpaEntity;
 import com.web.billim.product.dto.ProductRegisterCommand;
 import com.web.billim.product.dto.ProductUpdateCommand;
-import com.web.billim.product.dto.request.ProductRegisterRequest;
 import com.web.billim.member.domain.Member;
 import com.web.billim.product.type.TradeMethod;
 
@@ -28,7 +27,7 @@ public class Product extends JpaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id")
-    private long productId;
+    private Long productId;
 
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -80,19 +79,15 @@ public class Product extends JpaEntity {
                 .build();
     }
 
-    public static Product updateProduct(ProductUpdateCommand command, ProductCategory category, Member member, List<ImageProduct> images) {
-        return Product.builder()
-                .productId(command.getProductId())
-                .productCategory(category)
-                .member(member)
-                .productName(command.getRentalProduct())
-                .detail(command.getDescription())
-                .price(command.getRentalFee())
-                .tradeMethod(command.getTradeMethods().stream().map(Objects::toString).collect(Collectors.joining(",")))
-                .tradeArea(command.getPlace())
-                .images(images)
-                .build();
-    }
+	public void update(ProductUpdateCommand command, List<ImageProduct> appendImages, ProductCategory category) {
+        this.productCategory = category;
+        this.productName = command.getProductName();
+        this.detail = command.getProductDetail();
+        this.price = command.getPrice();
+        this.tradeMethod = command.getTradeMethods().stream().map(Objects::toString).collect(Collectors.joining(","));
+        this.tradeArea = command.getTradeArea();
+        this.images.addAll(appendImages);
+	}
 
 }
 

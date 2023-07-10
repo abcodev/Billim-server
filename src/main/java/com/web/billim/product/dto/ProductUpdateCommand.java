@@ -17,26 +17,30 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 public class ProductUpdateCommand {
 
-    private Long productId;
+    private long productId;
     private String category;
-    private Long memberId;
-    private String rentalProduct;
-    private String description;
-    private Long rentalFee;
-    private List<MultipartFile> images;
+    private long memberId;
+    private String productName;
+    private String productDetail;
+    private long price;
+
+    private List<String> deleteImageUrls;
+    private List<MultipartFile> appendImages;
     private List<TradeMethod> tradeMethods;
-    private String place;
+    private String tradeArea;
 
     public ProductUpdateCommand(ProductUpdateRequest req) {
         this.productId = req.getProductId();
         this.category = req.getCategory();
-        this.rentalProduct = req.getRentalProduct();
-        this.description = req.getDescription();
-        this.rentalFee = req.getRentalFee();
-        this.images = Stream.of(req.getImage0(), req.getImage1(), req.getImage2(), req.getImage3(), req.getImage4())
+        this.productName = req.getRentalProduct();
+        this.productDetail = req.getDescription();
+        this.price = req.getRentalFee();
+        this.deleteImageUrls = req.getDeleteImages();
+        this.appendImages = Stream.of(req.getImage0(), req.getImage1(), req.getImage2(), req.getImage3(), req.getImage4())
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
         this.tradeMethods = req.getTradeMethods();
-        this.place = req.getPlace();
+        this.tradeArea = req.getPlace();
     }
+
 }

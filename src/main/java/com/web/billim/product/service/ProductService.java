@@ -62,19 +62,26 @@ public class ProductService {
 
     @Transactional
     public Product update(ProductUpdateCommand command) {
-        Member registerMember = memberRepository.findById(command.getMemberId())
-                .orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+        // 1. 삭제된 이미지 삭제
+        command.getDeleteImageUrls().forEach(url -> {
+            imageUploadService.delete(url);
+            imageProductRepository.deleteByUrl(url);
+        });
 
-        var productCategory = productCategoryRepository.findByCategoryName(command.getCategory())
-                .orElseThrow(() -> new NotFoundException(ErrorCode.CATEGORY_NOT_FOUND));
-
-        List<ImageProduct> images = command.getImages().stream().map(image -> {
+        // 2. 추가된 이미지 추가
+        List<ImageProduct> appendImages = command.getAppendImages().stream().map(image -> {
             String url = imageUploadService.upload(image, "product");
             return imageProductRepository.save(ImageProduct.of(url));
         }).collect(Collectors.toList());
 
-        Product product = Product.updateProduct(command, productCategory, registerMember, images);
-        return productRepository.save(product);
+        // 3. 수정된 데이터로 덮어쓰기
+        return productRepository.findById(command.getProductId())
+            .map(product -> {
+                var category = productCategoryRepository.findByCategoryName(command.getCategory())
+                    .orElseThrow(() -> new NotFoundException(ErrorCode.CATEGORY_NOT_FOUND));
+                product.update(command, appendImages, category);
+                return productRepository.save(product);
+            }).orElseThrow();
     }
 
 
