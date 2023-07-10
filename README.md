@@ -24,6 +24,9 @@
 
 <br>
 
+# Jenkins CI/CD 파이프라인 구축
+<img width="1727" alt="스크린샷 2023-07-10 오후 1 30 40" src="https://github.com/HyunjeongJang/Billim-server/assets/113197284/19ec8f13-df37-4313-bba4-6a418c2dacd4">
+
 
 
 
@@ -117,7 +120,7 @@ Open In View true 일 경우 Api를 반환하는 시점까지 영속성 컨텍�
 <br>
 
 # Swagger API 명세서
-<img width="1848" alt="스크린샷 2023-07-01 오후 8 17 47" src="https://github.com/HyunjeongJang/Billim-server/assets/113197284/02c1a7f8-615c-4ba8-bf57-766da642b3fd">
+<img width="1730" alt="스크린샷 2023-07-01 오후 8 17 47" src="https://github.com/HyunjeongJang/Billim-server/assets/113197284/eb93aa49-ce30-4c26-b636-47042a946a2a">
 
 
 
