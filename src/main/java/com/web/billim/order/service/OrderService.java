@@ -1,6 +1,7 @@
 package com.web.billim.order.service;
 
 import com.web.billim.common.exception.NotFoundException;
+import com.web.billim.common.exception.OrderFailedException;
 import com.web.billim.common.exception.handler.ErrorCode;
 import com.web.billim.member.domain.Member;
 import com.web.billim.member.service.MemberService;
@@ -50,7 +51,7 @@ public class OrderService {
         // 1. 해당 사용자가 주문중인게 있는지 확인
         orderRepository.findByMemberAndStatus(member, ProductOrderStatus.IN_PROGRESS)
             .ifPresent(order -> {
-                throw new RuntimeException("해당 사용자가 이미 주문중인 거래가 있습니다.");
+                throw new OrderFailedException(ErrorCode.ORDER_DUPLICATED_REQUEST);
             });
 
         // 2. 다른 사용자가 해당 Product 의 해당 기간을 결제중인게 있는지 확인
@@ -58,7 +59,7 @@ public class OrderService {
         orderRepository.findByProductAndStatus(product, ProductOrderStatus.IN_PROGRESS)
             .ifPresent(order -> {
                 if (LocalDateHelper.checkDuplicatedPeriod(order.getPeriod(), orderCommand.getPeriod())) {
-                    throw new RuntimeException("해당 제품은 다른 사용자가 거래중입니다.");
+                    throw new OrderFailedException(ErrorCode.ORDER_DUPLICATED_PERIOD);
                 }
             });
 

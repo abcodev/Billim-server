@@ -30,7 +30,7 @@ public class Member extends JpaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
-    private long memberId;
+    private Long memberId;
 
     private String email;
     private String password;
@@ -63,4 +63,5 @@ public class Member extends JpaEntity {
     public void changePassword(String password) {
         this.password = password;
     }
+
 }

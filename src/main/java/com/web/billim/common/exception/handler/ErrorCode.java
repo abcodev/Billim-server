@@ -39,7 +39,10 @@ public enum ErrorCode {
 
     /* INTERNAL_SERVER_ERROR */
     IMAGE_UPLOAD_FAILED(INTERNAL_SERVER_ERROR, "이미지 업로드에 실패했습니다."),
-    EMAIL_SEND_FAILED(INTERNAL_SERVER_ERROR,"이메일 전송을 실패하였습니다.");
+    EMAIL_SEND_FAILED(INTERNAL_SERVER_ERROR,"이메일 전송에 실패하였습니다."),
+    ORDER_DUPLICATED_REQUEST(INTERNAL_SERVER_ERROR, "해당 사용자가 이미 주문중인 거래가 있습니다."),
+    ORDER_DUPLICATED_PERIOD(INTERNAL_SERVER_ERROR, "해당 제품은 다른 사용자가 거래중입니다.");
+
 
     private final HttpStatus httpStatus;
     private final String message;
