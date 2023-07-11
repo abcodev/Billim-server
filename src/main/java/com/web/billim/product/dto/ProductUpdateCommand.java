@@ -43,4 +43,8 @@ public class ProductUpdateCommand {
         this.tradeArea = req.getPlace();
     }
 
+	public int getAppendImageCount() {
+        return appendImages.size() - deleteImageUrls.size();
+	}
+
 }

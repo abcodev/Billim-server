@@ -17,7 +17,7 @@ public class ProductInterest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "interest_id")
-    private long interestId;
+    private Long interestId;
 
     @JoinColumn(name = "product_id", referencedColumnName = "product_id")
     @ManyToOne

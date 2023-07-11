@@ -32,9 +32,21 @@ public class JwtTokenFilterConfigurer extends SecurityConfigurerAdapter<DefaultS
         LoginAuthenticationFilter loginAuthenticationFilter = new LoginAuthenticationFilter(authenticationManager, jwtUtils, jwtTokenRedisService);
         loginAuthenticationFilter.setAuthenticationFailureHandler(new AuthenticationEntryPointFailureHandler(authenticationFailureEntryPoint));
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, securityFilterSkipMatcher);
+        jwtAuthenticationFilter.setAuthenticationFailureHandler(new AuthenticationEntryPointFailureHandler(authenticationFailureEntryPoint));
 
         builder.addFilterBefore(loginAuthenticationFilter,UsernamePasswordAuthenticationFilter.class);
-        builder.addFilterAfter(jwtAuthenticationFilter, ExceptionTranslationFilter.class);
+        builder.addFilterBefore(jwtAuthenticationFilter, ExceptionTranslationFilter.class);
     }
+
+    // After
+//    @Override
+//    public void configure(HttpSecurity builder) {
+//        LoginAuthenticationFilter loginAuthenticationFilter = new LoginAuthenticationFilter(authenticationManager, jwtUtils, jwtTokenRedisService);
+//        loginAuthenticationFilter.setAuthenticationFailureHandler(new AuthenticationEntryPointFailureHandler(authenticationFailureEntryPoint));
+//        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, securityFilterSkipMatcher);
+//
+//        builder.addFilterBefore(loginAuthenticationFilter,UsernamePasswordAuthenticationFilter.class);
+//        builder.addFilterAfter(jwtAuthenticationFilter, ExceptionTranslationFilter.class);
+//    }
 
 }

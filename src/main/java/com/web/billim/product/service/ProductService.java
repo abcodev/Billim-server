@@ -66,6 +66,10 @@ public class ProductService {
 
     @Transactional
     public Product update(ProductUpdateCommand command) {
+        // 0. 이미지 개수 검증
+        var imageCount = imageProductRepository.countByProductId(command.getProductId());
+        assert imageCount + command.getAppendImageCount() <= 5;
+
         // 1. 삭제된 이미지 삭제
         command.getDeleteImageUrls().forEach(url -> {
             imageUploadService.delete(url);
