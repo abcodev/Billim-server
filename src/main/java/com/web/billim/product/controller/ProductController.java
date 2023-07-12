@@ -52,7 +52,7 @@ public class ProductController {
     }
 
     @ApiOperation(value = "상품 수정", notes = "삭제할 이미지 deleteImages, 새로운 이미지 MultipartFile")
-    @PutMapping("/update")
+    @PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updateProduct(
             @AuthenticationPrincipal long memberId,
             @ModelAttribute @Valid ProductUpdateRequest req
