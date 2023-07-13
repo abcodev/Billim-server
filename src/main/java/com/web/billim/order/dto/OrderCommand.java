@@ -25,4 +25,5 @@ public class OrderCommand {
 	public Period getPeriod() {
 		return new Period(startAt, endAt);
 	}
+
 }

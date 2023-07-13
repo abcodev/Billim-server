@@ -11,7 +11,6 @@ import com.web.billim.product.domain.Product;
 import com.web.billim.product.domain.ProductCategory;
 import com.web.billim.product.dto.ProductRegisterCommand;
 import com.web.billim.product.dto.ProductUpdateCommand;
-import com.web.billim.product.dto.request.ProductUpdateRequest;
 import com.web.billim.product.dto.response.ProductDetailResponse;
 import com.web.billim.product.dto.response.MostProductList;
 import com.web.billim.product.dto.response.ProductListResponse;
@@ -25,13 +24,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -65,7 +60,7 @@ public class ProductService {
     }
 
     @Transactional
-    public Product update(ProductUpdateCommand command) {
+    public void update(ProductUpdateCommand command) {
         // 0. 이미지 개수 검증
         var imageCount = imageProductRepository.countByProductId(command.getProductId());
         assert imageCount + command.getAppendImageCount() <= 5;
@@ -83,16 +78,14 @@ public class ProductService {
         }).collect(Collectors.toList());
 
         // 3. 수정된 데이터로 덮어쓰기
-        return productRepository.findById(command.getProductId())
-            .map(product -> {
-                var category = productCategoryRepository.findByCategoryName(command.getCategory())
-                    .orElseThrow(() -> new NotFoundException(ErrorCode.CATEGORY_NOT_FOUND));
-                product.update(command, appendImages, category);
-                return productRepository.save(product);
-            }).orElseThrow();
+        productRepository.findById(command.getProductId())
+                .map(product -> {
+                    var category = productCategoryRepository.findByCategoryName(command.getCategory())
+                            .orElseThrow(() -> new NotFoundException(ErrorCode.CATEGORY_NOT_FOUND));
+                    product.update(command, appendImages, category);
+                    return productRepository.save(product);
+                }).orElseThrow();
     }
-
-
 
     public List<ProductCategory> categoryList() {
         return productCategoryRepository.findAll();

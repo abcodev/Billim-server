@@ -25,7 +25,7 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    @ApiOperation(value = "상품 주문", notes = "상품 상세보기에서 주문시 호출")
+    @ApiOperation(value = "상품 주문", notes = "상품 주문시 호출")
     @PostMapping
     public ResponseEntity<PaymentInfoResponse> order(
             @RequestBody OrderCommand command,

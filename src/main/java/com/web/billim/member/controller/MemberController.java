@@ -7,20 +7,18 @@ import com.web.billim.member.dto.request.FindPasswordRequest;
 import com.web.billim.member.dto.UpdatePasswordCommand;
 import com.web.billim.member.dto.request.*;
 import com.web.billim.member.dto.response.MyPageInfoResponse;
-import com.web.billim.member.dto.response.UpdateInfoResponse;
+import com.web.billim.member.dto.response.MemberInfoResponse;
 import com.web.billim.member.service.MemberService;
 import com.web.billim.review.service.ReviewService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.Map;
@@ -72,7 +70,7 @@ public class MemberController {
     }
 
     @ApiOperation(value = "마이페이지 헤더 정보 조회", notes = "내 프로필, 쿠폰, 적립금, 작성가능한 리뷰 조회")
-    @GetMapping("/my/page")
+    @GetMapping("/my-page")
     public ResponseEntity<MyPageInfoResponse> myPageInfo(@AuthenticationPrincipal long memberId) {
         MyPageInfoResponse resp = memberService.retrieveMyPageInfo(memberId);
         long availableReview = reviewService.myReviewNoCount(memberId);
@@ -81,43 +79,53 @@ public class MemberController {
     }
 
     @ApiOperation(value = "내 회원정보 조회" , notes = "회원 정보 수정 시 내 정보 조회")
-    @GetMapping("/my/info")
-    public ResponseEntity<UpdateInfoResponse> updateMemberInfo(@AuthenticationPrincipal long memberId) {
+    @GetMapping("/info")
+    public ResponseEntity<MemberInfoResponse> memberInfo(@AuthenticationPrincipal long memberId) {
         return ResponseEntity.ok(memberService.retrieveUpdateInfoPage(memberId));
     }
 
-    @ApiOperation(value = "회원정보 프로필 이미지 변경", notes = "회원 정보 수정 시 프로필 이미지 변경")
-    @PutMapping(value = "/my/profile-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> updateProfileImage(
+    @ApiOperation(value = "*회원 정보 수정" , notes = "회원 정보 수정 반영")
+    @PutMapping("/info")
+    public ResponseEntity<MemberInfoResponse> updateInfo(
             @AuthenticationPrincipal long memberId,
-            MultipartFile profileImage
+            @ModelAttribute MemberInfoUpdateRequest req
     ) {
-        memberService.updateProfileImage(memberId, profileImage);
-        return ResponseEntity.ok().build();
+        memberService.updateInfo(memberId, req);
+        return ResponseEntity.ok(memberService.retrieveUpdateInfoPage(memberId));
     }
 
-    @ApiOperation(value = "회원정보 주소 변경", notes = "회원 정보 수정 시 주소 변경")
-    @PutMapping("/my/address")
-    public ResponseEntity<Void> updateAddress(
-            @AuthenticationPrincipal long memberId,
-            @RequestBody UpdateAddressRequest req
-    ) {
-        memberService.updateAddress(memberId, req);
-        return ResponseEntity.ok().build();
-    }
+//    @ApiOperation(value = "회원정보 프로필 이미지 변경", notes = "회원 정보 수정 시 프로필 이미지 변경")
+//    @PutMapping(value = "/my/profile-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    public ResponseEntity<Void> updateProfileImage(
+//            @AuthenticationPrincipal long memberId,
+//            MultipartFile profileImage
+//    ) {
+//        memberService.updateProfileImage(memberId, profileImage);
+//        return ResponseEntity.ok().build();
+//    }
 
-    @ApiOperation(value = "회원정보 닉네임 변경", notes = "회원 정보 수정 시 닉네임 변경")
-    @PutMapping("/my/nickname")
-    public ResponseEntity<Void> updateNickname(
-            @AuthenticationPrincipal long memberId,
-            @RequestBody UpdateNicknameRequest req
-    ) {
-        memberService.updateNickname(memberId, req);
-        return ResponseEntity.ok().build();
-    }
+//    @ApiOperation(value = "회원정보 주소 변경", notes = "회원 정보 수정 시 주소 변경")
+//    @PutMapping("/my/address")
+//    public ResponseEntity<Void> updateAddress(
+//            @AuthenticationPrincipal long memberId,
+//            @RequestBody UpdateAddressRequest req
+//    ) {
+//        memberService.updateAddress(memberId, req);
+//        return ResponseEntity.ok().build();
+//    }
+
+//    @ApiOperation(value = "회원정보 닉네임 변경", notes = "회원 정보 수정 시 닉네임 변경")
+//    @PutMapping("/my/nickname")
+//    public ResponseEntity<Void> updateNickname(
+//            @AuthenticationPrincipal long memberId,
+//            @RequestBody UpdateNicknameRequest req
+//    ) {
+//        memberService.updateNickname(memberId, req);
+//        return ResponseEntity.ok().build();
+//    }
 
     @ApiOperation(value = "비밀번호 재설정", notes = "회원 정보 수정 시 비밀번호 재설정")
-    @PutMapping("/my/password")
+    @PutMapping("/info/password")
     public ResponseEntity<Void> updatePassword(
             @AuthenticationPrincipal long memberId,
             @RequestBody UpdatePasswordRequest req

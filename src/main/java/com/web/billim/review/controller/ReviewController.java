@@ -31,4 +31,6 @@ public class ReviewController {
         return ResponseEntity.ok().build();
     }
 
+    // 마이페이지 리뷰 리스트 불러오기
+
 }

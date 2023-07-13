@@ -8,9 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AuthenticationEntryPointFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
@@ -67,7 +65,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 //		}
 //		filterChain.doFilter(request, response);
 //	}
-
 
 	private String resolveToken(HttpServletRequest request) {
 		String bearerToken = request.getHeader(JwtAuthenticationFilter.AUTHORIZATION_HEADER);
