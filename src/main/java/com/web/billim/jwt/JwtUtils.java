@@ -90,10 +90,11 @@ public class JwtUtils implements InitializingBean {
 					parseClaimsJws(token);
 			return true;
 		} catch (Exception e) {
-			throw new JwtException(ErrorCode.EXPIRED_TOKEN);
+			log.info("토큰 문제 있음");
 		}
-
-
+		return false;
+	}
+}
 //		} catch (SignatureException ex) {
 //			log.error("Invalid JWT signature");
 //		} catch (MalformedJwtException ex) {
@@ -108,6 +109,5 @@ public class JwtUtils implements InitializingBean {
 //			log.error("JWT RefreshToken is empty");
 //		}
 
-	}
-}
+
 

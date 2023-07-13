@@ -3,41 +3,48 @@ package com.web.billim.jwt;
 import com.web.billim.common.exception.JwtException;
 import com.web.billim.common.exception.handler.ErrorCode;
 import com.web.billim.jwt.dto.JwtAuthenticationToken;
+import com.web.billim.security.SecurityFilterSkipMatcher;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Slf4j
-public class JwtAuthenticationFilter extends GenericFilterBean {
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
     private final JwtUtils jwtUtils;
 
-    public JwtAuthenticationFilter(JwtUtils jwtUtils) {
+    private final SecurityFilterSkipMatcher securityFilterSkipMatcher;
+
+    public JwtAuthenticationFilter(JwtUtils jwtUtils,SecurityFilterSkipMatcher securityFilterSkipMatcher) {
         this.jwtUtils = jwtUtils;
+        this.securityFilterSkipMatcher = securityFilterSkipMatcher;
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
-            String jwt = resolveToken((HttpServletRequest) request, AUTHORIZATION_HEADER);
+            String jwt = resolveToken(request, AUTHORIZATION_HEADER);
             if (jwtUtils.tokenValidation(jwt)) {
                 JwtAuthenticationToken jwtAuthenticationToken = jwtUtils.getAuthentication(jwt);
                 SecurityContextHolder.getContext().setAuthentication(jwtAuthenticationToken);
             }
-        } catch (AuthenticationException e){
+            filterChain.doFilter(request, response);
+        } catch (Exception e){
             throw  new JwtException(ErrorCode.EXPIRED_TOKEN);
         }
-            chain.doFilter(request, response);
     }
+
     private String resolveToken(HttpServletRequest request, String header) {
         String bearerToken = request.getHeader(header);
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
@@ -46,20 +53,8 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         return null;
     }
 
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        return securityFilterSkipMatcher.shouldSkipFilter(request);
+    }
 }
-
-
-//    @Override
-//    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-////        try {
-//            String jwt = resolveToken(request, AUTHORIZATION_HEADER);
-//            if (jwtUtils.tokenValidation(jwt)) {
-//                JwtAuthenticationToken jwtAuthenticationToken = jwtUtils.getAuthentication(jwt);
-//                SecurityContextHolder.getContext().setAuthentication(jwtAuthenticationToken);
-//            }
-////        } catch (Exception e) {
-////            request.setAttribute("exception","테스트중");
-////            throw new JwtException(ErrorCode.EXPIRED_TOKEN);
-////        }
-//            filterChain.doFilter(request, response);
-//    }

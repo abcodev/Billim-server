@@ -56,21 +56,23 @@ public class WebSecurityConfig {
                 .anyRequest().authenticated()
 
                 .and()
-                .apply(jwtTokenFilterConfigurer(jwtUtils,authenticationManager,jwtTokenRedisService,securityFilterSkipMatcher,authenticationFailureEntryPoint()));
+                .apply(jwtTokenFilterConfigurer(jwtUtils,authenticationManager,jwtTokenRedisService,securityFilterSkipMatcher,authenticationFailureEntryPoint()))
 
-//                .and()
-//                .exceptionHandling(c->c.authenticationEntryPoint(authenticationFailureEntryPoint()));
+                .and()
+                .exceptionHandling(c->c.authenticationEntryPoint(authenticationFailureEntryPoint()));
 
         return http.build();
     }
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter(JwtUtils jwtUtils){
-        return new JwtAuthenticationFilter(jwtUtils);
+        return new JwtAuthenticationFilter(jwtUtils,securityFilterSkipMatcher);
     }
-    @Bean
-    public JwtExceptionFilter jwtExceptionFilter(){
-        return new JwtExceptionFilter(securityFilterSkipMatcher);
-    }
+
+
+//    @Bean
+//    public JwtExceptionFilter jwtExceptionFilter(){
+//        return new JwtExceptionFilter(securityFilterSkipMatcher);
+//    }
 
 
     @Bean

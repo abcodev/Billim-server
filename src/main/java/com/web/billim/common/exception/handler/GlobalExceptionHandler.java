@@ -21,11 +21,11 @@ public class GlobalExceptionHandler {
 		return ErrorResponse.toResponseEntity(ex.getErrorCode());
 	}
 
-//	@ExceptionHandler(value = {JwtException.class})
-//	public ResponseEntity<ErrorResponse> handlerException(JwtException e){
-//		return ErrorResponse.toResponseEntity(e.
-//				getErrorCode());
-//	}
+	@ExceptionHandler(value = {JwtException.class})
+	public ResponseEntity<ErrorResponse> handlerException(JwtException e){
+		return ErrorResponse.toResponseEntity(e.
+				getErrorCode());
+	}
 
 	@ExceptionHandler(value = ConstraintViolationException.class)
 	public ResponseEntity<ErrorResponse> handleValidationException(ConstraintViolationException ex) {
