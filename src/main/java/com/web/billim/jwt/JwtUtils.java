@@ -1,5 +1,6 @@
 package com.web.billim.jwt;
 
+import com.web.billim.common.exception.JwtException;
 import com.web.billim.common.exception.handler.ErrorCode;
 import com.web.billim.jwt.dto.JwtAuthenticationToken;
 import com.web.billim.member.type.MemberGrade;
@@ -82,34 +83,31 @@ public class JwtUtils implements InitializingBean {
 		return new JwtAuthenticationToken(userDetails.getAuthorities(), userDetails.getMemberId());
 	}
 
-	// token 검증
-	public Boolean tokenValidation(String token) {
+
+	public boolean tokenValidation(String token) {
 		try {
-			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+			Jwts.parserBuilder().setSigningKey(key).build().
+					parseClaimsJws(token);
 			return true;
-		} catch (SignatureException e){
-			log.error("dddd");
-		} catch (SecurityException e){
-			log.error("테스트1");
-		} catch (MalformedJwtException e){
-			log.error("테스트2");
-		} catch (ExpiredJwtException e){
-			log.error("만료");
-		} catch (UnsupportedJwtException e){
-			log.error("테스트3");
-		} catch (IllegalArgumentException e){
-			log.error("테스트4");
+		} catch (Exception e) {
+			throw new JwtException(ErrorCode.EXPIRED_TOKEN);
 		}
-		return false;
 
 
-
-//		catch (ExpiredJwtException e){
-//			throw new JwtException(ErrorCode.EXPIRED_TOKEN);
-//		} catch (MalformedJwtException e){
-//			throw new JwtException(ErrorCode.WRONG_TYPE_TOKEN);
-//		} catch (SignatureException e){
-//			throw new JwtException(ErrorCode.UNKNOWN_ERROR);
+//		} catch (SignatureException ex) {
+//			log.error("Invalid JWT signature");
+//		} catch (MalformedJwtException ex) {
+//			log.error("Invalid JWT token");
+//		} catch (ExpiredJwtException ex) {
+//			log.error("Expired JWT token");
+//		} catch (UnsupportedJwtException ex) {
+//			log.error("Unsupported JWT token");
+//		} catch (IllegalArgumentException ex) {
+//			log.error("JWT claims string is empty.");
+//		} catch (NullPointerException ex) {
+//			log.error("JWT RefreshToken is empty");
 //		}
+
 	}
 }
+

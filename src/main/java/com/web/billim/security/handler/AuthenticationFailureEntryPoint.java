@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.web.billim.common.exception.handler.ErrorCode;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
@@ -19,12 +20,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.web.billim.common.exception.AuthenticationBusinessException;
 import com.web.billim.common.exception.handler.ErrorResponse;
 
-@Component
+@Slf4j
 public class AuthenticationFailureEntryPoint implements AuthenticationEntryPoint {
 
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-		System.out.println("commence() called");
+		String exception = (String) request.getAttribute("exception");
+		System.out.println("exception : "+exception);
+		log.info("CustomEntryPoint : 잘못된 토큰으로 페이지 요청");
 		ObjectMapper objectMapper = new ObjectMapper();
 		HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 		httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
@@ -32,6 +35,15 @@ public class AuthenticationFailureEntryPoint implements AuthenticationEntryPoint
 		httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		httpServletResponse.getWriter().write(Objects.requireNonNull(objectMapper.writeValueAsString(ErrorCode.EXPIRED_TOKEN)));
 	}
+
+}
+
+//	private void setResponse(HttpServletResponse response, ErrorCode code) throws IOException {
+//		response.setContentType("application/json;charset=UTF-8");
+//		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//		response.getWriter().print(ErrorResponse.toResponseEntity(code));
+//	}
+
 
 
 //		Object exception = request.getAttribute("exception");
@@ -42,15 +54,6 @@ public class AuthenticationFailureEntryPoint implements AuthenticationEntryPoint
 //			return;
 //		}
 //		response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"Unauthorized");
-
-
-	private void setResponse(HttpServletResponse response, ErrorCode code) throws IOException {
-		response.setContentType("application/json;charset=UTF-8");
-		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-		response.getWriter().print(ErrorResponse.toResponseEntity(code));
-	}
-
-}
 
 
 

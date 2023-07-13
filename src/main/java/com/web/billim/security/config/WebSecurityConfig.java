@@ -1,11 +1,8 @@
 package com.web.billim.security.config;
 
-import com.web.billim.jwt.JwtTokenRedisService;
-import com.web.billim.jwt.JwtAuthenticationProvider;
+import com.web.billim.jwt.*;
 import com.web.billim.security.SecurityFilterSkipMatcher;
 import com.web.billim.security.UsernamPasswordAuthenticationProvider;
-import com.web.billim.jwt.JwtTokenFilterConfigurer;
-import com.web.billim.jwt.JwtUtils;
 
 import com.web.billim.security.UserDetailServiceImpl;
 import com.web.billim.security.handler.AuthenticationFailureEntryPoint;
@@ -37,7 +34,8 @@ public class WebSecurityConfig {
     private final UserDetailServiceImpl userDetailsService;
     private final JwtTokenRedisService jwtTokenRedisService;
     private final SecurityFilterSkipMatcher securityFilterSkipMatcher;
-    private final AuthenticationFailureEntryPoint authenticationFailureEntryPoint;
+
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(AuthenticationManager authenticationManager,HttpSecurity http) throws Exception{
@@ -56,14 +54,43 @@ public class WebSecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/**").permitAll()
                 .anyRequest().authenticated()
-//                .and()
-//                .exceptionHandling()
-//                .authenticationEntryPoint(authenticationFailureEntryPoint)
+
                 .and()
-                .apply(new JwtTokenFilterConfigurer(jwtUtils, authenticationManager,jwtTokenRedisService, securityFilterSkipMatcher, authenticationFailureEntryPoint));
+                .apply(jwtTokenFilterConfigurer(jwtUtils,authenticationManager,jwtTokenRedisService,securityFilterSkipMatcher,authenticationFailureEntryPoint()));
+
+//                .and()
+//                .exceptionHandling(c->c.authenticationEntryPoint(authenticationFailureEntryPoint()));
 
         return http.build();
     }
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter(JwtUtils jwtUtils){
+        return new JwtAuthenticationFilter(jwtUtils);
+    }
+    @Bean
+    public JwtExceptionFilter jwtExceptionFilter(){
+        return new JwtExceptionFilter(securityFilterSkipMatcher);
+    }
+
+
+    @Bean
+    public JwtTokenFilterConfigurer jwtTokenFilterConfigurer(JwtUtils jwtUtils
+                                                             ,AuthenticationManager authenticationManager
+                                                             ,JwtTokenRedisService jwtTokenRedisService
+                                                             ,SecurityFilterSkipMatcher securityFilterSkipMatcher
+                                                             ,AuthenticationFailureEntryPoint authenticationFailureEntryPoint
+    ){
+        return new JwtTokenFilterConfigurer(jwtUtils, authenticationManager, jwtTokenRedisService, securityFilterSkipMatcher, authenticationFailureEntryPoint
+        );
+    }
+
+
+
+    @Bean
+    public AuthenticationFailureEntryPoint authenticationFailureEntryPoint(){
+        return new AuthenticationFailureEntryPoint();
+    }
+
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
@@ -81,7 +108,7 @@ public class WebSecurityConfig {
     public AuthenticationManager configureAuthenticationManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.authenticationProvider(usernamPasswordAuthenticationProvider());
-        authenticationManagerBuilder.authenticationProvider(jwtAuthenticationProvider());
+//        authenticationManagerBuilder.authenticationProvider(jwtAuthenticationProvider());
         return authenticationManagerBuilder.build();
     }
 
@@ -90,10 +117,10 @@ public class WebSecurityConfig {
         return new UsernamPasswordAuthenticationProvider(userDetailsService,passwordEncoder());
     }
 
-    @Bean
-    public JwtAuthenticationProvider jwtAuthenticationProvider(){
-        return new JwtAuthenticationProvider(jwtUtils);
-    }
+//    @Bean
+//    public JwtAuthenticationProvider jwtAuthenticationProvider(){
+//        return new JwtAuthenticationProvider(jwtUtils);
+//    }
 
     @Bean
     public PasswordEncoder passwordEncoder(){

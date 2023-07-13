@@ -30,12 +30,14 @@ public class JwtTokenFilterConfigurer extends SecurityConfigurerAdapter<DefaultS
     @Override
     public void configure(HttpSecurity builder) throws Exception {
         LoginAuthenticationFilter loginAuthenticationFilter = new LoginAuthenticationFilter(authenticationManager, jwtUtils, jwtTokenRedisService);
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtUtils,securityFilterSkipMatcher);
+        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtUtils);
+        JwtExceptionFilter jwtExceptionFilter = new JwtExceptionFilter(securityFilterSkipMatcher);
 
+
+
+        builder.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        builder.addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class);
         builder.addFilterBefore(loginAuthenticationFilter,UsernamePasswordAuthenticationFilter.class);
-        builder.addFilterBefore(jwtAuthenticationFilter,UsernamePasswordAuthenticationFilter.class);
-        builder.exceptionHandling().authenticationEntryPoint(authenticationFailureEntryPoint);
+        builder.exceptionHandling(c -> c.authenticationEntryPoint(authenticationFailureEntryPoint));
     }
 }
-
-//        loginAuthenticationFilter.setAuthenticationFailureHandler(new AuthenticationEntryPointFailureHandler(authenticationFailureEntryPoint));
