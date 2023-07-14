@@ -12,7 +12,6 @@ public class MemberInfoUpdateRequest {
 
     private String nickname;
     private String address;
-    private String deleteProfileImage;
-    private MultipartFile newProfileImage;
+    private MultipartFile profileImage;
 
 }

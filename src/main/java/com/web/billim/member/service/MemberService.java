@@ -94,22 +94,19 @@ public class MemberService {
 
 	@Transactional
 	public void updateInfo(long memberId, MemberInfoUpdateRequest req) {
-
 		if (memberRepository.existsByNickname(req.getNickname())) {
 			throw new RuntimeException("중복된 닉네임 입니다.");
 		}
 
-		// 프로필 사진 삭제하는 경우
-		imageUploadService.delete(req.getDeleteProfileImage());
-		memberRepository.deleteByProfileImageUrl(req.getDeleteProfileImage());
-
-		String imageUrl = imageUploadService.upload(req.getNewProfileImage(), "profile");
-
-		memberRepository.findById(memberId)
-				.ifPresent(member -> {
-					member.updateInfo(req.getNickname(), req.getAddress(), imageUrl);
-					memberRepository.save(member);
-				});
+		memberRepository.findById(memberId).ifPresent(member -> {
+			String imageUrl = null;
+			if (req.getProfileImage() != null) {
+				imageUploadService.delete(member.getProfileImageUrl());
+				imageUrl = imageUploadService.upload(req.getProfileImage(), "profile");
+			}
+			member.updateInfo(req.getNickname(), req.getAddress(), imageUrl);
+			memberRepository.save(member);
+		});
 	}
 
 //	@Transactional

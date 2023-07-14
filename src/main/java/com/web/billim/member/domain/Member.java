@@ -68,7 +68,9 @@ public class Member extends JpaEntity {
 //    }
 
     public void updateInfo(String imageUrl, String address, String nickname) {
-        this.profileImageUrl = imageUrl;
+        if (imageUrl != null) {
+            this.profileImageUrl = imageUrl;
+        }
         this.address = address;
         this.nickname = nickname;
     }
