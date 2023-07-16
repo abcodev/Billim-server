@@ -39,6 +39,16 @@ logging:
     org.springframework.web.cors: INFO
 
 
+#springdoc:
+#  api-docs:
+#    enabled: true
+#  swagger-ui:
+#    enabled: true
+#    tagsSorter: alpha
+#    operations-sorter: alpha
+#    display-request-duration: true
+
+
 ---
 spring:
   config:

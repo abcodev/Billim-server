@@ -1,6 +1,7 @@
 package com.web.billim.order.controller;
 
 import com.web.billim.order.dto.OrderCommand;
+import com.web.billim.order.dto.response.MyOrderHistory;
 import com.web.billim.order.dto.response.MyOrderHistoryListResponse;
 import com.web.billim.order.dto.response.PaymentInfoResponse;
 import com.web.billim.order.service.OrderService;
@@ -36,9 +37,10 @@ public class OrderController {
     }
 
     @ApiOperation(value = "마이페이지 상품 구매 내역", notes = "마이페이지 구매목록 조회")
-    @GetMapping("/my/purchase/list")
+    @GetMapping("/purchase/list")
     public ResponseEntity<MyOrderHistoryListResponse> myOrder(@AuthenticationPrincipal long memberId) {
         return ResponseEntity.ok(orderService.findMyOrder(memberId));
     }
 
+    
 }

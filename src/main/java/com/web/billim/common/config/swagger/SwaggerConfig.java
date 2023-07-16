@@ -27,19 +27,18 @@ public class SwaggerConfig {
 
         return new Docket(DocumentationType.OAS_30)
                 .select()
-                .apis(RequestHandlerSelectors.any()) // 프로젝트 내의 모든 패키지에 적용
-//                .apis(RequestHandlerSelectors.basePackage("")) 특정 패키지 내의 모든 Controller에 적용
+                .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
-//                조건에 맞는 API 필터링
-//                PathSelectors.any() 모든 Api 통과
                 .build()
                 .apiInfo(mySwaggerInfo())
                 .additionalModels(typeResolver.resolve(LoginRequest.class));
     }
+
     private ApiInfo mySwaggerInfo() {
         return new ApiInfoBuilder()
                 .title("BILLIM")
                 .description("server api")
                 .build();
     }
+
 }

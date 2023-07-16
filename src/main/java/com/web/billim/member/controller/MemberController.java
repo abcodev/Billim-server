@@ -11,6 +11,7 @@ import com.web.billim.member.dto.response.MemberInfoResponse;
 import com.web.billim.member.service.MemberService;
 import com.web.billim.review.service.ReviewService;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -42,6 +43,8 @@ public class MemberController {
         binder.addValidators(checkPasswordValidator);
     }
 
+
+//    @Operation(summary = "회원가입")
     @ApiOperation(value = "회원 가입")
     @PostMapping("/signup")
     public ResponseEntity<Map<String, String>> memberSignUp (
@@ -124,6 +127,8 @@ public class MemberController {
 //        return ResponseEntity.ok().build();
 //    }
 
+
+//    @Operation(summary = "비밀번호 재설정", description = "회원 정보 수정 시 비밀번호 재설정")
     @ApiOperation(value = "비밀번호 재설정", notes = "회원 정보 수정 시 비밀번호 재설정")
     @PutMapping("/info/password")
     public ResponseEntity<Void> updatePassword(
