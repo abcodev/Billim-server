@@ -37,7 +37,6 @@ public class AuthService {
 
     @Transactional
     public ReIssueTokenResponse reIssueToken(ReIssueTokenRequest request) {
-        String accessToken = request.getAccessToken();
         String refreshToken = request.getRefreshToken();
 
         log.info("refreshToken 유효성 검사");
