@@ -1,7 +1,7 @@
 package com.web.billim.common.exception.handler;
 
 import com.web.billim.common.exception.BusinessException;
-import com.web.billim.common.exception.TokenExpiredException;
+import com.web.billim.common.exception.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -21,9 +21,10 @@ public class GlobalExceptionHandler {
 		return ErrorResponse.toResponseEntity(ex.getErrorCode());
 	}
 
-	@ExceptionHandler(value = {TokenExpiredException.class})
-	public ResponseEntity<ErrorResponse> handlerException(TokenExpiredException e){
-		return ErrorResponse.toResponseEntity(e.getErrorCode());
+	@ExceptionHandler(value = {JwtException.class})
+	public ResponseEntity<ErrorResponse> handlerException(JwtException e){
+		return ErrorResponse.toResponseEntity(e.
+				getErrorCode());
 	}
 
 	@ExceptionHandler(value = ConstraintViolationException.class)

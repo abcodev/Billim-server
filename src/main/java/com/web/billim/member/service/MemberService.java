@@ -18,6 +18,7 @@ import com.web.billim.point.service.PointService;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -164,10 +165,5 @@ public class MemberService {
 		String encodedPassword = passwordEncoder.encode(command.getNewPassword());
 		member.changePassword(encodedPassword);
 	}
-
-    public void logout(long memberId){
-		SecurityContextHolder.clearContext();
-
-    }
 
 }

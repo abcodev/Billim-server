@@ -1,5 +1,7 @@
 package com.web.billim.jwt;
 
+import com.web.billim.common.exception.JwtException;
+import com.web.billim.common.exception.handler.ErrorCode;
 import com.web.billim.jwt.dto.JwtAuthenticationToken;
 import com.web.billim.member.type.MemberGrade;
 import com.web.billim.security.domain.UserDetailsEntity;
@@ -7,10 +9,13 @@ import com.web.billim.security.UserDetailServiceImpl;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -35,6 +40,7 @@ public class JwtUtils implements InitializingBean {
 		this.ACCESS_TIME = ACCESS_TIME;
 		this.REFRESH_TIME = REFRESH_TIME;
 		this.userDetailsService = userDetailsService;
+
 	}
 
 	@Override
@@ -47,54 +53,61 @@ public class JwtUtils implements InitializingBean {
 	// GrantedAuthority
 	public String createAccessToken(String memberId, MemberGrade memberGrade) {
 		return Jwts.builder()
-			.setHeaderParam("typ", "ACCESS")
-			.setSubject(memberId)
-			.setAudience(memberGrade.toString())
-			.setIssuedAt(new Date(System.currentTimeMillis()))
-			.setExpiration(new Date(System.currentTimeMillis() + ACCESS_TIME))
-			.signWith(key, SignatureAlgorithm.HS512)
-			.compact();
+				.setHeaderParam("typ", "ACCESS")
+				.setSubject(memberId)
+				.setAudience(memberGrade.toString())
+				.setIssuedAt(new Date(System.currentTimeMillis()))
+				.setExpiration(new Date(System.currentTimeMillis() + ACCESS_TIME))
+				.signWith(key, SignatureAlgorithm.HS512)
+				.compact();
 	}
 
 	// Refresh Token 발급
 	public String createRefreshToken() {
 		return Jwts.builder()
-			.setHeaderParam("typ", "REFRESH")
-			.setIssuedAt(new Date(System.currentTimeMillis()))
-			.setExpiration(new Date(System.currentTimeMillis() + REFRESH_TIME))
-			.signWith(key, SignatureAlgorithm.HS512)
-			.compact();
+				.setHeaderParam("typ", "REFRESH")
+				.setIssuedAt(new Date(System.currentTimeMillis()))
+				.setExpiration(new Date(System.currentTimeMillis() + REFRESH_TIME))
+				.signWith(key, SignatureAlgorithm.HS512)
+				.compact();
 	}
 
 	// 회원 정보 추출
 	public JwtAuthenticationToken getAuthentication(String token) {
 		Claims claims = Jwts.parserBuilder()
-			.setSigningKey(key)
-			.build()
-			.parseClaimsJws(token)
-			.getBody();
+				.setSigningKey(key)
+				.build()
+				.parseClaimsJws(token)
+				.getBody();
 		UserDetailsEntity userDetails = userDetailsService.findByMemberId(Long.parseLong(claims.getSubject()));
 		return new JwtAuthenticationToken(userDetails.getAuthorities(), userDetails.getMemberId());
 	}
 
-	// token 검증
-	public Boolean tokenValidation(String token) {
+
+	public boolean tokenValidation(String token) {
 		try {
-			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+			Jwts.parserBuilder().setSigningKey(key).build().
+					parseClaimsJws(token);
 			return true;
-		} catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-			log.error("잘못된 JWT 서명입니다.", e);
-			return false;
-		} catch (ExpiredJwtException e) {
-			log.error("만료된 JWT 토큰입니다.", e);
-			return false;
-		} catch (UnsupportedJwtException e) {
-			log.error("지원하지 않는 JWT 토큰입니다.", e);
-			return false;
-		} catch (IllegalArgumentException e) {
-			log.error("JWT 토큰이 잘못되었습니다.", e);
-			return false;
+		} catch (SignatureException ex) {
+			log.error("wrong signature JWT");
+			throw new JwtException(ErrorCode.INVALID_TOKEN);
+		} catch (MalformedJwtException ex) {
+			log.error("Invalid JWT token");
+			throw new JwtException(ErrorCode.INVALID_TOKEN);
+		} catch (ExpiredJwtException ex) {
+			log.error("Expired JWT token");
+			throw new JwtException(ErrorCode.EXPIRED_TOKEN);
+		} catch (UnsupportedJwtException ex) {
+			log.error("Unsupported JWT token");
+			throw new JwtException(ErrorCode.UNSUPPORTED_TOKEN);
+		} catch (IllegalArgumentException ex) {
+			log.error("JWT claims string is empty.");
+			throw new JwtException(ErrorCode.UNKNOWN_ERROR);
 		}
 	}
-
 }
+
+
+
+

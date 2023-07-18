@@ -30,5 +30,4 @@ public class SecurityFilterSkipMatcher{
         return Arrays.stream(excludedPaths)
                 .anyMatch(pattern -> pathMatcher.match(pattern, path));
     }
-
 }

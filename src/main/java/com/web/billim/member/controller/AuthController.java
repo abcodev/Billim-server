@@ -3,6 +3,7 @@ package com.web.billim.member.controller;
 import com.web.billim.jwt.JwtService;
 import com.web.billim.jwt.dto.ReIssueTokenRequest;
 import com.web.billim.member.dto.response.ReIssueTokenResponse;
+import com.web.billim.member.service.AuthService;
 import com.web.billim.member.service.MemberService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +20,8 @@ public class AuthController {
 
     private final JwtService jwtService;
     private final MemberService memberService;
+    private final AuthService authService;
 
-//    @ApiOperation(value = "accessToken 재발급",notes = "accessToken 만료 응답 받았을시, refreshToken 을 통해 accessToken 을 재발급 요청")
     @PostMapping("/reIssue/token")
     public ResponseEntity<?> reIssueToken(@RequestBody ReIssueTokenRequest req){
         String accessToken = req.getAccessToken();
@@ -29,12 +30,11 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-//    @ApiOperation(value = "로그아웃")
     @PostMapping
     public ResponseEntity<Void> logout(
             @AuthenticationPrincipal long memberId
     ){
-        memberService.logout(memberId);
+        authService.logout(memberId);
         return ResponseEntity.ok().build();
     }
 

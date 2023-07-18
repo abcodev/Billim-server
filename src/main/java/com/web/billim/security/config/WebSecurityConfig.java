@@ -1,14 +1,11 @@
 package com.web.billim.security.config;
 
-import com.web.billim.jwt.JwtTokenRedisService;
-import com.web.billim.jwt.JwtAuthenticationProvider;
+import com.web.billim.jwt.*;
+import com.web.billim.security.LoginAuthenticationFilter;
 import com.web.billim.security.SecurityFilterSkipMatcher;
 import com.web.billim.security.UsernamPasswordAuthenticationProvider;
-import com.web.billim.jwt.JwtTokenFilterConfigurer;
-import com.web.billim.jwt.JwtUtils;
 
 import com.web.billim.security.UserDetailServiceImpl;
-import com.web.billim.security.handler.AuthenticationFailureEntryPoint;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +18,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -37,7 +35,6 @@ public class WebSecurityConfig {
     private final UserDetailServiceImpl userDetailsService;
     private final JwtTokenRedisService jwtTokenRedisService;
     private final SecurityFilterSkipMatcher securityFilterSkipMatcher;
-    private final AuthenticationFailureEntryPoint authenticationFailureEntryPoint;
 
     @Bean
     public SecurityFilterChain securityFilterChain(AuthenticationManager authenticationManager,HttpSecurity http) throws Exception{
@@ -62,7 +59,7 @@ public class WebSecurityConfig {
                 .anyRequest().authenticated()
 
                 .and()
-                .apply(new JwtTokenFilterConfigurer(jwtUtils, authenticationManager,jwtTokenRedisService, securityFilterSkipMatcher, authenticationFailureEntryPoint));
+                .apply(jwtTokenFilterConfigurer(jwtUtils,authenticationManager,jwtTokenRedisService,securityFilterSkipMatcher));
 
         return http.build();
     }
@@ -83,18 +80,41 @@ public class WebSecurityConfig {
     public AuthenticationManager configureAuthenticationManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.authenticationProvider(usernamPasswordAuthenticationProvider());
-        authenticationManagerBuilder.authenticationProvider(jwtAuthenticationProvider());
+//        authenticationManagerBuilder.authenticationProvider(jwtAuthenticationProvider());
         return authenticationManagerBuilder.build();
+    }
+
+    @Bean
+    public JwtTokenFilterConfigurer jwtTokenFilterConfigurer(JwtUtils jwtUtils
+            ,AuthenticationManager authenticationManager
+            ,JwtTokenRedisService jwtTokenRedisService
+            ,SecurityFilterSkipMatcher securityFilterSkipMatcher
+    ){
+        return new JwtTokenFilterConfigurer(jwtUtils, authenticationManager, jwtTokenRedisService, securityFilterSkipMatcher);
+    }
+
+    @Bean
+    public JwtExceptionFilter jwtExceptionFilter(){
+        return new JwtExceptionFilter(securityFilterSkipMatcher);
+    }
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter(JwtUtils jwtUtils){
+        return new JwtAuthenticationFilter(jwtUtils,securityFilterSkipMatcher);
+    }
+
+    @Bean
+    public LoginAuthenticationFilter loginAuthenticationFilter(AuthenticationManager configureAuthenticationManager,
+                                                               JwtUtils jwtUtils,
+                                                               JwtTokenRedisService jwtTokenRedisService){
+        LoginAuthenticationFilter loginAuthenticationFilter = new LoginAuthenticationFilter(configureAuthenticationManager,jwtUtils,jwtTokenRedisService);
+        loginAuthenticationFilter.setAuthenticationManager(configureAuthenticationManager);
+        return loginAuthenticationFilter;
     }
 
     @Bean
     public UsernamPasswordAuthenticationProvider usernamPasswordAuthenticationProvider(){
         return new UsernamPasswordAuthenticationProvider(userDetailsService,passwordEncoder());
-    }
-
-    @Bean
-    public JwtAuthenticationProvider jwtAuthenticationProvider(){
-        return new JwtAuthenticationProvider(jwtUtils);
     }
 
     @Bean
