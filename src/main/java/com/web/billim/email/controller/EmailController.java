@@ -3,7 +3,6 @@ package com.web.billim.email.controller;
 import com.web.billim.email.dto.EmailAuthRequest;
 import com.web.billim.email.dto.EmailRequest;
 import com.web.billim.email.service.EmailService;
-//import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

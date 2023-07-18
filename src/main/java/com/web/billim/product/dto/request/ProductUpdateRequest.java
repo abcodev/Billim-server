@@ -1,7 +1,6 @@
 package com.web.billim.product.dto.request;
 
 import com.web.billim.product.type.TradeMethod;
-//import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +12,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.util.List;
 
-//@ApiModel(value = "상품 수정 요청")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
