@@ -46,10 +46,6 @@ public class WebSecurityConfig {
                 .formLogin().disable()
                 .httpBasic().disable()
 
-                .exceptionHandling()
-                .authenticationEntryPoint(authenticationFailureEntryPoint)
-
-                .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
