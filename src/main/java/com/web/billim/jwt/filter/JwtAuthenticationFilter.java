@@ -1,7 +1,8 @@
-package com.web.billim.jwt;
+package com.web.billim.jwt.filter;
 
+import com.web.billim.jwt.JwtProvider;
 import com.web.billim.jwt.dto.JwtAuthenticationToken;
-import com.web.billim.security.SecurityFilterSkipMatcher;
+import com.web.billim.security.config.SecurityFilterSkipMatcher;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -16,12 +17,12 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
-    private final JwtUtils jwtUtils;
+    private final JwtProvider jwtProvider;
 
     private final SecurityFilterSkipMatcher securityFilterSkipMatcher;
 
-    public JwtAuthenticationFilter(JwtUtils jwtUtils,SecurityFilterSkipMatcher securityFilterSkipMatcher) {
-        this.jwtUtils = jwtUtils;
+    public JwtAuthenticationFilter(JwtProvider jwtProvider, SecurityFilterSkipMatcher securityFilterSkipMatcher) {
+        this.jwtProvider = jwtProvider;
         this.securityFilterSkipMatcher = securityFilterSkipMatcher;
     }
 
@@ -29,8 +30,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String jwt = resolveToken(request, AUTHORIZATION_HEADER);
-        if (jwtUtils.tokenValidation(jwt)) {
-            JwtAuthenticationToken jwtAuthenticationToken = jwtUtils.getAuthentication(jwt);
+        if (jwtProvider.tokenValidation(jwt)) {
+            JwtAuthenticationToken jwtAuthenticationToken = jwtProvider.getAuthentication(jwt);
             SecurityContextHolder.getContext().setAuthentication(jwtAuthenticationToken);
             filterChain.doFilter(request, response);
         }

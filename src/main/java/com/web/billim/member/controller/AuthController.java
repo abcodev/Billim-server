@@ -1,6 +1,6 @@
 package com.web.billim.member.controller;
 
-import com.web.billim.jwt.JwtService;
+import com.web.billim.jwt.service.JwtService;
 import com.web.billim.jwt.dto.ReIssueTokenRequest;
 import com.web.billim.member.dto.response.ReIssueTokenResponse;
 import com.web.billim.member.service.AuthService;

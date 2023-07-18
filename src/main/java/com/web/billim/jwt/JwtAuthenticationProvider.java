@@ -12,9 +12,9 @@
 //
 //public class JwtAuthenticationProvider implements AuthenticationProvider {
 //
-//    private final JwtUtils jwtUtils;
+//    private final JwtProvider jwtUtils;
 //
-//    public JwtAuthenticationProvider(JwtUtils jwtUtils) {
+//    public JwtAuthenticationProvider(JwtProvider jwtUtils) {
 //        this.jwtUtils = jwtUtils;
 //    }
 //
