@@ -6,7 +6,7 @@ import com.web.billim.product.dto.ProductUpdateCommand;
 import com.web.billim.member.domain.Member;
 import com.web.billim.product.type.TradeMethod;
 
-import io.swagger.annotations.ApiModelProperty;
+//import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import javax.persistence.*;
@@ -31,31 +31,31 @@ public class Product extends JpaEntity {
 
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    @ApiModelProperty(value = "상품 카테고리")
+//    @ApiModelProperty(value = "상품 카테고리")
     private ProductCategory productCategory;
 
     @JoinColumn(name = "member_id", referencedColumnName = "member_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
-    @ApiModelProperty(value = "상품명")
+//    @ApiModelProperty(value = "상품명")
     private String productName;
 
-    @ApiModelProperty(value = "상품설명")
+//    @ApiModelProperty(value = "상품설명")
     private String detail;
 
-    @ApiModelProperty(value = "일일 대여료")
+//    @ApiModelProperty(value = "일일 대여료")
     private long price;
 
-    @ApiModelProperty(value = "거래 방법")
+//    @ApiModelProperty(value = "거래 방법")
     private String tradeMethod;
 
-    @ApiModelProperty(value = "직거래 지역")
+//    @ApiModelProperty(value = "직거래 지역")
     private String tradeArea;
 
     @JoinColumn(name = "product_id")
     @OneToMany(fetch = FetchType.LAZY)
-    @ApiModelProperty("상품 이미지 리스트 주소")
+//    @ApiModelProperty("상품 이미지 리스트 주소")
     private List<ImageProduct> images;
 
     public List<TradeMethod> getTradeMethods() {

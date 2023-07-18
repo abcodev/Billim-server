@@ -1,6 +1,6 @@
 package com.web.billim.point.controller;
 
-import io.swagger.annotations.ApiOperation;
+//import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,7 +21,7 @@ public class PointController {
 
 	private final PointService pointService;
 
-	@ApiOperation(value = "사용 가능 적립금 금액 조회", notes = "나의 사용 가능한 적림금 총 금액을 조회")
+//	@ApiOperation(value = "사용 가능 적립금 금액 조회", notes = "나의 사용 가능한 적림금 총 금액을 조회")
 	@GetMapping("/available")
 	public ResponseEntity<Long> retrieveAvailablePoint(@RequestParam long memberId) {
 		long availablePoint = pointService.retrieveAvailablePoint(memberId);

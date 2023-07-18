@@ -7,7 +7,7 @@ import com.web.billim.order.dto.response.PaymentInfoResponse;
 import com.web.billim.order.service.OrderService;
 import com.web.billim.point.service.PointService;
 import com.web.billim.product.service.ProductService;
-import io.swagger.annotations.ApiOperation;
+//import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +26,7 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    @ApiOperation(value = "상품 주문", notes = "상품 주문시 호출")
+//    @ApiOperation(value = "상품 주문", notes = "상품 주문시 호출")
     @PostMapping
     public ResponseEntity<PaymentInfoResponse> order(
             @RequestBody OrderCommand command,
@@ -36,11 +36,11 @@ public class OrderController {
         return ResponseEntity.ok(resp);
     }
 
-    @ApiOperation(value = "마이페이지 상품 구매 내역", notes = "마이페이지 구매목록 조회")
+//    @ApiOperation(value = "마이페이지 상품 구매 내역", notes = "마이페이지 구매목록 조회")
     @GetMapping("/purchase/list")
     public ResponseEntity<MyOrderHistoryListResponse> myOrder(@AuthenticationPrincipal long memberId) {
         return ResponseEntity.ok(orderService.findMyOrder(memberId));
     }
 
-    
+
 }

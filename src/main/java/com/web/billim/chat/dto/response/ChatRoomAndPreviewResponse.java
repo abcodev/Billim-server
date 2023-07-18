@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.web.billim.chat.domain.ChatRoom;
 
-import io.swagger.annotations.ApiModelProperty;
+//import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,28 +17,28 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ChatRoomAndPreviewResponse {
 
-	@ApiModelProperty(value = "채팅방 고유번호")
+//	@ApiModelProperty(value = "채팅방 고유번호")
 	private long chatRoomId;
 
-	@ApiModelProperty(value = "채팅 상대방 회원 고유번호")
+//	@ApiModelProperty(value = "채팅 상대방 회원 고유번호")
 //	private long opponentId;
 	private long receiverId;
 
-	@ApiModelProperty(value = "채팅 상대방 회원 닉네임")
+//	@ApiModelProperty(value = "채팅 상대방 회원 닉네임")
 //	private String opponentNickname;
 	private String receiverNickname;
 
-	@ApiModelProperty(value = "채팅 상대방 회원 프로필 이미지 주소")
+//	@ApiModelProperty(value = "채팅 상대방 회원 프로필 이미지 주소")
 //	private String opponentProfileImageUrl;
 	private String receiverProfileImageUrl;
 
-	@ApiModelProperty(value = "읽지 않은 메세지 개수")
+//	@ApiModelProperty(value = "읽지 않은 메세지 개수")
 	private int unreadCount;
 
-	@ApiModelProperty(value = "최신 채팅")
+//	@ApiModelProperty(value = "최신 채팅")
 	private String latestMessage;
 
-	@ApiModelProperty(value = "최신 채팅 시간")
+//	@ApiModelProperty(value = "최신 채팅 시간")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
 	private LocalDateTime latestMessageTime;
 
