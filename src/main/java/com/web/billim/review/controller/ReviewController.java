@@ -19,15 +19,14 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
-//    @ApiOperation(value = "리뷰 작성하기" , notes = "리뷰 작성하기, productId를 넘겨주세요.")
-    @Operation(summary = "리뷰 작성하기")
+    @Operation(summary = "리뷰 작성하기" , description = "리뷰를 작성한다. productId를 넘겨주세요.")
     @PostMapping("/write")
     public ResponseEntity<Void> productWrite(@RequestBody ReviewWriteRequest reviewWriteRequest) {
         reviewService.productReviewWrite(reviewWriteRequest);
         return ResponseEntity.ok().build();
     }
 
-//    @ApiOperation(value = "회원이 이용한 상품 리뷰 불러오기", notes = "마이페이지 헤더에서 리뷰 클릭시 작성한 후기, 작성 해야하는 리뷰를 불러옴")
+    @Operation(summary = "회원이 이용한 상품 리뷰 불러오기", description = "마이페이지 헤더에서 리뷰 클릭시 작성한 후기, 작성 해야하는 리뷰를 불러옴")
     @GetMapping("/my-list")
     public ResponseEntity<Void> myProductReview(@AuthenticationPrincipal long memberId) {
         reviewService.findMyProductReview(memberId);

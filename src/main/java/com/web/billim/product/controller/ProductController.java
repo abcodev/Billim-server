@@ -13,6 +13,7 @@ import com.web.billim.product.service.ProductInterestService;
 import com.web.billim.product.service.ProductService;
 import com.web.billim.review.service.ReviewService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +42,7 @@ public class ProductController {
     private final ProductInterestService productInterestService;
     private final ReviewService reviewService;
 
-//    @ApiOperation(value = "상품 등록", notes = "이미지 1장 부터 최대 5장까지 첨부 가능")
+    @Operation(summary = "상품 등록", description = "이미지 1장부터 최대 5장까지 첨부 가능")
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Product> registerProduct(
             @AuthenticationPrincipal long memberId,
@@ -52,7 +53,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.register(command));
     }
 
-//    @ApiOperation(value = "상품 수정", notes = "삭제할 이미지 deleteImages, 새로운 이미지 MultipartFile")
+    @Operation(summary = "상품 수정", description = "삭제할 이미지 deleteImages, 새로운 이미지 MultipartFile 형태로 전송")
     @PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updateProduct(
             @AuthenticationPrincipal long memberId,
@@ -65,7 +66,7 @@ public class ProductController {
 //        return ResponseEntity.ok(productService.update(command));
     }
 
-//    @ApiOperation(value = "전체 상품목록 조회, 검색, 페이징", notes = "전체 상품목록 조회, 카테고리별 검색, 키워드 검색, 페이징 처리")
+    @Operation(summary = "전체 상품목록 조회, 검색, 페이징", description = "전체 상품목록 조회, 카테고리별 검색, 키워드 검색, 페이징 처리")
     @Transactional
     @GetMapping("/list/search")
     public ResponseEntity<Page<ProductListResponse>> productList(
@@ -83,7 +84,7 @@ public class ProductController {
         return ResponseEntity.ok(categoryList);
     }
 
-//    @ApiOperation(value = "상품 상세정보", notes = "productId에 따른 상품 상세정보 & 이미 예약되어 이용할 수 없는 날짜")
+    @Operation(summary = "상품 상세정보", description = "productId에 따른 상품 상세정보 & 이미 예약되어 이용할 수 없는 날짜")
     @GetMapping("/detail/{productId}")
     public ResponseEntity<ProductDetailResponse> productDetail(@PathVariable("productId") long productId) {
         ProductDetailResponse resp = productService.retrieveDetail(productId);
@@ -97,7 +98,7 @@ public class ProductController {
         return ResponseEntity.ok(dates);
     }
 
-//    @ApiOperation(value = "상품 수정 기존 내용 조회", notes = "상품 수정시 기존 정보 조회")
+    @Operation(summary = "상품 수정 기존 내용 조회", description = "상품 수정시 기존 정보 조회를 조회한다")
     @GetMapping("/update/{productId}")
     public ResponseEntity<ProductUpdateResponse> updateProductResponse(
             @PathVariable("productId") long productId
@@ -106,7 +107,7 @@ public class ProductController {
         return ResponseEntity.ok(resp);
     }
 
-//    @ApiOperation(value = "상품 삭제", notes = "해당 회원이 작성한 상품 및 상품 이미지 삭제")
+    @Operation(summary = "상품 삭제", description = "해당 회원이 작성한 상품 및 상품 이미지 삭제")
     @DeleteMapping("/delete/{productId}")
     public ResponseEntity<Void> deleteProduct(
             @AuthenticationPrincipal long memberId,
@@ -116,13 +117,13 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
-//    @ApiOperation(value = "*인기 상품 조회", notes = "사람들이 많이 본 상품 사진 리스트")
+    @Operation(summary = "*인기 상품 조회", description = "사람들이 많이 본 상품 사진 리스트")
     @GetMapping("/list/most/popular")
     public ResponseEntity<List<MostProductList>> mostProductList() {
         return ResponseEntity.ok(productService.findMostPopularProduct());
     }
 
-//    @ApiOperation(value = "관심상품 등록, 삭제", notes = "true 관심상품등록, false 관심등록삭제")
+    @Operation(summary = "관심상품 등록, 삭제", description = "true 관심상품등록, false 관심등록삭제")
     @PostMapping("/interest")
     public ResponseEntity<Void> saveOrDeleteInterest(
             @AuthenticationPrincipal long memberId,
@@ -132,19 +133,19 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
-//    @ApiOperation(value = "마이페이지 관심목록 조회")
+    @Operation(summary = "마이페이지 관심목록 조회")
     @GetMapping("/my/interestList")
     public ResponseEntity<MyInterestProductList> myInterestProductList(@AuthenticationPrincipal long memberId) {
         return ResponseEntity.ok(productInterestService.myInterestProductList(memberId));
     }
 
-    // 판매중인 상품 목록 조회
+    @Operation(summary = "*마이페이지 판매 목록 조회", description = "마이페이지에서 판매중인 상품 목록을 전체 조회한다")
     @GetMapping("/my/sell/list")
     public ResponseEntity<Void> mySellList() {
         return ResponseEntity.ok().build();
     }
 
-    // 판매중인 상품 클릭시 판매 주문 내역 조회
+    @Operation(summary = "*마이페이지 판매 상품 상세정보", description = "판매중인 상품 클릭시 판매 주문 내역을 조회한다")
     @GetMapping("/my/sell/detail")
     public ResponseEntity<Void> mySellDetail() {
         return ResponseEntity.ok().build();

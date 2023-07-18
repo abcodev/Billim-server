@@ -1,6 +1,8 @@
 package com.web.billim.payment.controller;
 
 import com.web.billim.payment.service.PaymentService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,8 +21,7 @@ public class PaymentController {
 
     private final PaymentService paymentService;
 
-//    @ApiOperation(value = "결제 성공")
-//    @ApiImplicitParam(name = "imp_uid", value = "")
+    @Operation(summary = "결제 성공")
     @GetMapping("/complete")
     public ResponseEntity<Void> paymentComplete(
             @RequestParam("imp_uid") String impUid,
@@ -30,6 +31,7 @@ public class PaymentController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "결제 실패")
     @GetMapping("/failure")
     public ResponseEntity<Void> paymentFailure(@RequestParam("merchant_uid") String merchantUid) {
         paymentService.rollback(merchantUid);

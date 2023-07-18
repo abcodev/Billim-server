@@ -10,10 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PaymentInfoDto {
-
 	private ProductOrder order;
 	private CouponIssue coupon;
 	private long usedPoint;
 	private long amount;
-
 }

@@ -23,7 +23,6 @@ public class ReviewService {
 
 	private final ReviewRepository reviewRepository;
 	private final OrderService orderService;
-
 	private final PointService pointService;
 
 	public double calculateStarRating(long productId) {
