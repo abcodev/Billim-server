@@ -55,7 +55,8 @@ public class JwtProvider implements InitializingBean {
 				.setSubject(memberId)
 				.setAudience(memberGrade.toString())
 				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + ACCESS_TIME))
+//				.setExpiration(new Date(System.currentTimeMillis() + ACCESS_TIME))
+				.setExpiration(new Date(System.currentTimeMillis() + 120000))
 				.signWith(key, SignatureAlgorithm.HS512)
 				.compact();
 	}
@@ -65,7 +66,8 @@ public class JwtProvider implements InitializingBean {
 		return Jwts.builder()
 				.setHeaderParam("typ", "REFRESH")
 				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + REFRESH_TIME))
+//				.setExpiration(new Date(System.currentTimeMillis() + REFRESH_TIME))
+				.setExpiration(new Date(System.currentTimeMillis() + 300000))
 				.signWith(key, SignatureAlgorithm.HS512)
 				.compact();
 	}
@@ -88,19 +90,19 @@ public class JwtProvider implements InitializingBean {
 					parseClaimsJws(token);
 			return true;
 		} catch (SignatureException ex) {
-			log.error("wrong signature JWT");
+			log.error("wrong signature JWT",ex);
 			throw new JwtException(ErrorCode.INVALID_TOKEN);
 		} catch (MalformedJwtException ex) {
-			log.error("Invalid JWT token");
+			log.error("Invalid JWT token",ex);
 			throw new JwtException(ErrorCode.INVALID_TOKEN);
 		} catch (ExpiredJwtException ex) {
-			log.error("Expired JWT token");
+			log.error("Expired JWT token",ex);
 			throw new JwtException(ErrorCode.EXPIRED_TOKEN);
 		} catch (UnsupportedJwtException ex) {
-			log.error("Unsupported JWT token");
+			log.error("Unsupported JWT token",ex);
 			throw new JwtException(ErrorCode.UNSUPPORTED_TOKEN);
 		} catch (IllegalArgumentException ex) {
-			log.error("JWT claims string is empty.");
+			log.error("JWT claims string is empty",ex);
 			throw new JwtException(ErrorCode.UNKNOWN_ERROR);
 		}
 	}

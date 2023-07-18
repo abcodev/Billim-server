@@ -1,7 +1,9 @@
 package com.web.billim.jwt.service;
 
 import com.web.billim.common.exception.JwtException;
+import com.web.billim.common.exception.handler.ErrorCode;
 import com.web.billim.jwt.JwtProvider;
+import com.web.billim.jwt.dto.ReIssueTokenRequest;
 import com.web.billim.jwt.dto.RedisJwt;
 import com.web.billim.member.domain.Member;
 import com.web.billim.member.dto.response.ReIssueTokenResponse;
@@ -22,15 +24,15 @@ public class JwtService {
     private final JwtProvider jwtProvider;
     private final JwtTokenRedisService jwtTokenRedisService;
     private final MemberRepository memberRepository;
-    public ReIssueTokenResponse reIssueToken(String accessToken, String  refreshToken ) {
+    public ReIssueTokenResponse reIssueToken(ReIssueTokenRequest request) {
+        String accessToken = request.getAccessToken();
+        String refreshToken = request.getRefreshToken();
         // refreshToken 이 만료 됬다면??
-        if(!jwtProvider.tokenValidation(refreshToken)){
-            throw new JwtException(INVALID_REFRESH_TOKEN);
-        }
+        jwtProvider.tokenValidation(accessToken);
         // accessToken 에서 memberId 가져오기
-        Authentication authentication = jwtProvider.getAuthentication(accessToken);
+        Authentication authentication = jwtProvider.getAuthentication(refreshToken);
         Member member = memberRepository.findById(Long.parseLong(authentication.getPrincipal().toString()))
-                .orElseThrow(()-> new JwtException(MEMBER_NOT_FOUND));
+                .orElseThrow(()-> new JwtException(ErrorCode.MEMBER_NOT_FOUND));
 
         RedisJwt redisJwt = jwtTokenRedisService.compareToken(member.getMemberId());
 
