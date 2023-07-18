@@ -29,4 +29,8 @@ public class JwtTokenRedisService {
         jwtTokenRedisRepository.deleteById(String.valueOf(memberId));
         log.info(memberId+"토큰 삭제 완료");
     }
+
+    public boolean existsById(long memberId) {
+        return jwtTokenRedisRepository.existsById(String.valueOf(memberId));
+    }
 }
