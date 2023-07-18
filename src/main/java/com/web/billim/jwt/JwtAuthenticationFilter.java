@@ -1,19 +1,13 @@
 package com.web.billim.jwt;
 
-import com.web.billim.common.exception.JwtException;
-import com.web.billim.common.exception.handler.ErrorCode;
 import com.web.billim.jwt.dto.JwtAuthenticationToken;
 import com.web.billim.security.SecurityFilterSkipMatcher;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.filter.GenericFilterBean;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -33,15 +27,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        try {
-            String jwt = resolveToken(request, AUTHORIZATION_HEADER);
-            if (jwtUtils.tokenValidation(jwt)) {
-                JwtAuthenticationToken jwtAuthenticationToken = jwtUtils.getAuthentication(jwt);
-                SecurityContextHolder.getContext().setAuthentication(jwtAuthenticationToken);
-            }
+
+        String jwt = resolveToken(request, AUTHORIZATION_HEADER);
+        if (jwtUtils.tokenValidation(jwt)) {
+            JwtAuthenticationToken jwtAuthenticationToken = jwtUtils.getAuthentication(jwt);
+            SecurityContextHolder.getContext().setAuthentication(jwtAuthenticationToken);
             filterChain.doFilter(request, response);
-        } catch (Exception e){
-            throw  new JwtException(ErrorCode.EXPIRED_TOKEN);
         }
     }
 

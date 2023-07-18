@@ -1,7 +1,6 @@
 package com.web.billim.common.exception;
 
 import com.web.billim.common.exception.handler.ErrorCode;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.AuthenticationException;
 
@@ -13,5 +12,4 @@ public class JwtException extends AuthenticationException {
         super(errorCode.getMessage());
         this.errorCode = errorCode;
     }
-
 }

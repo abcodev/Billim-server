@@ -2,7 +2,6 @@ package com.web.billim.jwt;
 
 import com.web.billim.security.LoginAuthenticationFilter;
 import com.web.billim.security.SecurityFilterSkipMatcher;
-import com.web.billim.security.handler.AuthenticationFailureEntryPoint;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
@@ -16,23 +15,23 @@ public class JwtTokenFilterConfigurer extends SecurityConfigurerAdapter<DefaultS
     private final AuthenticationManager authenticationManager;
     private final JwtTokenRedisService jwtTokenRedisService;
     private final SecurityFilterSkipMatcher securityFilterSkipMatcher;
-    private final AuthenticationFailureEntryPoint authenticationFailureEntryPoint;
 
 
-    public JwtTokenFilterConfigurer(JwtUtils jwtUtils, AuthenticationManager authenticationManager, JwtTokenRedisService jwtTokenRedisService, SecurityFilterSkipMatcher securityFilterSkipMatcher, AuthenticationFailureEntryPoint authenticationFailureEntryPoint) {
+    public JwtTokenFilterConfigurer(JwtUtils jwtUtils, AuthenticationManager authenticationManager, JwtTokenRedisService jwtTokenRedisService, SecurityFilterSkipMatcher securityFilterSkipMatcher) {
         this.jwtUtils = jwtUtils;
         this.authenticationManager = authenticationManager;
         this.jwtTokenRedisService = jwtTokenRedisService;
         this.securityFilterSkipMatcher = securityFilterSkipMatcher;
-        this.authenticationFailureEntryPoint = authenticationFailureEntryPoint;
     }
 
     @Override
-    public void configure(HttpSecurity builder) throws Exception {
+    public void configure(HttpSecurity builder) {
         LoginAuthenticationFilter loginAuthenticationFilter = new LoginAuthenticationFilter(authenticationManager, jwtUtils, jwtTokenRedisService);
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtUtils,securityFilterSkipMatcher);
+        JwtExceptionFilter jwtExceptionFilter = new JwtExceptionFilter(securityFilterSkipMatcher);
 
         builder.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-        builder.addFilterBefore(loginAuthenticationFilter,UsernamePasswordAuthenticationFilter.class);
+        builder.addFilterBefore(jwtExceptionFilter,JwtAuthenticationFilter.class);
+        builder.addFilterBefore(loginAuthenticationFilter,JwtExceptionFilter.class);
     }
 }

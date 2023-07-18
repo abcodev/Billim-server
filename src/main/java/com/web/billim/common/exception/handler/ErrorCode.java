@@ -22,6 +22,7 @@ public enum ErrorCode {
     MISMATCH_PASSWORD(UNAUTHORIZED,"아이디 또는 비밀번호가 일치하지 않습니다."),
     EXPIRED_TOKEN(UNAUTHORIZED,"만료된 토큰입니다."),
     UNSUPPORTED_TOKEN(UNAUTHORIZED,"변조된 토큰입니다."),
+    INVALID_TOKEN(UNAUTHORIZED,"유효하지 않은 토큰입니다"),
     UNKNOWN_ERROR(UNAUTHORIZED,"토큰이 존재하지 않습니다."),
     WRONG_TYPE_TOKEN(UNAUTHORIZED,"변조된 토큰입니다."),
 
