@@ -36,14 +36,14 @@ public class AuthService {
     }
 
     @Transactional
-    public ReIssueTokenResponse reIssuToken(ReIssueTokenRequest request) {
+    public ReIssueTokenResponse reIssueToken(ReIssueTokenRequest request) {
         String accessToken = request.getAccessToken();
         String refreshToken = request.getRefreshToken();
 
         log.info("refreshToken 유효성 검사");
-        jwtProvider.tokenValidation(accessToken);
+        jwtProvider.tokenValidation(refreshToken);
 
-        Authentication authentication = jwtProvider.getAuthentication(accessToken);
+        Authentication authentication = jwtProvider.getAuthentication(refreshToken);
         Member member = memberService.findById(Long.parseLong(authentication.getPrincipal().toString()));
 
         log.info("회원번호 검사");
@@ -53,7 +53,7 @@ public class AuthService {
         jwtService.deleteRefreshToken(member.getMemberId());
 
         String newAccessToken = jwtProvider.createAccessToken(String.valueOf(member.getMemberId()),member.getGrade());
-        String newRefreshToken = jwtProvider.createRefreshToken();
+        String newRefreshToken = jwtProvider.createRefreshToken(String.valueOf(member.getMemberId()));
 
         log.info("새로운 토큰 redis 저장");
         jwtService.saveToken(new RedisJwt(member.getMemberId(),newRefreshToken));

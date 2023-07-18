@@ -56,15 +56,17 @@ public class JwtProvider implements InitializingBean {
 				.setAudience(memberGrade.toString())
 				.setIssuedAt(new Date(System.currentTimeMillis()))
 //				.setExpiration(new Date(System.currentTimeMillis() + ACCESS_TIME))
-				.setExpiration(new Date(System.currentTimeMillis() + 120000))
+//				.setExpiration(new Date(System.currentTimeMillis() + 120000))
+				.setExpiration(new Date(System.currentTimeMillis() + 60000))
 				.signWith(key, SignatureAlgorithm.HS512)
 				.compact();
 	}
 
 	// Refresh Token 발급
-	public String createRefreshToken() {
+	public String createRefreshToken(String memberId) {
 		return Jwts.builder()
 				.setHeaderParam("typ", "REFRESH")
+				.setSubject(memberId)
 				.setIssuedAt(new Date(System.currentTimeMillis()))
 //				.setExpiration(new Date(System.currentTimeMillis() + REFRESH_TIME))
 				.setExpiration(new Date(System.currentTimeMillis() + 300000))
