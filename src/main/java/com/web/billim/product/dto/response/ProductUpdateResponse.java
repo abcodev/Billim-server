@@ -11,8 +11,9 @@ import java.util.stream.Collectors;
 
 @Getter
 @Builder
-public class UpdateProductResponse {
+public class ProductUpdateResponse {
 
+    private long memberId;
     private String category;
     private long productId;
     private String rentalProduct;
@@ -22,8 +23,9 @@ public class UpdateProductResponse {
     private String place;
     private List<String> imageUrls;
 
-    public static UpdateProductResponse of(Product product){
-        return UpdateProductResponse.builder()
+    public static ProductUpdateResponse of(Product product){
+        return ProductUpdateResponse.builder()
+                .memberId(product.getMember().getMemberId())
                 .category(product.getProductCategory().getCategoryName())
                 .productId(product.getProductId())
                 .rentalProduct(product.getProductName())

@@ -11,7 +11,7 @@ public class SecurityFilterSkipMatcher{
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
     private final String[] excludedPaths = {
-            "/",
+            "/", "/ping",
             "/email/**",
             "/member/email/**",
             "/member/signup",
@@ -22,7 +22,7 @@ public class SecurityFilterSkipMatcher{
 
             "/v3/api-docs", "/configuration/ui", "/swagger-resources/**",
             "/configuration/security", "/swagger-ui.html/**", "/swagger-ui/**", "/webjars/**", "/swagger/**",
-            "/auth/reIssue/token"
+            "/auth/reIssue/token", "/v3/api-docs/swagger-config"
     };
 
     public boolean shouldSkipFilter(HttpServletRequest request) {

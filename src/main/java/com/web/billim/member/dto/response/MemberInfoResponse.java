@@ -6,15 +6,15 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class UpdateInfoResponse {
+public class MemberInfoResponse {
     private long memberId;
     private String email;
     private String nickname;
     private String address;
     private String profileImageUrl;
 
-    public static UpdateInfoResponse from(Member member) {
-        return UpdateInfoResponse.builder()
+    public static MemberInfoResponse from(Member member) {
+        return MemberInfoResponse.builder()
                 .memberId(member.getMemberId())
                 .email(member.getEmail())
                 .nickname(member.getNickname())

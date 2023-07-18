@@ -1,8 +1,7 @@
 package com.web.billim.payment.controller;
 
 import com.web.billim.payment.service.PaymentService;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "결제", description = "PaymentController")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -19,11 +19,12 @@ public class PaymentController {
 
     private final PaymentService paymentService;
 
-    @ApiOperation(value = "결제 성공")
-    @ApiImplicitParam(name = "imp_uid", value = "")
+//    @ApiOperation(value = "결제 성공")
+//    @ApiImplicitParam(name = "imp_uid", value = "")
     @GetMapping("/complete")
-    public ResponseEntity<Void> paymentComplete(@RequestParam("imp_uid") String impUid,
-                                                @RequestParam("merchant_uid") String merchantUid
+    public ResponseEntity<Void> paymentComplete(
+            @RequestParam("imp_uid") String impUid,
+            @RequestParam("merchant_uid") String merchantUid
     ) {
         paymentService.complete(impUid, merchantUid);
         return ResponseEntity.ok().build();

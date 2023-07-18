@@ -46,8 +46,8 @@ public class AmazonS3ImageUploadService implements ImageUploadService {
 	}
 
 	@Override
-	public String upload(String encodedBase64Image, String path) {
-		return null;
+	public void delete(String url) {
+		// TODO
 	}
 
 	private String put(File file, String fileName) {

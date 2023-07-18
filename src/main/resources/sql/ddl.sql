@@ -87,7 +87,6 @@ CREATE TABLE `payment`
     `merchant_uid`    varchar(500)                                                    NULL COMMENT '카드결제ID',
     `total_amount`    bigint                                                          NOT NULL COMMENT '총금액',
     `status`          varchar(50)                                                     NOT NULL COMMENT '결제여부',
-    `trade_method`    varchar(50)                                                     NOT NULL COMMENT '거래 방법',
     `imp_uid`         varchar(255)                                                    NULL COMMENT 'impUID',
     `created_at`      timestamp default current_timestamp                             NOT NULL COMMENT '결제일자',
     `updated_at`      timestamp default current_timestamp on update current_timestamp NOT NULL COMMENT '수정일자'

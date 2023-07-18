@@ -17,6 +17,7 @@ public enum ErrorCode {
 
 
     /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */
+    INVALID_ACCESS_TOKEN(UNAUTHORIZED, "잘못된 액세스 토큰입니다."),
     INVALID_AUTH_TOKEN(UNAUTHORIZED, "권한 정보가 없는 토큰입니다"),
     UNAUTHORIZED_MEMBER(UNAUTHORIZED, "현재 내 계정 정보가 존재하지 않습니다"),
     MISMATCH_PASSWORD(UNAUTHORIZED,"아이디 또는 비밀번호가 일치하지 않습니다."),
@@ -44,7 +45,10 @@ public enum ErrorCode {
 
     /* INTERNAL_SERVER_ERROR */
     IMAGE_UPLOAD_FAILED(INTERNAL_SERVER_ERROR, "이미지 업로드에 실패했습니다."),
-    EMAIL_SEND_FAILED(INTERNAL_SERVER_ERROR,"이메일 전송을 실패하였습니다.");
+    EMAIL_SEND_FAILED(INTERNAL_SERVER_ERROR,"이메일 전송에 실패하였습니다."),
+    ORDER_DUPLICATED_REQUEST(INTERNAL_SERVER_ERROR, "해당 사용자가 이미 주문중인 거래가 있습니다."),
+    ORDER_DUPLICATED_PERIOD(INTERNAL_SERVER_ERROR, "해당 제품은 다른 사용자가 거래중입니다.");
+
 
     private final HttpStatus httpStatus;
     private final String message;

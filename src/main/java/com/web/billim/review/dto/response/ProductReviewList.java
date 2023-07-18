@@ -2,13 +2,13 @@ package com.web.billim.review.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.web.billim.review.domain.Review;
-import io.swagger.annotations.ApiModel;
+//import io.swagger.annotations.ApiModel;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-@ApiModel(value = "상품 리뷰리스트")
+//@ApiModel(value = "상품 리뷰리스트")
 @Getter
 @Builder
 public class ProductReviewList {

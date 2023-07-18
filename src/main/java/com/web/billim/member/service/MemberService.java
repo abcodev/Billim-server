@@ -8,13 +8,10 @@ import com.web.billim.coupon.repository.CouponRepository;
 import com.web.billim.coupon.service.CouponService;
 import com.web.billim.infra.ImageUploadService;
 import com.web.billim.member.domain.Member;
-import com.web.billim.member.dto.request.FindPasswordRequest;
+import com.web.billim.member.dto.request.*;
 import com.web.billim.member.dto.UpdatePasswordCommand;
-import com.web.billim.member.dto.request.MemberSignupRequest;
-import com.web.billim.member.dto.request.UpdateAddressRequest;
-import com.web.billim.member.dto.request.UpdateNicknameRequest;
 import com.web.billim.member.dto.response.MyPageInfoResponse;
-import com.web.billim.member.dto.response.UpdateInfoResponse;
+import com.web.billim.member.dto.response.MemberInfoResponse;
 import com.web.billim.member.repository.MemberRepository;
 import com.web.billim.point.dto.AddPointCommand;
 import com.web.billim.point.service.PointService;
@@ -28,7 +25,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -75,7 +71,6 @@ public class MemberService {
 		return memberRepository.existsByNickname(nickname);
 	}
 
-
 	// Domain Service
 	public Member retrieve(long memberId) {
 		return memberRepository.findById(memberId)
@@ -83,9 +78,9 @@ public class MemberService {
 	}
 
 	@Transactional
-	public UpdateInfoResponse retrieveUpdateInfoPage(long memberId) {
+	public MemberInfoResponse retrieveUpdateInfoPage(long memberId) {
 		return memberRepository.findById(memberId)
-				.map(UpdateInfoResponse::from)
+				.map(MemberInfoResponse::from)
 				.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 	}
 
@@ -99,35 +94,52 @@ public class MemberService {
 	}
 
 	@Transactional
-	public void updateProfileImage(long memberId, MultipartFile profileImage) {
-		String imageUrl = imageUploadService.upload(profileImage, "profile");
-		memberRepository.findById(memberId)
-			.ifPresent(member -> {
-				member.updateProfileImage(imageUrl);
-				memberRepository.save(member);
-			});
-	}
-
-	@Transactional
-	public void updateAddress(long memberId, UpdateAddressRequest updateAddressRequest) {
-		memberRepository.findById(memberId)
-			.ifPresent(member -> {
-				member.updateAddress(updateAddressRequest.getAddress());
-				memberRepository.save(member);
-			});
-	}
-
-	@Transactional
-	public void updateNickname(long memberId, UpdateNicknameRequest updateNicknameRequest) {
-		if (memberRepository.existsByNickname(updateNicknameRequest.getNickname())) {
+	public void updateInfo(long memberId, MemberInfoUpdateRequest req) {
+		if (memberRepository.existsByNickname(req.getNickname())) {
 			throw new RuntimeException("중복된 닉네임 입니다.");
 		}
-		memberRepository.findById(memberId)
-			.ifPresent(member -> {
-				member.updateNickname(updateNicknameRequest.getNickname());
-				memberRepository.save(member);
-			});
+
+		memberRepository.findById(memberId).ifPresent(member -> {
+			String imageUrl = null;
+			if (req.getProfileImage() != null) {
+				imageUploadService.delete(member.getProfileImageUrl());
+				imageUrl = imageUploadService.upload(req.getProfileImage(), "profile");
+			}
+			member.updateInfo(req.getNickname(), req.getAddress(), imageUrl);
+			memberRepository.save(member);
+		});
 	}
+
+//	@Transactional
+//	public void updateProfileImage(long memberId, MultipartFile profileImage) {
+//		String imageUrl = imageUploadService.upload(profileImage, "profile");
+//		memberRepository.findById(memberId)
+//			.ifPresent(member -> {
+//				member.updateProfileImage(imageUrl);
+//				memberRepository.save(member);
+//			});
+//	}
+
+//	@Transactional
+//	public void updateAddress(long memberId, UpdateAddressRequest req) {
+//		memberRepository.findById(memberId)
+//			.ifPresent(member -> {
+//				member.updateAddress(req.getAddress());
+//				memberRepository.save(member);
+//			});
+//	}
+
+//	@Transactional
+//	public void updateNickname(long memberId, UpdateNicknameRequest req) {
+//		if (memberRepository.existsByNickname(req.getNickname())) {
+//			throw new RuntimeException("중복된 닉네임 입니다.");
+//		}
+//		memberRepository.findById(memberId)
+//			.ifPresent(member -> {
+//				member.updateNickname(req.getNickname());
+//				memberRepository.save(member);
+//			});
+//	}
 
 	@Transactional
 	public void findPassword(FindPasswordRequest req) {
