@@ -1,7 +1,8 @@
-package com.web.billim.jwt;
+package com.web.billim.jwt.service;
 
 import com.web.billim.common.exception.JwtException;
 import com.web.billim.jwt.dto.RedisJwt;
+import com.web.billim.jwt.JwtTokenRedisRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

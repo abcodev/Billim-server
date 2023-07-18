@@ -1,6 +1,6 @@
 package com.web.billim.member.controller;
 
-import com.web.billim.jwt.JwtService;
+import com.web.billim.jwt.service.JwtService;
 import com.web.billim.jwt.dto.ReIssueTokenRequest;
 import com.web.billim.member.dto.response.ReIssueTokenResponse;
 import com.web.billim.member.service.AuthService;
@@ -9,7 +9,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

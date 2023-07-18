@@ -14,8 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.AuthenticationServiceException;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -24,7 +22,7 @@ import java.util.Date;
 
 @Component
 @Slf4j
-public class JwtUtils implements InitializingBean {
+public class JwtProvider implements InitializingBean {
 
 	private final UserDetailServiceImpl userDetailsService;
 	private final long ACCESS_TIME;
@@ -32,10 +30,10 @@ public class JwtUtils implements InitializingBean {
 	private final String secretKey;
 	private Key key;
 
-	public JwtUtils(@Value("${jwt.secret}") String secretKey,
-					@Value("${jwt.access-time}") long ACCESS_TIME,
-					@Value("${jwt.refresh-time}") long REFRESH_TIME,
-					UserDetailServiceImpl userDetailsService) {
+	public JwtProvider(@Value("${jwt.secret}") String secretKey,
+					   @Value("${jwt.access-time}") long ACCESS_TIME,
+					   @Value("${jwt.refresh-time}") long REFRESH_TIME,
+					   UserDetailServiceImpl userDetailsService) {
 		this.secretKey = secretKey;
 		this.ACCESS_TIME = ACCESS_TIME;
 		this.REFRESH_TIME = REFRESH_TIME;

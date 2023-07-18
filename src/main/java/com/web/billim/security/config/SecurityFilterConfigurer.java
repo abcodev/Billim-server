@@ -1,7 +1,10 @@
-package com.web.billim.jwt;
+package com.web.billim.security.config;
 
+import com.web.billim.jwt.filter.JwtAuthenticationFilter;
+import com.web.billim.jwt.filter.JwtExceptionFilter;
+import com.web.billim.jwt.JwtProvider;
+import com.web.billim.jwt.service.JwtTokenRedisService;
 import com.web.billim.security.LoginAuthenticationFilter;
-import com.web.billim.security.SecurityFilterSkipMatcher;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
@@ -9,16 +12,16 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-public class JwtTokenFilterConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
+public class SecurityFilterConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
 
-    private final JwtUtils jwtUtils;
+    private final JwtProvider jwtProvider;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenRedisService jwtTokenRedisService;
     private final SecurityFilterSkipMatcher securityFilterSkipMatcher;
 
 
-    public JwtTokenFilterConfigurer(JwtUtils jwtUtils, AuthenticationManager authenticationManager, JwtTokenRedisService jwtTokenRedisService, SecurityFilterSkipMatcher securityFilterSkipMatcher) {
-        this.jwtUtils = jwtUtils;
+    public SecurityFilterConfigurer(JwtProvider jwtProvider, AuthenticationManager authenticationManager, JwtTokenRedisService jwtTokenRedisService, SecurityFilterSkipMatcher securityFilterSkipMatcher) {
+        this.jwtProvider = jwtProvider;
         this.authenticationManager = authenticationManager;
         this.jwtTokenRedisService = jwtTokenRedisService;
         this.securityFilterSkipMatcher = securityFilterSkipMatcher;
@@ -26,8 +29,8 @@ public class JwtTokenFilterConfigurer extends SecurityConfigurerAdapter<DefaultS
 
     @Override
     public void configure(HttpSecurity builder) {
-        LoginAuthenticationFilter loginAuthenticationFilter = new LoginAuthenticationFilter(authenticationManager, jwtUtils, jwtTokenRedisService);
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtUtils,securityFilterSkipMatcher);
+        LoginAuthenticationFilter loginAuthenticationFilter = new LoginAuthenticationFilter(authenticationManager, jwtProvider, jwtTokenRedisService);
+        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtProvider,securityFilterSkipMatcher);
         JwtExceptionFilter jwtExceptionFilter = new JwtExceptionFilter(securityFilterSkipMatcher);
 
         builder.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
