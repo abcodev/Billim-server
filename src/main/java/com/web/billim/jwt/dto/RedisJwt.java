@@ -10,10 +10,9 @@ import org.springframework.data.redis.core.RedisHash;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@RedisHash(value = "REFREHTOKEN", timeToLive = 3600000)
+@RedisHash(value = "REFREHTOKEN", timeToLive = 300)
 public class RedisJwt {
     @Id
     private long memberId;
     private String refreshToken;
-
 }

@@ -19,10 +19,11 @@ public class SecurityFilterSkipMatcher{
             "/member/find/password",
             "/product/list/**",
             "/product/detail/**",
+            "/auth/reIssue/token",
 
             "/v3/api-docs", "/configuration/ui", "/swagger-resources/**",
             "/configuration/security", "/swagger-ui.html/**", "/swagger-ui/**", "/webjars/**", "/swagger/**",
-            "/auth/reIssue/token", "/v3/api-docs/swagger-config"
+            "/v3/api-docs/swagger-config"
     };
 
     public boolean shouldSkipFilter(HttpServletRequest request) {

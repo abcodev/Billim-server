@@ -24,9 +24,7 @@ public class AuthController {
     @Operation(summary = "토큰 재발급", description = "refresh token 유효성 검사후 access token 재발급")
     @PostMapping("/reIssue/token")
     public ResponseEntity<?> reIssueToken(@RequestBody ReIssueTokenRequest req){
-        String accessToken = req.getAccessToken();
-        String refreshToken = req.getRefreshToken();
-        ReIssueTokenResponse response = jwtService.reIssueToken(accessToken,refreshToken);
+        ReIssueTokenResponse response = jwtService.reIssueToken(req);
         return ResponseEntity.ok(response);
     }
     @Operation(summary = "* 로그아웃")
