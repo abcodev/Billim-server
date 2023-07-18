@@ -13,7 +13,7 @@ import com.web.billim.product.service.ProductInterestService;
 import com.web.billim.product.service.ProductService;
 import com.web.billim.review.service.ReviewService;
 
-//import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,6 +30,7 @@ import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 
+@Tag(name = "상품", description = "ProductController")
 @Slf4j
 @RestController
 @RequiredArgsConstructor

@@ -39,13 +39,14 @@ logging:
     org.springframework.web.cors: INFO
 
 springdoc:
-  packages-to-scan: com.web.billim
-  default-consumes-media-type: application/json;charset=UTF-8
-  default-produces-media-type: application/json;charset=UTF-8
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
   swagger-ui:
+    tags-sorter: alpha
+    operations-sorter: method
+    doc-expansion: none
     disable-swagger-default-url: true
-    display-request-duration: true
-    operations-sorter: alpha
+
 
 #server:
 #  forward-headers-strategy: framework
