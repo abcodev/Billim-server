@@ -22,7 +22,7 @@ public class AuthController {
     @Operation(summary = "토큰 재발급", description = "refresh token 유효성 검사후 access token 재발급")
     @PostMapping("/reIssue/token")
     public ResponseEntity<ReIssueTokenResponse> reIssueToken(@RequestBody ReIssueTokenRequest req){
-        ReIssueTokenResponse response = authService.reIssuToken(req);
+        ReIssueTokenResponse response = authService.reIssueToken(req);
         return ResponseEntity.ok(response);
     }
 
