@@ -1,11 +1,12 @@
 package com.web.billim.member.controller;
 
-import com.web.billim.jwt.service.JwtService;
 import com.web.billim.jwt.dto.ReIssueTokenRequest;
 import com.web.billim.member.dto.response.ReIssueTokenResponse;
 import com.web.billim.member.service.AuthService;
-import com.web.billim.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +21,9 @@ public class AuthController {
     private final AuthService authService;
 
     @Operation(summary = "토큰 재발급", description = "refresh token 유효성 검사후 access token 재발급")
+    @ApiResponse(responseCode = "200", description = "token 재발급", content = {@Content(schema = @Schema(implementation = ReIssueTokenResponse.class))})
     @PostMapping("/reIssue/token")
-    public ResponseEntity<?> reIssueToken(@RequestBody ReIssueTokenRequest req){
+    public ResponseEntity<ReIssueTokenResponse> reIssueToken(@RequestBody ReIssueTokenRequest req){
         ReIssueTokenResponse response = authService.reIssuToken(req);
         return ResponseEntity.ok(response);
     }
