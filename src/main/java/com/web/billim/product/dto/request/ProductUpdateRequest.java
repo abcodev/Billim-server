@@ -18,7 +18,6 @@ import java.util.List;
 public class ProductUpdateRequest {
 
     private long productId;
-
     private long memberId;
 
     @NotEmpty(message = "카테고리는 필수 입력입니다.")

@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "회원 인증", description = "AuthController")
@@ -38,6 +37,5 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
-    // 로그아웃
 
 }
