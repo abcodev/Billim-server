@@ -1,8 +1,10 @@
 package com.web.billim.security.config;
 
 import com.web.billim.jwt.*;
+import com.web.billim.jwt.filter.JwtAuthenticationFilter;
+import com.web.billim.jwt.filter.JwtExceptionFilter;
+import com.web.billim.jwt.service.JwtTokenRedisService;
 import com.web.billim.security.LoginAuthenticationFilter;
-import com.web.billim.security.SecurityFilterSkipMatcher;
 import com.web.billim.security.UsernamPasswordAuthenticationProvider;
 
 import com.web.billim.security.UserDetailServiceImpl;
@@ -18,7 +20,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -31,7 +32,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
-    private final JwtUtils jwtUtils;
+    private final JwtProvider jwtProvider;
     private final UserDetailServiceImpl userDetailsService;
     private final JwtTokenRedisService jwtTokenRedisService;
     private final SecurityFilterSkipMatcher securityFilterSkipMatcher;
@@ -55,7 +56,7 @@ public class WebSecurityConfig {
                 .anyRequest().authenticated()
 
                 .and()
-                .apply(jwtTokenFilterConfigurer(jwtUtils,authenticationManager,jwtTokenRedisService,securityFilterSkipMatcher));
+                .apply(jwtTokenFilterConfigurer(jwtProvider,authenticationManager,jwtTokenRedisService,securityFilterSkipMatcher));
 
         return http.build();
     }
@@ -81,12 +82,12 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public JwtTokenFilterConfigurer jwtTokenFilterConfigurer(JwtUtils jwtUtils
-            ,AuthenticationManager authenticationManager
-            ,JwtTokenRedisService jwtTokenRedisService
-            ,SecurityFilterSkipMatcher securityFilterSkipMatcher
+    public SecurityFilterConfigurer jwtTokenFilterConfigurer(JwtProvider jwtProvider
+            , AuthenticationManager authenticationManager
+            , JwtTokenRedisService jwtTokenRedisService
+            , SecurityFilterSkipMatcher securityFilterSkipMatcher
     ){
-        return new JwtTokenFilterConfigurer(jwtUtils, authenticationManager, jwtTokenRedisService, securityFilterSkipMatcher);
+        return new SecurityFilterConfigurer(jwtProvider, authenticationManager, jwtTokenRedisService, securityFilterSkipMatcher);
     }
 
     @Bean
@@ -95,15 +96,15 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter(JwtUtils jwtUtils){
-        return new JwtAuthenticationFilter(jwtUtils,securityFilterSkipMatcher);
+    public JwtAuthenticationFilter jwtAuthenticationFilter(JwtProvider jwtProvider){
+        return new JwtAuthenticationFilter(jwtProvider,securityFilterSkipMatcher);
     }
 
     @Bean
     public LoginAuthenticationFilter loginAuthenticationFilter(AuthenticationManager configureAuthenticationManager,
-                                                               JwtUtils jwtUtils,
+                                                               JwtProvider jwtProvider,
                                                                JwtTokenRedisService jwtTokenRedisService){
-        LoginAuthenticationFilter loginAuthenticationFilter = new LoginAuthenticationFilter(configureAuthenticationManager,jwtUtils,jwtTokenRedisService);
+        LoginAuthenticationFilter loginAuthenticationFilter = new LoginAuthenticationFilter(configureAuthenticationManager, jwtProvider,jwtTokenRedisService);
         loginAuthenticationFilter.setAuthenticationManager(configureAuthenticationManager);
         return loginAuthenticationFilter;
     }
