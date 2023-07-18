@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReIssueTokenRequest {
-    private String accessToken;
     private String refreshToken;
 
 }
