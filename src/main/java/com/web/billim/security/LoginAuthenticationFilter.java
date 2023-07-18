@@ -54,7 +54,7 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
         MemberGrade memberGrade = (MemberGrade) authResult.getAuthorities().stream().findFirst().orElseThrow();
         log.info("등급"+memberGrade);
         String accessToken  = jwtProvider.createAccessToken(String.valueOf(memberId),memberGrade);
-        String refreshToken = jwtProvider.createRefreshToken();
+        String refreshToken = jwtProvider.createRefreshToken(String.valueOf(memberId));
         RedisJwt redisJwt = new RedisJwt(Long.parseLong(memberId),refreshToken);
         jwtService.saveToken(redisJwt);
 
