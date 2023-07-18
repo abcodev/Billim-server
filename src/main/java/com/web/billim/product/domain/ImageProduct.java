@@ -1,7 +1,7 @@
 package com.web.billim.product.domain;
 
 import com.web.billim.common.domain.JpaEntity;
-import io.swagger.annotations.ApiModelProperty;
+//import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,7 +22,7 @@ public class ImageProduct extends JpaEntity {
     @Column(name = "image_product_id")
     private Long id;
 
-    @ApiModelProperty(value = "상품 이미지 주소")
+//    @ApiModelProperty(value = "상품 이미지 주소")
     private String url;
 
     public static ImageProduct of(String url) {

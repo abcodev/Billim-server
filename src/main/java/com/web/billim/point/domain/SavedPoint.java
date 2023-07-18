@@ -3,7 +3,7 @@ package com.web.billim.point.domain;
 import com.web.billim.common.domain.JpaEntity;
 import com.web.billim.member.domain.Member;
 import com.web.billim.point.dto.AddPointCommand;
-import io.swagger.annotations.ApiModelProperty;
+//import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import javax.persistence.*;
@@ -27,10 +27,10 @@ public class SavedPoint extends JpaEntity {
 
 	private long amount;
 
-	@ApiModelProperty("사용가능한 적립금")
+//	@ApiModelProperty("사용가능한 적립금")
 	private long availableAmount;
 
-	@ApiModelProperty("적립금 만료일")
+//	@ApiModelProperty("적립금 만료일")
 	private LocalDateTime expiredAt;
 
 	public static SavedPoint of(AddPointCommand command) {

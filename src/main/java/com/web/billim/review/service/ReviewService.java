@@ -4,6 +4,8 @@ import com.web.billim.common.exception.NotFoundException;
 import com.web.billim.common.exception.handler.ErrorCode;
 import com.web.billim.order.domain.ProductOrder;
 import com.web.billim.order.service.OrderService;
+import com.web.billim.point.dto.AddPointCommand;
+import com.web.billim.point.service.PointService;
 import com.web.billim.review.domain.Review;
 import com.web.billim.review.dto.request.ReviewWriteRequest;
 import com.web.billim.review.dto.response.ProductReviewList;
@@ -11,6 +13,7 @@ import com.web.billim.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,6 +23,8 @@ public class ReviewService {
 
 	private final ReviewRepository reviewRepository;
 	private final OrderService orderService;
+
+	private final PointService pointService;
 
 	public double calculateStarRating(long productId) {
 		return reviewRepository.findAllByProductId(productId).stream()
@@ -33,6 +38,8 @@ public class ReviewService {
 	public void productReviewWrite(ReviewWriteRequest reviewWriteRequest) {
 		ProductOrder productOrder =  orderService.findByOrder(reviewWriteRequest.getOrderId());
 		reviewRepository.save(ReviewWriteRequest.of(reviewWriteRequest,productOrder));
+
+		// 리뷰 작성시 포인트 주기 ( 주문 금액의 1% )
 	}
 
 	public long myReviewNoCount(long memberId) {

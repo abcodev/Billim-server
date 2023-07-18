@@ -37,3 +37,22 @@ spring:
 logging:
   level:
     org.springframework.web.cors: INFO
+
+springdoc:
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  swagger-ui:
+    tags-sorter: alpha
+    operations-sorter: method
+    doc-expansion: none
+    disable-swagger-default-url: true
+
+
+#server:
+#  forward-headers-strategy: framework
+
+---
+spring:
+  config:
+    activate:
+      on-profile: fe-test

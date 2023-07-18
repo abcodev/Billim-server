@@ -1,8 +1,10 @@
 package com.web.billim.order.service;
 
 import com.web.billim.common.exception.NotFoundException;
+import com.web.billim.common.exception.OrderFailedException;
 import com.web.billim.common.exception.handler.ErrorCode;
 import com.web.billim.member.domain.Member;
+import com.web.billim.member.dto.response.MemberInfoResponse;
 import com.web.billim.member.service.MemberService;
 import com.web.billim.order.domain.ProductOrder;
 import com.web.billim.order.dto.OrderCommand;
@@ -16,11 +18,11 @@ import com.web.billim.payment.dto.PaymentCommand;
 import com.web.billim.payment.service.PaymentService;
 import com.web.billim.product.domain.Product;
 import com.web.billim.product.domain.service.ProductDomainService;
+import com.web.billim.product.dto.response.MostProductList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,7 +46,6 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    // Lock
     @Transactional
     public PaymentInfoResponse order(long memberId, OrderCommand orderCommand) {
         Member member = memberService.retrieve(memberId);
@@ -52,7 +53,7 @@ public class OrderService {
         // 1. 해당 사용자가 주문중인게 있는지 확인
         orderRepository.findByMemberAndStatus(member, ProductOrderStatus.IN_PROGRESS)
             .ifPresent(order -> {
-                throw new RuntimeException("해당 사용자가 이미 주문중인 거래가 있습니다.");
+                throw new OrderFailedException(ErrorCode.ORDER_DUPLICATED_REQUEST);
             });
 
         // 2. 다른 사용자가 해당 Product 의 해당 기간을 결제중인게 있는지 확인
@@ -60,14 +61,14 @@ public class OrderService {
         orderRepository.findByProductAndStatus(product, ProductOrderStatus.IN_PROGRESS)
             .ifPresent(order -> {
                 if (LocalDateHelper.checkDuplicatedPeriod(order.getPeriod(), orderCommand.getPeriod())) {
-                    throw new RuntimeException("해당 제품은 다른 사용자가 거래중입니다.");
+                    throw new OrderFailedException(ErrorCode.ORDER_DUPLICATED_PERIOD);
                 }
             });
 
-        // 2. 주문정보 생성
+        // 3. 주문정보 생성
         ProductOrder order = orderRepository.save(ProductOrder.generateNewOrder(member, product, orderCommand));
 
-        // 3. 결제정보 생성
+        // 4. 결제정보 생성
         PaymentCommand paymentCommand = new PaymentCommand(member, order, orderCommand.getCouponIssueId(), orderCommand.getUsedPoint());
         return paymentService.payment(paymentCommand);
     }
@@ -75,7 +76,7 @@ public class OrderService {
     @Transactional
     public MyOrderHistoryListResponse findMyOrder(long memberId) {
        List<ProductOrder> productOrders= orderRepository.findAllByMember_memberId(memberId)
-               .orElseThrow(()-> new EntityNotFoundException("구매하신 상품이 없습니다."));
+               .orElseThrow(()-> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
        List<MyOrderHistory> myOrderHistories = productOrders.stream()
                 .map(MyOrderHistory::from)
                 .collect(Collectors.toList());
@@ -83,13 +84,13 @@ public class OrderService {
     }
 
     public ProductOrder findByOrder(long orderId) {
-        ProductOrder productOrder = orderRepository.findById(orderId)
+        return orderRepository.findById(orderId)
                 .orElseThrow();
-        return productOrder;
     }
 
     public long numberOfOrders(long memberId) {
         return orderRepository.countByMember_memberId(memberId)
                 .orElseThrow(()-> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
     }
+
 }

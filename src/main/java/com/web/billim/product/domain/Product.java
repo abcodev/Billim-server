@@ -1,11 +1,11 @@
 package com.web.billim.product.domain;
 
 import com.web.billim.common.domain.JpaEntity;
-import com.web.billim.product.dto.request.ProductRegisterRequest;
+import com.web.billim.product.dto.ProductRegisterCommand;
+import com.web.billim.product.dto.ProductUpdateCommand;
 import com.web.billim.member.domain.Member;
 import com.web.billim.product.type.TradeMethod;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import javax.persistence.*;
@@ -30,31 +30,20 @@ public class Product extends JpaEntity {
 
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    @ApiModelProperty(value = "상품 카테고리")
     private ProductCategory productCategory;
 
     @JoinColumn(name = "member_id", referencedColumnName = "member_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
-    @ApiModelProperty(value = "상품명")
     private String productName;
-
-    @ApiModelProperty(value = "상품설명")
     private String detail;
-
-    @ApiModelProperty(value = "일일 대여료")
     private long price;
-
-    @ApiModelProperty(value = "거래 방법")
     private String tradeMethod;
-
-    @ApiModelProperty(value = "직거래 지역")
     private String tradeArea;
 
     @JoinColumn(name = "product_id")
-    @OneToMany(fetch = FetchType.LAZY) // EAGER(즉시 로딩)
-    @ApiModelProperty("상품 이미지 리스트 주소")
+    @OneToMany(fetch = FetchType.LAZY)
     private List<ImageProduct> images;
 
     public List<TradeMethod> getTradeMethods() {
@@ -65,18 +54,28 @@ public class Product extends JpaEntity {
         return this.images.get(0).getUrl();
     }
 
-    public static Product generateNewProduct(ProductRegisterRequest request, ProductCategory category, Member member, List<ImageProduct> images) {
+    public static Product generateNewProduct(ProductRegisterCommand command, ProductCategory category, Member member, List<ImageProduct> images) {
         return Product.builder()
                 .productCategory(category)
                 .member(member)
-                .productName(request.getRentalProduct())
-                .detail(request.getDescription())
-                .price(request.getRentalFee())
-                .tradeMethod(request.getTradeMethods().stream().map(Objects::toString).collect(Collectors.joining(",")))
-                .tradeArea(request.getPlace())
+                .productName(command.getRentalProduct())
+                .detail(command.getDescription())
+                .price(command.getRentalFee())
+                .tradeMethod(command.getTradeMethods().stream().map(Objects::toString).collect(Collectors.joining(",")))
+                .tradeArea(command.getPlace())
                 .images(images)
                 .build();
     }
+
+	public void update(ProductUpdateCommand command, List<ImageProduct> appendImages, ProductCategory category) {
+        this.productCategory = category;
+        this.productName = command.getProductName();
+        this.detail = command.getProductDetail();
+        this.price = command.getPrice();
+        this.tradeMethod = command.getTradeMethods().stream().map(Objects::toString).collect(Collectors.joining(","));
+        this.tradeArea = command.getTradeArea();
+        this.images.addAll(appendImages);
+	}
 
 }
 
