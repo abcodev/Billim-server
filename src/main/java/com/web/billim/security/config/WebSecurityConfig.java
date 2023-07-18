@@ -3,7 +3,7 @@ package com.web.billim.security.config;
 import com.web.billim.jwt.*;
 import com.web.billim.jwt.filter.JwtAuthenticationFilter;
 import com.web.billim.jwt.filter.JwtExceptionFilter;
-import com.web.billim.jwt.service.JwtTokenRedisService;
+import com.web.billim.jwt.service.JwtService;
 import com.web.billim.security.LoginAuthenticationFilter;
 import com.web.billim.security.UsernamPasswordAuthenticationProvider;
 
@@ -34,7 +34,7 @@ public class WebSecurityConfig {
 
     private final JwtProvider jwtProvider;
     private final UserDetailServiceImpl userDetailsService;
-    private final JwtTokenRedisService jwtTokenRedisService;
+    private final JwtService jwtService;
     private final SecurityFilterSkipMatcher securityFilterSkipMatcher;
 
     @Bean
@@ -56,7 +56,7 @@ public class WebSecurityConfig {
                 .anyRequest().authenticated()
 
                 .and()
-                .apply(jwtTokenFilterConfigurer(jwtProvider,authenticationManager,jwtTokenRedisService,securityFilterSkipMatcher));
+                .apply(jwtTokenFilterConfigurer(jwtProvider,authenticationManager, jwtService,securityFilterSkipMatcher));
 
         return http.build();
     }
@@ -84,10 +84,10 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterConfigurer jwtTokenFilterConfigurer(JwtProvider jwtProvider
             , AuthenticationManager authenticationManager
-            , JwtTokenRedisService jwtTokenRedisService
+            , JwtService jwtService
             , SecurityFilterSkipMatcher securityFilterSkipMatcher
     ){
-        return new SecurityFilterConfigurer(jwtProvider, authenticationManager, jwtTokenRedisService, securityFilterSkipMatcher);
+        return new SecurityFilterConfigurer(jwtProvider, authenticationManager, jwtService, securityFilterSkipMatcher);
     }
 
     @Bean
@@ -103,8 +103,8 @@ public class WebSecurityConfig {
     @Bean
     public LoginAuthenticationFilter loginAuthenticationFilter(AuthenticationManager configureAuthenticationManager,
                                                                JwtProvider jwtProvider,
-                                                               JwtTokenRedisService jwtTokenRedisService){
-        LoginAuthenticationFilter loginAuthenticationFilter = new LoginAuthenticationFilter(configureAuthenticationManager, jwtProvider,jwtTokenRedisService);
+                                                               JwtService jwtService){
+        LoginAuthenticationFilter loginAuthenticationFilter = new LoginAuthenticationFilter(configureAuthenticationManager, jwtProvider, jwtService);
         loginAuthenticationFilter.setAuthenticationManager(configureAuthenticationManager);
         return loginAuthenticationFilter;
     }

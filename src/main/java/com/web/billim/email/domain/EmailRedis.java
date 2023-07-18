@@ -9,7 +9,7 @@ import org.springframework.data.redis.core.RedisHash;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@RedisHash(value = "Email", timeToLive = 12000)
+@RedisHash(value = "Email", timeToLive = 600)
 public class EmailRedis {
     @Id
     private String email;

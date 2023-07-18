@@ -1,51 +1,44 @@
 package com.web.billim.jwt.service;
 
 import com.web.billim.common.exception.JwtException;
-import com.web.billim.common.exception.handler.ErrorCode;
-import com.web.billim.jwt.JwtProvider;
-import com.web.billim.jwt.dto.ReIssueTokenRequest;
 import com.web.billim.jwt.dto.RedisJwt;
-import com.web.billim.member.domain.Member;
-import com.web.billim.member.dto.response.ReIssueTokenResponse;
-import com.web.billim.member.repository.MemberRepository;
+import com.web.billim.jwt.JwtTokenRedisRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import static com.web.billim.common.exception.handler.ErrorCode.INVALID_REFRESH_TOKEN;
-import static com.web.billim.common.exception.handler.ErrorCode.MEMBER_NOT_FOUND;
+import static com.web.billim.common.exception.handler.ErrorCode.MISMATCH_REFRESH_TOKEN;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class JwtService {
 
-    private final JwtProvider jwtProvider;
-    private final JwtTokenRedisService jwtTokenRedisService;
-    private final MemberRepository memberRepository;
-    public ReIssueTokenResponse reIssueToken(ReIssueTokenRequest request) {
-        String accessToken = request.getAccessToken();
-        String refreshToken = request.getRefreshToken();
-        // refreshToken 이 만료 됬다면??
-        jwtProvider.tokenValidation(accessToken);
-        // accessToken 에서 memberId 가져오기
-        Authentication authentication = jwtProvider.getAuthentication(refreshToken);
-        Member member = memberRepository.findById(Long.parseLong(authentication.getPrincipal().toString()))
-                .orElseThrow(()-> new JwtException(ErrorCode.MEMBER_NOT_FOUND));
+    private final JwtTokenRedisRepository jwtTokenRedisRepository;
 
-        RedisJwt redisJwt = jwtTokenRedisService.compareToken(member.getMemberId());
+    public  RedisJwt compareToken(String refreshToken ,long memberId) {
+        RedisJwt redisJwt = jwtTokenRedisRepository.findById(String.valueOf(memberId))
+                .orElseThrow(()-> new JwtException(MISMATCH_REFRESH_TOKEN));
 
-        // refresh token 일치 check
+        log.info("리프레시 토큰 값: "+redisJwt.getRefreshToken());
+
         if(!refreshToken.equals(redisJwt.getRefreshToken())){
             throw new JwtException(INVALID_REFRESH_TOKEN);
         }
-        // 기존 refreshToken 삭제
-        jwtTokenRedisService.deleteRefreshToken(member.getMemberId());
-        // access token , refreshTOken 발급
-        String accessTokenNew = jwtProvider.createAccessToken(String.valueOf(member.getMemberId()),member.getGrade());
-        String refreshTokenNew = jwtProvider.createRefreshToken();
-        return new ReIssueTokenResponse(accessTokenNew,refreshTokenNew);
+        return redisJwt;
     }
 
+    public void saveToken(RedisJwt redisJwt){
+        jwtTokenRedisRepository.save(redisJwt);
+    }
+
+    public void deleteRefreshToken(long memberId) {
+        jwtTokenRedisRepository.deleteById(String.valueOf(memberId));
+        log.info("토큰 삭제 완료");
+    }
+
+    public boolean existsById(long memberId) {
+        return jwtTokenRedisRepository.existsById(String.valueOf(memberId));
+    }
 }

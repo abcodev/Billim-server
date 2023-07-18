@@ -2,7 +2,7 @@ package com.web.billim.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.web.billim.jwt.JwtProvider;
-import com.web.billim.jwt.service.JwtTokenRedisService;
+import com.web.billim.jwt.service.JwtService;
 import com.web.billim.member.type.MemberGrade;
 import com.web.billim.security.dto.LoginRequest;
 import com.web.billim.security.dto.LoginResponse;
@@ -28,12 +28,12 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
 
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
-    private final JwtTokenRedisService jwtTokenRedisService;
+    private final JwtService jwtService;
 
-    public LoginAuthenticationFilter(AuthenticationManager authenticationManager, JwtProvider jwtProvider, JwtTokenRedisService jwtTokenRedisService) {
+    public LoginAuthenticationFilter(AuthenticationManager authenticationManager, JwtProvider jwtProvider, JwtService jwtService) {
         this.authenticationManager = authenticationManager;
         this.jwtProvider = jwtProvider;
-        this.jwtTokenRedisService = jwtTokenRedisService;
+        this.jwtService = jwtService;
         setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/auth/login", "POST"));
     }
 
@@ -56,7 +56,7 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
         String accessToken  = jwtProvider.createAccessToken(String.valueOf(memberId),memberGrade);
         String refreshToken = jwtProvider.createRefreshToken();
         RedisJwt redisJwt = new RedisJwt(Long.parseLong(memberId),refreshToken);
-        jwtTokenRedisService.saveToken(redisJwt);
+        jwtService.saveToken(redisJwt);
 
         LoginResponse token = new LoginResponse(Long.parseLong(memberId),accessToken,refreshToken);
         ObjectMapper objectMapper = new ObjectMapper();

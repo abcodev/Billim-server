@@ -1,5 +1,6 @@
 package com.web.billim.member.service;
 
+import com.web.billim.common.exception.JwtException;
 import com.web.billim.email.service.EmailSendService;
 import com.web.billim.common.exception.NotFoundException;
 import com.web.billim.common.exception.UnAuthorizedException;
@@ -166,4 +167,8 @@ public class MemberService {
 		member.changePassword(encodedPassword);
 	}
 
+	public Member findById(long memberId) {
+		return memberRepository.findById(memberId)
+				.orElseThrow(()-> new JwtException(ErrorCode.MEMBER_NOT_FOUND));
+	}
 }

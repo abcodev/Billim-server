@@ -17,14 +17,12 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 public class AuthController {
-
-    private final JwtService jwtService;
     private final AuthService authService;
 
     @Operation(summary = "토큰 재발급", description = "refresh token 유효성 검사후 access token 재발급")
     @PostMapping("/reIssue/token")
     public ResponseEntity<?> reIssueToken(@RequestBody ReIssueTokenRequest req){
-        ReIssueTokenResponse response = jwtService.reIssueToken(req);
+        ReIssueTokenResponse response = authService.reIssuToken(req);
         return ResponseEntity.ok(response);
     }
     @Operation(summary = "* 로그아웃")
@@ -35,6 +33,4 @@ public class AuthController {
         authService.logout(memberId);
         return ResponseEntity.ok().build();
     }
-
-
 }

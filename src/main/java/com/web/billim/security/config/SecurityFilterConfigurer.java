@@ -3,7 +3,7 @@ package com.web.billim.security.config;
 import com.web.billim.jwt.filter.JwtAuthenticationFilter;
 import com.web.billim.jwt.filter.JwtExceptionFilter;
 import com.web.billim.jwt.JwtProvider;
-import com.web.billim.jwt.service.JwtTokenRedisService;
+import com.web.billim.jwt.service.JwtService;
 import com.web.billim.security.LoginAuthenticationFilter;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,20 +16,20 @@ public class SecurityFilterConfigurer extends SecurityConfigurerAdapter<DefaultS
 
     private final JwtProvider jwtProvider;
     private final AuthenticationManager authenticationManager;
-    private final JwtTokenRedisService jwtTokenRedisService;
+    private final JwtService jwtService;
     private final SecurityFilterSkipMatcher securityFilterSkipMatcher;
 
 
-    public SecurityFilterConfigurer(JwtProvider jwtProvider, AuthenticationManager authenticationManager, JwtTokenRedisService jwtTokenRedisService, SecurityFilterSkipMatcher securityFilterSkipMatcher) {
+    public SecurityFilterConfigurer(JwtProvider jwtProvider, AuthenticationManager authenticationManager, JwtService jwtService, SecurityFilterSkipMatcher securityFilterSkipMatcher) {
         this.jwtProvider = jwtProvider;
         this.authenticationManager = authenticationManager;
-        this.jwtTokenRedisService = jwtTokenRedisService;
+        this.jwtService = jwtService;
         this.securityFilterSkipMatcher = securityFilterSkipMatcher;
     }
 
     @Override
     public void configure(HttpSecurity builder) {
-        LoginAuthenticationFilter loginAuthenticationFilter = new LoginAuthenticationFilter(authenticationManager, jwtProvider, jwtTokenRedisService);
+        LoginAuthenticationFilter loginAuthenticationFilter = new LoginAuthenticationFilter(authenticationManager, jwtProvider, jwtService);
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtProvider,securityFilterSkipMatcher);
         JwtExceptionFilter jwtExceptionFilter = new JwtExceptionFilter(securityFilterSkipMatcher);
 
