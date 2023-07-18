@@ -10,6 +10,7 @@ import com.web.billim.member.dto.response.MyPageInfoResponse;
 import com.web.billim.member.dto.response.MemberInfoResponse;
 import com.web.billim.member.service.MemberService;
 import com.web.billim.review.service.ReviewService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,8 +46,7 @@ public class MemberController {
     }
 
 
-//    @Operation(summary = "회원가입")
-//    @ApiOperation(value = "회원 가입")
+    @Operation(summary = "회원가입")
     @PostMapping("/signup")
     public ResponseEntity<Map<String, String>> memberSignUp (
             @Valid @RequestBody MemberSignupRequest memberSignupRequest,
@@ -60,20 +60,20 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-//    @ApiOperation(value = "닉네임 중복 확인", notes = "true 닉네임 중복")
+    @Operation(summary = "닉네임 중복 확인", description = "true 닉네임 중복")
     @GetMapping("/check/nickname")
     public ResponseEntity<Boolean> checkDuplicateNickname(@RequestParam String nickname) {
         return ResponseEntity.ok(memberService.checkDuplicateNickname(nickname));
     }
 
-//    @ApiOperation(value = "비밀번호 찾기", notes = "이메일, 이름 입력시 해당 이메일로 임시 비밀번호 전송")
+    @Operation(summary = "비밀번호 찾기", description = "이메일, 이름 입력시 해당 이메일로 임시 비밀번호 전송")
     @PostMapping("/find/password")
     public ResponseEntity<Void> findPassword(@RequestBody FindPasswordRequest req) {
         memberService.findPassword(req);
         return ResponseEntity.ok().build();
     }
 
-//    @ApiOperation(value = "마이페이지 헤더 정보 조회", notes = "내 프로필, 쿠폰, 적립금, 작성가능한 리뷰 조회")
+    @Operation(summary = "마이페이지 헤더 정보 조회", description = "내 프로필, 쿠폰, 적립금, 작성가능한 리뷰 조회")
     @GetMapping("/my-page")
     public ResponseEntity<MyPageInfoResponse> myPageInfo(@AuthenticationPrincipal long memberId) {
         MyPageInfoResponse resp = memberService.retrieveMyPageInfo(memberId);
@@ -82,13 +82,13 @@ public class MemberController {
         return ResponseEntity.ok(resp);
     }
 
-//    @ApiOperation(value = "내 회원정보 조회" , notes = "회원 정보 수정 시 내 정보 조회")
+    @Operation(summary = "내 회원정보 조회" , description = "회원 정보 수정 시 내 정보 조회")
     @GetMapping("/info")
     public ResponseEntity<MemberInfoResponse> memberInfo(@AuthenticationPrincipal long memberId) {
         return ResponseEntity.ok(memberService.retrieveUpdateInfoPage(memberId));
     }
 
-//    @ApiOperation(value = "*회원 정보 수정" , notes = "회원 정보 수정 반영")
+    @Operation(summary = "*회원 정보 수정" , description = "회원 정보 수정 반영")
     @PutMapping(value = "/info", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<MemberInfoResponse> updateInfo(
             @AuthenticationPrincipal long memberId,
@@ -129,8 +129,7 @@ public class MemberController {
 //    }
 
 
-//    @Operation(summary = "비밀번호 재설정", description = "회원 정보 수정 시 비밀번호 재설정")
-//    @ApiOperation(value = "비밀번호 재설정", notes = "회원 정보 수정 시 비밀번호 재설정")
+    @Operation(summary = "비밀번호 재설정", description = "회원 정보 수정 시 비밀번호 재설정")
     @PutMapping("/info/password")
     public ResponseEntity<Void> updatePassword(
             @AuthenticationPrincipal long memberId,

@@ -1,6 +1,7 @@
-package com.web.billim.jwt;
+package com.web.billim.jwt.service;
 
-import com.web.billim.common.exception.TokenExpiredException;
+import com.web.billim.common.exception.JwtException;
+import com.web.billim.jwt.JwtProvider;
 import com.web.billim.jwt.dto.RedisJwt;
 import com.web.billim.member.domain.Member;
 import com.web.billim.member.dto.response.ReIssueTokenResponse;
@@ -18,30 +19,30 @@ import static com.web.billim.common.exception.handler.ErrorCode.MEMBER_NOT_FOUND
 @Slf4j
 public class JwtService {
 
-    private final JwtUtils jwtUtils;
+    private final JwtProvider jwtProvider;
     private final JwtTokenRedisService jwtTokenRedisService;
     private final MemberRepository memberRepository;
     public ReIssueTokenResponse reIssueToken(String accessToken, String  refreshToken ) {
         // refreshToken 이 만료 됬다면??
-        if(!jwtUtils.tokenValidation(refreshToken)){
-            throw new TokenExpiredException(INVALID_REFRESH_TOKEN);
+        if(!jwtProvider.tokenValidation(refreshToken)){
+            throw new JwtException(INVALID_REFRESH_TOKEN);
         }
         // accessToken 에서 memberId 가져오기
-        Authentication authentication = jwtUtils.getAuthentication(accessToken);
+        Authentication authentication = jwtProvider.getAuthentication(accessToken);
         Member member = memberRepository.findById(Long.parseLong(authentication.getPrincipal().toString()))
-                .orElseThrow(()-> new TokenExpiredException(MEMBER_NOT_FOUND));
+                .orElseThrow(()-> new JwtException(MEMBER_NOT_FOUND));
 
         RedisJwt redisJwt = jwtTokenRedisService.compareToken(member.getMemberId());
 
         // refresh token 일치 check
         if(!refreshToken.equals(redisJwt.getRefreshToken())){
-            throw new TokenExpiredException(INVALID_REFRESH_TOKEN);
+            throw new JwtException(INVALID_REFRESH_TOKEN);
         }
         // 기존 refreshToken 삭제
         jwtTokenRedisService.deleteRefreshToken(member.getMemberId());
         // access token , refreshTOken 발급
-        String accessTokenNew = jwtUtils.createAccessToken(String.valueOf(member.getMemberId()),member.getGrade());
-        String refreshTokenNew = jwtUtils.createRefreshToken();
+        String accessTokenNew = jwtProvider.createAccessToken(String.valueOf(member.getMemberId()),member.getGrade());
+        String refreshTokenNew = jwtProvider.createRefreshToken();
         return new ReIssueTokenResponse(accessTokenNew,refreshTokenNew);
     }
 

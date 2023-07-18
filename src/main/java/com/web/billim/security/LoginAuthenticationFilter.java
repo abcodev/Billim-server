@@ -1,13 +1,13 @@
 package com.web.billim.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.web.billim.jwt.JwtTokenRedisService;
+import com.web.billim.jwt.JwtProvider;
+import com.web.billim.jwt.service.JwtTokenRedisService;
 import com.web.billim.member.type.MemberGrade;
 import com.web.billim.security.dto.LoginRequest;
 import com.web.billim.security.dto.LoginResponse;
 import com.web.billim.security.dto.LoginAuthenticationToken;
 import com.web.billim.jwt.dto.RedisJwt;
-import com.web.billim.jwt.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,15 +27,17 @@ import java.io.InputStream;
 public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
-    private final JwtUtils jwtUtils;
+    private final JwtProvider jwtProvider;
     private final JwtTokenRedisService jwtTokenRedisService;
 
-    public LoginAuthenticationFilter(AuthenticationManager authenticationManager, JwtUtils jwtUtils, JwtTokenRedisService jwtTokenRedisService) {
+    public LoginAuthenticationFilter(AuthenticationManager authenticationManager, JwtProvider jwtProvider, JwtTokenRedisService jwtTokenRedisService) {
         this.authenticationManager = authenticationManager;
-        this.jwtUtils = jwtUtils;
+        this.jwtProvider = jwtProvider;
         this.jwtTokenRedisService = jwtTokenRedisService;
         setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/auth/login", "POST"));
     }
+
+
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException{
@@ -51,8 +53,8 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
         String memberId = authResult.getPrincipal().toString();
         MemberGrade memberGrade = (MemberGrade) authResult.getAuthorities().stream().findFirst().orElseThrow();
         log.info("등급"+memberGrade);
-        String accessToken  = jwtUtils.createAccessToken(String.valueOf(memberId),memberGrade);
-        String refreshToken = jwtUtils.createRefreshToken();
+        String accessToken  = jwtProvider.createAccessToken(String.valueOf(memberId),memberGrade);
+        String refreshToken = jwtProvider.createRefreshToken();
         RedisJwt redisJwt = new RedisJwt(Long.parseLong(memberId),refreshToken);
         jwtTokenRedisService.saveToken(redisJwt);
 

@@ -1,7 +1,8 @@
-package com.web.billim.jwt;
+package com.web.billim.jwt.service;
 
-import com.web.billim.common.exception.TokenExpiredException;
+import com.web.billim.common.exception.JwtException;
 import com.web.billim.jwt.dto.RedisJwt;
+import com.web.billim.jwt.JwtTokenRedisRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ public class JwtTokenRedisService {
 
     public  RedisJwt compareToken(long memberId) {
         RedisJwt redisJwt = jwtTokenRedisRepository.findById(String.valueOf(memberId))
-                .orElseThrow(()-> new TokenExpiredException(MISMATCH_REFRESH_TOKEN));
+                .orElseThrow(()-> new JwtException(MISMATCH_REFRESH_TOKEN));
         log.info("리프레시 토큰 값: "+redisJwt.getRefreshToken());
         return redisJwt;
     }
@@ -28,5 +29,9 @@ public class JwtTokenRedisService {
     public void deleteRefreshToken(long memberId) {
         jwtTokenRedisRepository.deleteById(String.valueOf(memberId));
         log.info(memberId+"토큰 삭제 완료");
+    }
+
+    public boolean existsById(long memberId) {
+        return jwtTokenRedisRepository.existsById(String.valueOf(memberId));
     }
 }

@@ -1,4 +1,4 @@
-package com.web.billim.security;
+package com.web.billim.security.config;
 
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
@@ -30,5 +30,4 @@ public class SecurityFilterSkipMatcher{
         return Arrays.stream(excludedPaths)
                 .anyMatch(pattern -> pathMatcher.match(pattern, path));
     }
-
 }
