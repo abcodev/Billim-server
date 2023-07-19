@@ -1,7 +1,7 @@
 package com.web.billim.jwt.filter;
 
 import com.web.billim.jwt.JwtProvider;
-import com.web.billim.jwt.dto.JwtAuthenticationToken;
+import com.web.billim.jwt.JwtAuthenticationToken;
 import com.web.billim.security.config.SecurityFilterSkipMatcher;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;

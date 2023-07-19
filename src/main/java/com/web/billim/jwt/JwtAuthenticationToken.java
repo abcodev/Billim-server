@@ -1,4 +1,4 @@
-package com.web.billim.jwt.dto;
+package com.web.billim.jwt;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -41,4 +41,5 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
 //    public boolean implies(Subject subject) {
 //        return super.implies(subject);
 //    }
+
 }

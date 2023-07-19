@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class JwtExceptionFilter extends OncePerRequestFilter {
 
     private final SecurityFilterSkipMatcher securityFilterSkipMatcher;

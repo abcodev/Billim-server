@@ -2,7 +2,6 @@ package com.web.billim.jwt;
 
 import com.web.billim.common.exception.JwtException;
 import com.web.billim.common.exception.handler.ErrorCode;
-import com.web.billim.jwt.dto.JwtAuthenticationToken;
 import com.web.billim.member.type.MemberGrade;
 import com.web.billim.security.domain.UserDetailsEntity;
 import com.web.billim.security.UserDetailServiceImpl;
@@ -56,7 +55,7 @@ public class JwtProvider implements InitializingBean {
 				.setAudience(memberGrade.toString())
 				.setIssuedAt(new Date(System.currentTimeMillis()))
 //				.setExpiration(new Date(System.currentTimeMillis() + ACCESS_TIME))
-				.setExpiration(new Date(System.currentTimeMillis() + 120000))
+				.setExpiration(new Date(System.currentTimeMillis() + 20000))
 				.signWith(key, SignatureAlgorithm.HS512)
 				.compact();
 	}
@@ -107,6 +106,7 @@ public class JwtProvider implements InitializingBean {
 			throw new JwtException(ErrorCode.UNKNOWN_ERROR);
 		}
 	}
+
 }
 
 
