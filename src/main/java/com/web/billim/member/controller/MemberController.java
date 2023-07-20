@@ -45,7 +45,6 @@ public class MemberController {
         binder.addValidators(checkPasswordValidator);
     }
 
-
     @Operation(summary = "회원가입")
     @PostMapping("/signup")
     public ResponseEntity<Map<String, String>> memberSignUp (
