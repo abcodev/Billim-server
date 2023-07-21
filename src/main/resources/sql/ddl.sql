@@ -188,7 +188,7 @@ DROP TABLE IF EXISTS `review`;
 CREATE TABLE `review`
 (
     `review_id`   bigint primary key auto_increment COMMENT '리뷰번호',
-    `product_id`  bigint                                                          NOT NULL COMMENT '상품번호',
+    `product_order_id`  bigint                                                          NOT NULL COMMENT '상품번호',
     `member_id`   bigint                                                          NOT NULL COMMENT '구매회원번호',
     `content`     varchar(1000)                                                   NOT NULL COMMENT '리뷰내용',
     `star_rating` bigint                                                          NOT NULL COMMENT '별점',

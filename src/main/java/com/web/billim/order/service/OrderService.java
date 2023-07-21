@@ -41,9 +41,10 @@ public class OrderService {
         List<ProductOrder> orderList = orderRepository.findAllByProductAndEndAtAfter(product,LocalDate.now());
 
         return orderList.stream()
-                .flatMap(order -> LocalDateHelper.changeDate(order.getStartAt(),order.getEndAt()).stream())
-                .filter(date -> !date.isBefore(LocalDate.now()))
-                .collect(Collectors.toList());
+            .filter(order -> order.getStatus().equals(ProductOrderStatus.DONE) || order.getStatus().equals(ProductOrderStatus.IN_PROGRESS))
+            .flatMap(order -> LocalDateHelper.changeDate(order.getStartAt(),order.getEndAt()).stream())
+            .filter(date -> !date.isBefore(LocalDate.now()))
+            .collect(Collectors.toList());
     }
 
     @Transactional

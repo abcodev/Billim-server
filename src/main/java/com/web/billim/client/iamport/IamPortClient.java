@@ -25,6 +25,9 @@ public class IamPortClient {
 	private final RestTemplate restTemplate;
 	private final String IAM_PORT_BASE_URL = "https://api.iamport.kr";
 
+	@Value("${import.imp_api_key}")
+	private String impApiKey;
+
 	@Value("${import.imp_key}")
 	private String impKey;
 
@@ -33,7 +36,7 @@ public class IamPortClient {
 
 	public String getAccessToken() {
 		Map<String, String> body = new HashMap<>();
-		body.put("imp_key", impKey);
+		body.put("imp_key", impApiKey);
 		body.put("imp_secret", impSecret);
 		ResponseEntity<IamPortAccessTokenResponse> result = restTemplate.postForEntity(IAM_PORT_BASE_URL + "/users/getToken", body, IamPortAccessTokenResponse.class);
 		if (result.getStatusCode().is2xxSuccessful()) {

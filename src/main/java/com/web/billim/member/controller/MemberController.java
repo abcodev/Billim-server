@@ -45,7 +45,6 @@ public class MemberController {
         binder.addValidators(checkPasswordValidator);
     }
 
-
     @Operation(summary = "회원가입")
     @PostMapping("/signup")
     public ResponseEntity<Map<String, String>> memberSignUp (
@@ -88,7 +87,7 @@ public class MemberController {
         return ResponseEntity.ok(memberService.retrieveUpdateInfoPage(memberId));
     }
 
-    @Operation(summary = "*회원 정보 수정" , description = "회원 정보 수정 반영")
+    @Operation(summary = "회원 정보 수정" , description = "회원 정보 수정 반영")
     @PutMapping(value = "/info", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<MemberInfoResponse> updateInfo(
             @AuthenticationPrincipal long memberId,

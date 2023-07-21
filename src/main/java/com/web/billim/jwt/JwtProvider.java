@@ -32,7 +32,8 @@ public class JwtProvider implements InitializingBean {
 	public JwtProvider(@Value("${jwt.secret}") String secretKey,
 					   @Value("${jwt.access-time}") long ACCESS_TIME,
 					   @Value("${jwt.refresh-time}") long REFRESH_TIME,
-					   UserDetailServiceImpl userDetailsService) {
+					   UserDetailServiceImpl userDetailsService
+	) {
 		this.secretKey = secretKey;
 		this.ACCESS_TIME = ACCESS_TIME;
 		this.REFRESH_TIME = REFRESH_TIME;
@@ -54,8 +55,8 @@ public class JwtProvider implements InitializingBean {
 				.setSubject(memberId)
 				.setAudience(memberGrade.toString())
 				.setIssuedAt(new Date(System.currentTimeMillis()))
-//				.setExpiration(new Date(System.currentTimeMillis() + ACCESS_TIME))
-				.setExpiration(new Date(System.currentTimeMillis() + 20000))
+				.setExpiration(new Date(System.currentTimeMillis() + ACCESS_TIME))
+// 				.setExpiration(new Date(System.currentTimeMillis() + 20000))
 				.signWith(key, SignatureAlgorithm.HS512)
 				.compact();
 	}
@@ -66,8 +67,8 @@ public class JwtProvider implements InitializingBean {
 				.setHeaderParam("typ", "REFRESH")
 				.setSubject(memberId)
 				.setIssuedAt(new Date(System.currentTimeMillis()))
-//				.setExpiration(new Date(System.currentTimeMillis() + REFRESH_TIME))
-				.setExpiration(new Date(System.currentTimeMillis() + 300000))
+				.setExpiration(new Date(System.currentTimeMillis() + REFRESH_TIME))
+				// .setExpiration(new Date(System.currentTimeMillis() + 300000))
 				.signWith(key, SignatureAlgorithm.HS512)
 				.compact();
 	}
