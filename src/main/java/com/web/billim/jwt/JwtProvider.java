@@ -57,7 +57,7 @@ public class JwtProvider implements InitializingBean {
 				.setIssuedAt(new Date(System.currentTimeMillis()))
 //				.setExpiration(new Date(System.currentTimeMillis() + ACCESS_TIME))
 //				 60 * 1000 = 1분
-				.setExpiration(new Date(System.currentTimeMillis() + 300000))
+				.setExpiration(new Date(System.currentTimeMillis() + 180000))
 				.signWith(key, SignatureAlgorithm.HS512)
 				.compact();
 	}
@@ -69,7 +69,7 @@ public class JwtProvider implements InitializingBean {
 				.setSubject(memberId)
 				.setIssuedAt(new Date(System.currentTimeMillis()))
 //				.setExpiration(new Date(System.currentTimeMillis() + REFRESH_TIME))
-				.setExpiration(new Date(System.currentTimeMillis() + 3000000))
+				.setExpiration(new Date(System.currentTimeMillis() + 600000))
 				.signWith(key, SignatureAlgorithm.HS512)
 				.compact();
 	}
@@ -117,6 +117,7 @@ public class JwtProvider implements InitializingBean {
 			throw new JwtException(ErrorCode.UNKNOWN_ERROR);
 		}
 	}
+
 }
 
 
