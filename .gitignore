@@ -2,6 +2,8 @@ application-aws.yml
 application-email.yml
 application-import.yml
 application-security.yml
+application-datasource.yml
+
 
 HELP.md
 .gradle

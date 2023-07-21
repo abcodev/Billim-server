@@ -56,7 +56,8 @@ public class JwtProvider implements InitializingBean {
 				.setAudience(memberGrade.toString())
 				.setIssuedAt(new Date(System.currentTimeMillis()))
 //				.setExpiration(new Date(System.currentTimeMillis() + ACCESS_TIME))
-				.setExpiration(new Date(System.currentTimeMillis() + 120000))
+//				 60 * 1000 = 1분
+				.setExpiration(new Date(System.currentTimeMillis() + 300000))
 				.signWith(key, SignatureAlgorithm.HS512)
 				.compact();
 	}
@@ -68,7 +69,7 @@ public class JwtProvider implements InitializingBean {
 				.setSubject(memberId)
 				.setIssuedAt(new Date(System.currentTimeMillis()))
 //				.setExpiration(new Date(System.currentTimeMillis() + REFRESH_TIME))
-				.setExpiration(new Date(System.currentTimeMillis() + 300000))
+				.setExpiration(new Date(System.currentTimeMillis() + 3000000))
 				.signWith(key, SignatureAlgorithm.HS512)
 				.compact();
 	}
@@ -82,6 +83,15 @@ public class JwtProvider implements InitializingBean {
 				.getBody();
 		UserDetailsEntity userDetails = userDetailsService.findByMemberId(Long.parseLong(claims.getSubject()));
 		return new JwtAuthenticationToken(userDetails.getAuthorities(), userDetails.getMemberId());
+	}
+	public Date getExpriedAt(String token){
+		Date expiration = Jwts.parserBuilder()
+				.setSigningKey(key)
+				.build()
+				.parseClaimsJws(token)
+				.getBody()
+				.getExpiration();
+		return expiration;
 	}
 
 

@@ -97,7 +97,7 @@ public class WebSecurityConfig {
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter(JwtProvider jwtProvider){
-        return new JwtAuthenticationFilter(jwtProvider,securityFilterSkipMatcher);
+        return new JwtAuthenticationFilter(jwtProvider,securityFilterSkipMatcher, jwtService);
     }
 
     @Bean

@@ -12,21 +12,31 @@ public enum ErrorCode {
 
     /* 400 BAD_REQUEST : 잘못된 요청 */
     INVALIDATION_INPUT(BAD_REQUEST, "잘못된 사용자 입력입니다"),
-    INVALID_REFRESH_TOKEN(BAD_REQUEST, "리프레시 토큰이 유효하지 않습니다"),
-    MISMATCH_REFRESH_TOKEN(BAD_REQUEST, "리프레시 토큰의 유저 정보가 일치하지 않습니다"),
 
 
     /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */
-    INVALID_ACCESS_TOKEN(UNAUTHORIZED, "잘못된 액세스 토큰입니다."),
-    INVALID_AUTH_TOKEN(UNAUTHORIZED, "권한 정보가 없는 토큰입니다"),
-    UNAUTHORIZED_MEMBER(UNAUTHORIZED, "현재 내 계정 정보가 존재하지 않습니다"),
-    MISMATCH_PASSWORD(UNAUTHORIZED,"아이디 또는 비밀번호가 일치하지 않습니다."),
-    EXPIRED_TOKEN(UNAUTHORIZED,"만료된 토큰입니다."),
+
+    /* refresh token */
+    INVALID_REFRESH_TOKEN(UNAUTHORIZED, "리프레시 토큰이 유효하지 않습니다"),
+    MISMATCH_REFRESH_TOKEN(UNAUTHORIZED, "리프레시 토큰의 유저 정보가 일치하지 않습니다"),
+
+    /* jwt common */
+    EXPIRED_TOKEN(UNAUTHORIZED,"액세스 토큰은 만료된 토큰입니다."),
     UNSUPPORTED_TOKEN(UNAUTHORIZED,"변조된 토큰입니다."),
     INVALID_TOKEN(UNAUTHORIZED,"유효하지 않은 토큰입니다"),
-    UNKNOWN_ERROR(UNAUTHORIZED,"토큰이 존재하지 않습니다."),
     WRONG_TYPE_TOKEN(UNAUTHORIZED,"변조된 토큰입니다."),
+    UNKNOWN_ERROR(UNAUTHORIZED,"토큰이 존재하지 않습니다."),
 
+
+    /* 아이디 및 비밀번호 일치 하지 않음*/
+    MISMATCH_PASSWORD(UNAUTHORIZED,"아이디 또는 비밀번호가 일치하지 않습니다."),
+
+
+
+//
+//    INVALID_ACCESS_TOKEN(UNAUTHORIZED, "잘못된 액세스 토큰입니다."),
+//    INVALID_AUTH_TOKEN(UNAUTHORIZED, "권한 정보가 없는 토큰입니다"),
+//    UNAUTHORIZED_MEMBER(UNAUTHORIZED, "현재 내 계정 정보가 존재하지 않습니다"),
 
 
     /* 404 NOT_FOUND : Resource 를 찾을 수 없음 */
