@@ -1,5 +1,6 @@
 package com.web.billim.member.controller;
 
+import com.querydsl.core.types.dsl.StringExpression;
 import com.web.billim.jwt.service.JwtService;
 import com.web.billim.jwt.dto.ReIssueTokenRequest;
 import com.web.billim.member.dto.response.ReIssueTokenResponse;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 public class AuthController {
+    private static final String AUTHORIZATION_HEADER_PREFIX = "Bearer ";
     private final AuthService authService;
 
     @Operation(summary = "토큰 재발급", description = "refresh token 유효성 검사후 access token 재발급")
@@ -27,10 +29,11 @@ public class AuthController {
     }
 
     @Operation(summary = "* 로그아웃")
-    @PostMapping
-    public ResponseEntity<Void> logout(@AuthenticationPrincipal long memberId){
-        authService.logout(memberId);
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@RequestHeader(name = "Authorization") String authorization
+    ){
+        String accessToken = authorization.substring(AUTHORIZATION_HEADER_PREFIX.length());
+        authService.logout(accessToken);
         return ResponseEntity.ok().build();
     }
-
 }

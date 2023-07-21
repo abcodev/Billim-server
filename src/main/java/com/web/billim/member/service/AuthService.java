@@ -10,8 +10,11 @@ import com.web.billim.member.dto.response.ReIssueTokenResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
 
 import static com.web.billim.common.exception.handler.ErrorCode.INVALID_REFRESH_TOKEN;
 
@@ -22,16 +25,24 @@ public class AuthService {
 
     private final JwtProvider jwtProvider;
     private final JwtService jwtService;
-
     private final MemberService memberService;
 
 
-    public void logout(long memberId) {
-        String token = " ";
-        Authentication authentication = jwtProvider.getAuthentication(token);
+    public void logout(String accessToken) {
+        String memberId = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        // refresh Token 유효한지
 
         if(jwtService.existsById(memberId)){
+            String refreshToken = jwtService.getRefreshToken(memberId);
+
+            jwtProvider.tokenValidation(refreshToken);
+
+            log.info("refreshToken 존재 여부 / 있으면 삭제시키기");
             jwtService.deleteRefreshToken(memberId);
+
+            log.info("기존 accessToken BlackList 로 저장");
+            Date expiration = jwtProvider.getExpriedAt(accessToken);
+            jwtService.blackList(memberId,accessToken,expiration);
         }
     }
 
@@ -49,7 +60,7 @@ public class AuthService {
         jwtService.compareToken(refreshToken,member.getMemberId());
 
         log.info("기존 token 삭제");
-        jwtService.deleteRefreshToken(member.getMemberId());
+        jwtService.deleteRefreshToken(String.valueOf(member.getMemberId()));
 
         String newAccessToken = jwtProvider.createAccessToken(String.valueOf(member.getMemberId()),member.getGrade());
         String newRefreshToken = jwtProvider.createRefreshToken(String.valueOf(member.getMemberId()));

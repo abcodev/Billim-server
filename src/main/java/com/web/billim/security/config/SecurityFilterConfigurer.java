@@ -30,7 +30,7 @@ public class SecurityFilterConfigurer extends SecurityConfigurerAdapter<DefaultS
     @Override
     public void configure(HttpSecurity builder) {
         LoginAuthenticationFilter loginAuthenticationFilter = new LoginAuthenticationFilter(authenticationManager, jwtProvider, jwtService);
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtProvider,securityFilterSkipMatcher);
+        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtProvider,securityFilterSkipMatcher, jwtService);
         JwtExceptionFilter jwtExceptionFilter = new JwtExceptionFilter(securityFilterSkipMatcher);
 
         builder.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

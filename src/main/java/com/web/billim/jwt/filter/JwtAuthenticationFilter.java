@@ -1,7 +1,10 @@
 package com.web.billim.jwt.filter;
 
+import com.web.billim.common.exception.JwtException;
+import com.web.billim.common.exception.handler.ErrorCode;
 import com.web.billim.jwt.JwtProvider;
-import com.web.billim.jwt.JwtAuthenticationToken;
+import com.web.billim.jwt.dto.JwtAuthenticationToken;
+import com.web.billim.jwt.service.JwtService;
 import com.web.billim.security.config.SecurityFilterSkipMatcher;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,9 +24,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final SecurityFilterSkipMatcher securityFilterSkipMatcher;
 
-    public JwtAuthenticationFilter(JwtProvider jwtProvider, SecurityFilterSkipMatcher securityFilterSkipMatcher) {
+    private final JwtService jwtService;
+
+    public JwtAuthenticationFilter(JwtProvider jwtProvider, SecurityFilterSkipMatcher securityFilterSkipMatcher, JwtService jwtService) {
         this.jwtProvider = jwtProvider;
         this.securityFilterSkipMatcher = securityFilterSkipMatcher;
+        this.jwtService = jwtService;
     }
 
     @Override
@@ -31,6 +37,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String jwt = resolveToken(request, AUTHORIZATION_HEADER);
         if (jwtProvider.tokenValidation(jwt)) {
+            if(jwtService.checkBlackList(jwt)){
+                log.error("해당 토큰은 blackList 에 등록된 토큰 입니다.");
+                throw new JwtException(ErrorCode.INVALID_TOKEN);
+            }
             JwtAuthenticationToken jwtAuthenticationToken = jwtProvider.getAuthentication(jwt);
             SecurityContextHolder.getContext().setAuthentication(jwtAuthenticationToken);
             filterChain.doFilter(request, response);

@@ -2,6 +2,7 @@ package com.web.billim.jwt;
 
 import com.web.billim.common.exception.JwtException;
 import com.web.billim.common.exception.handler.ErrorCode;
+import com.web.billim.jwt.dto.JwtAuthenticationToken;
 import com.web.billim.member.type.MemberGrade;
 import com.web.billim.security.domain.UserDetailsEntity;
 import com.web.billim.security.UserDetailServiceImpl;
@@ -32,8 +33,7 @@ public class JwtProvider implements InitializingBean {
 	public JwtProvider(@Value("${jwt.secret}") String secretKey,
 					   @Value("${jwt.access-time}") long ACCESS_TIME,
 					   @Value("${jwt.refresh-time}") long REFRESH_TIME,
-					   UserDetailServiceImpl userDetailsService
-	) {
+					   UserDetailServiceImpl userDetailsService) {
 		this.secretKey = secretKey;
 		this.ACCESS_TIME = ACCESS_TIME;
 		this.REFRESH_TIME = REFRESH_TIME;
@@ -56,7 +56,8 @@ public class JwtProvider implements InitializingBean {
 				.setAudience(memberGrade.toString())
 				.setIssuedAt(new Date(System.currentTimeMillis()))
 //				.setExpiration(new Date(System.currentTimeMillis() + ACCESS_TIME))
- 				.setExpiration(new Date(System.currentTimeMillis() + 180000))
+//				 60 * 1000 = 1분
+				.setExpiration(new Date(System.currentTimeMillis() + 300000))
 				.signWith(key, SignatureAlgorithm.HS512)
 				.compact();
 	}
@@ -68,7 +69,7 @@ public class JwtProvider implements InitializingBean {
 				.setSubject(memberId)
 				.setIssuedAt(new Date(System.currentTimeMillis()))
 //				.setExpiration(new Date(System.currentTimeMillis() + REFRESH_TIME))
-				.setExpiration(new Date(System.currentTimeMillis() + 1800000))
+				.setExpiration(new Date(System.currentTimeMillis() + 3000000))
 				.signWith(key, SignatureAlgorithm.HS512)
 				.compact();
 	}
@@ -82,6 +83,15 @@ public class JwtProvider implements InitializingBean {
 				.getBody();
 		UserDetailsEntity userDetails = userDetailsService.findByMemberId(Long.parseLong(claims.getSubject()));
 		return new JwtAuthenticationToken(userDetails.getAuthorities(), userDetails.getMemberId());
+	}
+	public Date getExpriedAt(String token){
+		Date expiration = Jwts.parserBuilder()
+				.setSigningKey(key)
+				.build()
+				.parseClaimsJws(token)
+				.getBody()
+				.getExpiration();
+		return expiration;
 	}
 
 
@@ -107,7 +117,6 @@ public class JwtProvider implements InitializingBean {
 			throw new JwtException(ErrorCode.UNKNOWN_ERROR);
 		}
 	}
-
 }
 
 
