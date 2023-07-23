@@ -1,7 +1,7 @@
 package com.web.billim.product.service;
 
-import com.web.billim.common.exception.NotFoundException;
-import com.web.billim.common.exception.handler.ErrorCode;
+import com.web.billim.exception.NotFoundException;
+import com.web.billim.exception.handler.ErrorCode;
 import com.web.billim.infra.ImageUploadService;
 import com.web.billim.member.domain.Member;
 import com.web.billim.member.repository.MemberRepository;

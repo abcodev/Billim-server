@@ -1,7 +1,7 @@
 package com.web.billim.jwt;
 
-import com.web.billim.common.exception.JwtException;
-import com.web.billim.common.exception.handler.ErrorCode;
+import com.web.billim.exception.JwtException;
+import com.web.billim.exception.handler.ErrorCode;
 import com.web.billim.jwt.dto.JwtAuthenticationToken;
 import com.web.billim.member.type.MemberGrade;
 import com.web.billim.security.domain.UserDetailsEntity;

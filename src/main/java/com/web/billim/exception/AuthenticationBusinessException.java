@@ -1,8 +1,7 @@
-package com.web.billim.common.exception;
+package com.web.billim.exception;
 
+import com.web.billim.exception.handler.ErrorCode;
 import org.springframework.security.core.AuthenticationException;
-
-import com.web.billim.common.exception.handler.ErrorCode;
 
 public abstract class AuthenticationBusinessException extends AuthenticationException {
 

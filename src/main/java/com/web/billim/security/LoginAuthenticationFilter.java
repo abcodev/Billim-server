@@ -1,8 +1,8 @@
 package com.web.billim.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.web.billim.common.exception.AuthenticationBusinessException;
-import com.web.billim.common.exception.handler.ErrorResponse;
+import com.web.billim.exception.AuthenticationBusinessException;
+import com.web.billim.exception.handler.ErrorResponse;
 import com.web.billim.jwt.JwtProvider;
 import com.web.billim.jwt.service.JwtService;
 import com.web.billim.member.type.MemberGrade;
@@ -72,6 +72,7 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
         if (failed instanceof AuthenticationBusinessException) {
             AuthenticationBusinessException ex = (AuthenticationBusinessException)failed;
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            response.setCharacterEncoding("UTF-8");
             response.getWriter().write(objectMapper.writeValueAsString(ErrorResponse.from(ex)));
         }
     }

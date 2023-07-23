@@ -1,6 +1,6 @@
-package com.web.billim.common.exception;
+package com.web.billim.exception;
 
-import com.web.billim.common.exception.handler.ErrorCode;
+import com.web.billim.exception.handler.ErrorCode;
 
 public class UnAuthorizedException extends AuthenticationBusinessException {
 	public UnAuthorizedException(ErrorCode errorCode) {

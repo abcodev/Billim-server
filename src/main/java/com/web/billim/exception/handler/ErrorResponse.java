@@ -1,12 +1,12 @@
-package com.web.billim.common.exception.handler;
+package com.web.billim.exception.handler;
 
 import lombok.Builder;
 import lombok.Getter;
 
 import org.springframework.http.ResponseEntity;
 
-import com.web.billim.common.exception.AuthenticationBusinessException;
-import com.web.billim.common.exception.BusinessException;
+import com.web.billim.exception.AuthenticationBusinessException;
+import com.web.billim.exception.BusinessException;
 
 @Getter
 @Builder

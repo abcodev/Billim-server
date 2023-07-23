@@ -1,6 +1,6 @@
 package com.web.billim.security;
-import com.web.billim.common.exception.UnAuthorizedException;
-import com.web.billim.common.exception.handler.ErrorCode;
+import com.web.billim.exception.UnAuthorizedException;
+import com.web.billim.exception.handler.ErrorCode;
 import com.web.billim.security.domain.UserDetailsEntity;
 import com.web.billim.security.dto.LoginAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationProvider;

@@ -1,7 +1,7 @@
 package com.web.billim.jwt.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.web.billim.common.exception.JwtException;
+import com.web.billim.exception.JwtException;
 import com.web.billim.security.config.SecurityFilterSkipMatcher;
 import org.springframework.http.MediaType;
 import org.springframework.web.filter.OncePerRequestFilter;

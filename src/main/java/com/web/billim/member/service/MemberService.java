@@ -1,10 +1,10 @@
 package com.web.billim.member.service;
 
-import com.web.billim.common.exception.JwtException;
+import com.web.billim.exception.JwtException;
 import com.web.billim.email.service.EmailSendService;
-import com.web.billim.common.exception.NotFoundException;
-import com.web.billim.common.exception.UnAuthorizedException;
-import com.web.billim.common.exception.handler.ErrorCode;
+import com.web.billim.exception.NotFoundException;
+import com.web.billim.exception.UnAuthorizedException;
+import com.web.billim.exception.handler.ErrorCode;
 import com.web.billim.coupon.repository.CouponRepository;
 import com.web.billim.coupon.service.CouponService;
 import com.web.billim.infra.ImageUploadService;
@@ -19,8 +19,6 @@ import com.web.billim.point.service.PointService;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

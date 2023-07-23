@@ -1,4 +1,4 @@
-package com.web.billim.common.exception.handler;
+package com.web.billim.exception.handler;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,7 +36,7 @@ public enum ErrorCode {
     UNKNOWN_ERROR(UNAUTHORIZED,"토큰이 존재하지 않습니다."),
 
     /* ID-PW */
-    INVALID_EMAIL_PASSWORD(UNAUTHORIZED, "Invalid email or password."),
+    INVALID_EMAIL_PASSWORD(UNAUTHORIZED, "이메일 혹은 비밀번호가 일치하지 않습니다."),
 
 //    INVALID_ACCESS_TOKEN(UNAUTHORIZED, "잘못된 액세스 토큰입니다."),
 //    INVALID_AUTH_TOKEN(UNAUTHORIZED, "권한 정보가 없는 토큰입니다"),

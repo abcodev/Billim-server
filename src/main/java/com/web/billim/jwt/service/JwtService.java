@@ -1,7 +1,7 @@
 package com.web.billim.jwt.service;
 
-import com.web.billim.common.exception.JwtException;
-import com.web.billim.common.exception.handler.ErrorCode;
+import com.web.billim.exception.JwtException;
+import com.web.billim.exception.handler.ErrorCode;
 import com.web.billim.jwt.JwtBlackListRepository;
 import com.web.billim.jwt.dto.RedisJwt;
 import com.web.billim.jwt.repository.JwtTokenRedisRepository;
@@ -10,10 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.Optional;
 
-import static com.web.billim.common.exception.handler.ErrorCode.INVALID_REFRESH_TOKEN;
-import static com.web.billim.common.exception.handler.ErrorCode.MISMATCH_REFRESH_TOKEN;
+import static com.web.billim.exception.handler.ErrorCode.INVALID_REFRESH_TOKEN;
+import static com.web.billim.exception.handler.ErrorCode.MISMATCH_REFRESH_TOKEN;
 
 @Service
 @RequiredArgsConstructor

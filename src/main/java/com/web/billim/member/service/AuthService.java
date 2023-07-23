@@ -1,8 +1,7 @@
 package com.web.billim.member.service;
 
-import static com.web.billim.common.exception.handler.ErrorCode.*;
-
-import com.web.billim.common.exception.JwtException;
+import com.web.billim.exception.JwtException;
+import com.web.billim.exception.handler.ErrorCode;
 import com.web.billim.jwt.dto.ReIssueTokenRequest;
 import com.web.billim.jwt.dto.RedisJwt;
 import com.web.billim.jwt.service.JwtService;
@@ -54,10 +53,10 @@ public class AuthService {
         try {
             jwtProvider.tokenValidation(refreshToken);
         } catch (JwtException ex) {
-            if (ex.getErrorCode().equals(EXPIRED_TOKEN)) {
-                throw new JwtException(EXPIRED_REFRESH_TOKEN);
+            if (ex.getErrorCode().equals(ErrorCode.EXPIRED_TOKEN)) {
+                throw new JwtException(ErrorCode.EXPIRED_REFRESH_TOKEN);
             } else {
-                throw new JwtException(INVALID_REFRESH_TOKEN);
+                throw new JwtException(ErrorCode.INVALID_REFRESH_TOKEN);
             }
         }
 
