@@ -18,7 +18,8 @@ public class ErrorResponse {
 		return ResponseEntity
 			.status(errorCode.getHttpStatus())
 			.body(ErrorResponse.builder()
-				.code(errorCode.getHttpStatus().name())
+				.code(errorCode.name())
+//				.code(errorCode.getHttpStatus().name())
 				.message(errorCode.getMessage())
 				.build());
 	}
@@ -27,7 +28,8 @@ public class ErrorResponse {
 		return ResponseEntity
 			.status(errorCode.getHttpStatus())
 			.body(ErrorResponse.builder()
-				.code(errorCode.getHttpStatus().name())
+				.code(errorCode.name())
+//				.code(errorCode.getHttpStatus().name())
 				.message(message)
 				.build());
 	}
