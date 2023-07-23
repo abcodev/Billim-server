@@ -38,7 +38,7 @@ public class WebSecurityConfig {
     private final SecurityFilterSkipMatcher securityFilterSkipMatcher;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(AuthenticationManager authenticationManager,HttpSecurity http) throws Exception{
+    public SecurityFilterChain securityFilterChain(AuthenticationManager authenticationManager,HttpSecurity http) throws Exception {
 
         http
                 .cors()
@@ -82,16 +82,15 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public SecurityFilterConfigurer jwtTokenFilterConfigurer(JwtProvider jwtProvider
-            , AuthenticationManager authenticationManager
-            , JwtService jwtService
-            , SecurityFilterSkipMatcher securityFilterSkipMatcher
-    ){
+    public SecurityFilterConfigurer jwtTokenFilterConfigurer(JwtProvider jwtProvider,
+                                                             AuthenticationManager authenticationManager,
+                                                             JwtService jwtService,
+                                                             SecurityFilterSkipMatcher securityFilterSkipMatcher) {
         return new SecurityFilterConfigurer(jwtProvider, authenticationManager, jwtService, securityFilterSkipMatcher);
     }
 
     @Bean
-    public JwtExceptionFilter jwtExceptionFilter(){
+    public JwtExceptionFilter jwtExceptionFilter() {
         return new JwtExceptionFilter(securityFilterSkipMatcher);
     }
 
@@ -103,14 +102,14 @@ public class WebSecurityConfig {
     @Bean
     public LoginAuthenticationFilter loginAuthenticationFilter(AuthenticationManager configureAuthenticationManager,
                                                                JwtProvider jwtProvider,
-                                                               JwtService jwtService){
+                                                               JwtService jwtService) {
         LoginAuthenticationFilter loginAuthenticationFilter = new LoginAuthenticationFilter(configureAuthenticationManager, jwtProvider, jwtService);
         loginAuthenticationFilter.setAuthenticationManager(configureAuthenticationManager);
         return loginAuthenticationFilter;
     }
 
     @Bean
-    public UsernamPasswordAuthenticationProvider usernamPasswordAuthenticationProvider(){
+    public UsernamPasswordAuthenticationProvider usernamPasswordAuthenticationProvider() {
         return new UsernamPasswordAuthenticationProvider(userDetailsService,passwordEncoder());
     }
 

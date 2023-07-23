@@ -83,12 +83,4 @@ public class PaymentService {
     // 1. Transaction 은 이미 예외가 발생한 상황에서 재사용이 안된다.
     // 2. Transaction 은 내부호출에 대해서는 적용이 안된다. (@Transactional 이 AOP 로 구현되어있어서 -> 내부호출문제)
 
-
 }
-
-// FE 에서 사용자 입력 받고
-// 서버 API 호출(/order) 해서 결제금액 받고(merchant_uid, amount..)
-// IMP request_pay 호출
-// http://localhost:8080/order/validation
-
-

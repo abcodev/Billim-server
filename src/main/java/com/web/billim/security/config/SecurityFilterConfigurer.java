@@ -37,4 +37,5 @@ public class SecurityFilterConfigurer extends SecurityConfigurerAdapter<DefaultS
         builder.addFilterBefore(jwtExceptionFilter,JwtAuthenticationFilter.class);
         builder.addFilterBefore(loginAuthenticationFilter,JwtExceptionFilter.class);
     }
+
 }
