@@ -38,7 +38,6 @@ public class JwtProvider implements InitializingBean {
 		this.ACCESS_TIME = ACCESS_TIME;
 		this.REFRESH_TIME = REFRESH_TIME;
 		this.userDetailsService = userDetailsService;
-
 	}
 
 	@Override
@@ -85,15 +84,13 @@ public class JwtProvider implements InitializingBean {
 		return new JwtAuthenticationToken(userDetails.getAuthorities(), userDetails.getMemberId());
 	}
 	public Date getExpriedAt(String token){
-		Date expiration = Jwts.parserBuilder()
+		return Jwts.parserBuilder()
 				.setSigningKey(key)
 				.build()
 				.parseClaimsJws(token)
 				.getBody()
 				.getExpiration();
-		return expiration;
 	}
-
 
 	public boolean tokenValidation(String token) {
 		try {

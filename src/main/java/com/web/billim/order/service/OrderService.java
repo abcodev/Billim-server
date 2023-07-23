@@ -17,7 +17,7 @@ import com.web.billim.payment.dto.PaymentCommand;
 import com.web.billim.payment.service.PaymentService;
 import com.web.billim.product.domain.Product;
 import com.web.billim.product.domain.service.ProductDomainService;
-import com.web.billim.product.dto.response.MostProductList;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,6 +53,7 @@ public class OrderService {
         // 1. 해당 사용자가 주문중인게 있는지 확인
         orderRepository.findByMemberAndStatus(member, ProductOrderStatus.IN_PROGRESS)
             .ifPresent(order -> {
+//                throw new RuntimeException("해당 사용자가 이미 주문중인 거래가 있습니다.");
                 throw new OrderFailedException(ErrorCode.ORDER_DUPLICATED_REQUEST);
             });
 
@@ -61,6 +62,7 @@ public class OrderService {
         orderRepository.findByProductAndStatus(product, ProductOrderStatus.IN_PROGRESS)
             .ifPresent(order -> {
                 if (LocalDateHelper.checkDuplicatedPeriod(order.getPeriod(), orderCommand.getPeriod())) {
+//                    throw new RuntimeException("해당 제품은 다른 사용자가 거래중입니다.");
                     throw new OrderFailedException(ErrorCode.ORDER_DUPLICATED_PERIOD);
                 }
             });
@@ -81,6 +83,23 @@ public class OrderService {
                 .map(MyOrderHistory::from)
                 .collect(Collectors.toList());
        return new MyOrderHistoryListResponse(myOrderHistories);
+    }
+
+    @Transactional
+    public void cancel(long orderId) {
+        ProductOrder order = orderRepository.findById(orderId).orElseThrow();
+
+        // 1. 이미 기간이 지난 건은 아닌지
+        if (order.getEndAt().isBefore(LocalDate.now())) {
+            throw new RuntimeException("기간이 지난 주문이라 취소할 수 없습니다.");
+        }
+        // 2. 결제 완료된 건인지
+        if (!order.getStatus().equals(ProductOrderStatus.DONE)) {
+            throw new RuntimeException("주문이 완료되지 않아 취소할 수 없습니다.");
+        }
+
+        order.cancel(); // Dirty Checking 이 발생하면서 알아서 저장된다.
+        paymentService.cancel(order);
     }
 
     public ProductOrder findByOrder(long orderId) {

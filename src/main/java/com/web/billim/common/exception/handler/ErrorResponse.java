@@ -5,6 +5,7 @@ import lombok.Getter;
 
 import org.springframework.http.ResponseEntity;
 
+import com.web.billim.common.exception.AuthenticationBusinessException;
 import com.web.billim.common.exception.BusinessException;
 
 @Getter
@@ -32,6 +33,10 @@ public class ErrorResponse {
 	}
 
 	public static ErrorResponse from(BusinessException ex) {
+		return new ErrorResponse(ex.getErrorCode().name(), ex.getMessage());
+	}
+
+	public static ErrorResponse from(AuthenticationBusinessException ex) {
 		return new ErrorResponse(ex.getErrorCode().name(), ex.getMessage());
 	}
 

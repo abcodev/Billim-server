@@ -160,7 +160,7 @@ public class MemberService {
 			.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 
 		if (!passwordEncoder.matches(command.getPassword(), member.getPassword())) {
-			throw new UnAuthorizedException(ErrorCode.MISMATCH_PASSWORD);
+			throw new UnAuthorizedException(ErrorCode.INVALID_EMAIL_PASSWORD);
 		}
 		// member.validatePassword(passwordEncoder, command.getPassword());
 		String encodedPassword = passwordEncoder.encode(command.getNewPassword());

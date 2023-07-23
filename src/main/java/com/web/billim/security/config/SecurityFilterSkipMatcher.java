@@ -20,7 +20,7 @@ public class SecurityFilterSkipMatcher{
             "/product/list/**",
             "/product/detail/**",
             "/auth/reIssue/token",
-            "/subscribe/**", "/publish/**", "/stomp/chat",
+            "/subscribe/**", "/publish/**", "/stomp/**",
 
             "/v3/api-docs", "/configuration/ui", "/swagger-resources/**",
             "/configuration/security", "/swagger-ui.html/**", "/swagger-ui/**", "/webjars/**", "/swagger/**",

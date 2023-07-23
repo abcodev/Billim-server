@@ -27,9 +27,10 @@ public class UsernamPasswordAuthenticationProvider implements AuthenticationProv
         if(user != null && this.passwordEncoder.matches(password, user.getPassword())){
             return new LoginAuthenticationToken(user.getAuthorities(),user.getMemberId());
         }else {
-            throw new UnAuthorizedException(ErrorCode.MISMATCH_PASSWORD);
+            throw new UnAuthorizedException(ErrorCode.INVALID_EMAIL_PASSWORD);
         }
     }
+
     @Override
     public boolean supports(Class<?> authentication) {
         return LoginAuthenticationToken.class.isAssignableFrom(authentication);

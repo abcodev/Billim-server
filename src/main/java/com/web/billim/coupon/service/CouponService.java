@@ -59,4 +59,10 @@ public class CouponService {
         }
         couponIssue.use();
     }
+
+    @Transactional
+	public void refund(CouponIssue couponIssue) {
+        couponIssue.available();
+	}
+
 }

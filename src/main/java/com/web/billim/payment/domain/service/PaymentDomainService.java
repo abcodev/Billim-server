@@ -31,14 +31,19 @@ public class PaymentDomainService {
 		pointService.usePoint(payment);
 		// Order, Payment Entity 완료처리
 		paymentRepository.save(payment.complete());
-		// 포인트 적립 -> 사용자의 회원 등급, 결제 금액
-		pointService.addPoint(AddPointCommand.from(payment));
 	}
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void rollback(String merchantUid) {
 		Payment payment = paymentRepository.findByMerchantUid(merchantUid).orElseThrow();
 		paymentRepository.save(payment.cancel());
+	}
+
+	@Transactional
+	public void refund(Payment payment) {
+		pointService.refund(payment);
+		couponService.refund(payment.getCouponIssue());
+		payment.cancel();
 	}
 
 }

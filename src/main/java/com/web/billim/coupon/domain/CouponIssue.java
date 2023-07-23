@@ -38,6 +38,9 @@ public class CouponIssue extends JpaEntity {
 		this.status = CouponStatus.USED;
 	}
 
+	public void available() {
+		this.status = CouponStatus.AVAILABLE;
+	}
 }
 
 enum CouponStatus {

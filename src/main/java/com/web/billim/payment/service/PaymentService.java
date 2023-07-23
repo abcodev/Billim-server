@@ -1,23 +1,20 @@
 package com.web.billim.payment.service;
 
 import com.web.billim.client.iamport.IamPortClientService;
-import com.web.billim.client.iamport.response.IamPortPaymentData;
 import com.web.billim.coupon.domain.CouponIssue;
 import com.web.billim.coupon.repository.CouponIssueRepository;
-import com.web.billim.coupon.service.CouponService;
+import com.web.billim.order.domain.ProductOrder;
 import com.web.billim.order.dto.response.PaymentInfoResponse;
 import com.web.billim.payment.domain.Payment;
 import com.web.billim.payment.domain.service.PaymentDomainService;
 import com.web.billim.payment.dto.PaymentCommand;
 import com.web.billim.payment.dto.PaymentInfoDto;
 import com.web.billim.payment.repository.PaymentRepository;
-import com.web.billim.point.dto.AddPointCommand;
-import com.web.billim.point.service.PointService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
@@ -47,21 +44,16 @@ public class PaymentService {
 
     @Transactional
     public void complete(String impUid, String merchantUid) {
-        // TODO : complete 하는 과정에서 실패하면 CANCLED 로 바꾸고 사용자에게 에러를 내려줄 필요가 있겠다.
         try {
-            // IamPort 결제내역 조회
-            IamPortPaymentData paymentData = iamPortClientService.retrievePayment(impUid);
             // Payment Entity 조회
             Payment payment = paymentRepository.findByMerchantUid(merchantUid).orElseThrow();
             payment.setImpUid(impUid);
-            // 데이터 검증
-            if (payment.getTotalAmount() != paymentData.getAmount() || !paymentData.getStatus().equals("paid")) {
-                // TODO : IamPort 쪽에 결제 취소 API 호출
-                // Order, Payment Entity 취소
+
+            if (iamPortClientService.validate(impUid, payment.getTotalAmount())) {
+                paymentDomainService.payment(payment);
+            } else {
                 paymentDomainService.rollback(merchantUid);
                 throw new RuntimeException("결제내역이 일치하지 않습니다. 결제가 취소되었습니다.");
-            } else {
-                paymentDomainService.payment(payment);
             }
         } catch (Exception ex) {
             log.error("결제를 완료 처리하는 과정에서 에러가 발생했습니다.", ex);
@@ -72,6 +64,20 @@ public class PaymentService {
 
     public void rollback(String merchantUid) {
         paymentDomainService.rollback(merchantUid);
+    }
+
+    @Transactional
+    public void cancel(ProductOrder order) {
+        Payment payment = paymentRepository.findByProductOrder(order).orElseThrow();
+        paymentDomainService.refund(payment);
+        iamPortClientService.cancel(payment.getImpUid());
+        //
+        // TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+        //     @Override
+        //     public void afterCommit() {
+        //         iamPortClientService.cancel(payment.getImpUid());
+        //     }
+        // });
     }
 
     // 1. Transaction 은 이미 예외가 발생한 상황에서 재사용이 안된다.

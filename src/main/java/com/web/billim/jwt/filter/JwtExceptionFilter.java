@@ -37,7 +37,7 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
         Map<String, Object> body = new HashMap<>();
         body.put("error", e.getErrorCode());
         body.put("message", e.getMessage());
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper(); // ObjectMapper 는 Bean 으로 등록해서도 많이 쓴다.
         mapper.writeValue(response.getOutputStream(), body);
     }
 
@@ -45,4 +45,5 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         return securityFilterSkipMatcher.shouldSkipFilter(request);
     }
+
 }
