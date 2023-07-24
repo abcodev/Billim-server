@@ -11,10 +11,7 @@ import com.web.billim.product.domain.Product;
 import com.web.billim.product.domain.ProductCategory;
 import com.web.billim.product.dto.ProductRegisterCommand;
 import com.web.billim.product.dto.ProductUpdateCommand;
-import com.web.billim.product.dto.response.ProductDetailResponse;
-import com.web.billim.product.dto.response.MostProductList;
-import com.web.billim.product.dto.response.ProductListResponse;
-import com.web.billim.product.dto.response.ProductUpdateResponse;
+import com.web.billim.product.dto.response.*;
 import com.web.billim.product.repository.ImageProductRepository;
 import com.web.billim.product.repository.ProductCategoryRepository;
 import com.web.billim.product.repository.ProductRepository;
@@ -27,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -146,7 +144,6 @@ public class ProductService {
                     return ProductListResponse.of(product, starRating);
                 });
 	}
-
 
 
 

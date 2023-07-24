@@ -11,6 +11,7 @@ import com.web.billim.product.dto.request.ProductUpdateRequest;
 import com.web.billim.product.dto.response.*;
 import com.web.billim.product.service.ProductInterestService;
 import com.web.billim.product.service.ProductService;
+import com.web.billim.product.service.RecentProductRedisService;
 import com.web.billim.review.service.ReviewService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -117,7 +118,7 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "*인기 상품 조회", description = "사람들이 많이 본 상품 사진 리스트")
+    @Operation(summary = "*인기 상품 조회", description = "사람들이 많이 본 상품 상품 리스트")
     @GetMapping("/list/most/popular")
     public ResponseEntity<List<MostProductList>> mostProductList() {
         return ResponseEntity.ok(productService.findMostPopularProduct());
@@ -150,6 +151,12 @@ public class ProductController {
     public ResponseEntity<Void> mySellDetail() {
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/list/recent")
+    public ResponseEntity<?> recentProduct(@AuthenticationPrincipal long memberId) {
+        return ResponseEntity.ok().build();
+    }
+
 
 }
 

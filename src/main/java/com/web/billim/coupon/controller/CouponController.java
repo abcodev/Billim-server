@@ -29,4 +29,6 @@ public class CouponController {
         return ResponseEntity.ok(couponService.retrieveAvailableCouponList(memberId));
     }
 
+
+
 }
