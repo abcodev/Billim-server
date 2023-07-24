@@ -9,6 +9,7 @@ import com.web.billim.order.domain.ProductOrder;
 import com.web.billim.order.dto.OrderCommand;
 import com.web.billim.order.dto.response.MyOrderHistory;
 import com.web.billim.order.dto.response.MyOrderHistoryListResponse;
+import com.web.billim.order.dto.response.MySalesDetailResponse;
 import com.web.billim.order.dto.response.PaymentInfoResponse;
 import com.web.billim.order.repository.OrderRepository;
 import com.web.billim.order.type.ProductOrderStatus;
@@ -76,16 +77,6 @@ public class OrderService {
     }
 
     @Transactional
-    public MyOrderHistoryListResponse findMyOrder(long memberId) {
-       List<ProductOrder> productOrders= orderRepository.findAllByMember_memberId(memberId)
-               .orElseThrow(()-> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
-       List<MyOrderHistory> myOrderHistories = productOrders.stream()
-                .map(MyOrderHistory::from)
-                .collect(Collectors.toList());
-       return new MyOrderHistoryListResponse(myOrderHistories);
-    }
-
-    @Transactional
     public void cancel(long orderId) {
         ProductOrder order = orderRepository.findById(orderId).orElseThrow();
 
@@ -111,5 +102,24 @@ public class OrderService {
         return orderRepository.countByMember_memberId(memberId)
                 .orElseThrow(()-> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
     }
+
+    @Transactional
+    public MyOrderHistoryListResponse findMyOrder(long memberId) {
+        List<ProductOrder> productOrders= orderRepository.findAllByMember_memberId(memberId)
+                .orElseThrow(()-> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
+        List<MyOrderHistory> myOrderHistories = productOrders.stream()
+                .map(MyOrderHistory::from)
+                .collect(Collectors.toList());
+        return new MyOrderHistoryListResponse(myOrderHistories);
+    }
+
+    @Transactional
+    public MySalesDetailResponse findAllHistory(long productId) {
+        Product product = productDomainService.find(productId);
+        List<ProductOrder> orderHistories = orderRepository.findAllByProduct(product);
+        return MySalesDetailResponse.of(product, orderHistories);
+    }
+
+
 
 }

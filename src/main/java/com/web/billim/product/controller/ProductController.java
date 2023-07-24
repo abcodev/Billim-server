@@ -1,7 +1,5 @@
 package com.web.billim.product.controller;
 
-import com.web.billim.order.dto.response.MySalesDetailResponse;
-import com.web.billim.order.dto.response.MySalesListResponse;
 import com.web.billim.order.service.OrderService;
 import com.web.billim.product.domain.Product;
 import com.web.billim.product.domain.ProductCategory;
@@ -55,6 +53,51 @@ public class ProductController {
         return ResponseEntity.ok(productService.register(command));
     }
 
+    @Operation(summary = "전체 상품목록 조회, 검색, 페이징", description = "전체 상품목록 조회, 카테고리별 검색, 키워드 검색, 페이징 처리")
+    @Transactional
+    @GetMapping("/list/search")
+    public ResponseEntity<Page<ProductListResponse>> productList(
+            @RequestParam(required = false, defaultValue = "") String category,
+            @RequestParam(required = false, defaultValue = "") String keyword,
+            @RequestParam(required = false, defaultValue = "1", value = "page") int page
+    ) {
+        PageRequest paging = PageRequest.of(page - 1, 20);
+        return ResponseEntity.ok(productService.search(category, keyword, paging));
+    }
+
+//    @GetMapping("/list/category")
+//    public ResponseEntity<List<ProductCategory>> productCategory() {
+//        List<ProductCategory> categoryList = productService.categoryList();
+//        return ResponseEntity.ok(categoryList);
+//    }
+
+    @Operation(summary = "상품 상세정보", description = "productId에 따른 상품 상세정보 & 이미 예약되어 이용할 수 없는 날짜")
+    @GetMapping("/detail/{productId}")
+    public ResponseEntity<ProductDetailResponse> productDetail(
+            @PathVariable("productId") long productId
+    ) {
+        ProductDetailResponse resp = productService.retrieveDetail(productId);
+        resp.setProductReviewLists(reviewService.reviewList(productId));
+        return ResponseEntity.ok(resp);
+    }
+
+//    @GetMapping("/detail/date/{productId}")
+//    public ResponseEntity<List<LocalDate>> alreadyReservedDate(
+//            @PathVariable("productId") long productId
+//    ) {
+//        List<LocalDate> dates = orderService.reservationDate(productId);
+//        return ResponseEntity.ok(dates);
+//    }
+
+    @Operation(summary = "상품 수정 기존 내용 조회", description = "상품 수정시 기존 정보 조회를 조회한다")
+    @GetMapping("/update/{productId}")
+    public ResponseEntity<ProductUpdateResponse> updateProductResponse(
+            @PathVariable("productId") long productId
+    ) {
+        ProductUpdateResponse resp = productService.retrieveUpdateProduct(productId);
+        return ResponseEntity.ok(resp);
+    }
+
     @Operation(summary = "상품 수정", description = "삭제할 이미지 deleteImages, 새로운 이미지 MultipartFile 형태로 전송")
     @PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updateProduct(
@@ -68,50 +111,6 @@ public class ProductController {
 //        return ResponseEntity.ok(productService.update(command));
     }
 
-    @Operation(summary = "전체 상품목록 조회, 검색, 페이징", description = "전체 상품목록 조회, 카테고리별 검색, 키워드 검색, 페이징 처리")
-    @Transactional
-    @GetMapping("/list/search")
-    public ResponseEntity<Page<ProductListResponse>> productList(
-            @RequestParam(required = false, defaultValue = "") String category,
-            @RequestParam(required = false, defaultValue = "") String keyword,
-            @RequestParam(required = false, defaultValue = "1", value = "page") int page
-    ) {
-        PageRequest paging = PageRequest.of(page - 1, 20);
-        return ResponseEntity.ok(productService.search(category, keyword, paging));
-    }
-
-    @GetMapping("/list/category")
-    public ResponseEntity<List<ProductCategory>> productCategory() {
-        List<ProductCategory> categoryList = productService.categoryList();
-        return ResponseEntity.ok(categoryList);
-    }
-
-    @Operation(summary = "상품 상세정보", description = "productId에 따른 상품 상세정보 & 이미 예약되어 이용할 수 없는 날짜")
-    @GetMapping("/detail/{productId}")
-    public ResponseEntity<ProductDetailResponse> productDetail(
-            @PathVariable("productId") long productId
-    ) {
-        ProductDetailResponse resp = productService.retrieveDetail(productId);
-        resp.setProductReviewLists(reviewService.reviewList(productId));
-        return ResponseEntity.ok(resp);
-    }
-
-    @GetMapping("/detail/date/{productId}")
-    public ResponseEntity<List<LocalDate>> alreadyReservedDate(
-            @PathVariable("productId") long productId
-    ) {
-        List<LocalDate> dates = orderService.reservationDate(productId);
-        return ResponseEntity.ok(dates);
-    }
-
-    @Operation(summary = "상품 수정 기존 내용 조회", description = "상품 수정시 기존 정보 조회를 조회한다")
-    @GetMapping("/update/{productId}")
-    public ResponseEntity<ProductUpdateResponse> updateProductResponse(
-            @PathVariable("productId") long productId
-    ) {
-        ProductUpdateResponse resp = productService.retrieveUpdateProduct(productId);
-        return ResponseEntity.ok(resp);
-    }
 
     @Operation(summary = "상품 삭제", description = "해당 회원이 작성한 상품 및 상품 이미지 삭제")
     @DeleteMapping("/delete/{productId}")
@@ -147,21 +146,6 @@ public class ProductController {
         return ResponseEntity.ok(productInterestService.myInterestProductList(memberId));
     }
 
-//    @Operation(summary = "*마이페이지 판매 목록 조회", description = "마이페이지에서 판매중인 상품 목록을 전체 조회한다")
-//    @GetMapping("/my/sales")
-//    public ResponseEntity<MySalesListResponse> mySalesList(
-//            @AuthenticationPrincipal long memberId
-//    ) {
-//        return ResponseEntity.ok().build();
-//    }
-//
-//    @Operation(summary = "*마이페이지 판매 상품 상세정보", description = "판매중인 상품 클릭시 판매 주문 내역을 조회한다")
-//    @GetMapping("/my/sales/{productId}")
-//    public ResponseEntity<MySalesDetailResponse> mySalesDetail(
-//            @PathVariable("productId") long productId
-//    ) {
-//        return ResponseEntity.ok().build();
-//    }
 
     @GetMapping("/list/recent")
     public ResponseEntity<?> recentProduct(

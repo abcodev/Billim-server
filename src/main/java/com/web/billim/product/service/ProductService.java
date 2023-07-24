@@ -5,6 +5,7 @@ import com.web.billim.exception.handler.ErrorCode;
 import com.web.billim.infra.ImageUploadService;
 import com.web.billim.member.domain.Member;
 import com.web.billim.member.repository.MemberRepository;
+import com.web.billim.order.dto.response.MySalesListResponse;
 import com.web.billim.order.service.OrderService;
 import com.web.billim.product.domain.ImageProduct;
 import com.web.billim.product.domain.Product;
@@ -56,6 +57,44 @@ public class ProductService {
         return productRepository.save(product);
     }
 
+    public Page<ProductListResponse> search(String category, String keyword, PageRequest paging) {
+        return  productRepository.findAllByKeyword(category, keyword, paging)
+                .map(product -> {
+                    double starRating = reviewService.calculateStarRating(product.getProductId());
+                    return ProductListResponse.of(product, starRating);
+                });
+    }
+
+//    @Transactional
+//    public Page<ProductListResponse> findAllProduct(int page) {
+//        PageRequest paging = PageRequest.of(page, 20);
+//        return productRepository.findAllByOrderByCreatedAtDesc(paging).map(product -> {
+//            double starRating = reviewService.calculateStarRating(product.getProductId());
+//            return ProductListResponse.of(product, starRating);
+//        });
+//    }
+
+//    public List<ProductCategory> categoryList() {
+//        return productCategoryRepository.findAll();
+//    }
+
+    @Transactional
+    public ProductDetailResponse retrieveDetail(long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
+        List<LocalDate> alreadyDates = orderService.reservationDate(productId);
+        double starRating = reviewService.calculateStarRating(product.getProductId());
+        productRedisService.saveProduct(productId);
+        return ProductDetailResponse.of(product, alreadyDates, starRating);
+    }
+
+    @Transactional
+    public ProductUpdateResponse retrieveUpdateProduct(long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
+        return ProductUpdateResponse.of(product);
+    }
+
     @Transactional
     public void update(ProductUpdateCommand command) {
         // 0. 이미지 개수 검증
@@ -84,27 +123,14 @@ public class ProductService {
                 }).orElseThrow();
     }
 
-    public List<ProductCategory> categoryList() {
-        return productCategoryRepository.findAll();
-    }
 
     @Transactional
-    public Page<ProductListResponse> findAllProduct(int page) {
-        PageRequest paging = PageRequest.of(page, 20);
-        return productRepository.findAllByOrderByCreatedAtDesc(paging).map(product -> {
-            double starRating = reviewService.calculateStarRating(product.getProductId());
-            return ProductListResponse.of(product, starRating);
-        });
-    }
-
-    @Transactional
-    public ProductDetailResponse retrieveDetail(long productId) {
+    public void delete(long memberId, long productId) {
         Product product = productRepository.findById(productId)
+                .filter(p -> p.getMember().getMemberId() == memberId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
-        List<LocalDate> alreadyDates = orderService.reservationDate(productId);
-        double starRating = reviewService.calculateStarRating(product.getProductId());
-        productRedisService.saveProduct(productId);
-        return ProductDetailResponse.of(product, alreadyDates, starRating);
+        imageProductRepository.deleteAllInBatch(product.getImages());
+        productRepository.delete(product);
     }
 
     public List<MostProductList> findMostPopularProduct() {
@@ -113,29 +139,14 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
-    public ProductUpdateResponse retrieveUpdateProduct(long productId) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
-        return ProductUpdateResponse.of(product);
-    }
 
     @Transactional
-    public void delete(long memberId, long productId) {
-        Product product = productRepository.findById(productId)
-            .filter(p -> p.getMember().getMemberId() == memberId)
-            .orElseThrow(() -> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
-        imageProductRepository.deleteAllInBatch(product.getImages());
-        productRepository.delete(product);
+    public List<MySalesListResponse> findMySalesList(long memberId) {
+        return productRepository.findByMemberId(memberId)
+                .stream().map(MySalesListResponse::of)
+                .collect(Collectors.toList());
     }
 
-	public Page<ProductListResponse> search(String category, String keyword, PageRequest paging) {
-        return  productRepository.findAllByKeyword(category, keyword, paging)
-                .map(product -> {
-                    double starRating = reviewService.calculateStarRating(product.getProductId());
-                    return ProductListResponse.of(product, starRating);
-                });
-	}
 
 
 //    public ReservationDateResponse reservationDate(int productId) {
