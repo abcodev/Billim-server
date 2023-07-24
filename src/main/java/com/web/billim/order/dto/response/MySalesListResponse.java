@@ -1,4 +1,4 @@
-package com.web.billim.product.dto.response;
+package com.web.billim.order.dto.response;
 
 import com.web.billim.product.domain.ImageProduct;
 import com.web.billim.product.domain.Product;
@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @Builder
-public class MyProductSalesResponse {
+public class MySalesListResponse {
 
 	private long productId;
 	private String productName;
@@ -20,8 +20,8 @@ public class MyProductSalesResponse {
 	private List<String> imageUrls;
 	private List<TradeMethod> tradeMethods;
 
-	public static MyProductSalesResponse of(Product product) {
-		return MyProductSalesResponse.builder()
+	public static MySalesListResponse of(Product product) {
+		return MySalesListResponse.builder()
 			.productId(product.getProductId())
 			.productName(product.getProductName())
 			.detail(product.getDetail())

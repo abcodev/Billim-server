@@ -1,17 +1,18 @@
 package com.web.billim.product.controller;
 
+import com.web.billim.order.dto.response.MySalesDetailResponse;
+import com.web.billim.order.dto.response.MySalesListResponse;
 import com.web.billim.order.service.OrderService;
 import com.web.billim.product.domain.Product;
 import com.web.billim.product.domain.ProductCategory;
-import com.web.billim.product.dto.ProductRegisterCommand;
-import com.web.billim.product.dto.ProductUpdateCommand;
+import com.web.billim.product.dto.command.ProductRegisterCommand;
+import com.web.billim.product.dto.command.ProductUpdateCommand;
 import com.web.billim.product.dto.request.InterestRequest;
 import com.web.billim.product.dto.request.ProductRegisterRequest;
 import com.web.billim.product.dto.request.ProductUpdateRequest;
 import com.web.billim.product.dto.response.*;
 import com.web.billim.product.service.ProductInterestService;
 import com.web.billim.product.service.ProductService;
-import com.web.billim.product.service.RecentProductRedisService;
 import com.web.billim.review.service.ReviewService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -87,14 +88,18 @@ public class ProductController {
 
     @Operation(summary = "상품 상세정보", description = "productId에 따른 상품 상세정보 & 이미 예약되어 이용할 수 없는 날짜")
     @GetMapping("/detail/{productId}")
-    public ResponseEntity<ProductDetailResponse> productDetail(@PathVariable("productId") long productId) {
+    public ResponseEntity<ProductDetailResponse> productDetail(
+            @PathVariable("productId") long productId
+    ) {
         ProductDetailResponse resp = productService.retrieveDetail(productId);
         resp.setProductReviewLists(reviewService.reviewList(productId));
         return ResponseEntity.ok(resp);
     }
 
     @GetMapping("/detail/date/{productId}")
-    public ResponseEntity<List<LocalDate>> alreadyReservedDate(@PathVariable("productId") long productId) {
+    public ResponseEntity<List<LocalDate>> alreadyReservedDate(
+            @PathVariable("productId") long productId
+    ) {
         List<LocalDate> dates = orderService.reservationDate(productId);
         return ResponseEntity.ok(dates);
     }
@@ -135,25 +140,33 @@ public class ProductController {
     }
 
     @Operation(summary = "마이페이지 관심목록 조회")
-    @GetMapping("/my/interestList")
-    public ResponseEntity<MyInterestProductList> myInterestProductList(@AuthenticationPrincipal long memberId) {
+    @GetMapping("/my/interest")
+    public ResponseEntity<MyInterestProductList> myInterestProductList(
+            @AuthenticationPrincipal long memberId
+    ) {
         return ResponseEntity.ok(productInterestService.myInterestProductList(memberId));
     }
 
-    @Operation(summary = "*마이페이지 판매 목록 조회", description = "마이페이지에서 판매중인 상품 목록을 전체 조회한다")
-    @GetMapping("/my/sell/list")
-    public ResponseEntity<Void> mySellList() {
-        return ResponseEntity.ok().build();
-    }
-
-    @Operation(summary = "*마이페이지 판매 상품 상세정보", description = "판매중인 상품 클릭시 판매 주문 내역을 조회한다")
-    @GetMapping("/my/sell/detail")
-    public ResponseEntity<Void> mySellDetail() {
-        return ResponseEntity.ok().build();
-    }
+//    @Operation(summary = "*마이페이지 판매 목록 조회", description = "마이페이지에서 판매중인 상품 목록을 전체 조회한다")
+//    @GetMapping("/my/sales")
+//    public ResponseEntity<MySalesListResponse> mySalesList(
+//            @AuthenticationPrincipal long memberId
+//    ) {
+//        return ResponseEntity.ok().build();
+//    }
+//
+//    @Operation(summary = "*마이페이지 판매 상품 상세정보", description = "판매중인 상품 클릭시 판매 주문 내역을 조회한다")
+//    @GetMapping("/my/sales/{productId}")
+//    public ResponseEntity<MySalesDetailResponse> mySalesDetail(
+//            @PathVariable("productId") long productId
+//    ) {
+//        return ResponseEntity.ok().build();
+//    }
 
     @GetMapping("/list/recent")
-    public ResponseEntity<?> recentProduct(@AuthenticationPrincipal long memberId) {
+    public ResponseEntity<?> recentProduct(
+            @AuthenticationPrincipal long memberId
+    ) {
         return ResponseEntity.ok().build();
     }
 

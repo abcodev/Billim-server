@@ -1,4 +1,4 @@
-package com.web.billim.product.dto;
+package com.web.billim.product.dto.command;
 
 import com.web.billim.product.dto.request.ProductUpdateRequest;
 import com.web.billim.product.type.TradeMethod;

@@ -1,18 +1,13 @@
-package com.web.billim.product.dto.response;
+package com.web.billim.order.dto.response;
 
-import com.web.billim.order.domain.ProductOrder;
-import com.web.billim.product.domain.ImageProduct;
-import com.web.billim.product.domain.Product;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @Builder
-public class MySellDetailResponse {
+public class MySalesDetailResponse {
 
     private long memberId;
 

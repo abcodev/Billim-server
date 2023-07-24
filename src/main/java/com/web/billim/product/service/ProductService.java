@@ -9,8 +9,8 @@ import com.web.billim.order.service.OrderService;
 import com.web.billim.product.domain.ImageProduct;
 import com.web.billim.product.domain.Product;
 import com.web.billim.product.domain.ProductCategory;
-import com.web.billim.product.dto.ProductRegisterCommand;
-import com.web.billim.product.dto.ProductUpdateCommand;
+import com.web.billim.product.dto.command.ProductRegisterCommand;
+import com.web.billim.product.dto.command.ProductUpdateCommand;
 import com.web.billim.product.dto.response.*;
 import com.web.billim.product.repository.ImageProductRepository;
 import com.web.billim.product.repository.ProductCategoryRepository;
@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -114,19 +113,12 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-
     @Transactional
     public ProductUpdateResponse retrieveUpdateProduct(long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
         return ProductUpdateResponse.of(product);
     }
-
-//    public Product update(long memberId, ProductUpdateRequest req) {
-//
-//        return productRepository.save(memberId, product);
-//    }
-
 
     @Transactional
     public void delete(long memberId, long productId) {
@@ -146,8 +138,7 @@ public class ProductService {
 	}
 
 
-
-    //    public ReservationDateResponse reservationDate(int productId) {
+//    public ReservationDateResponse reservationDate(int productId) {
 //        Optional<ProductOrder> productOrder = Optional.ofNullable(orderRepository.findByProductId(productId)
 //                .orElseThrow(() ->
 //                        new RuntimeException("해당 ProductId(" + productId + ") 에 대한 예약날짜가 없습니다.")));

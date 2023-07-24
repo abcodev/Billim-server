@@ -13,18 +13,11 @@ import javax.persistence.Table;
 import com.web.billim.common.domain.JpaEntity;
 import com.web.billim.member.type.MemberGrade;
 
-import com.web.billim.product.domain.ImageProduct;
-import com.web.billim.product.domain.ProductCategory;
-import com.web.billim.product.dto.ProductUpdateCommand;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

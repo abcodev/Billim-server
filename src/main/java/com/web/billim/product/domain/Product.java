@@ -1,8 +1,8 @@
 package com.web.billim.product.domain;
 
 import com.web.billim.common.domain.JpaEntity;
-import com.web.billim.product.dto.ProductRegisterCommand;
-import com.web.billim.product.dto.ProductUpdateCommand;
+import com.web.billim.product.dto.command.ProductRegisterCommand;
+import com.web.billim.product.dto.command.ProductUpdateCommand;
 import com.web.billim.member.domain.Member;
 import com.web.billim.product.type.TradeMethod;
 
