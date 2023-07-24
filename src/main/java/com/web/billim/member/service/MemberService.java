@@ -109,37 +109,6 @@ public class MemberService {
 		});
 	}
 
-//	@Transactional
-//	public void updateProfileImage(long memberId, MultipartFile profileImage) {
-//		String imageUrl = imageUploadService.upload(profileImage, "profile");
-//		memberRepository.findById(memberId)
-//			.ifPresent(member -> {
-//				member.updateProfileImage(imageUrl);
-//				memberRepository.save(member);
-//			});
-//	}
-
-//	@Transactional
-//	public void updateAddress(long memberId, UpdateAddressRequest req) {
-//		memberRepository.findById(memberId)
-//			.ifPresent(member -> {
-//				member.updateAddress(req.getAddress());
-//				memberRepository.save(member);
-//			});
-//	}
-
-//	@Transactional
-//	public void updateNickname(long memberId, UpdateNicknameRequest req) {
-//		if (memberRepository.existsByNickname(req.getNickname())) {
-//			throw new RuntimeException("중복된 닉네임 입니다.");
-//		}
-//		memberRepository.findById(memberId)
-//			.ifPresent(member -> {
-//				member.updateNickname(req.getNickname());
-//				memberRepository.save(member);
-//			});
-//	}
-
 	@Transactional
 	public void findPassword(FindPasswordRequest req) {
 		Member member = memberRepository.findByEmailAndName(req.getEmail(), req.getName())

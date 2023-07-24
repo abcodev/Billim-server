@@ -1,10 +1,6 @@
 package com.web.billim.product.repository;
 
-import com.web.billim.order.dto.response.MySalesListResponse;
 import com.web.billim.product.domain.Product;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,8 +10,6 @@ import java.util.List;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long>, ProductQueryDslRepository {
-
-
 
     List<Product> findAllByProductIdIn(List<Long> mostProductLists);
 

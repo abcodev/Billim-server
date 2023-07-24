@@ -14,7 +14,6 @@ public class MySalesListResponse {
 	private long productId;
 	private String productName;
 	private long price;
-//	private List<String> imageUrls;
 	private String imageUrl;
 	private List<TradeMethod> tradeMethods;
 
@@ -24,11 +23,6 @@ public class MySalesListResponse {
 			.productName(product.getProductName())
 			.price(product.getPrice())
 			.imageUrl(product.mainImage())
-//			.imageUrls(
-//				product.getImages().stream()
-//					.map(ImageProduct::getUrl)
-//					.collect(Collectors.toList())
-//			)
 			.tradeMethods(product.getTradeMethods())
 			.build();
 	}

@@ -2,7 +2,6 @@ package com.web.billim.product.controller;
 
 import com.web.billim.order.service.OrderService;
 import com.web.billim.product.domain.Product;
-import com.web.billim.product.domain.ProductCategory;
 import com.web.billim.product.dto.command.ProductRegisterCommand;
 import com.web.billim.product.dto.command.ProductUpdateCommand;
 import com.web.billim.product.dto.request.InterestRequest;
@@ -28,7 +27,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Tag(name = "상품", description = "ProductController")
@@ -38,7 +36,6 @@ import java.util.List;
 @RequestMapping("/product")
 public class ProductController {
     private final ProductService productService;
-    private final OrderService orderService;
     private final ProductInterestService productInterestService;
     private final ReviewService reviewService;
 
@@ -65,12 +62,6 @@ public class ProductController {
         return ResponseEntity.ok(productService.search(category, keyword, paging));
     }
 
-//    @GetMapping("/list/category")
-//    public ResponseEntity<List<ProductCategory>> productCategory() {
-//        List<ProductCategory> categoryList = productService.categoryList();
-//        return ResponseEntity.ok(categoryList);
-//    }
-
     @Operation(summary = "상품 상세정보", description = "productId에 따른 상품 상세정보 & 이미 예약되어 이용할 수 없는 날짜")
     @GetMapping("/detail/{productId}")
     public ResponseEntity<ProductDetailResponse> productDetail(
@@ -80,14 +71,6 @@ public class ProductController {
         resp.setProductReviewLists(reviewService.reviewList(productId));
         return ResponseEntity.ok(resp);
     }
-
-//    @GetMapping("/detail/date/{productId}")
-//    public ResponseEntity<List<LocalDate>> alreadyReservedDate(
-//            @PathVariable("productId") long productId
-//    ) {
-//        List<LocalDate> dates = orderService.reservationDate(productId);
-//        return ResponseEntity.ok(dates);
-//    }
 
     @Operation(summary = "상품 수정 기존 내용 조회", description = "상품 수정시 기존 정보 조회를 조회한다")
     @GetMapping("/update/{productId}")

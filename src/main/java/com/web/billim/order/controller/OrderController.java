@@ -30,8 +30,8 @@ public class OrderController {
     @Operation(summary = "상품 주문", description = "상품 결제버튼 클릭시 호출한다.")
     @PostMapping
     public ResponseEntity<PaymentInfoResponse> order(
-            @RequestBody OrderCommand command,
-            @AuthenticationPrincipal long memberId
+            @AuthenticationPrincipal long memberId,
+            @RequestBody OrderCommand command
     ) {
         PaymentInfoResponse resp = orderService.order(memberId, command);
         return ResponseEntity.ok(resp);
@@ -39,14 +39,18 @@ public class OrderController {
 
     @Operation(summary = "상품 주문 취소", description = "상품 주문 및 결제를 취소한다.")
     @DeleteMapping("/{orderId}")
-    public ResponseEntity<Void> cancel(@PathVariable long orderId) {
+    public ResponseEntity<Void> cancel(
+            @PathVariable long orderId
+    ) {
         orderService.cancel(orderId);
         return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "*마이페이지 상품 구매 목록 조회", description = "마이페이지에서 구매 목록을 조회한다.")
     @GetMapping("/my/purchase")
-    public ResponseEntity<MyOrderHistoryListResponse> myOrder(@AuthenticationPrincipal long memberId) {
+    public ResponseEntity<MyOrderHistoryListResponse> myOrder(
+            @AuthenticationPrincipal long memberId
+    ) {
         return ResponseEntity.ok(orderService.findMyOrder(memberId));
     }
 

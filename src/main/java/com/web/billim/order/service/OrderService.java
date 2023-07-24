@@ -19,6 +19,7 @@ import com.web.billim.payment.service.PaymentService;
 import com.web.billim.product.domain.Product;
 import com.web.billim.product.domain.service.ProductDomainService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +37,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ProductDomainService productDomainService;
 
+    // 이미 예약된 날짜 조회
     public List<LocalDate> reservationDate(long productId) {
         Product product = productDomainService.find(productId);
         List<ProductOrder> orderList = orderRepository.findAllByProductAndEndAtAfter(product,LocalDate.now());
@@ -47,6 +49,7 @@ public class OrderService {
             .collect(Collectors.toList());
     }
 
+    // 주문 및 결제
     @Transactional
     public PaymentInfoResponse order(long memberId, OrderCommand orderCommand) {
         Member member = memberService.retrieve(memberId);
@@ -76,6 +79,7 @@ public class OrderService {
         return paymentService.payment(paymentCommand);
     }
 
+    // 주문 취소
     @Transactional
     public void cancel(long orderId) {
         ProductOrder order = orderRepository.findById(orderId).orElseThrow();
@@ -103,6 +107,7 @@ public class OrderService {
                 .orElseThrow(()-> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
     }
 
+    // 마이페이지 나의 구매 내역 목록 조회
     @Transactional
     public MyOrderHistoryListResponse findMyOrder(long memberId) {
         List<ProductOrder> productOrders= orderRepository.findAllByMember_memberId(memberId)
@@ -113,13 +118,13 @@ public class OrderService {
         return new MyOrderHistoryListResponse(myOrderHistories);
     }
 
+    // 마이페이지 나의 판매 내역 상세 조회
     @Transactional
     public MySalesDetailResponse findAllHistory(long productId) {
         Product product = productDomainService.find(productId);
         List<ProductOrder> orderHistories = orderRepository.findAllByProduct(product);
         return MySalesDetailResponse.of(product, orderHistories);
     }
-
 
 
 }

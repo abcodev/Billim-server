@@ -1,7 +1,6 @@
 package com.web.billim.order.dto.response;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.web.billim.order.domain.ProductOrder;
@@ -40,4 +39,5 @@ public class MySalesOrderResponse {
 			order.getEndAt()
 		);
 	}
+
 }
