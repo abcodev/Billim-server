@@ -117,7 +117,7 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "마이페이지 관심목록 조회")
+    @Operation(summary = "관심목록 조회")
     @GetMapping("/my/interest")
     public ResponseEntity<MyInterestProductList> myInterestProductList(
             @AuthenticationPrincipal long memberId

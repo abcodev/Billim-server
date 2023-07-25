@@ -70,5 +70,4 @@ public class OrderController {
         return ResponseEntity.ok(orderService.findAllHistory(productId));
     }
 
-
 }

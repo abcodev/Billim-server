@@ -25,7 +25,7 @@ public class AuthController {
     }
 
     @Operation(summary = "로그아웃")
-    @PostMapping("/logout")
+    @DeleteMapping("/logout")
     public ResponseEntity<Void> logout(@RequestHeader(name = "Authorization") String authorization) {
         String accessToken = authorization.substring(AUTHORIZATION_HEADER_PREFIX.length());
         authService.logout(accessToken);
