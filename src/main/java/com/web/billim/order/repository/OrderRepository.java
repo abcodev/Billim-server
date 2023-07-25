@@ -21,6 +21,7 @@ public interface OrderRepository extends JpaRepository<ProductOrder, Long> {
 
     // List<> 를 두면 null 이 안오고 데이터가 없으면 빈 리스트
     Optional<List<ProductOrder>> findAllByMember_memberId(long memberId);
+    List<ProductOrder> findAllByMember_memberId_OrderByOrderIdDesc(long memberId);
 
     Optional<Long> countByMember_memberId(long memberId);
 

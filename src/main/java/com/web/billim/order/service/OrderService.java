@@ -110,8 +110,9 @@ public class OrderService {
     // 마이페이지 나의 구매 내역 목록 조회
     @Transactional
     public MyOrderHistoryListResponse findMyOrder(long memberId) {
-        List<ProductOrder> productOrders= orderRepository.findAllByMember_memberId(memberId)
-                .orElseThrow(()-> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
+//        List<ProductOrder> productOrders= orderRepository.findAllByMember_memberId(memberId)
+//                .orElseThrow(()-> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
+        List<ProductOrder> productOrders= orderRepository.findAllByMember_memberId_OrderByOrderIdDesc(memberId);
         List<MyOrderHistory> myOrderHistories = productOrders.stream()
                 .map(MyOrderHistory::from)
                 .collect(Collectors.toList());

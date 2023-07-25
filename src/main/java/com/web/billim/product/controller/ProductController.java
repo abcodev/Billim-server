@@ -38,7 +38,6 @@ import java.util.List;
 public class ProductController {
     private final ProductService productService;
     private final ProductInterestService productInterestService;
-    private final RecentProductRedisService recentProductRedisService;
     private final ReviewService reviewService;
 
     @Operation(summary = "상품 등록", description = "이미지 1장부터 최대 5장까지 첨부 가능")
@@ -95,8 +94,7 @@ public class ProductController {
         return ResponseEntity.ok().build();
 //        return ResponseEntity.ok(productService.update(command));
     }
-
-
+    
     @Operation(summary = "상품 삭제", description = "해당 회원이 작성한 상품 및 상품 이미지 삭제")
     @DeleteMapping("/delete/{productId}")
     public ResponseEntity<Void> deleteProduct(

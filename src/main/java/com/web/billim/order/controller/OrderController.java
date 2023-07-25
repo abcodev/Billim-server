@@ -39,34 +39,26 @@ public class OrderController {
 
     @Operation(summary = "상품 주문 취소", description = "상품 주문 및 결제를 취소한다.")
     @DeleteMapping("/{orderId}")
-    public ResponseEntity<Void> cancel(
-            @PathVariable long orderId
-    ) {
+    public ResponseEntity<Void> cancel(@PathVariable long orderId) {
         orderService.cancel(orderId);
         return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "*마이페이지 상품 구매 목록 조회", description = "마이페이지에서 구매 목록을 조회한다.")
     @GetMapping("/my/purchase")
-    public ResponseEntity<MyOrderHistoryListResponse> myOrder(
-            @AuthenticationPrincipal long memberId
-    ) {
+    public ResponseEntity<MyOrderHistoryListResponse> myOrder(@AuthenticationPrincipal long memberId) {
         return ResponseEntity.ok(orderService.findMyOrder(memberId));
     }
 
     @Operation(summary = "마이페이지 판매 목록 조회", description = "마이페이지에서 판매중인 상품 목록을 전체 조회한다.")
     @GetMapping("/my/sales")
-    public ResponseEntity<List<MySalesListResponse>> mySalesList(
-            @AuthenticationPrincipal long memberId
-    ) {
+    public ResponseEntity<List<MySalesListResponse>> mySalesList(@AuthenticationPrincipal long memberId) {
         return ResponseEntity.ok(productService.findMySalesList(memberId));
     }
 
     @Operation(summary = "*마이페이지 판매 상품 상세정보", description = "판매중인 상품 클릭시 판매 주문 내역을 조회한다.")
     @GetMapping("/my/sales/{productId}")
-    public ResponseEntity<MySalesDetailResponse> mySalesDetail(
-            @PathVariable("productId") long productId
-    ) {
+    public ResponseEntity<MySalesDetailResponse> mySalesDetail(@PathVariable("productId") long productId) {
         return ResponseEntity.ok(orderService.findAllHistory(productId));
     }
 
