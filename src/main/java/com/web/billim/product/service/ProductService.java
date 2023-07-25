@@ -17,7 +17,6 @@ import com.web.billim.product.repository.ImageProductRepository;
 import com.web.billim.product.repository.ProductCategoryRepository;
 import com.web.billim.product.repository.ProductRepository;
 import com.web.billim.review.service.ReviewService;
-import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,6 +38,7 @@ public class ProductService {
     private final OrderService orderService;
     private final ImageUploadService imageUploadService;
     private final ProductRedisService productRedisService;
+    private final RecentProductRedisService recentProductRedisService;
     private final ReviewService reviewService;
 
     // 상품 등록
@@ -76,6 +77,9 @@ public class ProductService {
         List<LocalDate> alreadyDates = orderService.reservationDate(productId);
         double starRating = reviewService.calculateStarRating(product.getProductId());
         productRedisService.saveProduct(productId);
+
+        recentProductRedisService.push(3, productId);
+
         return ProductDetailResponse.of(product, alreadyDates, starRating);
     }
 
@@ -133,6 +137,14 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
+    // 최근 본 상품 목록
+    public List<RecentProductResponse> recentProductList(long memberId) {
+        return productRepository.findAllById(recentProductRedisService.findTopN(memberId, 5))
+                .stream()
+                .filter(Objects::nonNull)
+                .map(RecentProductResponse::of)
+                .collect(Collectors.toList());
+    }
 
     // 마이페이지 상품 판매 목록 조회
     @Transactional
@@ -141,7 +153,6 @@ public class ProductService {
                 .stream().map(MySalesListResponse::of)
                 .collect(Collectors.toList());
     }
-
 
 
 }

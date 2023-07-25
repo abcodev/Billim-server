@@ -10,6 +10,7 @@ import com.web.billim.product.dto.request.ProductUpdateRequest;
 import com.web.billim.product.dto.response.*;
 import com.web.billim.product.service.ProductInterestService;
 import com.web.billim.product.service.ProductService;
+import com.web.billim.product.service.RecentProductRedisService;
 import com.web.billim.review.service.ReviewService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,6 +38,7 @@ import java.util.List;
 public class ProductController {
     private final ProductService productService;
     private final ProductInterestService productInterestService;
+    private final RecentProductRedisService recentProductRedisService;
     private final ReviewService reviewService;
 
     @Operation(summary = "상품 등록", description = "이미지 1장부터 최대 5장까지 첨부 가능")
@@ -72,7 +74,7 @@ public class ProductController {
         return ResponseEntity.ok(resp);
     }
 
-    @Operation(summary = "상품 수정 기존 내용 조회", description = "상품 수정시 기존 정보 조회를 조회한다")
+    @Operation(summary = "상품 수정시 기존 내용 조회", description = "상품 수정시 기존 정보 조회를 조회한다")
     @GetMapping("/update/{productId}")
     public ResponseEntity<ProductUpdateResponse> updateProductResponse(
             @PathVariable("productId") long productId
@@ -105,12 +107,6 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "*인기 상품 조회", description = "사람들이 많이 본 상품 상품 리스트")
-    @GetMapping("/list/most/popular")
-    public ResponseEntity<List<MostProductList>> mostProductList() {
-        return ResponseEntity.ok(productService.findMostPopularProduct());
-    }
-
     @Operation(summary = "관심상품 등록, 삭제", description = "true 관심상품등록, false 관심등록삭제")
     @PostMapping("/interest")
     public ResponseEntity<Void> saveOrDeleteInterest(
@@ -129,13 +125,17 @@ public class ProductController {
         return ResponseEntity.ok(productInterestService.myInterestProductList(memberId));
     }
 
+    @Operation(summary = "*인기 상품 조회", description = "사람들이 많이 본 상품 상품 리스트")
+    @GetMapping("/list/most/popular")
+    public ResponseEntity<List<MostProductList>> mostProductList() {
+        return ResponseEntity.ok(productService.findMostPopularProduct());
+    }
 
     @GetMapping("/list/recent")
-    public ResponseEntity<?> recentProduct(
-            @AuthenticationPrincipal long memberId
-    ) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<List<RecentProductResponse>> recentProductList(@AuthenticationPrincipal long memberId) {
+        return ResponseEntity.ok(productService.recentProductList(memberId));
     }
+
 
 
 }
