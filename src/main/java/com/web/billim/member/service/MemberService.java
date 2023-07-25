@@ -1,10 +1,10 @@
 package com.web.billim.member.service;
 
-import com.web.billim.common.exception.JwtException;
+import com.web.billim.exception.JwtException;
 import com.web.billim.email.service.EmailSendService;
-import com.web.billim.common.exception.NotFoundException;
-import com.web.billim.common.exception.UnAuthorizedException;
-import com.web.billim.common.exception.handler.ErrorCode;
+import com.web.billim.exception.NotFoundException;
+import com.web.billim.exception.UnAuthorizedException;
+import com.web.billim.exception.handler.ErrorCode;
 import com.web.billim.coupon.repository.CouponRepository;
 import com.web.billim.coupon.service.CouponService;
 import com.web.billim.infra.ImageUploadService;
@@ -19,8 +19,6 @@ import com.web.billim.point.service.PointService;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -111,37 +109,6 @@ public class MemberService {
 		});
 	}
 
-//	@Transactional
-//	public void updateProfileImage(long memberId, MultipartFile profileImage) {
-//		String imageUrl = imageUploadService.upload(profileImage, "profile");
-//		memberRepository.findById(memberId)
-//			.ifPresent(member -> {
-//				member.updateProfileImage(imageUrl);
-//				memberRepository.save(member);
-//			});
-//	}
-
-//	@Transactional
-//	public void updateAddress(long memberId, UpdateAddressRequest req) {
-//		memberRepository.findById(memberId)
-//			.ifPresent(member -> {
-//				member.updateAddress(req.getAddress());
-//				memberRepository.save(member);
-//			});
-//	}
-
-//	@Transactional
-//	public void updateNickname(long memberId, UpdateNicknameRequest req) {
-//		if (memberRepository.existsByNickname(req.getNickname())) {
-//			throw new RuntimeException("중복된 닉네임 입니다.");
-//		}
-//		memberRepository.findById(memberId)
-//			.ifPresent(member -> {
-//				member.updateNickname(req.getNickname());
-//				memberRepository.save(member);
-//			});
-//	}
-
 	@Transactional
 	public void findPassword(FindPasswordRequest req) {
 		Member member = memberRepository.findByEmailAndName(req.getEmail(), req.getName())
@@ -160,7 +127,7 @@ public class MemberService {
 			.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 
 		if (!passwordEncoder.matches(command.getPassword(), member.getPassword())) {
-			throw new UnAuthorizedException(ErrorCode.MISMATCH_PASSWORD);
+			throw new UnAuthorizedException(ErrorCode.INVALID_EMAIL_PASSWORD);
 		}
 		// member.validatePassword(passwordEncoder, command.getPassword());
 		String encodedPassword = passwordEncoder.encode(command.getNewPassword());

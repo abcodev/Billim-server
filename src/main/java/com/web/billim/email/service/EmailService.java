@@ -1,7 +1,7 @@
 package com.web.billim.email.service;
 
-import com.web.billim.common.exception.DuplicatedException;
-import com.web.billim.common.exception.handler.ErrorCode;
+import com.web.billim.exception.DuplicatedException;
+import com.web.billim.exception.handler.ErrorCode;
 import com.web.billim.email.dto.EmailAuthRequest;
 import com.web.billim.email.dto.EmailRequest;
 import com.web.billim.member.repository.MemberRepository;

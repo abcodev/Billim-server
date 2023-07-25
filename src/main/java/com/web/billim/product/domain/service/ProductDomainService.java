@@ -1,9 +1,9 @@
 package com.web.billim.product.domain.service;
 
-import com.web.billim.common.exception.NotFoundException;
+import com.web.billim.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.web.billim.common.exception.handler.ErrorCode;
+import com.web.billim.exception.handler.ErrorCode;
 import com.web.billim.product.domain.Product;
 import com.web.billim.product.repository.ProductRepository;
 

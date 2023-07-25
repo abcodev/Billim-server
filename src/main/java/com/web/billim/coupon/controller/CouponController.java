@@ -23,10 +23,17 @@ public class CouponController {
 
     private final CouponService couponService;
 
-    @Operation(summary = "회원 쿠폰 목록 조회", description = "마이페이지에서 쿠폰 클릭시 현재 사용가능한 쿠폰 목록 조회")
+    @Operation(summary = "회원 쿠폰 목록 조회", description = "현재 사용가능한 쿠폰 목록 조회")
     @GetMapping("/list")
     public ResponseEntity<List<AvailableCouponResponse>> myCouponList(@AuthenticationPrincipal long memberId) {
         return ResponseEntity.ok(couponService.retrieveAvailableCouponList(memberId));
     }
+
+    @Operation(summary = "회원 쿠폰 목록 할인율순 조회", description = "현재 사용 가능한 쿠폰 목록 중 할인율 높은순 조회")
+    @GetMapping("/list/rate")
+    public ResponseEntity<List<AvailableCouponResponse>> myCouponListByRate(@AuthenticationPrincipal long memberId) {
+        return ResponseEntity.ok(couponService.retrieveAvailableCouponListByRate(memberId));
+    }
+
 
 }

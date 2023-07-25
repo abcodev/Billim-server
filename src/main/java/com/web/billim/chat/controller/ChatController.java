@@ -58,7 +58,7 @@ public class ChatController {
 		return ResponseEntity.ok(chatRoomService.joinChatRoom(buyerId, productId));
 	}
 
-	@Operation(summary = "구매자의 채팅방 목록 조회", description = "자신의 채팅방 목록 전체 조회한다.")
+	@Operation(summary = "채팅방 목록 조회", description = "자신의 채팅방 목록 전체 조회한다.")
 	@GetMapping("/rooms")
 	public ResponseEntity<List<ChatRoomAndPreviewResponse>> retrieveAllMyChatRoom(@AuthenticationPrincipal long buyerId) {
 		return ResponseEntity.ok(chatRoomService.retrieveAllJoined(buyerId));

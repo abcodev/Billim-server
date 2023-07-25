@@ -45,7 +45,6 @@ public class MemberController {
         binder.addValidators(checkPasswordValidator);
     }
 
-
     @Operation(summary = "회원가입")
     @PostMapping("/signup")
     public ResponseEntity<Map<String, String>> memberSignUp (
@@ -88,7 +87,7 @@ public class MemberController {
         return ResponseEntity.ok(memberService.retrieveUpdateInfoPage(memberId));
     }
 
-    @Operation(summary = "*회원 정보 수정" , description = "회원 정보 수정 반영")
+    @Operation(summary = "회원 정보 수정" , description = "회원 정보 수정 반영")
     @PutMapping(value = "/info", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<MemberInfoResponse> updateInfo(
             @AuthenticationPrincipal long memberId,
@@ -97,36 +96,6 @@ public class MemberController {
         memberService.updateInfo(memberId, req);
         return ResponseEntity.ok(memberService.retrieveUpdateInfoPage(memberId));
     }
-
-//    @ApiOperation(value = "회원정보 프로필 이미지 변경", notes = "회원 정보 수정 시 프로필 이미지 변경")
-//    @PutMapping(value = "/my/profile-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    public ResponseEntity<Void> updateProfileImage(
-//            @AuthenticationPrincipal long memberId,
-//            MultipartFile profileImage
-//    ) {
-//        memberService.updateProfileImage(memberId, profileImage);
-//        return ResponseEntity.ok().build();
-//    }
-
-//    @ApiOperation(value = "회원정보 주소 변경", notes = "회원 정보 수정 시 주소 변경")
-//    @PutMapping("/my/address")
-//    public ResponseEntity<Void> updateAddress(
-//            @AuthenticationPrincipal long memberId,
-//            @RequestBody UpdateAddressRequest req
-//    ) {
-//        memberService.updateAddress(memberId, req);
-//        return ResponseEntity.ok().build();
-//    }
-
-//    @ApiOperation(value = "회원정보 닉네임 변경", notes = "회원 정보 수정 시 닉네임 변경")
-//    @PutMapping("/my/nickname")
-//    public ResponseEntity<Void> updateNickname(
-//            @AuthenticationPrincipal long memberId,
-//            @RequestBody UpdateNicknameRequest req
-//    ) {
-//        memberService.updateNickname(memberId, req);
-//        return ResponseEntity.ok().build();
-//    }
 
 
     @Operation(summary = "비밀번호 재설정", description = "회원 정보 수정 시 비밀번호 재설정")

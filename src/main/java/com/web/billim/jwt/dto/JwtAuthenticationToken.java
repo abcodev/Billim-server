@@ -18,7 +18,6 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
     }
 
     // provider -> filter 반환
-
     public JwtAuthenticationToken(Collection<? extends GrantedAuthority> authorities, Object email){
         super(authorities);
         this.email = email;
@@ -41,4 +40,5 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
 //    public boolean implies(Subject subject) {
 //        return super.implies(subject);
 //    }
+
 }

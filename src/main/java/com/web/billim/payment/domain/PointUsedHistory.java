@@ -28,4 +28,8 @@ public class PointUsedHistory extends JpaEntity {
 
 	private long amount;
 
+	public void refund() {
+		savedPoint.addAvailablePoint(amount);
+	}
+
 }

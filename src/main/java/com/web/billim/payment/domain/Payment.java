@@ -6,6 +6,8 @@ import com.web.billim.member.domain.Member;
 import com.web.billim.order.domain.ProductOrder;
 import com.web.billim.payment.dto.PaymentInfoDto;
 import com.web.billim.payment.type.PaymentStatus;
+import com.web.billim.product.type.TradeMethod;
+
 import lombok.*;
 
 import javax.persistence.*;
@@ -40,6 +42,9 @@ public class Payment extends JpaEntity {
 	@Enumerated(EnumType.STRING)
 	private PaymentStatus status;
 
+	@Enumerated(EnumType.STRING)
+	private TradeMethod tradeMethod;
+
 	public Member getMember() {
 		return this.productOrder.getMember();
 	}
@@ -52,6 +57,7 @@ public class Payment extends JpaEntity {
 				.merchantUid(merchantUid)
 				.totalAmount(dto.getAmount())
 				.status(PaymentStatus.IN_PROGRESS)
+				.tradeMethod(dto.getOrder().getTradeMethod())
 				.build();
 	}
 

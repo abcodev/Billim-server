@@ -11,7 +11,7 @@ public class LoginAuthenticationToken extends AbstractAuthenticationToken {
     private final String password;
 
     // 로그인 filter -> provider , 인증 전
-    public LoginAuthenticationToken(Object principal, String password){
+    public LoginAuthenticationToken(Object principal, String password) {
         super(null);
         this.principal = principal;
         this.password = password;

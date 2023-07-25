@@ -1,7 +1,7 @@
 package com.web.billim.jwt;
 
-import com.web.billim.common.exception.JwtException;
-import com.web.billim.common.exception.handler.ErrorCode;
+import com.web.billim.exception.JwtException;
+import com.web.billim.exception.handler.ErrorCode;
 import com.web.billim.jwt.dto.JwtAuthenticationToken;
 import com.web.billim.member.type.MemberGrade;
 import com.web.billim.security.domain.UserDetailsEntity;
@@ -38,7 +38,6 @@ public class JwtProvider implements InitializingBean {
 		this.ACCESS_TIME = ACCESS_TIME;
 		this.REFRESH_TIME = REFRESH_TIME;
 		this.userDetailsService = userDetailsService;
-
 	}
 
 	@Override
@@ -57,7 +56,7 @@ public class JwtProvider implements InitializingBean {
 				.setIssuedAt(new Date(System.currentTimeMillis()))
 //				.setExpiration(new Date(System.currentTimeMillis() + ACCESS_TIME))
 //				 60 * 1000 = 1분
-				.setExpiration(new Date(System.currentTimeMillis() + 300000))
+				.setExpiration(new Date(System.currentTimeMillis() + 1800000))
 				.signWith(key, SignatureAlgorithm.HS512)
 				.compact();
 	}
@@ -69,7 +68,7 @@ public class JwtProvider implements InitializingBean {
 				.setSubject(memberId)
 				.setIssuedAt(new Date(System.currentTimeMillis()))
 //				.setExpiration(new Date(System.currentTimeMillis() + REFRESH_TIME))
-				.setExpiration(new Date(System.currentTimeMillis() + 3000000))
+				.setExpiration(new Date(System.currentTimeMillis() + 6000000))
 				.signWith(key, SignatureAlgorithm.HS512)
 				.compact();
 	}
@@ -85,15 +84,13 @@ public class JwtProvider implements InitializingBean {
 		return new JwtAuthenticationToken(userDetails.getAuthorities(), userDetails.getMemberId());
 	}
 	public Date getExpriedAt(String token){
-		Date expiration = Jwts.parserBuilder()
+		return Jwts.parserBuilder()
 				.setSigningKey(key)
 				.build()
 				.parseClaimsJws(token)
 				.getBody()
 				.getExpiration();
-		return expiration;
 	}
-
 
 	public boolean tokenValidation(String token) {
 		try {
@@ -117,6 +114,7 @@ public class JwtProvider implements InitializingBean {
 			throw new JwtException(ErrorCode.UNKNOWN_ERROR);
 		}
 	}
+
 }
 
 

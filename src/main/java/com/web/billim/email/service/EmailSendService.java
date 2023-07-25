@@ -1,7 +1,7 @@
 package com.web.billim.email.service;
 
-import com.web.billim.common.exception.BadRequestException;
-import com.web.billim.common.exception.handler.ErrorCode;
+import com.web.billim.exception.BadRequestException;
+import com.web.billim.exception.handler.ErrorCode;
 import com.web.billim.member.dto.request.FindPasswordRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

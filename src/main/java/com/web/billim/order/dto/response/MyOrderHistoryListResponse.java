@@ -1,6 +1,5 @@
 package com.web.billim.order.dto.response;
 
-import com.web.billim.order.domain.ProductOrder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

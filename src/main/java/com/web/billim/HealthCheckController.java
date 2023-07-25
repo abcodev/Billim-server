@@ -1,4 +1,4 @@
-package com.web.billim.common;
+package com.web.billim;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,30 +1,30 @@
 package com.web.billim.payment.service;
 
 import com.web.billim.client.iamport.IamPortClientService;
-import com.web.billim.client.iamport.response.IamPortPaymentData;
 import com.web.billim.coupon.domain.CouponIssue;
 import com.web.billim.coupon.repository.CouponIssueRepository;
-import com.web.billim.coupon.service.CouponService;
+import com.web.billim.order.domain.ProductOrder;
 import com.web.billim.order.dto.response.PaymentInfoResponse;
 import com.web.billim.payment.domain.Payment;
+import com.web.billim.payment.domain.service.PaymentDomainService;
 import com.web.billim.payment.dto.PaymentCommand;
 import com.web.billim.payment.dto.PaymentInfoDto;
 import com.web.billim.payment.repository.PaymentRepository;
-import com.web.billim.point.dto.AddPointCommand;
-import com.web.billim.point.service.PointService;
+
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PaymentService {
 
     private final IamPortClientService iamPortClientService;
     private final PaymentAmountCalculateService paymentAmountCalculateService;
-    private final CouponService couponService;
-    private final PointService pointService;
-
+    private final PaymentDomainService paymentDomainService;
     private final CouponIssueRepository couponIssueRepository;
     private final PaymentRepository paymentRepository;
 
@@ -44,40 +44,43 @@ public class PaymentService {
 
     @Transactional
     public void complete(String impUid, String merchantUid) {
-        // IamPort 결제내역 조회
-        IamPortPaymentData paymentData = iamPortClientService.retrievePayment(impUid);
-        // Payment Entity 조회
-        Payment payment = paymentRepository.findByMerchantUid(merchantUid).orElseThrow();
-        payment.setImpUid(impUid);
-        // 데이터 검증
-        if (payment.getTotalAmount() != paymentData.getAmount() || !paymentData.getStatus().equals("paid")) {
-            // TODO : IamPort 쪽에 결제 취소 API 호출
-            // Order, Payment Entity 취소
-            this.rollback(merchantUid);
-            throw new RuntimeException("결제내역이 일치하지 않습니다. 결제가 취소되었습니다.");
-        } else {
-            // 쿠폰 사용처리
-            couponService.useCoupon(payment.getMember(), payment.getCouponIssue().getId());
-            // 적립금 사용처리
-            pointService.usePoint(payment);
-            // Order, Payment Entity 완료처리
-            paymentRepository.save(payment.complete());
-            // 포인트 적립 -> 사용자의 회원 등급, 결제 금액
-            pointService.addPoint(AddPointCommand.from(payment));
+        try {
+            // Payment Entity 조회
+            Payment payment = paymentRepository.findByMerchantUid(merchantUid).orElseThrow();
+            payment.setImpUid(impUid);
+
+            if (iamPortClientService.validate(impUid, payment.getTotalAmount())) {
+                paymentDomainService.payment(payment);
+            } else {
+                paymentDomainService.rollback(merchantUid);
+                throw new RuntimeException("결제내역이 일치하지 않습니다. 결제가 취소되었습니다.");
+            }
+        } catch (Exception ex) {
+            log.error("결제를 완료 처리하는 과정에서 에러가 발생했습니다.", ex);
+            paymentDomainService.rollback(merchantUid);
+            throw new RuntimeException("결제 실패. 다시시도해주세요.");
         }
     }
 
-    @Transactional
     public void rollback(String merchantUid) {
-        Payment payment = paymentRepository.findByMerchantUid(merchantUid).orElseThrow();
-        paymentRepository.save(payment.cancel());
+        paymentDomainService.rollback(merchantUid);
     }
 
+    @Transactional
+    public void cancel(ProductOrder order) {
+        Payment payment = paymentRepository.findByProductOrder(order).orElseThrow();
+        paymentDomainService.refund(payment);
+        iamPortClientService.cancel(payment.getImpUid());
+        //
+        // TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+        //     @Override
+        //     public void afterCommit() {
+        //         iamPortClientService.cancel(payment.getImpUid());
+        //     }
+        // });
+    }
+
+    // 1. Transaction 은 이미 예외가 발생한 상황에서 재사용이 안된다.
+    // 2. Transaction 은 내부호출에 대해서는 적용이 안된다. (@Transactional 이 AOP 로 구현되어있어서 -> 내부호출문제)
+
 }
-
-// FE 에서 사용자 입력 받고
-// 서버 API 호출(/order) 해서 결제금액 받고(merchant_uid, amount..)
-// IMP request_pay 호출
-// http://localhost:8080/order/validation
-
-

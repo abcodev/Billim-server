@@ -1,4 +1,4 @@
-package com.web.billim.product.dto;
+package com.web.billim.product.dto.command;
 
 import com.web.billim.product.dto.request.ProductUpdateRequest;
 import com.web.billim.product.type.TradeMethod;
@@ -16,14 +16,12 @@ import java.util.stream.Stream;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductUpdateCommand {
-
     private long productId;
     private String category;
     private long memberId;
     private String productName;
     private String productDetail;
     private long price;
-
     private List<String> deleteImageUrls;
     private List<MultipartFile> appendImages;
     private List<TradeMethod> tradeMethods;

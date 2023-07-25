@@ -1,10 +1,12 @@
 package com.web.billim.client.iamport;
 
-import com.web.billim.client.iamport.response.IamPortPaymentData;
-import lombok.RequiredArgsConstructor;
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
+import com.web.billim.client.iamport.response.IamPortPaymentData;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -16,8 +18,13 @@ public class IamPortClientService {
 		return UUID.randomUUID().toString();
 	}
 
-	public IamPortPaymentData retrievePayment(String impUid) {
-		return iamPortClient.retrievePaymentHistory(impUid);
+	public boolean validate(String impUid, long totalAmount) {
+		IamPortPaymentData paymentData = iamPortClient.retrievePaymentHistory(impUid);
+		return totalAmount == paymentData.getAmount() && paymentData.getStatus().equals("paid");
+	}
+
+	public void cancel(String impUid) {
+		iamPortClient.cancel(impUid);
 	}
 
 }

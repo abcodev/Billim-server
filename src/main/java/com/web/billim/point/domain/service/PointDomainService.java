@@ -1,6 +1,7 @@
 package com.web.billim.point.domain.service;
 
 import com.web.billim.member.domain.Member;
+import com.web.billim.payment.domain.Payment;
 import com.web.billim.point.domain.SavedPoint;
 import com.web.billim.point.repository.SavedPointRepository;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,12 @@ public class PointDomainService {
 		}
 		return usedPointMap;
 	}
+
+	// public long calculate(Payment payment) {
+	// 	Member buyer = payment.getMember();
+	// 	long price = payment.getTotalAmount();
+	// 	return (long) (price * buyer.getGrade().getSavedPointRate() / 100.0);
+	// }
 
 }
 

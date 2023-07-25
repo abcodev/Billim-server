@@ -1,7 +1,7 @@
 package com.web.billim.jwt.filter;
 
-import com.web.billim.common.exception.JwtException;
-import com.web.billim.common.exception.handler.ErrorCode;
+import com.web.billim.exception.JwtException;
+import com.web.billim.exception.handler.ErrorCode;
 import com.web.billim.jwt.JwtProvider;
 import com.web.billim.jwt.dto.JwtAuthenticationToken;
 import com.web.billim.jwt.service.JwtService;

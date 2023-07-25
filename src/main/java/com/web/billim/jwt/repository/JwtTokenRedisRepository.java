@@ -1,4 +1,4 @@
-package com.web.billim.jwt;
+package com.web.billim.jwt.repository;
 
 import com.web.billim.jwt.dto.RedisJwt;
 import org.springframework.data.repository.CrudRepository;

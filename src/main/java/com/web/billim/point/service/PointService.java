@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -79,5 +80,14 @@ public class PointService {
 		return pointHistoryDomainService.generateHistory(payment, usedPointMap);
 	}
 
+	@Transactional
+	public void refund(Payment payment) {
+		pointUsedHistoryRepository.findAllByPayment(payment).forEach(history -> {
+			// 1. SavedPoint 의 availablePoint 늘려주기
+			history.refund();
+			// 2. 해당 history 삭제
+			pointUsedHistoryRepository.delete(history);
+		});
+	}
 
 }

@@ -1,6 +1,7 @@
 package com.web.billim.member.service;
 
-import com.web.billim.common.exception.JwtException;
+import com.web.billim.exception.JwtException;
+import com.web.billim.exception.handler.ErrorCode;
 import com.web.billim.jwt.dto.ReIssueTokenRequest;
 import com.web.billim.jwt.dto.RedisJwt;
 import com.web.billim.jwt.service.JwtService;
@@ -15,8 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-
-import static com.web.billim.common.exception.handler.ErrorCode.INVALID_REFRESH_TOKEN;
 
 @Service
 @RequiredArgsConstructor
@@ -51,8 +50,17 @@ public class AuthService {
         String refreshToken = request.getRefreshToken();
 
         log.info("refreshToken 유효성 검사");
-        jwtProvider.tokenValidation(refreshToken);
+        try {
+            jwtProvider.tokenValidation(refreshToken);
+        } catch (JwtException ex) {
+            if (ex.getErrorCode().equals(ErrorCode.EXPIRED_TOKEN)) {
+                throw new JwtException(ErrorCode.EXPIRED_REFRESH_TOKEN);
+            } else {
+                throw new JwtException(ErrorCode.INVALID_REFRESH_TOKEN);
+            }
+        }
 
+        // 정상적인 Refresh Token 임을 전제로 아래가 진행이 되니까..
         Authentication authentication = jwtProvider.getAuthentication(refreshToken);
         Member member = memberService.findById(Long.parseLong(authentication.getPrincipal().toString()));
 
@@ -69,4 +77,5 @@ public class AuthService {
         jwtService.saveToken(new RedisJwt(member.getMemberId(),newRefreshToken));
         return new ReIssueTokenResponse(member.getMemberId(),newAccessToken,newRefreshToken);
     }
+
 }

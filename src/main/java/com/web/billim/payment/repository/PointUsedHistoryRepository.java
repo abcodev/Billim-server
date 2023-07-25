@@ -1,6 +1,7 @@
 package com.web.billim.payment.repository;
 
 import com.web.billim.member.domain.Member;
+import com.web.billim.payment.domain.Payment;
 import com.web.billim.payment.domain.PointUsedHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,4 +16,5 @@ public interface PointUsedHistoryRepository extends JpaRepository<PointUsedHisto
 	@Query("SELECT puh FROM PointUsedHistory puh WHERE puh.payment.productOrder.member = :member")
 	List<PointUsedHistory> findAllByMember(@Param("member") Member member);
 
+	List<PointUsedHistory> findAllByPayment(Payment payment);
 }

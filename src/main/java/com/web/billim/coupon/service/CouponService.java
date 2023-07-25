@@ -48,6 +48,17 @@ public class CouponService {
                 .collect(Collectors.toList());
     }
 
+    // 2. 사용가능한 쿠폰 목록 조회 - 할인율순
+    @Transactional
+    public List<AvailableCouponResponse> retrieveAvailableCouponListByRate(long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow();
+        return couponIssueRepository.findAllByMemberOrderByRate(member).stream()
+                .filter(coupon -> LocalDateTime.now().isBefore(coupon.getExpiredAt()))
+                .map(AvailableCouponResponse::from)
+                .collect(Collectors.toList());
+    }
+
+
     // 3. 쿠폰 사용
     @Transactional
     public void useCoupon(Member member, long couponIssueId) {
@@ -59,4 +70,10 @@ public class CouponService {
         }
         couponIssue.use();
     }
+
+    @Transactional
+	public void refund(CouponIssue couponIssue) {
+        couponIssue.available();
+	}
+
 }

@@ -11,8 +11,7 @@ import java.util.Objects;
 @Service
 public class ProductRedisService {
 
-    private final RedisTemplate<String,String > redisTemplate;
-
+    private final RedisTemplate<String, String> redisTemplate;
 
     public ProductRedisService(RedisTemplate<String,String> redisTemplate) {
         this.redisTemplate = redisTemplate;
@@ -30,7 +29,5 @@ public class ProductRedisService {
                         redisTemplate.opsForZSet().
                                 reverseRange("MOST_POPULAR_PRODUCT", 0, 4)), new TypeReference<List<Long>>() {});
     }
+
 }
-
-
-

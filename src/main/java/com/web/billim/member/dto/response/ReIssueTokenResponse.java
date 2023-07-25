@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ReIssueTokenResponse {
     private long memberId;
-    private String  accessToken;
-    private String refreshToken;
+    private String accessToken;
+    private String newRefreshToken;
 
 }

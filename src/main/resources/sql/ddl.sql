@@ -85,9 +85,10 @@ CREATE TABLE `payment`
     `coupon_issue_id` bigint                                                          NULL COMMENT '쿠폰번호',
     `point`           bigint                                                          NULL COMMENT '적립금',
     `merchant_uid`    varchar(500)                                                    NULL COMMENT '카드결제ID',
+    `imp_uid`         varchar(255)                                                    NULL COMMENT 'impUID',
+    `trade_method` varchar(50) NOT NULL COMMENT '거래방법',
     `total_amount`    bigint                                                          NOT NULL COMMENT '총금액',
     `status`          varchar(50)                                                     NOT NULL COMMENT '결제여부',
-    `imp_uid`         varchar(255)                                                    NULL COMMENT 'impUID',
     `created_at`      timestamp default current_timestamp                             NOT NULL COMMENT '결제일자',
     `updated_at`      timestamp default current_timestamp on update current_timestamp NOT NULL COMMENT '수정일자'
 );
@@ -188,7 +189,7 @@ DROP TABLE IF EXISTS `review`;
 CREATE TABLE `review`
 (
     `review_id`   bigint primary key auto_increment COMMENT '리뷰번호',
-    `product_id`  bigint                                                          NOT NULL COMMENT '상품번호',
+    `product_order_id`  bigint                                                          NOT NULL COMMENT '상품번호',
     `member_id`   bigint                                                          NOT NULL COMMENT '구매회원번호',
     `content`     varchar(1000)                                                   NOT NULL COMMENT '리뷰내용',
     `star_rating` bigint                                                          NOT NULL COMMENT '별점',

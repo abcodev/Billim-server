@@ -36,6 +36,14 @@ public class RedisConfig {
         return redisTemplate;
     }
 
+    @Bean(name = "recentRedisTemplate")
+    public RedisTemplate<String, Long> recentRedisTemplate() {
+        RedisTemplate<String, Long> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setConnectionFactory(redisConnectionFactory());
+        return redisTemplate;
+    }
+
     @Bean
     public RedisCacheManager redisCacheManager(RedisConnectionFactory redisConnectionFactory) {
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
@@ -50,4 +58,5 @@ public class RedisConfig {
                 .cacheDefaults(redisCacheConfiguration)
                 .build();
     }
+
 }

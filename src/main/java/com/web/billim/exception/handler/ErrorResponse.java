@@ -1,11 +1,12 @@
-package com.web.billim.common.exception.handler;
+package com.web.billim.exception.handler;
 
 import lombok.Builder;
 import lombok.Getter;
 
 import org.springframework.http.ResponseEntity;
 
-import com.web.billim.common.exception.BusinessException;
+import com.web.billim.exception.AuthenticationBusinessException;
+import com.web.billim.exception.BusinessException;
 
 @Getter
 @Builder
@@ -17,7 +18,8 @@ public class ErrorResponse {
 		return ResponseEntity
 			.status(errorCode.getHttpStatus())
 			.body(ErrorResponse.builder()
-				.code(errorCode.getHttpStatus().name())
+				.code(errorCode.name())
+//				.code(errorCode.getHttpStatus().name())
 				.message(errorCode.getMessage())
 				.build());
 	}
@@ -26,12 +28,17 @@ public class ErrorResponse {
 		return ResponseEntity
 			.status(errorCode.getHttpStatus())
 			.body(ErrorResponse.builder()
-				.code(errorCode.getHttpStatus().name())
+				.code(errorCode.name())
+//				.code(errorCode.getHttpStatus().name())
 				.message(message)
 				.build());
 	}
 
 	public static ErrorResponse from(BusinessException ex) {
+		return new ErrorResponse(ex.getErrorCode().name(), ex.getMessage());
+	}
+
+	public static ErrorResponse from(AuthenticationBusinessException ex) {
 		return new ErrorResponse(ex.getErrorCode().name(), ex.getMessage());
 	}
 

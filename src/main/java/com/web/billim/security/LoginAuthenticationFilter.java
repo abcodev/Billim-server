@@ -1,6 +1,8 @@
 package com.web.billim.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.web.billim.exception.AuthenticationBusinessException;
+import com.web.billim.exception.handler.ErrorResponse;
 import com.web.billim.jwt.JwtProvider;
 import com.web.billim.jwt.service.JwtService;
 import com.web.billim.member.type.MemberGrade;
@@ -30,14 +32,14 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
     private final JwtProvider jwtProvider;
     private final JwtService jwtService;
 
+    ObjectMapper objectMapper = new ObjectMapper();
+
     public LoginAuthenticationFilter(AuthenticationManager authenticationManager, JwtProvider jwtProvider, JwtService jwtService) {
         this.authenticationManager = authenticationManager;
         this.jwtProvider = jwtProvider;
         this.jwtService = jwtService;
         setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/auth/login", "POST"));
     }
-
-
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException{
@@ -59,10 +61,20 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
         jwtService.saveToken(redisJwt);
 
         LoginResponse token = new LoginResponse(Long.parseLong(memberId),accessToken,refreshToken);
-        ObjectMapper objectMapper = new ObjectMapper();
         String jsonToken = objectMapper.writeValueAsString(token);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.getWriter().write(jsonToken);
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        if (failed instanceof AuthenticationBusinessException) {
+            AuthenticationBusinessException ex = (AuthenticationBusinessException)failed;
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(objectMapper.writeValueAsString(ErrorResponse.from(ex)));
+        }
     }
 
     private LoginRequest obtainEmailPassword(HttpServletRequest request) {

@@ -54,4 +54,8 @@ public class SavedPoint extends JpaEntity {
 		return usedAmount;
 	}
 
+	public void addAvailablePoint(long amount) {
+		this.availableAmount += amount;
+	}
+
 }

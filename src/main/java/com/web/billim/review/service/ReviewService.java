@@ -1,10 +1,9 @@
 package com.web.billim.review.service;
 
-import com.web.billim.common.exception.NotFoundException;
-import com.web.billim.common.exception.handler.ErrorCode;
+import com.web.billim.exception.NotFoundException;
+import com.web.billim.exception.handler.ErrorCode;
 import com.web.billim.order.domain.ProductOrder;
 import com.web.billim.order.service.OrderService;
-import com.web.billim.point.dto.AddPointCommand;
 import com.web.billim.point.service.PointService;
 import com.web.billim.review.domain.Review;
 import com.web.billim.review.dto.request.ReviewWriteRequest;
@@ -13,7 +12,6 @@ import com.web.billim.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
