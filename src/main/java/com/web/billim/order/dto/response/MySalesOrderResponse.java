@@ -2,6 +2,7 @@ package com.web.billim.order.dto.response;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.web.billim.order.domain.ProductOrder;
 import com.web.billim.product.type.TradeMethod;
@@ -23,7 +24,10 @@ public class MySalesOrderResponse {
 	private String name;  // nullable
 	private String address;  // nullable
 	private String phoneNumber;  // nullable
+
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private LocalDate startAt;
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private LocalDate endAt;
 
 	public static MySalesOrderResponse from(ProductOrder order) {

@@ -100,11 +100,12 @@ public class MemberService {
 
 		memberRepository.findById(memberId).ifPresent(member -> {
 			String imageUrl = null;
-			if (req.getProfileImage() != null) {
+			if (!(req.getNewProfileImage().isEmpty())) {
 				imageUploadService.delete(member.getProfileImageUrl());
-				imageUrl = imageUploadService.upload(req.getProfileImage(), "profile");
+				imageUrl = imageUploadService.upload(req.getNewProfileImage(), "profile");
 			}
-			member.updateInfo(req.getNickname(), req.getAddress(), imageUrl);
+
+			member.updateInfo(imageUrl, req.getNickname(), req.getAddress());
 			memberRepository.save(member);
 		});
 	}
@@ -138,4 +139,5 @@ public class MemberService {
 		return memberRepository.findById(memberId)
 				.orElseThrow(()-> new JwtException(ErrorCode.MEMBER_NOT_FOUND));
 	}
+
 }

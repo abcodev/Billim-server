@@ -1,6 +1,5 @@
 package com.web.billim.product.controller;
 
-import com.web.billim.order.service.OrderService;
 import com.web.billim.product.domain.Product;
 import com.web.billim.product.dto.command.ProductRegisterCommand;
 import com.web.billim.product.dto.command.ProductUpdateCommand;
@@ -72,7 +71,7 @@ public class ProductController {
         return ResponseEntity.ok(resp);
     }
 
-    @Operation(summary = "상품 수정 기존 내용 조회", description = "상품 수정시 기존 정보 조회를 조회한다")
+    @Operation(summary = "상품 수정시 기존 내용 조회", description = "상품 수정시 기존 정보 조회를 조회한다")
     @GetMapping("/update/{productId}")
     public ResponseEntity<ProductUpdateResponse> updateProductResponse(
             @PathVariable("productId") long productId
@@ -94,7 +93,6 @@ public class ProductController {
 //        return ResponseEntity.ok(productService.update(command));
     }
 
-
     @Operation(summary = "상품 삭제", description = "해당 회원이 작성한 상품 및 상품 이미지 삭제")
     @DeleteMapping("/delete/{productId}")
     public ResponseEntity<Void> deleteProduct(
@@ -103,12 +101,6 @@ public class ProductController {
     ) {
         productService.delete(memberId, productId);
         return ResponseEntity.ok().build();
-    }
-
-    @Operation(summary = "*인기 상품 조회", description = "사람들이 많이 본 상품 상품 리스트")
-    @GetMapping("/list/most/popular")
-    public ResponseEntity<List<MostProductList>> mostProductList() {
-        return ResponseEntity.ok(productService.findMostPopularProduct());
     }
 
     @Operation(summary = "관심상품 등록, 삭제", description = "true 관심상품등록, false 관심등록삭제")
@@ -121,7 +113,7 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "마이페이지 관심목록 조회")
+    @Operation(summary = "관심목록 조회")
     @GetMapping("/my/interest")
     public ResponseEntity<MyInterestProductList> myInterestProductList(
             @AuthenticationPrincipal long memberId
@@ -129,13 +121,17 @@ public class ProductController {
         return ResponseEntity.ok(productInterestService.myInterestProductList(memberId));
     }
 
+    @Operation(summary = "*인기 상품 조회", description = "사람들이 많이 본 상품 상품 리스트")
+    @GetMapping("/list/most/popular")
+    public ResponseEntity<List<MostProductList>> mostProductList() {
+        return ResponseEntity.ok(productService.findMostPopularProduct());
+    }
 
     @GetMapping("/list/recent")
-    public ResponseEntity<?> recentProduct(
-            @AuthenticationPrincipal long memberId
-    ) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<List<RecentProductResponse>> recentProductList(@AuthenticationPrincipal long memberId) {
+        return ResponseEntity.ok(productService.recentProductList(memberId));
     }
+
 
 
 }

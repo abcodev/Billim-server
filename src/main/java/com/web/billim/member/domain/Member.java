@@ -48,24 +48,13 @@ public class Member extends JpaEntity {
         this.profileImageUrl = this.profileImageUrl == null ? "https://billim.s3.ap-northeast-2.amazonaws.com/profile/profile-default.png": this.profileImageUrl;
     }
 
-//    public void updateProfileImage(String imageUrl) {
-//        this.profileImageUrl = imageUrl;
-//    }
-
-//    public void updateAddress(String address) {
-//        this.address = address;
-//    }
-
-//    public void updateNickname(String nickname) {
-//        this.nickname = nickname;
-//    }
-
-    public void updateInfo(String imageUrl, String address, String nickname) {
+    public void updateInfo(String imageUrl, String nickname, String address) {
         if (imageUrl != null) {
             this.profileImageUrl = imageUrl;
         }
-        this.address = address;
+//        this.profileImageUrl = imageUrl;
         this.nickname = nickname;
+        this.address = address;
     }
 
     public void changePassword(String password) {

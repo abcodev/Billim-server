@@ -9,9 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 @Data
 public class MemberInfoUpdateRequest {
-
+    private MultipartFile NewProfileImage;
     private String nickname;
     private String address;
-    private MultipartFile profileImage;
-
 }

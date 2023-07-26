@@ -8,7 +8,7 @@ import com.web.billim.member.service.MemberService;
 import com.web.billim.order.domain.ProductOrder;
 import com.web.billim.order.dto.OrderCommand;
 import com.web.billim.order.dto.response.MyOrderHistory;
-import com.web.billim.order.dto.response.MyOrderHistoryListResponse;
+import com.web.billim.order.dto.response.MyOrderListResponse;
 import com.web.billim.order.dto.response.MySalesDetailResponse;
 import com.web.billim.order.dto.response.PaymentInfoResponse;
 import com.web.billim.order.repository.OrderRepository;
@@ -19,7 +19,6 @@ import com.web.billim.payment.service.PaymentService;
 import com.web.billim.product.domain.Product;
 import com.web.billim.product.domain.service.ProductDomainService;
 
-import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +30,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class OrderService {
-
     private final MemberService memberService;
     private final PaymentService paymentService;
     private final OrderRepository orderRepository;
@@ -109,18 +107,19 @@ public class OrderService {
 
     // 마이페이지 나의 구매 내역 목록 조회
     @Transactional
-    public MyOrderHistoryListResponse findMyOrder(long memberId) {
-        List<ProductOrder> productOrders= orderRepository.findAllByMember_memberId(memberId)
-                .orElseThrow(()-> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
+    public MyOrderListResponse findMyOrder(long memberId) {
+//        List<ProductOrder> productOrders= orderRepository.findAllByMember_memberId(memberId)
+//                .orElseThrow(()-> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
+        List<ProductOrder> productOrders= orderRepository.findAllByMember_memberId_OrderByOrderIdDesc(memberId);
         List<MyOrderHistory> myOrderHistories = productOrders.stream()
                 .map(MyOrderHistory::from)
                 .collect(Collectors.toList());
-        return new MyOrderHistoryListResponse(myOrderHistories);
+        return new MyOrderListResponse(myOrderHistories);
     }
 
     // 마이페이지 나의 판매 내역 상세 조회
     @Transactional
-    public MySalesDetailResponse findAllHistory(long productId) {
+    public MySalesDetailResponse findMySalesDetail(long productId) {
         Product product = productDomainService.find(productId);
         List<ProductOrder> orderHistories = orderRepository.findAllByProduct(product);
         return MySalesDetailResponse.of(product, orderHistories);

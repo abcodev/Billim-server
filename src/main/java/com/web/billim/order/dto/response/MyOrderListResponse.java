@@ -9,6 +9,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MyOrderHistoryListResponse {
+public class MyOrderListResponse {
     private List<MyOrderHistory> productOrders;
 }

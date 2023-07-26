@@ -56,7 +56,8 @@ public class JwtService {
 
     public String getRefreshToken(String memberId) {
         RedisJwt redisJwt = jwtTokenRedisRepository.findById(memberId)
-                .orElseThrow(()->new JwtException(ErrorCode.UNKNOWN_ERROR));
+                .orElseThrow(() -> new JwtException(ErrorCode.UNKNOWN_ERROR));
         return redisJwt.getRefreshToken();
     }
+
 }
