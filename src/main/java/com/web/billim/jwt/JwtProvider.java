@@ -114,7 +114,6 @@ public class JwtProvider implements InitializingBean {
 			throw new JwtException(ErrorCode.UNKNOWN_ERROR);
 		}
 	}
-
 }
 
 

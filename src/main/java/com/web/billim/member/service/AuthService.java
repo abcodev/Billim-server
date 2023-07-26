@@ -29,8 +29,8 @@ public class AuthService {
 
     public void logout(String accessToken) {
         String memberId = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        // refresh Token 유효한지
 
+        // refresh Token 유효한지
         if(jwtService.existsById(memberId)){
             String refreshToken = jwtService.getRefreshToken(memberId);
 
@@ -60,7 +60,6 @@ public class AuthService {
             }
         }
 
-        // 정상적인 Refresh Token 임을 전제로 아래가 진행이 되니까..
         Authentication authentication = jwtProvider.getAuthentication(refreshToken);
         Member member = memberService.findById(Long.parseLong(authentication.getPrincipal().toString()));
 
@@ -77,5 +76,4 @@ public class AuthService {
         jwtService.saveToken(new RedisJwt(member.getMemberId(),newRefreshToken));
         return new ReIssueTokenResponse(member.getMemberId(),newAccessToken,newRefreshToken);
     }
-
 }
