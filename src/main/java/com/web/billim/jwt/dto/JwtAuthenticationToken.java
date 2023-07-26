@@ -8,7 +8,6 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
     private final Object email;
     private final Object credentials;
 
-
     // url 요청시 token 넣어주기 / 인증전
     public JwtAuthenticationToken(Object  credentials){
         super(null);
@@ -24,7 +23,6 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
         this.credentials = null;
         setAuthenticated(true);
     }
-
 
     @Override
     public Object getCredentials() {

@@ -1,6 +1,5 @@
 package com.web.billim.product.controller;
 
-import com.web.billim.order.service.OrderService;
 import com.web.billim.product.domain.Product;
 import com.web.billim.product.dto.command.ProductRegisterCommand;
 import com.web.billim.product.dto.command.ProductUpdateCommand;
@@ -10,7 +9,6 @@ import com.web.billim.product.dto.request.ProductUpdateRequest;
 import com.web.billim.product.dto.response.*;
 import com.web.billim.product.service.ProductInterestService;
 import com.web.billim.product.service.ProductService;
-import com.web.billim.product.service.RecentProductRedisService;
 import com.web.billim.review.service.ReviewService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -94,7 +92,7 @@ public class ProductController {
         return ResponseEntity.ok().build();
 //        return ResponseEntity.ok(productService.update(command));
     }
-    
+
     @Operation(summary = "상품 삭제", description = "해당 회원이 작성한 상품 및 상품 이미지 삭제")
     @DeleteMapping("/delete/{productId}")
     public ResponseEntity<Void> deleteProduct(

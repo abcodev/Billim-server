@@ -1,7 +1,7 @@
 package com.web.billim.order.controller;
 
 import com.web.billim.order.dto.OrderCommand;
-import com.web.billim.order.dto.response.MyOrderHistoryListResponse;
+import com.web.billim.order.dto.response.MyOrderListResponse;
 import com.web.billim.order.dto.response.MySalesDetailResponse;
 import com.web.billim.order.dto.response.MySalesListResponse;
 import com.web.billim.order.dto.response.PaymentInfoResponse;
@@ -23,7 +23,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/order")
 public class OrderController {
-
     private final OrderService orderService;
     private final ProductService productService;
 
@@ -46,7 +45,7 @@ public class OrderController {
 
     @Operation(summary = "*마이페이지 상품 구매 목록 조회", description = "마이페이지에서 구매 목록을 조회한다.")
     @GetMapping("/my/purchase")
-    public ResponseEntity<MyOrderHistoryListResponse> myOrder(@AuthenticationPrincipal long memberId) {
+    public ResponseEntity<MyOrderListResponse> myOrder(@AuthenticationPrincipal long memberId) {
         return ResponseEntity.ok(orderService.findMyOrder(memberId));
     }
 
@@ -59,7 +58,7 @@ public class OrderController {
     @Operation(summary = "*마이페이지 판매 상품 상세정보", description = "판매중인 상품 클릭시 판매 주문 내역을 조회한다.")
     @GetMapping("/my/sales/{productId}")
     public ResponseEntity<MySalesDetailResponse> mySalesDetail(@PathVariable("productId") long productId) {
-        return ResponseEntity.ok(orderService.findAllHistory(productId));
+        return ResponseEntity.ok(orderService.findMySalesDetail(productId));
     }
 
 }
