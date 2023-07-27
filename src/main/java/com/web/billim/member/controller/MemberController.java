@@ -6,6 +6,7 @@ import com.web.billim.common.validation.CheckPasswordValidator;
 import com.web.billim.member.dto.request.FindPasswordRequest;
 import com.web.billim.member.dto.UpdatePasswordCommand;
 import com.web.billim.member.dto.request.*;
+import com.web.billim.member.dto.response.HeaderResponse;
 import com.web.billim.member.dto.response.MyPageInfoResponse;
 import com.web.billim.member.dto.response.MemberInfoResponse;
 import com.web.billim.member.service.MemberService;
@@ -120,7 +121,7 @@ public class MemberController {
     // 마이페이지 헤더
     @Operation(summary = "헤더 조회", description = "헤더 프로필 이미지 조회")
     @GetMapping("/header")
-    public ResponseEntity<?> header() {
+    public ResponseEntity<HeaderResponse> header() {
         return ResponseEntity.ok().build();
     }
 
