@@ -45,6 +45,9 @@ dependencies {
     annotationProcessor 'com.querydsl:querydsl-apt:5.0.0'
     runtimeOnly 'com.mysql:mysql-connector-j'
 
+    // oauth2-client
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 

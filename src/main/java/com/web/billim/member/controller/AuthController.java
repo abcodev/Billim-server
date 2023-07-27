@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 public class AuthController {
-
     private static final String AUTHORIZATION_HEADER_PREFIX = "Bearer ";
     private final AuthService authService;
 
@@ -32,5 +31,4 @@ public class AuthController {
         authService.logout(accessToken);
         return ResponseEntity.ok().build();
     }
-
 }
