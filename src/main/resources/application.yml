@@ -27,7 +27,6 @@ spring:
       - email
       - import
       - security
-      - oauth
 
 logging:
   level:

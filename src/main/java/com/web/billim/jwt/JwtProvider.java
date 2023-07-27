@@ -55,7 +55,6 @@ public class JwtProvider implements InitializingBean {
 				.setAudience(memberGrade.toString())
 				.setIssuedAt(new Date(System.currentTimeMillis()))
 //				.setExpiration(new Date(System.currentTimeMillis() + ACCESS_TIME))
-//				 60 * 1000 = 1분
 				.setExpiration(new Date(System.currentTimeMillis() + 180000))
 				.signWith(key, SignatureAlgorithm.HS512)
 				.compact();
