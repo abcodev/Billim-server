@@ -26,7 +26,7 @@ public class AuthService {
     private final JwtService jwtService;
     private final MemberService memberService;
 
-
+    @Transactional
     public void logout(String accessToken) {
         String memberId = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
 
