@@ -3,10 +3,11 @@ package com.web.billim.point.domain;
 import com.web.billim.common.domain.JpaEntity;
 import com.web.billim.member.domain.Member;
 import com.web.billim.point.dto.AddPointCommand;
-//import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import javax.persistence.*;
+
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Entity
@@ -32,6 +33,13 @@ public class SavedPoint extends JpaEntity {
 
 //	@ApiModelProperty("적립금 만료일")
 	private LocalDateTime expiredAt;
+
+	public SavedPoint(Member member, long amount, Duration expiresIn) {
+		this.member = member;
+		this.amount = amount;
+		this.availableAmount = amount;
+		this.expiredAt = LocalDateTime.now().plus(expiresIn);
+	}
 
 	public static SavedPoint of(AddPointCommand command) {
 		return SavedPoint.builder()
