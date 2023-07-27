@@ -115,6 +115,17 @@ public class MemberController {
     // 회원 차단
 
     // 회원 탈퇴
+
+
+    // 마이페이지 헤더
+    @Operation(summary = "헤더 조회", description = "헤더 프로필 이미지 조회")
+    @GetMapping("/header")
+    public ResponseEntity<?> header() {
+        return ResponseEntity.ok().build();
+    }
+
+
+
 }
 
 

@@ -9,9 +9,11 @@ public enum MemberGrade implements GrantedAuthority {
     DIAMOND(4);
 
     private final int savedPointRate;
+
     MemberGrade(int savedPointRate) {
         this.savedPointRate = savedPointRate;
     }
+
     public int getSavedPointRate() {
         return this.savedPointRate;
     }
@@ -20,4 +22,5 @@ public enum MemberGrade implements GrantedAuthority {
     public String getAuthority() {
         return this.name();
     }
+
 }
