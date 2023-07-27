@@ -36,11 +36,11 @@ public class PointDomainService {
 		return usedPointMap;
 	}
 
-	// public long calculate(Payment payment) {
-	// 	Member buyer = payment.getMember();
-	// 	long price = payment.getTotalAmount();
-	// 	return (long) (price * buyer.getGrade().getSavedPointRate() / 100.0);
-	// }
+	public long calculate(Payment payment) {
+		Member buyer = payment.getMember();
+		long price = payment.getTotalAmount();
+		return (long) (price * buyer.getGrade().getSavedPointRate() / 100.0);
+	}
 
 }
 

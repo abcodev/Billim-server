@@ -43,6 +43,16 @@ public class PaymentService {
     }
 
     @Transactional
+    public void completeZeroAmount(String merchantUid) {
+        try {
+            Payment payment = paymentRepository.findByMerchantUid(merchantUid).orElseThrow();
+            paymentDomainService.payment(payment);
+        } catch (RuntimeException ex) {
+            paymentDomainService.rollback(merchantUid);
+        }
+    }
+
+    @Transactional
     public void complete(String impUid, String merchantUid) {
         try {
             // Payment Entity 조회
