@@ -57,8 +57,8 @@ public class OrderController {
 
     @Operation(summary = "*마이페이지 판매 상품 상세정보", description = "판매중인 상품 클릭시 판매 주문 내역을 조회한다.")
     @GetMapping("/my/sales/{productId}")
-    public ResponseEntity<MySalesDetailResponse> mySalesDetail(@PathVariable("productId") long productId) {
-        return ResponseEntity.ok(orderService.findMySalesDetail(productId));
+    public ResponseEntity<MySalesDetailResponse> mySalesDetail(@AuthenticationPrincipal long memberId, @PathVariable("productId") long productId) {
+        return ResponseEntity.ok(orderService.findMySalesDetail(memberId, productId));
     }
 
 }

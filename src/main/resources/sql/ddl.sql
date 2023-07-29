@@ -27,7 +27,8 @@ CREATE TABLE `product`
     `trade_area`   varchar(200)                                                    NULL COMMENT '직거래지역',
     `created_at`   timestamp default current_timestamp                             NOT NULL COMMENT '등록일자',
     `updated_at`   timestamp default current_timestamp on update current_timestamp NOT NULL COMMENT '수정일자',
-    `trade_method` varchar(30)                                                     NOT NULL COMMENT '거래방법'
+    `trade_method` varchar(30)                                                     NOT NULL COMMENT '거래방법',
+    'deleted_yn'   varchar(1) default 'N'                                          NOT NULL COMMENT '삭제여부'
 );
 
 DROP TABLE IF EXISTS `product_category`;

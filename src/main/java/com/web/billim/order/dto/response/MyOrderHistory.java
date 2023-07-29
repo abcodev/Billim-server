@@ -3,9 +3,11 @@ package com.web.billim.order.dto.response;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.web.billim.order.domain.ProductOrder;
 import com.web.billim.order.type.ProductOrderStatus;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -22,6 +24,7 @@ public class MyOrderHistory {
     private long price;
     private String imageUrl;
     private ProductOrderStatus status;
+    private boolean isDeleted;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime orderDate;
@@ -32,7 +35,7 @@ public class MyOrderHistory {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate orderEndAt;
 
-    public static MyOrderHistory from(ProductOrder productOrder){
+    public static MyOrderHistory from(ProductOrder productOrder) {
         return MyOrderHistory.builder()
                 .orderId(productOrder.getOrderId())
                 .productId(productOrder.getProduct().getProductId())
@@ -42,6 +45,7 @@ public class MyOrderHistory {
                 .price(productOrder.getPrice())
                 .imageUrl(productOrder.getProduct().mainImage())
                 .status(productOrder.getStatus())
+                .isDeleted(productOrder.getProduct().isDeleted())
                 .orderDate(productOrder.getCreatedAt())
                 .orderStartAt(productOrder.getStartAt())
                 .orderEndAt(productOrder.getEndAt())

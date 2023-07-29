@@ -6,6 +6,7 @@ import com.web.billim.infra.ImageUploadService;
 import com.web.billim.member.domain.Member;
 import com.web.billim.member.repository.MemberRepository;
 import com.web.billim.order.dto.response.MySalesListResponse;
+import com.web.billim.order.repository.OrderRepository;
 import com.web.billim.order.service.OrderService;
 import com.web.billim.product.domain.ImageProduct;
 import com.web.billim.product.domain.Product;
@@ -17,7 +18,9 @@ import com.web.billim.product.repository.ImageProductRepository;
 import com.web.billim.product.repository.ProductCategoryRepository;
 import com.web.billim.product.repository.ProductRepository;
 import com.web.billim.review.service.ReviewService;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -25,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,6 +38,7 @@ public class ProductService {
     private final ProductCategoryRepository productCategoryRepository;
     private final ImageProductRepository imageProductRepository;
     private final OrderService orderService;
+    private final OrderRepository orderRepository;
     private final ImageUploadService imageUploadService;
     private final ProductRedisService productRedisService;
     private final RecentProductRedisService recentProductRedisService;
@@ -62,7 +65,7 @@ public class ProductService {
 
     // 상품 목록 조회, 페이징, 카테고리 및 키워드 검색
     public Page<ProductListResponse> search(String category, String keyword, PageRequest paging) {
-        return  productRepository.findAllByKeyword(category, keyword, paging)
+        return productRepository.findAllByKeyword(category, keyword, paging)
                 .map(product -> {
                     double starRating = reviewService.calculateStarRating(product.getProductId());
                     return ProductListResponse.of(product, starRating);
@@ -123,25 +126,30 @@ public class ProductService {
     // 상품 삭제
     @Transactional
     public void delete(long memberId, long productId) {
-        Product product = productRepository.findById(productId)
-                .filter(p -> p.getMember().getMemberId() == memberId)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
-        imageProductRepository.deleteAllInBatch(product.getImages());
-        productRepository.delete(product);
+        productRepository.findById(productId)
+                .filter(product -> product.getMember().getMemberId() == memberId)
+                .ifPresent(product -> {
+                    if (!orderRepository.findAllByProductAndEndAtAfter(product, LocalDate.now()).isEmpty()) {
+                        throw new RuntimeException("해당 상품에 대한 예약이있어 삭제할 수 없습니다.");
+                    }
+                    // TODO : 실제로 이미지가 삭제되도록 수정
+                    imageProductRepository.deleteAllInBatch(product.getImages());
+                    product.delete();
+                });
     }
 
     // 인기 상품 목록
     public List<MostProductList> findMostPopularProduct() {
-        return productRepository.findAllByProductIdIn(productRedisService.rankPopularProduct())
-                .stream().map(MostProductList::from)
+        return productRepository.findAllByProductIdInAndIsDeleted(productRedisService.rankPopularProduct(), false)
+                .stream()
+                .map(MostProductList::from)
                 .collect(Collectors.toList());
     }
 
     // 최근 본 상품 목록
     public List<RecentProductResponse> recentProductList(long memberId) {
-        return productRepository.findAllById(recentProductRedisService.findTopN(memberId, 5))
+        return productRepository.findAllByProductIdInAndIsDeleted(recentProductRedisService.findTopN(memberId, 5), false)
                 .stream()
-                .filter(Objects::nonNull)
                 .map(RecentProductResponse::of)
                 .collect(Collectors.toList());
     }
@@ -153,7 +161,6 @@ public class ProductService {
                 .stream().map(MySalesListResponse::of)
                 .collect(Collectors.toList());
     }
-
 
 }
 

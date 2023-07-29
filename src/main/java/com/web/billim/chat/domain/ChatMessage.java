@@ -77,7 +77,7 @@ public class ChatMessage extends JpaEntity {
 			.sender(null)
 			.type(ChatMessageType.SYSTEM)
 			.message(message)
-			.read(false)
+			.read(true)
 			.build();
 	}
 }

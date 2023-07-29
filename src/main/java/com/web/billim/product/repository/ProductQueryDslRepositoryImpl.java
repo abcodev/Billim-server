@@ -27,12 +27,14 @@ public class ProductQueryDslRepositoryImpl implements ProductQueryDslRepository 
 	public Page<Product> findAllByKeyword(String category, String keyword, Pageable pageable) {
 		var count = Optional.ofNullable(jpaQueryFactory.select(product.count())
 			.from(product)
+			.where(product.isDeleted.eq(false))
 			.where(product.productName.contains(keyword).or(product.detail.contains(keyword)))
 			.fetchOne()).orElse(0L);
 
 		var productList = jpaQueryFactory.selectFrom(product)
 			.innerJoin(product.member).fetchJoin()
 			.innerJoin(product.productCategory).fetchJoin()
+			.where(product.isDeleted.eq(false))
 			.where(this.checkCategoryName(category))
 			.where(product.productName.contains(keyword).or(product.detail.contains(keyword)))
 			.orderBy(product.createdAt.desc())

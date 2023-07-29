@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Table(name = "product")
+// @Where(clause = "deleted_yn = 'N'")  -> 구매자가 상품 조회했을 때 삭제된것도 뭔가 나와야해서..
 @Builder
 @Getter
 public class Product extends JpaEntity {
@@ -45,6 +46,13 @@ public class Product extends JpaEntity {
     @JoinColumn(name = "product_id")
     @OneToMany(fetch = FetchType.LAZY)
     private List<ImageProduct> images;
+
+    @Column(name = "deleted_yn")  // "y", "n"
+    private boolean isDeleted = false;
+
+    public void delete() {
+        this.isDeleted = true;
+    }
 
     public List<TradeMethod> getTradeMethods() {
         return Arrays.stream(tradeMethod.split(",")).map(TradeMethod::valueOf).collect(Collectors.toList());
@@ -76,6 +84,10 @@ public class Product extends JpaEntity {
         this.tradeArea = command.getTradeArea();
         this.images.addAll(appendImages);
 	}
+
+    public boolean isOwned(long memberId) {
+        return this.member.getMemberId().equals(memberId);
+    }
 
 }
 

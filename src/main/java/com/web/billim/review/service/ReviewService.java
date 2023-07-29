@@ -3,6 +3,7 @@ package com.web.billim.review.service;
 import com.web.billim.exception.NotFoundException;
 import com.web.billim.exception.handler.ErrorCode;
 import com.web.billim.order.domain.ProductOrder;
+import com.web.billim.order.repository.OrderRepository;
 import com.web.billim.order.service.OrderService;
 import com.web.billim.point.service.PointService;
 import com.web.billim.review.domain.Review;
@@ -21,6 +22,7 @@ public class ReviewService {
 
 	private final ReviewRepository reviewRepository;
 	private final OrderService orderService;
+	private final OrderRepository orderRepository;
 	private final PointService pointService;
 
 	public double calculateStarRating(long productId) {
@@ -29,14 +31,14 @@ public class ReviewService {
 			.getAverage();
 	}
 
-	public void findMyProductReview(long memberId) {
+	public void findMyWritableReview(long memberId) {
+		orderRepository.findAllByMember_memberId(memberId);
 	}
 
 	public void productReviewWrite(ReviewWriteRequest reviewWriteRequest) {
 		ProductOrder productOrder =  orderService.findByOrder(reviewWriteRequest.getOrderId());
 		reviewRepository.save(ReviewWriteRequest.of(reviewWriteRequest,productOrder));
-
-		// 리뷰 작성시 포인트 주기 ( 주문 금액의 1% )
+		// 리뷰 작성시 포인트 주기
 	}
 
 	public long myReviewNoCount(long memberId) {

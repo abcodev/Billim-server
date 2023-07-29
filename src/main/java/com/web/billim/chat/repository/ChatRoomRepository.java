@@ -22,4 +22,7 @@ public interface ChatRoomRepository extends CrudRepository<ChatRoom, Long> {
 	@Query("SELECT cr FROM ChatRoom cr WHERE cr.buyer.memberId = :buyerId AND cr.buyerJoined = true")
 	List<ChatRoom> findAllJoinedByBuyerId(@Param("buyerId") long buyerId);
 
+	@Query("SELECT cr FROM ChatRoom cr WHERE cr.seller.memberId = :sellerId AND cr.sellerJoined = true")
+	List<ChatRoom> findAllJoinedBySellerId(@Param("sellerId") long sellerId);
+
 }

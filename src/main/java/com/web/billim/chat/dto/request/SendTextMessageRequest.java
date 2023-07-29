@@ -24,6 +24,12 @@ public class SendTextMessageRequest {
 		);
 	}
 
+	public static SendTextMessageRequest ofJoinMessage(ChatRoom savedChatRoom, Member member) {
+		return new SendTextMessageRequest(
+			savedChatRoom.getId(), 0, String.format("%s 님이 채팅방을 생성했습니다.", member.getName())
+		);
+	}
+
 	// public static SendTextMessageRequest ofJoinMessage(ChatRoom chatRoom, Member joinMember) {
 	//
 	// }

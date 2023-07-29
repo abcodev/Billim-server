@@ -26,13 +26,14 @@ public class ReviewController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "회원이 이용한 상품 리뷰 불러오기", description = "마이페이지 헤더에서 리뷰 클릭시 작성한 후기, 작성 해야하는 리뷰를 불러옴")
-    @GetMapping("/my-list")
-    public ResponseEntity<Void> myProductReview(@AuthenticationPrincipal long memberId) {
-        reviewService.findMyProductReview(memberId);
+    @Operation(summary = "*리뷰 작성 가능한 상품 목록 불러오기", description = "마이페이지 헤더에서 후기작성 개수 클릭시 회원이 이용한 상품 중 리뷰 작성 가능한 상품 목록 불러온다.")
+    @GetMapping("/writable")
+    public ResponseEntity<Void> myWritableReview(@AuthenticationPrincipal long memberId) {
+        reviewService.findMyWritableReview(memberId);
         return ResponseEntity.ok().build();
     }
 
-    // 마이페이지 리뷰 리스트 불러오기
+    // 상품 리뷰
+
 
 }
