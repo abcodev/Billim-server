@@ -26,6 +26,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.Map;
 
 @Tag(name = "회원", description = "MemberController")
@@ -81,7 +82,8 @@ public class MemberController {
     @GetMapping("/my-page")
     public ResponseEntity<MyPageInfoResponse> myPageInfo(@AuthenticationPrincipal long memberId) {
         MyPageInfoResponse resp = memberService.retrieveMyPageInfo(memberId);
-        long availableReview = reviewService.myReviewNoCount(memberId);
+//        long availableReview = reviewService.myReviewNoCount(memberId);
+        long availableReview = reviewService.writableReviewCount(memberId);
         resp.setAvailableReview(availableReview);
         return ResponseEntity.ok(resp);
     }

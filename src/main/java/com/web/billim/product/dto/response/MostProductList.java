@@ -16,7 +16,7 @@ public class MostProductList {
     private String imageUrl;
     private String productName;
 
-    public static MostProductList from(Product product){
+    public static MostProductList of(Product product){
         return MostProductList.builder()
                 .productId(product.getProductId())
                 .imageUrl(product.mainImage())

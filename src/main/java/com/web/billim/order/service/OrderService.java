@@ -101,8 +101,13 @@ public class OrderService {
                 .orElseThrow();
     }
 
-    public long numberOfOrders(long memberId) {
-        return orderRepository.countByMember_memberId(memberId)
+//    public long numberOfOrders(long memberId) {
+//        return orderRepository.countByMember_memberId(memberId)
+//                .orElseThrow(() -> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
+//    }
+
+    public long numberOfOrdersDone(long memberId) {
+        return orderRepository.countByMemberAndStatus(memberId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
     }
 

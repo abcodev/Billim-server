@@ -142,7 +142,7 @@ public class ProductService {
     public List<MostProductList> findMostPopularProduct() {
         return productRepository.findAllByProductIdInAndIsDeleted(productRedisService.rankPopularProduct(), false)
                 .stream()
-                .map(MostProductList::from)
+                .map(MostProductList::of)
                 .collect(Collectors.toList());
     }
 

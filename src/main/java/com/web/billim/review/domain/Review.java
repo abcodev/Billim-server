@@ -35,7 +35,7 @@ public class Review extends JpaEntity {
 
 
 
-    //    @JoinColumn(name = "product_id", referencedColumnName = "product_id")
+//    @JoinColumn(name = "product_id", referencedColumnName = "product_id")
 //    @ManyToOne
 //    private Product product;
 //
