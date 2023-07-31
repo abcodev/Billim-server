@@ -94,11 +94,11 @@ public class MemberService {
 
 	@Transactional
 	public void updateInfo(long memberId, MemberInfoUpdateRequest req) {
-		if (memberRepository.existsByNickname(req.getNickname())) {
-			throw new RuntimeException("중복된 닉네임 입니다.");
-		}
-
 		memberRepository.findById(memberId).ifPresent(member -> {
+			if (!member.getNickname().equals(req.getNickname())
+				&& memberRepository.existsByNickname(req.getNickname())) {
+				throw new RuntimeException("중복된 닉네임 입니다.");
+			}
 			String imageUrl = null;
 			if (!(req.getNewProfileImage().isEmpty())) {
 				imageUploadService.delete(member.getProfileImageUrl());
