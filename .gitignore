@@ -4,6 +4,7 @@ application-email.yml
 application-import.yml
 application-security.yml
 application-datasource.yml
+application-oauth.yml
 
 
 HELP.md
