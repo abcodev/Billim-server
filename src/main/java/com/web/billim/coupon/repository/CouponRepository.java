@@ -12,5 +12,4 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
 
 	Optional<Coupon> findByName(String name);
 
-
 }

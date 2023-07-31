@@ -30,4 +30,5 @@ public class PointHistoryDomainService {
 		}).collect(Collectors.toList());
 		return pointUsedHistoryRepository.saveAll(histories);
 	}
+
 }

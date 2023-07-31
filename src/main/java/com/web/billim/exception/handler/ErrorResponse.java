@@ -19,7 +19,6 @@ public class ErrorResponse {
 			.status(errorCode.getHttpStatus())
 			.body(ErrorResponse.builder()
 				.code(errorCode.name())
-//				.code(errorCode.getHttpStatus().name())
 				.message(errorCode.getMessage())
 				.build());
 	}
@@ -29,7 +28,6 @@ public class ErrorResponse {
 			.status(errorCode.getHttpStatus())
 			.body(ErrorResponse.builder()
 				.code(errorCode.name())
-//				.code(errorCode.getHttpStatus().name())
 				.message(message)
 				.build());
 	}

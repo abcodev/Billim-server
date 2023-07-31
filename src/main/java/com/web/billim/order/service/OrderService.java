@@ -1,5 +1,6 @@
 package com.web.billim.order.service;
 
+import com.web.billim.exception.ForbiddenException;
 import com.web.billim.exception.NotFoundException;
 import com.web.billim.exception.OrderFailedException;
 import com.web.billim.exception.handler.ErrorCode;
@@ -24,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -67,7 +69,7 @@ public class OrderService {
 
         // 3. 자기자신의 상품을 주문하는 케이스 확인
         if (product.isOwned(memberId)) {
-            throw new OrderFailedException(ErrorCode.ORDER_DUPLICATED_PERIOD); // TODO: 에러코드 추가바람
+            throw new OrderFailedException(ErrorCode.ORDER_OWN_PRODUCT);
         }
 
         // 4. 주문정보 생성
@@ -106,11 +108,6 @@ public class OrderService {
 //                .orElseThrow(() -> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
 //    }
 
-    public long numberOfOrdersDone(long memberId) {
-        return orderRepository.countByMemberAndStatus(memberId)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
-    }
-
     // 마이페이지 나의 구매 내역 목록 조회
     @Transactional
     public MyOrderListResponse findMyOrder(long memberId) {
@@ -131,7 +128,7 @@ public class OrderService {
             List<ProductOrder> orderHistories = orderRepository.findAllByProduct(product);
             return MySalesDetailResponse.of(product, orderHistories);
         } else {
-            throw new RuntimeException("상품 판매자만 상세내역을 조회할 수 있습니다.");
+            throw new ForbiddenException(ErrorCode.ACCESS_DENIED_MEMBER);
         }
     }
 

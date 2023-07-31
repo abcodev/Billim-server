@@ -49,7 +49,6 @@ public class PointService {
 	@Transactional
 	public long retrieveAvailablePoint(long memberId) {
 		return savedPointRepository.findAllNotExpired(memberId).stream()
-				// A : SavedPoint -> B : Integer
 				.mapToLong(SavedPoint::getAvailableAmount)
 				.sum();
 	}
@@ -74,7 +73,6 @@ public class PointService {
 		pointHistories.addAll(savedPoints);
 
 		// 4. 정렬해서 반환
-		// Comparable, Comparator -> JAVA 문법
 		pointHistories.sort(Comparator.comparing(PointResponse::getAt).reversed());
 		return pointHistories;
 	}

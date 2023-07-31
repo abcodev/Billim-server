@@ -36,6 +36,10 @@ public class ReviewController {
     }
 
     // 상품 리뷰
+    @GetMapping("/my/list")
+    public ResponseEntity<?> myReviewList(@AuthenticationPrincipal long memberId) {
+        return ResponseEntity.ok().build();
+    }
 
 
 }

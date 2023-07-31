@@ -16,6 +16,7 @@ public enum ErrorCode {
     /* Order */
     ORDER_DUPLICATED_REQUEST(BAD_REQUEST, "해당 사용자가 이미 주문중인 거래가 있습니다."),
     ORDER_DUPLICATED_PERIOD(BAD_REQUEST, "해당 제품은 다른 사용자가 거래중입니다."),
+    ORDER_OWN_PRODUCT(BAD_REQUEST, "본인이 등록 상품은 주문할 수 없습니다."),
     PAYMENT_FAILED(BAD_REQUEST, "결제에 실패했습니다."),
 
 
@@ -42,6 +43,9 @@ public enum ErrorCode {
 //    INVALID_AUTH_TOKEN(UNAUTHORIZED, "권한 정보가 없는 토큰입니다"),
 //    UNAUTHORIZED_MEMBER(UNAUTHORIZED, "현재 내 계정 정보가 존재하지 않습니다"),
 
+    /* 403 FORBIDDEN : 접근 권한 */
+    ACCESS_DENIED_MEMBER(FORBIDDEN, "해당 회원만 접근 가능합니다."),
+
 
     /* 404 NOT_FOUND : Resource 를 찾을 수 없음 */
     MEMBER_NOT_FOUND(NOT_FOUND, "해당 사용자 정보를 찾을 수 없습니다"),
@@ -56,6 +60,7 @@ public enum ErrorCode {
     DUPLICATE_RESOURCE(CONFLICT, "데이터가 이미 존재합니다"),
     DUPLICATE_EMAIL(CONFLICT, "중복된 이메일 입니다."),
     DUPLICATE_NICKNAME(CONFLICT, "중복된 닉네임 입니다."),
+
 
 
     /* INTERNAL_SERVER_ERROR */

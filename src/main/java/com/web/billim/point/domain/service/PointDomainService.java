@@ -18,10 +18,9 @@ public class PointDomainService {
 	private final SavedPointRepository savedPointRepository;
 
 	public Map<SavedPoint, Long> use(Member member, long amount) {
-//		List<SavedPoint> savedPoints = savedPointRepository.findAllNotExpired(member.getEmail());
         List<SavedPoint> savedPoints = savedPointRepository.findAllNotExpired(member.getMemberId());
 		if (savedPoints.stream().mapToLong(SavedPoint::getAvailableAmount).sum() < amount) {
-			throw new RuntimeException("사용가능 적립금이 부족합니다.");
+			throw new RuntimeException("사용 가능한 적립금이 부족합니다.");
 		}
 
 		Map<SavedPoint, Long> usedPointMap = new HashMap<>();

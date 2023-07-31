@@ -21,21 +21,15 @@ public interface OrderRepository extends JpaRepository<ProductOrder, Long> {
     Optional<ProductOrder> findByMemberAndStatus(Member member, ProductOrderStatus status);
     Optional<ProductOrder> findByProductAndStatus(Product product, ProductOrderStatus status);
     List<ProductOrder> findAllByMember_memberId_OrderByOrderIdDesc(long memberId);
-
-//    Optional<Long> countByMember_memberId(long memberId);
-
 	List<ProductOrder> findAllByProduct(Product product);
-
 	List<ProductOrder> findAllByEndAt(LocalDate datetime);
 
-//    List<ProductOrder> findAllByMember_memberId(long memberId);
-
-
-
-    @Query("SELECT COUNT(po) FROM ProductOrder po WHERE po NOT IN (SELECT r.productOrder FROM Review r) AND po.status = 'DONE' AND po.endAt <= CURRENT_DATE")
+    @Query("SELECT COUNT(po) FROM ProductOrder po WHERE po NOT IN (SELECT r.productOrder FROM Review r) " +
+            "AND po.status = 'DONE' AND po.endAt <= CURRENT_DATE")
     Optional<Long> countByMemberAndStatus(long memberId);
 
-    @Query("SELECT po FROM ProductOrder po WHERE po NOT IN (SELECT r.productOrder FROM Review r) AND po.status = 'DONE' AND po.endAt <= CURRENT_DATE")
+    @Query("SELECT po FROM ProductOrder po WHERE po NOT IN (SELECT r.productOrder FROM Review r) " +
+            "AND po.status = 'DONE' AND po.endAt <= CURRENT_DATE")
     List<ProductOrder> findProductOrdersWritableReview(long memberId);
 
 }
