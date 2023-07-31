@@ -31,7 +31,5 @@ public class OauthService extends DefaultOAuth2UserService {
             KakaoLogin kakaoLogin = new KakaoLogin(oAuth2User.getAttributes());
         }
         return new OauthMember("test1","닉네임");
-
-
     }
 }

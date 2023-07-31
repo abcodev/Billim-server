@@ -2,7 +2,7 @@ package com.web.billim.security.oauth;
 
 import java.util.Map;
 
-public class KakaoLogin {
+public class KakaoLogin implements OAuthLogin{
 
     private Map<String, Object> kakaoAttributes;
 
@@ -10,18 +10,23 @@ public class KakaoLogin {
         this.kakaoAttributes = kakaoAttributes;
     }
 
+    @Override
+    public long getProviderId() {
+        return 0;
+    }
 
-//    private long oauthId;
-//    private String providerName;
-//    private String accountId;
-//    private String email;
-//    private String nickName;
-//    public KakaoLogin(Map<String,Object> attributes) {
-//        this.oauthId = (long) attributes.get("id");
-//        this.providerName = "kakao";
-//        this.email = attributes.get("email").toString();
-//        this.nickName = attributes.get("nickname").toString();
-//    }
+    @Override
+    public String getProvider() {
+        return null;
+    }
 
+    @Override
+    public String getEmail() {
+        return null;
+    }
 
+    @Override
+    public String getName() {
+        return null;
+    }
 }
