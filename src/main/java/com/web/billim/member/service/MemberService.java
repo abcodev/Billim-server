@@ -1,5 +1,6 @@
 package com.web.billim.member.service;
 
+import com.web.billim.exception.DuplicatedException;
 import com.web.billim.exception.JwtException;
 import com.web.billim.email.service.EmailSendService;
 import com.web.billim.exception.NotFoundException;
@@ -98,8 +99,9 @@ public class MemberService {
 		memberRepository.findById(memberId).ifPresent(member -> {
 			if (!member.getNickname().equals(req.getNickname())
 				&& memberRepository.existsByNickname(req.getNickname())) {
-				throw new RuntimeException("중복된 닉네임 입니다.");
+				throw new DuplicatedException(ErrorCode.DUPLICATE_NICKNAME);
 			}
+
 			String imageUrl = null;
 			if (!(req.getNewProfileImage().isEmpty())) {
 				imageUploadService.delete(member.getProfileImageUrl());

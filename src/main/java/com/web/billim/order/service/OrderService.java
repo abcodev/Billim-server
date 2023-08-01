@@ -1,7 +1,6 @@
 package com.web.billim.order.service;
 
 import com.web.billim.exception.ForbiddenException;
-import com.web.billim.exception.NotFoundException;
 import com.web.billim.exception.OrderFailedException;
 import com.web.billim.exception.handler.ErrorCode;
 import com.web.billim.member.domain.Member;
@@ -25,7 +24,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -128,7 +126,7 @@ public class OrderService {
             List<ProductOrder> orderHistories = orderRepository.findAllByProduct(product);
             return MySalesDetailResponse.of(product, orderHistories);
         } else {
-            throw new ForbiddenException(ErrorCode.ACCESS_DENIED_MEMBER);
+            throw new ForbiddenException(ErrorCode.MISMATCH_MEMBER);
         }
     }
 

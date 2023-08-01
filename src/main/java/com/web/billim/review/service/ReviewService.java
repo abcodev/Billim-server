@@ -62,7 +62,6 @@ public class ReviewService {
 	// 리뷰가 이미 작성된건 빠져야됨
 	@Transactional
 	public List<WritableReviewResponse> findMyWritableReview(long memberId) {
-//		return orderRepository.findAllByMember_memberId(memberId)
 		return orderRepository.findProductOrdersWritableReview(memberId)
 				.stream().map(WritableReviewResponse::of).collect(Collectors.toList());
 	}
