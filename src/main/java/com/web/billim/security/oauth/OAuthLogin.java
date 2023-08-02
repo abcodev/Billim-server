@@ -1,7 +1,7 @@
 package com.web.billim.security.oauth;
 
 public interface OAuthLogin {
-    long getProviderId();
+    String getProviderId();
     String getProvider();
     String getEmail();
     String getName();

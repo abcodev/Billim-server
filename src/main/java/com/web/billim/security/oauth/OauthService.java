@@ -11,6 +11,7 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -19,7 +20,7 @@ public class OauthService extends DefaultOAuth2UserService {
 
     private final MemberService memberService;
 
-
+    @Transactional
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         log.info("userRequest : " + userRequest);
@@ -32,6 +33,7 @@ public class OauthService extends DefaultOAuth2UserService {
         return oAuth2UserLogin(userRequest,oAuth2User);
     }
 
+
     private OAuth2User oAuth2UserLogin(OAuth2UserRequest userRequest, OAuth2User oAuth2User){
         // SNS TYPE
         String provider = userRequest.getClientRegistration().getClientName();
@@ -39,17 +41,14 @@ public class OauthService extends DefaultOAuth2UserService {
         OAuthLogin kakaoLogin = null;
         if(provider.equals("KAKAO")){
             kakaoLogin = KakaoLogin.ofKaKao(oAuth2User.getAttributes());
-            log.info(oAuth2User.getAttributes().toString());
         }
-
-        log.info("KAKAO 중복 이메일 체크");
         if(memberService.existByEmail(kakaoLogin.getEmail())){
-            log.info("사용중인 이메일이 있음");
             throw new DuplicatedException(ErrorCode.DUPLICATE_EMAIL);
         }
-        memberService.register(kakaoLogin);
+        Member member = memberService.register(kakaoLogin);
+
         log.info("KAKAO 사용자 Member 저장");
 
-        return new OauthMember("test1","닉네임");
+        return new OauthMember(kakaoLogin,member);
     }
 }

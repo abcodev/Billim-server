@@ -21,6 +21,7 @@ import com.web.billim.point.service.PointService;
 import com.web.billim.security.oauth.OAuthLogin;
 import lombok.RequiredArgsConstructor;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +31,7 @@ import org.springframework.validation.FieldError;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 @RequiredArgsConstructor
 @Service
@@ -146,16 +148,22 @@ public class MemberService {
 		return memberRepository.existsByEmail(email);
 	}
 
-	public void register(OAuthLogin kakaoLogin) {
+	public Member register(OAuthLogin kakaoLogin) {
+		String nickname;
+		do {
+			nickname = "Billim-" + RandomStringUtils.random(7, true, true);
+		}
+		while (memberRepository.existsByNickname(nickname));
+
 		Member member = com.web.billim.member.domain.Member.builder()
 				.email(kakaoLogin.getEmail())
 				.password(" ")
 				.name(kakaoLogin.getName())
-				.nickname(" ")
+				.nickname(nickname)
 				.grade(MemberGrade.BRONZE)
 				.profileImageUrl(kakaoLogin.getImageUrl())
 				.address(" ")
 				.build();
-		memberRepository.save(member);
+		return memberRepository.save(member);
 	}
 }
