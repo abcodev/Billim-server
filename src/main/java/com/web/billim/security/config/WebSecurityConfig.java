@@ -9,6 +9,7 @@ import com.web.billim.security.UsernamPasswordAuthenticationProvider;
 
 import com.web.billim.security.UserDetailServiceImpl;
 
+import com.web.billim.security.oauth.OauthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,6 +37,7 @@ public class WebSecurityConfig {
     private final UserDetailServiceImpl userDetailsService;
     private final JwtService jwtService;
     private final SecurityFilterSkipMatcher securityFilterSkipMatcher;
+    private final OauthService oauthService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(AuthenticationManager authenticationManager,HttpSecurity http) throws Exception {
@@ -56,7 +58,13 @@ public class WebSecurityConfig {
                 .anyRequest().authenticated()
 
                 .and()
-                .apply(jwtTokenFilterConfigurer(jwtProvider,authenticationManager, jwtService,securityFilterSkipMatcher));
+                .apply(jwtTokenFilterConfigurer(jwtProvider,authenticationManager, jwtService,securityFilterSkipMatcher))
+
+                .and()
+                .oauth2Login()
+                .redirectionEndpoint().baseUri("/oauth/kakao")
+                .and()
+                .userInfoEndpoint().userService(oauthService);
 
         return http.build();
     }
