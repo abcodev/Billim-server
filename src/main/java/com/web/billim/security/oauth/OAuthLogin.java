@@ -5,4 +5,5 @@ public interface OAuthLogin {
     String getProvider();
     String getEmail();
     String getName();
+    String getImageUrl();
 }

@@ -14,9 +14,11 @@ import com.web.billim.member.dto.UpdatePasswordCommand;
 import com.web.billim.member.dto.response.MyPageInfoResponse;
 import com.web.billim.member.dto.response.MemberInfoResponse;
 import com.web.billim.member.repository.MemberRepository;
+import com.web.billim.member.type.MemberGrade;
 import com.web.billim.point.dto.AddPointCommand;
 import com.web.billim.point.service.PointService;
 
+import com.web.billim.security.oauth.OAuthLogin;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -140,4 +142,20 @@ public class MemberService {
 				.orElseThrow(()-> new JwtException(ErrorCode.MEMBER_NOT_FOUND));
 	}
 
+	public Boolean existByEmail(String email) {
+		return memberRepository.existsByEmail(email);
+	}
+
+	public void register(OAuthLogin kakaoLogin) {
+		Member member = com.web.billim.member.domain.Member.builder()
+				.email(kakaoLogin.getEmail())
+				.password(" ")
+				.name(kakaoLogin.getName())
+				.nickname(" ")
+				.grade(MemberGrade.BRONZE)
+				.profileImageUrl(kakaoLogin.getImageUrl())
+				.address(" ")
+				.build();
+		memberRepository.save(member);
+	}
 }

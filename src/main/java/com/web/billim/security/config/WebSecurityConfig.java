@@ -9,6 +9,7 @@ import com.web.billim.security.UsernamPasswordAuthenticationProvider;
 
 import com.web.billim.security.UserDetailServiceImpl;
 
+import com.web.billim.security.oauth.OAuth2LoginSuccessHandler;
 import com.web.billim.security.oauth.OauthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -38,6 +39,9 @@ public class WebSecurityConfig {
     private final JwtService jwtService;
     private final SecurityFilterSkipMatcher securityFilterSkipMatcher;
     private final OauthService oauthService;
+    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+
+    private final PasswordEncoder passwordEncoder;
 
     @Bean
     public SecurityFilterChain securityFilterChain(AuthenticationManager authenticationManager,HttpSecurity http) throws Exception {
@@ -63,8 +67,8 @@ public class WebSecurityConfig {
                 .and()
                 .oauth2Login()
                 .redirectionEndpoint().baseUri("/oauth/kakao")
-                .and()
-                .userInfoEndpoint().userService(oauthService);
+                .and().userInfoEndpoint().userService(oauthService)
+                .and().successHandler(oAuth2LoginSuccessHandler);
 
         return http.build();
     }
@@ -118,12 +122,6 @@ public class WebSecurityConfig {
 
     @Bean
     public UsernamPasswordAuthenticationProvider usernamPasswordAuthenticationProvider() {
-        return new UsernamPasswordAuthenticationProvider(userDetailsService,passwordEncoder());
+        return new UsernamPasswordAuthenticationProvider(userDetailsService,passwordEncoder);
     }
-
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
-
 }
