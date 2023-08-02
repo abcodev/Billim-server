@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
 
-public class MyOrderReview {
+public class MyReviewListResponse {
 
     private long orderId;
     private String productName;

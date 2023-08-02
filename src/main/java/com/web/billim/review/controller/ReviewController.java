@@ -1,6 +1,7 @@
 package com.web.billim.review.controller;
 
 import com.web.billim.review.dto.request.ReviewWriteRequest;
+import com.web.billim.review.dto.response.MyReviewListResponse;
 import com.web.billim.review.dto.response.WritableReviewResponse;
 import com.web.billim.review.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,7 +38,7 @@ public class ReviewController {
 
     // 상품 리뷰
     @GetMapping("/my/list")
-    public ResponseEntity<?> myReviewList(@AuthenticationPrincipal long memberId) {
+    public ResponseEntity<List<MyReviewListResponse>> myReviewList(@AuthenticationPrincipal long memberId) {
         return ResponseEntity.ok().build();
     }
 
