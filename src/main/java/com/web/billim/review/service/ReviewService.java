@@ -9,6 +9,7 @@ import com.web.billim.point.dto.AddPointCommand;
 import com.web.billim.point.service.PointService;
 import com.web.billim.review.domain.Review;
 import com.web.billim.review.dto.request.ReviewWriteRequest;
+import com.web.billim.review.dto.response.MyReviewListResponse;
 import com.web.billim.review.dto.response.ProductReviewListResponse;
 import com.web.billim.review.dto.response.WritableReviewResponse;
 import com.web.billim.review.repository.ReviewRepository;
@@ -40,7 +41,6 @@ public class ReviewService {
 		reviewRepository.save(ReviewWriteRequest.of(reviewWriteRequest,productOrder));
 		// 리뷰 작성시 포인트 주기
 
-
 	}
 
 	public List<ProductReviewListResponse> reviewList(long productId) {
@@ -60,5 +60,11 @@ public class ReviewService {
 		return orderRepository.findProductOrdersWritableReview(memberId)
 				.stream().map(WritableReviewResponse::of).collect(Collectors.toList());
 	}
+
+	public List<MyReviewListResponse> myReviewList(long memberId) {
+		return null;
+	}
+
+
 
 }
