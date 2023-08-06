@@ -22,19 +22,20 @@ public class WritableReviewList {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate endAt;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSS")
-    private LocalDateTime createAt;
+    private LocalDateTime orderCreatedAt;
     private String isWritable;
 
     public static WritableReviewList of(ProductOrder productOrder) {
+        var product = productOrder.getProduct();
         return WritableReviewList.builder()
                 .orderId(productOrder.getOrderId())
-                .sellerNickname(productOrder.getProduct().getMember().getNickname())
-                .productName(productOrder.getProduct().getProductName())
+                .sellerNickname(product.getMember().getNickname())
+                .productName(product.getProductName())
                 .price(productOrder.getPrice())
-                .productImageUrl(productOrder.getProduct().mainImage())
+                .productImageUrl(product.mainImage())
                 .startAt(productOrder.getStartAt())
                 .endAt(productOrder.getEndAt())
-                .createAt(productOrder.getCreatedAt())
+                .orderCreatedAt(productOrder.getCreatedAt())
                 .isWritable("true")
                 .build();
     }

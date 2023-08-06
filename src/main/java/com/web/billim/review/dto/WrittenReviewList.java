@@ -1,7 +1,6 @@
 package com.web.billim.review.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.web.billim.order.domain.ProductOrder;
 import com.web.billim.review.domain.Review;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,12 +21,14 @@ public class WrittenReviewList {
     private LocalDate startAt;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate endAt;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSS")
+    private LocalDateTime orderCreatedAt;
 
     private long reviewId;
     private String content;
     private long starRating;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSS")
-    private LocalDateTime createAt;
+    private LocalDateTime reviewCreatedAt;
 
     private String isWritable;
 
@@ -42,10 +43,11 @@ public class WrittenReviewList {
                 .productImageUrl(product.mainImage())
                 .startAt(productOrder.getStartAt())
                 .endAt(productOrder.getEndAt())
+                .orderCreatedAt(productOrder.getCreatedAt())
                 .reviewId(review.getReviewId())
                 .content(review.getContent())
                 .starRating(review.getStarRating())
-                .createAt(review.getCreatedAt())
+                .reviewCreatedAt(review.getCreatedAt())
                 .isWritable("false")
                 .build();
     }
