@@ -21,6 +21,7 @@ import java.util.Objects;
 public class OauthService extends DefaultOAuth2UserService {
 
     private final MemberService memberService;
+    private final OAuthRepository oAuthRepository;
 
     @Transactional
     @Override
@@ -37,16 +38,26 @@ public class OauthService extends DefaultOAuth2UserService {
     private OAuth2User oAuth2UserLogin(OAuth2UserRequest userRequest, OAuth2User oAuth2User){
         // SNS TYPE
         String provider = userRequest.getClientRegistration().getClientName();
-        OAuthLogin kakaoLogin = null;
+        OAuthLogin oAuthLogin = null;
         if(provider.equals("KAKAO")){
-            kakaoLogin = KakaoLogin.ofKaKao(oAuth2User.getAttributes());
+            oAuthLogin = KakaoLogin.ofKaKao(oAuth2User.getAttributes());
         }
-        if(memberService.existByEmail(Objects.requireNonNull(kakaoLogin).getEmail())){
+
+        // email 이 존재하는지 확인
+        if(memberService.existByEmail(Objects.requireNonNull(oAuthLogin).getEmail())){
             throw new DuplicatedException(ErrorCode.DUPLICATE_EMAIL);
         }
-        Member member = memberService.register(kakaoLogin);
+        // 없다면 member 등록
+        Member member = memberService.register(oAuthLogin);
 
+        // 소셜 테이블에도 저장
+        SocialMember socialMember = SocialMember.of(member,oAuthLogin);
+        save(socialMember);
+        log.info("social 회원");
+        return new OauthMember(oAuthLogin,member);
+    }
 
-        return new OauthMember(kakaoLogin,member);
+    public SocialMember save(SocialMember socialMember){
+        return oAuthRepository.save(socialMember);
     }
 }
