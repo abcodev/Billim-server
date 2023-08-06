@@ -31,7 +31,6 @@ public class Member extends JpaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long memberId;
-
     private String email;
     private String password;
     private String name;
@@ -60,5 +59,4 @@ public class Member extends JpaEntity {
     public void changePassword(String password) {
         this.password = password;
     }
-
 }
