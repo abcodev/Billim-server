@@ -1,4 +1,4 @@
-package com.web.billim.review.dto.response;
+package com.web.billim.review.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.web.billim.order.domain.ProductOrder;
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
-public class WritableReviewResponse {
+public class WritableReviewList {
 
     private long orderId;
     private String sellerNickname;
@@ -23,9 +23,10 @@ public class WritableReviewResponse {
     private LocalDate endAt;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSS")
     private LocalDateTime createAt;
+    private String isWritable;
 
-    public static WritableReviewResponse of(ProductOrder productOrder) {
-        return WritableReviewResponse.builder()
+    public static WritableReviewList of(ProductOrder productOrder) {
+        return WritableReviewList.builder()
                 .orderId(productOrder.getOrderId())
                 .sellerNickname(productOrder.getProduct().getMember().getNickname())
                 .productName(productOrder.getProduct().getProductName())
@@ -34,6 +35,7 @@ public class WritableReviewResponse {
                 .startAt(productOrder.getStartAt())
                 .endAt(productOrder.getEndAt())
                 .createAt(productOrder.getCreatedAt())
+                .isWritable("true")
                 .build();
     }
 

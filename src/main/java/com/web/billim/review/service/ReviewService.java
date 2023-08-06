@@ -5,19 +5,17 @@ import com.web.billim.exception.handler.ErrorCode;
 import com.web.billim.order.domain.ProductOrder;
 import com.web.billim.order.repository.OrderRepository;
 import com.web.billim.order.service.OrderService;
-import com.web.billim.point.dto.AddPointCommand;
 import com.web.billim.point.service.PointService;
 import com.web.billim.review.domain.Review;
 import com.web.billim.review.dto.request.ReviewWriteRequest;
 import com.web.billim.review.dto.response.MyReviewListResponse;
 import com.web.billim.review.dto.response.ProductReviewListResponse;
-import com.web.billim.review.dto.response.WritableReviewResponse;
+import com.web.billim.review.dto.WritableReviewList;
 import com.web.billim.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,18 +48,24 @@ public class ReviewService {
 				.collect(Collectors.toList());
 	}
 
+	// 작성 가능한 리뷰 개수
 	public long writableReviewCount(long memberId) {
 		return orderRepository.countByMemberAndStatus(memberId)
 				.orElseThrow(() -> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
 	}
 
+	// 작성 가능한 리뷰 리스트
 	@Transactional
-	public List<WritableReviewResponse> findMyWritableReview(long memberId) {
+	public List<WritableReviewList> findMyWritableReview(long memberId) {
 		return orderRepository.findProductOrdersWritableReview(memberId)
-				.stream().map(WritableReviewResponse::of).collect(Collectors.toList());
+				.stream().map(WritableReviewList::of).collect(Collectors.toList());
 	}
 
 	public List<MyReviewListResponse> myReviewList(long memberId) {
+
+		List<WritableReviewList> writableReviewList = orderRepository.findProductOrdersWritableReview(memberId)
+				.stream().map(WritableReviewList::of).collect(Collectors.toList());
+
 		return null;
 	}
 
