@@ -1,10 +1,11 @@
-package com.web.billim.security.oauth;
+package com.web.billim.oauth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.web.billim.jwt.JwtProvider;
 import com.web.billim.jwt.dto.RedisJwt;
 import com.web.billim.jwt.service.JwtService;
 import com.web.billim.member.type.MemberGrade;
+import com.web.billim.oauth.dto.OauthMember;
 import com.web.billim.security.dto.LoginResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

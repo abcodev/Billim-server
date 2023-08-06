@@ -1,8 +1,8 @@
-package com.web.billim.security.oauth;
+package com.web.billim.oauth.dto;
 
 import com.web.billim.member.domain.Member;
 import com.web.billim.member.type.MemberGrade;
-import lombok.Builder;
+import com.web.billim.oauth.dto.OAuthLogin;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;

@@ -9,8 +9,8 @@ import com.web.billim.security.UsernamPasswordAuthenticationProvider;
 
 import com.web.billim.security.UserDetailServiceImpl;
 
-import com.web.billim.security.oauth.OAuth2LoginSuccessHandler;
-import com.web.billim.security.oauth.OauthService;
+import com.web.billim.oauth.OAuth2LoginSuccessHandler;
+import com.web.billim.oauth.service.OauthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +19,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;

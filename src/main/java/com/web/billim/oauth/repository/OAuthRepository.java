@@ -1,5 +1,6 @@
-package com.web.billim.security.oauth;
+package com.web.billim.oauth.repository;
 
+import com.web.billim.oauth.domain.SocialMember;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

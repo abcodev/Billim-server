@@ -1,4 +1,4 @@
-package com.web.billim.security.oauth;
+package com.web.billim.oauth.dto;
 
 public interface OAuthLogin {
     String getProviderId();

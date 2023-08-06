@@ -1,4 +1,4 @@
-package com.web.billim.security.oauth;
+package com.web.billim.oauth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,7 +6,7 @@ import lombok.Builder;
 import java.util.Map;
 @AllArgsConstructor
 @Builder
-public class KakaoLogin implements OAuthLogin{
+public class KakaoLogin implements OAuthLogin {
 
     private String accountId;
     private String email;

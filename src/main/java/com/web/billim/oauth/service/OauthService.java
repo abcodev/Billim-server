@@ -1,9 +1,14 @@
-package com.web.billim.security.oauth;
+package com.web.billim.oauth.service;
 
 import com.web.billim.exception.DuplicatedException;
 import com.web.billim.exception.handler.ErrorCode;
 import com.web.billim.member.domain.Member;
 import com.web.billim.member.service.MemberService;
+import com.web.billim.oauth.domain.SocialMember;
+import com.web.billim.oauth.dto.KakaoLogin;
+import com.web.billim.oauth.dto.OAuthLogin;
+import com.web.billim.oauth.dto.OauthMember;
+import com.web.billim.oauth.repository.OAuthRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;

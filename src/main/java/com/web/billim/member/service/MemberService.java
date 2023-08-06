@@ -18,7 +18,7 @@ import com.web.billim.member.type.MemberGrade;
 import com.web.billim.point.dto.AddPointCommand;
 import com.web.billim.point.service.PointService;
 
-import com.web.billim.security.oauth.OAuthLogin;
+import com.web.billim.oauth.dto.OAuthLogin;
 import lombok.RequiredArgsConstructor;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -31,7 +31,6 @@ import org.springframework.validation.FieldError;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 @RequiredArgsConstructor
 @Service
