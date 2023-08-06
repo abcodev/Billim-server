@@ -7,6 +7,7 @@ import com.web.billim.order.repository.OrderRepository;
 import com.web.billim.order.service.OrderService;
 import com.web.billim.point.service.PointService;
 import com.web.billim.review.domain.Review;
+import com.web.billim.review.dto.WrittenReviewList;
 import com.web.billim.review.dto.request.ReviewWriteRequest;
 import com.web.billim.review.dto.response.MyReviewListResponse;
 import com.web.billim.review.dto.response.ProductReviewListResponse;
@@ -61,12 +62,15 @@ public class ReviewService {
 				.stream().map(WritableReviewList::of).collect(Collectors.toList());
 	}
 
-	public List<MyReviewListResponse> myReviewList(long memberId) {
+	@Transactional
+	public MyReviewListResponse myReviewList(long memberId) {
 
 		List<WritableReviewList> writableReviewList = orderRepository.findProductOrdersWritableReview(memberId)
 				.stream().map(WritableReviewList::of).collect(Collectors.toList());
+		List<WrittenReviewList> writtenReviewList = reviewRepository.findByProductOrder_Member_MemberId(memberId)
+				.stream().map(WrittenReviewList::of).collect(Collectors.toList());
 
-		return null;
+		return new MyReviewListResponse(writableReviewList, writtenReviewList);
 	}
 
 

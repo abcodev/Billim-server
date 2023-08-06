@@ -3,6 +3,7 @@ package com.web.billim.review.controller;
 import com.web.billim.review.dto.request.ReviewWriteRequest;
 import com.web.billim.review.dto.WrittenReviewList;
 import com.web.billim.review.dto.WritableReviewList;
+import com.web.billim.review.dto.response.MyReviewListResponse;
 import com.web.billim.review.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,10 +38,10 @@ public class ReviewController {
     }
 
     // 상품 리뷰
-    @Operation(summary = "* 나의 리뷰 목록")
+    @Operation(summary = "* 나의 리뷰 목록", description = "리뷰 목록 불러오기")
     @GetMapping("/my/list")
-    public ResponseEntity<List<WrittenReviewList>> myReviewList(@AuthenticationPrincipal long memberId) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<MyReviewListResponse> myReviewList(@AuthenticationPrincipal long memberId) {
+        return ResponseEntity.ok(reviewService.myReviewList(memberId));
     }
 
 
