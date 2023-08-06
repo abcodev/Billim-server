@@ -34,6 +34,7 @@ public class OauthService extends DefaultOAuth2UserService {
         log.info("userRequest : " + userRequest);
         log.info("ClientRegistration : "+userRequest.getClientRegistration()); // ClientRegistration 정보
 		log.info("AccessToken : "+userRequest.getAccessToken().getTokenValue()); // accessToken 가져오기
+        log.info("login");
 
         OAuth2User oAuth2User = super.loadUser(userRequest);
         return oAuth2UserLogin(userRequest,oAuth2User);
