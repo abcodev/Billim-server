@@ -9,7 +9,8 @@ import com.web.billim.security.UsernamPasswordAuthenticationProvider;
 
 import com.web.billim.security.UserDetailServiceImpl;
 
-import com.web.billim.security.oauth.OauthService;
+import com.web.billim.oauth.OAuth2LoginSuccessHandler;
+import com.web.billim.oauth.service.OauthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +19,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
@@ -38,6 +38,9 @@ public class WebSecurityConfig {
     private final JwtService jwtService;
     private final SecurityFilterSkipMatcher securityFilterSkipMatcher;
     private final OauthService oauthService;
+    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+
+    private final PasswordEncoder passwordEncoder;
 
     @Bean
     public SecurityFilterChain securityFilterChain(AuthenticationManager authenticationManager,HttpSecurity http) throws Exception {
@@ -63,8 +66,8 @@ public class WebSecurityConfig {
                 .and()
                 .oauth2Login()
                 .redirectionEndpoint().baseUri("/oauth/kakao")
-                .and()
-                .userInfoEndpoint().userService(oauthService);
+                .and().userInfoEndpoint().userService(oauthService)
+                .and().successHandler(oAuth2LoginSuccessHandler);
 
         return http.build();
     }
@@ -118,12 +121,6 @@ public class WebSecurityConfig {
 
     @Bean
     public UsernamPasswordAuthenticationProvider usernamPasswordAuthenticationProvider() {
-        return new UsernamPasswordAuthenticationProvider(userDetailsService,passwordEncoder());
+        return new UsernamPasswordAuthenticationProvider(userDetailsService,passwordEncoder);
     }
-
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
-
 }

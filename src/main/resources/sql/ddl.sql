@@ -4,14 +4,26 @@ CREATE TABLE `member`
 (
     `member_id`         bigint primary key auto_increment COMMENT '회원번호',
     `email`             varchar(200)                                                    NOT NULL COMMENT '회원이메일',
-    `password`          varchar(200)                                                    NOT NULL COMMENT '비밀번호',
+    `password`          varchar(200)                                                    COMMENT '비밀번호',
     `name`              varchar(100)                                                    NOT NULL COMMENT '회원이름',
     `nickname`          varchar(100)                                                    NOT NULL COMMENT '닉네임',
-    `address`           varchar(100)                                                    NOT NULL COMMENT '회원주소',
+    `address`           varchar(100)                                                    COMMENT '회원주소',
     `grade`             varchar(10)                                                     NOT NULL COMMENT '회원등급',
     `created_at`        timestamp default current_timestamp                             NOT NULL COMMENT '가입일자',
     `updated_at`        timestamp default current_timestamp on update current_timestamp NOT NULL COMMENT '접속일자',
     `profile_image_url` varchar(1024)                                                   NOT NULL COMMENT '프로필 url'
+);
+
+DROP TABLE IF EXISTS `social_member`;
+
+CREATE TABLE social_member
+(
+    social_id bigint auto_increment primary key,
+    provider_name     varchar(128) not null,
+    account_id        varchar(255) not null,
+    member_id         bigint       not null,
+    `created_at`        timestamp default current_timestamp                             NOT NULL,
+    `updated_at`        timestamp default current_timestamp on update current_timestamp NOT NULL
 );
 
 DROP TABLE IF EXISTS `product`;

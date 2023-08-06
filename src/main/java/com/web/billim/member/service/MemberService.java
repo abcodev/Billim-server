@@ -16,11 +16,14 @@ import com.web.billim.member.dto.response.HeaderInfoResponse;
 import com.web.billim.member.dto.response.MyPageInfoResponse;
 import com.web.billim.member.dto.response.MemberInfoResponse;
 import com.web.billim.member.repository.MemberRepository;
+import com.web.billim.member.type.MemberGrade;
 import com.web.billim.point.dto.AddPointCommand;
 import com.web.billim.point.service.PointService;
 
+import com.web.billim.oauth.dto.OAuthLogin;
 import lombok.RequiredArgsConstructor;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -99,9 +102,8 @@ public class MemberService {
 		memberRepository.findById(memberId).ifPresent(member -> {
 			if (!member.getNickname().equals(req.getNickname())
 				&& memberRepository.existsByNickname(req.getNickname())) {
-				throw new DuplicatedException(ErrorCode.DUPLICATE_NICKNAME);
+				throw new RuntimeException("중복된 닉네임 입니다.");
 			}
-
 			String imageUrl = null;
 			if (!(req.getNewProfileImage().isEmpty())) {
 				imageUploadService.delete(member.getProfileImageUrl());
@@ -151,4 +153,26 @@ public class MemberService {
 	}
 
 
+	public Boolean existByEmail(String email) {
+		return memberRepository.existsByEmail(email);
+	}
+
+	public Member register(OAuthLogin kakaoLogin) {
+		String nickname;
+		do {
+			nickname = "Billim-" + RandomStringUtils.random(7, true, true);
+		}
+		while (memberRepository.existsByNickname(nickname));
+
+		Member member = com.web.billim.member.domain.Member.builder()
+				.email(kakaoLogin.getEmail())
+				.password(" ")
+				.name(kakaoLogin.getName())
+				.nickname(nickname)
+				.grade(MemberGrade.BRONZE)
+				.profileImageUrl(kakaoLogin.getImageUrl())
+				.address(" ")
+				.build();
+		return memberRepository.save(member);
+	}
 }

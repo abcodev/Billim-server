@@ -1,8 +1,9 @@
-package com.web.billim.security.oauth;
+package com.web.billim.oauth.dto;
 
 public interface OAuthLogin {
-    long getProviderId();
+    String getProviderId();
     String getProvider();
     String getEmail();
     String getName();
+    String getImageUrl();
 }
