@@ -71,12 +71,10 @@ public class ReviewService {
 
     @Transactional
     public MyReviewListResponse myReviewList(long memberId) {
-
         List<WritableReviewList> writableReviewList = orderRepository.findProductOrdersWritableReview(memberId)
                 .stream().map(WritableReviewList::of).collect(Collectors.toList());
         List<WrittenReviewList> writtenReviewList = reviewRepository.findByProductOrder_Member_MemberId(memberId)
                 .stream().map(WrittenReviewList::of).collect(Collectors.toList());
-
         return new MyReviewListResponse(writableReviewList, writtenReviewList);
     }
 

@@ -70,10 +70,3 @@ public class MySalesDetailResponse {
     }
 
 }
-
-/**
- *  만약에 5분에 한번씩 도는 스케줄러가 있어
- *  근데 그 스케줄러는 5분에 한번씩 IN_PROGRESS 를 CANCELED 로 바꿔.
- *  진짜 결제를 진행하고 있는 사람이 있는데 그거까지 손대버릴까봐...
- *  "IN_PROGRESS -> CANCELED -> DONE"
- */

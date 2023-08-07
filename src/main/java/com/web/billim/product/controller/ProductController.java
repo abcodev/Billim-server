@@ -90,7 +90,6 @@ public class ProductController {
         ProductUpdateCommand command = new ProductUpdateCommand(req);
         productService.update(command);
         return ResponseEntity.ok().build();
-//        return ResponseEntity.ok(productService.update(command));
     }
 
     @Operation(summary = "상품 삭제", description = "해당 회원이 작성한 상품 및 상품 이미지 삭제")
@@ -131,8 +130,6 @@ public class ProductController {
     public ResponseEntity<List<RecentProductResponse>> recentProductList(@AuthenticationPrincipal long memberId) {
         return ResponseEntity.ok(productService.recentProductList(memberId));
     }
-
-
 
 }
 
