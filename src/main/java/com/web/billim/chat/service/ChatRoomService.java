@@ -1,29 +1,25 @@
 package com.web.billim.chat.service;
 
-import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.web.billim.chat.domain.ChatRoom;
+import com.web.billim.chat.domain.service.ChatMessageDomainService;
+import com.web.billim.chat.dto.request.SendTextMessageRequest;
 import com.web.billim.chat.dto.response.ChatMessagePreview;
 import com.web.billim.chat.dto.response.ChatMessageResponse;
 import com.web.billim.chat.dto.response.ChatRoomAndPreviewResponse;
 import com.web.billim.chat.dto.response.ChatRoomResponse;
-import com.web.billim.chat.dto.request.SendTextMessageRequest;
-import com.web.billim.chat.repository.ChatMessageRepository;
 import com.web.billim.chat.repository.ChatRoomRepository;
-import com.web.billim.infra.ImageUploadService;
 import com.web.billim.member.domain.Member;
 import com.web.billim.member.repository.MemberRepository;
 import com.web.billim.product.domain.Product;
 import com.web.billim.product.repository.ProductRepository;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.ZoneOffset;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +27,7 @@ public class ChatRoomService {
 
 	private final ChatMessageService chatMessageService;
 	private final ChatRoomRepository chatRoomRepository;
-	private final ChatMessageRepository chatMessageRepository;
+	private final ChatMessageDomainService chatMessageDomainService;
 	private final MemberRepository memberRepository;
 	private final ProductRepository productRepository;
 
@@ -49,11 +45,16 @@ public class ChatRoomService {
 		return ChatRoomResponse.from(chatRoom);
 	}
 
-	public List<ChatMessageResponse> retrieveAllChatMessage(long chatRoomId) {
+	// 이건 서비스에서 처리하기에는 약간.. 너무 구체적이고 복잡한거같다.
+	// 뭔가 이 일을 전문적으로 잘 처리해줄 수 있는 객체가 있으면 좋을거같은데..
+	// 나는 그냥 걔한테 시키고 결과만 받는 입장이 되면 좋겠다..!
+	@Transactional
+	public List<ChatMessageResponse> retrieveAllChatMessage(long readMemberId, long chatRoomId) {
 		ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow();
-		return chatMessageRepository.findAllByChatRoom(chatRoom).stream()
-			.map(ChatMessageResponse::from)
-			.collect(Collectors.toList());
+		chatMessageDomainService.readAll(readMemberId, chatRoom);
+		return chatMessageDomainService.findAll(chatRoom).stream()
+				.map(ChatMessageResponse::from)
+				.collect(Collectors.toList());
 	}
 
 	@Transactional(readOnly = true)

@@ -46,6 +46,12 @@ public class AmazonS3ImageUploadService implements ImageUploadService {
 	}
 
 	@Override
+	public String upload(String encodedImage, String path) {
+		// TODO
+		return null;
+	}
+
+	@Override
 	public void delete(String url) {
 		// TODO
 	}

@@ -85,5 +85,8 @@ public class ProductOrder extends JpaEntity {
         this.status = ProductOrderStatus.DONE;
     }
 
+    public boolean isCanceled() {
+        return this.status == ProductOrderStatus.CANCELED;
+    }
 }
 

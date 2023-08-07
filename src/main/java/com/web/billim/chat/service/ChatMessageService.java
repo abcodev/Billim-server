@@ -2,6 +2,7 @@ package com.web.billim.chat.service;
 
 import java.util.Optional;
 
+import com.web.billim.infra.ImageUploadService;
 import org.springframework.stereotype.Service;
 
 import com.web.billim.chat.domain.ChatMessage;
@@ -24,6 +25,7 @@ public class ChatMessageService {
 	private final ChatRoomRepository chatRoomRepository;
 	private final ChatMessageRepository chatMessageRepository;
 	private final MemberRepository memberRepository;
+	private final ImageUploadService imageUploadService;
 
 	public ChatMessageResponse sendText(SendTextMessageRequest req) {
 		ChatRoom chatRoom = chatRoomRepository.findById(req.getChatRoomId()).orElseThrow();
@@ -46,10 +48,8 @@ public class ChatMessageService {
 		Member sender = memberRepository.findById(req.getSenderId()).orElseThrow();
 		ChatRoom chatRoom = chatRoomRepository.findById(req.getChatRoomId()).orElseThrow();
 
-		// TODO : FE 에서 Upload 해서 URL 만 넘겨주는 상황이라면 빠지게 될 코드
-		// 	      서버에서 업로드 해야한다면 추가되어야 할 코드
-		// String imageUrl = imageUploadService.upload(req.getImageUrl(), "chat_" + req.getChatRoomId());
-		ChatMessage message = ChatMessage.ofImage(sender, chatRoom, req.getImageUrl());
+		String imageUrl = imageUploadService.upload(req.getEncodedImage(), "chat_" + req.getChatRoomId());
+		ChatMessage message = ChatMessage.ofImage(sender, chatRoom, imageUrl);
 		ChatMessage saved = chatMessageRepository.save(message);
 		return ChatMessageResponse.from(saved);
 	}

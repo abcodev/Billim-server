@@ -50,6 +50,11 @@ public class OrderService {
     }
 
     // 주문 및 결제
+    // product_order, payment 테이블에 INSERT
+    // 1. 그러면 연속으로 2번 요청이 들어오면 당연히 2개의 INSERT 가 발생한다. -> Lock 을 이용하거나 하는 방식으로 해소..
+    // 2. 아니면 중복 주문 검증로직에 걸려서 에러가 발생할 수도 있다.
+    //   FE -> 1번 (200)
+    //   FE -> 2번 (500) -> /failure
     @Transactional
     public PaymentInfoResponse order(long memberId, OrderCommand orderCommand) {
         Member member = memberService.retrieve(memberId);

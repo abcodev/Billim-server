@@ -22,4 +22,6 @@ public interface ChatMessageRepository extends CrudRepository<ChatMessage, Long>
 	@Query("SELECT count(m) FROM ChatMessage m WHERE m.chatRoom = :chatRoom AND m.read = false AND m.sender is null OR m.sender <> :member")
 	int calculateUnreadCount(@Param("chatRoom") ChatRoom chatRoom, @Param("member") Member member);
 
+	@Query("SELECT m FROM ChatMessage m WHERE m.chatRoom = :chatRoom AND m.sender.memberId <> :memberId")
+	List<ChatMessage> findAllByOtherMember(@Param("chatRoom") ChatRoom chatRoom, @Param("memberId") long memberId);
 }

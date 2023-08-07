@@ -40,6 +40,12 @@ public class PaymentController {
         return ResponseEntity.ok().build();
     }
 
+    // 따닥 이슈
+    // FE 에서 그 잘못된 상황을 try - catch 로 잡을 수 있는 상황이면, 에러를 식별할 수 있으면,
+    // 그러면 그 에러를 잡았을 때 /failure 한번만 호출해줘.
+    // 그러한 순간을 잡을수가 없어.
+    // 그러면 원인을 좀 찾아야할 것 같다.
+    // 따닥이 발생하는 것 같다. => DB 에 결제 정보가 2개?
     @Operation(summary = "결제 실패")
     @GetMapping("/failure")
     public ResponseEntity<Void> paymentFailure(@RequestParam("merchant_uid") String merchantUid) {

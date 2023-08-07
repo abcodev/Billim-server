@@ -58,6 +58,8 @@ public class ChatController {
 		return ResponseEntity.ok(chatRoomService.joinChatRoom(buyerId, productId));
 	}
 
+	// 채팅방이 5개 있으면 [{unreadCount:5}, {unreadCount:10}, {unreadCount:0}, {unreadCount:4}, {unreadCount:0}]
+	// TODO : API 로 테스트했을 때 각각 채팅방에 대해서 unreadCount 가 독립적으로 내려오는지 확인
 	@Operation(summary = "채팅방 목록 조회", description = "자신의 채팅방 목록 전체 조회한다.")
 	@GetMapping("/rooms")
 	public ResponseEntity<List<ChatRoomAndPreviewResponse>> retrieveAllMyChatRoom(@AuthenticationPrincipal long buyerId) {
@@ -73,8 +75,8 @@ public class ChatController {
 	// TODO : 나간 후 다시 재입장했을 때 나가기 전 메시지 가리기 필요
 	@Operation(summary = "채팅방 들어갔을 때 채팅 내용 조회", description = "채팅방 들어갔을 때 전체 채팅 목록을 불러온다.")
 	@GetMapping("/messages/{chatRoomId}")
-	public ResponseEntity<List<ChatMessageResponse>> retrieveAllChatMessage(@PathVariable long chatRoomId) {
-		return ResponseEntity.ok(chatRoomService.retrieveAllChatMessage(chatRoomId));
+	public ResponseEntity<List<ChatMessageResponse>> retrieveAllChatMessage(@AuthenticationPrincipal long memberId, @PathVariable long chatRoomId) {
+		return ResponseEntity.ok(chatRoomService.retrieveAllChatMessage(memberId, chatRoomId));
 	}
 
 	@Operation(summary = "채팅방 나가기", description = "채팅방을 나가면 상대방에게 채팅방 나갔다는 시스템 메세지가 전송된다.")

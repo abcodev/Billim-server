@@ -17,7 +17,7 @@ public class ReviewWriteRequest {
     private long starRating;
 
     @Builder
-    public static Review of(ReviewWriteRequest reviewWriteRequest, ProductOrder productOrder){
+    public static Review toEntity(ReviewWriteRequest reviewWriteRequest, ProductOrder productOrder){
         return Review.builder()
                 .productOrder(productOrder)
                 .content(reviewWriteRequest.getContent())

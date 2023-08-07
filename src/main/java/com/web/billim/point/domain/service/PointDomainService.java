@@ -1,9 +1,11 @@
 package com.web.billim.point.domain.service;
 
 import com.web.billim.member.domain.Member;
+import com.web.billim.order.domain.ProductOrder;
 import com.web.billim.payment.domain.Payment;
 import com.web.billim.point.domain.SavedPoint;
 import com.web.billim.point.repository.SavedPointRepository;
+import com.web.billim.review.domain.Review;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +41,11 @@ public class PointDomainService {
 		Member buyer = payment.getMember();
 		long price = payment.getTotalAmount();
 		return (long) (price * buyer.getGrade().getSavedPointRate() / 100.0);
+	}
+
+	public long calculate(Review review) {
+		// TODO : 리뷰에 대한 포인트를 계산해주는 로직
+		return 500;
 	}
 
 }
