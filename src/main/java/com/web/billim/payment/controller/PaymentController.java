@@ -21,7 +21,7 @@ public class PaymentController {
 
     private final PaymentService paymentService;
 
-    @Operation(summary = "0원 결제")
+    @Operation(summary = "0원 결제", description = "최종 카드 결제금액이 0원일 경우 호출하는 api")
     @PostMapping("/complete/zero-amount")
     public ResponseEntity<Void> paymentCompleteZeroAmount(
             @RequestParam("merchant_uid") String merchantUid

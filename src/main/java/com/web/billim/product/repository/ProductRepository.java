@@ -11,11 +11,9 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long>, ProductQueryDslRepository {
 
-    List<Product> findAllByProductIdIn(List<Long> mostProductLists);
+    List<Product> findAllByProductIdInAndIsDeleted(List<Long> mostProductLists, boolean deleted);
 
-//    Page<Product> findAllByMemberId(Pageable paging);
-
-    @Query("SELECT p FROM Product p WHERE p.member.memberId = :memberId")
+    @Query("SELECT p FROM Product p WHERE p.member.memberId = :memberId AND p.isDeleted = false")
     List<Product> findByMemberId(@Param("memberId") long memberId);
 
 

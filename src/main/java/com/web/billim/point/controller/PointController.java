@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,7 +32,7 @@ public class PointController {
 		return ResponseEntity.ok(availablePoint);
 	}
 
-	@Scheduled(cron = "0 0 0 * * *") // Linux Cron
+	@Scheduled(cron = "0 0 0 * * *")
 	public void savingPointScheduler() {
 		log.info(String.format("[PointController] savingPointScheduler Action! (Time: %s)", LocalDateTime.now()));
 		pointService.savingPointOrderHistory();

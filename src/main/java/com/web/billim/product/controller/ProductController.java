@@ -67,7 +67,7 @@ public class ProductController {
             @PathVariable("productId") long productId
     ) {
         ProductDetailResponse resp = productService.retrieveDetail(productId);
-        resp.setProductReviewLists(reviewService.reviewList(productId));
+        resp.setProductReviewListResponses(reviewService.reviewList(productId));
         return ResponseEntity.ok(resp);
     }
 

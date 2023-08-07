@@ -23,7 +23,6 @@ public class Review extends JpaEntity {
     private ProductOrder productOrder;
 
     private String content;
-
     private long starRating;
 
 
@@ -35,11 +34,4 @@ public class Review extends JpaEntity {
 
 
 
-    //    @JoinColumn(name = "product_id", referencedColumnName = "product_id")
-//    @ManyToOne
-//    private Product product;
-//
-//    @JoinColumn(name = "member_id", referencedColumnName = "member_id")
-//    @ManyToOne
-//    private Member member;
 }

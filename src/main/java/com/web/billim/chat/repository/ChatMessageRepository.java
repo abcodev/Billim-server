@@ -1,6 +1,7 @@
 package com.web.billim.chat.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -16,7 +17,7 @@ public interface ChatMessageRepository extends CrudRepository<ChatMessage, Long>
 
 	List<ChatMessage> findAllByChatRoom(ChatRoom chatRoom);
 
-	ChatMessage findTopByChatRoomOrderByCreatedAtDesc(ChatRoom chatRoom);
+	Optional<ChatMessage> findTopByChatRoomOrderByCreatedAtDesc(ChatRoom chatRoom);
 
 	@Query("SELECT count(m) FROM ChatMessage m WHERE m.chatRoom = :chatRoom AND m.read = false AND m.sender is null OR m.sender <> :member")
 	int calculateUnreadCount(@Param("chatRoom") ChatRoom chatRoom, @Param("member") Member member);

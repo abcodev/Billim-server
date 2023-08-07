@@ -6,11 +6,14 @@ import com.web.billim.common.validation.CheckPasswordValidator;
 import com.web.billim.member.dto.request.FindPasswordRequest;
 import com.web.billim.member.dto.UpdatePasswordCommand;
 import com.web.billim.member.dto.request.*;
+import com.web.billim.member.dto.response.HeaderInfoResponse;
 import com.web.billim.member.dto.response.MyPageInfoResponse;
 import com.web.billim.member.dto.response.MemberInfoResponse;
 import com.web.billim.member.service.MemberService;
 import com.web.billim.review.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +26,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.Map;
 
 @Tag(name = "회원", description = "MemberController")
@@ -59,7 +63,9 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @Operation(summary = "닉네임 중복 확인", description = "true 닉네임 중복")
+//    @Operation(summary = "닉네임 중복 확인", description = "true 시 중복된 닉네임")
+    @Operation(summary = "닉네임 중복 확인",
+            responses = {@ApiResponse(responseCode = "200", description = "true - 중복된 닉네임 / false - 사용 가능 닉네임")})
     @GetMapping("/check/nickname")
     public ResponseEntity<Boolean> checkDuplicateNickname(@RequestParam String nickname) {
         return ResponseEntity.ok(memberService.checkDuplicateNickname(nickname));
@@ -76,18 +82,19 @@ public class MemberController {
     @GetMapping("/my-page")
     public ResponseEntity<MyPageInfoResponse> myPageInfo(@AuthenticationPrincipal long memberId) {
         MyPageInfoResponse resp = memberService.retrieveMyPageInfo(memberId);
-        long availableReview = reviewService.myReviewNoCount(memberId);
+//        long availableReview = reviewService.myReviewNoCount(memberId);
+        long availableReview = reviewService.writableReviewCount(memberId);
         resp.setAvailableReview(availableReview);
         return ResponseEntity.ok(resp);
     }
 
-    @Operation(summary = "내 회원정보 조회" , description = "회원 정보 수정 시 내 정보 조회")
+    @Operation(summary = "내 회원정보 조회" , description = "회원 정보 수정 시 내 정보 조회한다.")
     @GetMapping("/info")
     public ResponseEntity<MemberInfoResponse> memberInfo(@AuthenticationPrincipal long memberId) {
         return ResponseEntity.ok(memberService.retrieveUpdateInfoPage(memberId));
     }
 
-    @Operation(summary = "회원 정보 수정" , description = "회원 정보 수정 반영")
+    @Operation(summary = "회원 정보 수정" , description = "회원 정보 수정된 정보를 저장한다.")
     @PutMapping(value = "/info", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<MemberInfoResponse> updateInfo(
             @AuthenticationPrincipal long memberId,
@@ -110,11 +117,19 @@ public class MemberController {
     }
 
 
-    // 소셜 연동
-
     // 회원 차단
 
     // 회원 탈퇴
+
+
+    // 마이페이지 헤더
+    @Operation(summary = "메인페이지 헤더 조회", description = "메인페이지 헤더 사용자 프로필 이미지를 조회한다.")
+    @GetMapping("/header")
+    public ResponseEntity<HeaderInfoResponse> header(@AuthenticationPrincipal long memberId) {
+        return ResponseEntity.ok(memberService.retrieveHeaderInfo(memberId));
+    }
+
+
 }
 
 

@@ -1,6 +1,7 @@
 package com.web.billim.email.service;
 
 import com.web.billim.exception.BadRequestException;
+import com.web.billim.exception.InternalSeverException;
 import com.web.billim.exception.handler.ErrorCode;
 import com.web.billim.member.dto.request.FindPasswordRequest;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,7 @@ public class EmailSendService {
             helper.setFrom(new InternetAddress(billimEmail, "BILLIM"));
             javaMailSender.send(message);
         } catch (Exception e) {
-            throw new BadRequestException(ErrorCode.EMAIL_SEND_FAILED, e);
+            throw new InternalSeverException(ErrorCode.EMAIL_SEND_FAILED, e);
         }
     }
 

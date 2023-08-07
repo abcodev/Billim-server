@@ -3,7 +3,6 @@ application-datasource.yml
 application-email.yml
 application-import.yml
 application-security.yml
-application-datasource.yml
 application-oauth.yml
 
 

@@ -16,17 +16,21 @@ import java.util.Optional;
 
 @Repository
 public interface OrderRepository extends JpaRepository<ProductOrder, Long> {
+
     List<ProductOrder> findAllByProductAndEndAtAfter(Product product, LocalDate now);
     Optional<ProductOrder> findByMemberAndStatus(Member member, ProductOrderStatus status);
     Optional<ProductOrder> findByProductAndStatus(Product product, ProductOrderStatus status);
-
-    // List<> 를 두면 null 이 안오고 데이터가 없으면 빈 리스트
-//    Optional<List<ProductOrder>> findAllByMember_memberId(long memberId);
     List<ProductOrder> findAllByMember_memberId_OrderByOrderIdDesc(long memberId);
-    Optional<Long> countByMember_memberId(long memberId);
-
 	List<ProductOrder> findAllByProduct(Product product);
-
 	List<ProductOrder> findAllByEndAt(LocalDate datetime);
+
+    @Query("SELECT COUNT(po) FROM ProductOrder po WHERE po NOT IN (SELECT r.productOrder FROM Review r) " +
+            "AND po.status = 'DONE' AND po.endAt <= CURRENT_DATE")
+    Optional<Long> countByMemberAndStatus(long memberId);
+
+    @Query("SELECT po FROM ProductOrder po WHERE po NOT IN (SELECT r.productOrder FROM Review r) " +
+            "AND po.status = 'DONE' AND po.endAt <= CURRENT_DATE")
+    List<ProductOrder> findProductOrdersWritableReview(long memberId);
+
 }
 

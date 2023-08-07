@@ -4,10 +4,10 @@ CREATE TABLE `member`
 (
     `member_id`         bigint primary key auto_increment COMMENT '회원번호',
     `email`             varchar(200)                                                    NOT NULL COMMENT '회원이메일',
-    `password`          varchar(200)                                                    COMMENT '비밀번호',
+    `password`          varchar(200) COMMENT '비밀번호',
     `name`              varchar(100)                                                    NOT NULL COMMENT '회원이름',
     `nickname`          varchar(100)                                                    NOT NULL COMMENT '닉네임',
-    `address`           varchar(100)                                                    COMMENT '회원주소',
+    `address`           varchar(100) COMMENT '회원주소',
     `grade`             varchar(10)                                                     NOT NULL COMMENT '회원등급',
     `created_at`        timestamp default current_timestamp                             NOT NULL COMMENT '가입일자',
     `updated_at`        timestamp default current_timestamp on update current_timestamp NOT NULL COMMENT '접속일자',
@@ -18,12 +18,12 @@ DROP TABLE IF EXISTS `social_member`;
 
 CREATE TABLE social_member
 (
-    social_id bigint auto_increment primary key,
-    provider_name     varchar(128) not null,
-    account_id        varchar(255) not null,
-    member_id         bigint       not null,
-    `created_at`        timestamp default current_timestamp                             NOT NULL,
-    `updated_at`        timestamp default current_timestamp on update current_timestamp NOT NULL
+    social_id     bigint auto_increment primary key,
+    provider_name varchar(128)                                                    not null,
+    account_id    varchar(255)                                                    not null,
+    member_id     bigint                                                          not null,
+    `created_at`  timestamp default current_timestamp                             NOT NULL,
+    `updated_at`  timestamp default current_timestamp on update current_timestamp NOT NULL
 );
 
 DROP TABLE IF EXISTS `product`;
@@ -31,15 +31,16 @@ DROP TABLE IF EXISTS `product`;
 CREATE TABLE `product`
 (
     `product_id`   bigint primary key auto_increment COMMENT '상품번호',
-    `category_id`  bigint                                                          NOT NULL COMMENT '카테고리번호',
-    `member_id`    bigint                                                          NOT NULL COMMENT '판매회원번호',
-    `product_name` varchar(100)                                                    NOT NULL COMMENT '상품명',
-    `detail`       varchar(3000)                                                   NOT NULL COMMENT '상품설명',
-    `price`        bigint                                                          NOT NULL COMMENT '대여요금',
-    `trade_area`   varchar(200)                                                    NULL COMMENT '직거래지역',
-    `created_at`   timestamp default current_timestamp                             NOT NULL COMMENT '등록일자',
-    `updated_at`   timestamp default current_timestamp on update current_timestamp NOT NULL COMMENT '수정일자',
-    `trade_method` varchar(30)                                                     NOT NULL COMMENT '거래방법'
+    `category_id`  bigint                                                           NOT NULL COMMENT '카테고리번호',
+    `member_id`    bigint                                                           NOT NULL COMMENT '판매회원번호',
+    `product_name` varchar(100)                                                     NOT NULL COMMENT '상품명',
+    `detail`       varchar(3000)                                                    NOT NULL COMMENT '상품설명',
+    `price`        bigint                                                           NOT NULL COMMENT '대여요금',
+    `trade_area`   varchar(200)                                                     NULL COMMENT '직거래지역',
+    `created_at`   timestamp  default current_timestamp                             NOT NULL COMMENT '등록일자',
+    `updated_at`   timestamp  default current_timestamp on update current_timestamp NOT NULL COMMENT '수정일자',
+    `trade_method` varchar(30)                                                      NOT NULL COMMENT '거래방법',
+    `deleted_yn`   varchar(1) default 'N'                                           NOT NULL COMMENT '삭제여부'
 );
 
 DROP TABLE IF EXISTS `product_category`;
@@ -98,7 +99,7 @@ CREATE TABLE `payment`
     `point`           bigint                                                          NULL COMMENT '적립금',
     `merchant_uid`    varchar(500)                                                    NULL COMMENT '카드결제ID',
     `imp_uid`         varchar(255)                                                    NULL COMMENT 'impUID',
-    `trade_method` varchar(50) NOT NULL COMMENT '거래방법',
+    `trade_method`    varchar(50)                                                     NOT NULL COMMENT '거래방법',
     `total_amount`    bigint                                                          NOT NULL COMMENT '총금액',
     `status`          varchar(50)                                                     NOT NULL COMMENT '결제여부',
     `created_at`      timestamp default current_timestamp                             NOT NULL COMMENT '결제일자',
@@ -172,14 +173,14 @@ DROP TABLE IF EXISTS `chat_room`;
 
 CREATE TABLE `chat_room`
 (
-    `chat_room_id` bigint primary key auto_increment COMMENT '채팅방번호',
-    `product_id`   bigint                                                          NOT NULL COMMENT '상품번호',
-    `seller_id`    bigint                                                          NOT NULL COMMENT '판매회원번호',
-    `seller_joined_yn` varchar(1)                                                  NOT NULL COMMENT '판매자 참가여부',
-    `buyer_id`     bigint                                                          NOT NULL COMMENT '구매회원번호',
-    `buyer_joined_yn` varchar(1)                                                  NOT NULL COMMENT '구매자 참가여부',
-    `created_at`   timestamp default current_timestamp                             NOT NULL COMMENT '생성일자',
-    `updated_at`   timestamp default current_timestamp on update current_timestamp NOT NULL COMMENT '업데이트일자'
+    `chat_room_id`     bigint primary key auto_increment COMMENT '채팅방번호',
+    `product_id`       bigint                                                          NOT NULL COMMENT '상품번호',
+    `seller_id`        bigint                                                          NOT NULL COMMENT '판매회원번호',
+    `seller_joined_yn` varchar(1)                                                      NOT NULL COMMENT '판매자 참가여부',
+    `buyer_id`         bigint                                                          NOT NULL COMMENT '구매회원번호',
+    `buyer_joined_yn`  varchar(1)                                                      NOT NULL COMMENT '구매자 참가여부',
+    `created_at`       timestamp default current_timestamp                             NOT NULL COMMENT '생성일자',
+    `updated_at`       timestamp default current_timestamp on update current_timestamp NOT NULL COMMENT '업데이트일자'
 );
 
 DROP TABLE IF EXISTS `chat_message`;
@@ -200,14 +201,14 @@ DROP TABLE IF EXISTS `review`;
 
 CREATE TABLE `review`
 (
-    `review_id`   bigint primary key auto_increment COMMENT '리뷰번호',
-    `product_order_id`  bigint                                                          NOT NULL COMMENT '상품번호',
-    `member_id`   bigint                                                          NOT NULL COMMENT '구매회원번호',
-    `content`     varchar(1000)                                                   NOT NULL COMMENT '리뷰내용',
-    `star_rating` bigint                                                          NOT NULL COMMENT '별점',
-    `created_at`  timestamp default current_timestamp                             NOT NULL COMMENT '작성일자',
-    `updated_at`  timestamp default current_timestamp on update current_timestamp NOT NULL COMMENT '업데이트일자',
-    `status`      varchar(10)                                                     NOT NULL COMMENT '삭제여부'
+    `review_id`        bigint primary key auto_increment COMMENT '리뷰번호',
+    `product_order_id` bigint                                                          NOT NULL COMMENT '상품번호',
+    `member_id`        bigint                                                          NOT NULL COMMENT '구매회원번호',
+    `content`          varchar(1000)                                                   NOT NULL COMMENT '리뷰내용',
+    `star_rating`      bigint                                                          NOT NULL COMMENT '별점',
+    `created_at`       timestamp default current_timestamp                             NOT NULL COMMENT '작성일자',
+    `updated_at`       timestamp default current_timestamp on update current_timestamp NOT NULL COMMENT '업데이트일자',
+    `status`           varchar(10)                                                     NOT NULL COMMENT '삭제여부'
 );
 
 DROP TABLE IF EXISTS `image_product`;
@@ -226,9 +227,9 @@ DROP TABLE IF EXISTS `image_chat`;
 CREATE TABLE `image_chat`
 (
     `image_chat_id` bigint primary key auto_increment COMMENT '이미지번호',
-    `message_id`       bigint    default 0                                             NOT NULL COMMENT '상품번호',
-    `url`              varchar(1024)                                                   NOT NULL COMMENT '이미지 url',
-    `created_at`       timestamp default current_timestamp                             NOT NULL COMMENT '작성일자',
-    `updated_at`       timestamp default current_timestamp on update current_timestamp NOT NULL COMMENT '업데이트일자'
+    `message_id`    bigint    default 0                                             NOT NULL COMMENT '상품번호',
+    `url`           varchar(1024)                                                   NOT NULL COMMENT '이미지 url',
+    `created_at`    timestamp default current_timestamp                             NOT NULL COMMENT '작성일자',
+    `updated_at`    timestamp default current_timestamp on update current_timestamp NOT NULL COMMENT '업데이트일자'
 );
 

@@ -1,5 +1,7 @@
 package com.web.billim.chat.service;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import com.web.billim.chat.domain.ChatMessage;
@@ -53,9 +55,11 @@ public class ChatMessageService {
 	}
 
 	public ChatMessagePreview retrieveChatMessagePreview(ChatRoom chatRoom) {
-		ChatMessage latestMessage = chatMessageRepository.findTopByChatRoomOrderByCreatedAtDesc(chatRoom);
-		int unreadCount = chatMessageRepository.calculateUnreadCount(chatRoom, chatRoom.getProduct().getMember());
-		return ChatMessagePreview.of(latestMessage, unreadCount);
+		return chatMessageRepository.findTopByChatRoomOrderByCreatedAtDesc(chatRoom)
+			.map(latestMessage -> {
+				int unreadCount = chatMessageRepository.calculateUnreadCount(chatRoom, chatRoom.getProduct().getMember());
+				return ChatMessagePreview.of(latestMessage, unreadCount);
+			}).orElse(ChatMessagePreview.empty());
 	}
 
 }

@@ -1,6 +1,9 @@
 package com.web.billim.review.controller;
 
 import com.web.billim.review.dto.request.ReviewWriteRequest;
+import com.web.billim.review.dto.WrittenReviewList;
+import com.web.billim.review.dto.WritableReviewList;
+import com.web.billim.review.dto.response.MyReviewListResponse;
 import com.web.billim.review.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -9,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "리뷰", description = "ReviewController")
 @Slf4j
@@ -26,13 +31,17 @@ public class ReviewController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "회원이 이용한 상품 리뷰 불러오기", description = "마이페이지 헤더에서 리뷰 클릭시 작성한 후기, 작성 해야하는 리뷰를 불러옴")
-    @GetMapping("/my-list")
-    public ResponseEntity<Void> myProductReview(@AuthenticationPrincipal long memberId) {
-        reviewService.findMyProductReview(memberId);
-        return ResponseEntity.ok().build();
+//    @Operation(summary = "리뷰 작성 가능한 상품 목록 불러오기", description = "마이페이지 헤더에서 후기작성 개수 클릭시 회원이 이용한 상품 중 리뷰 작성 가능한 상품 목록 불러온다.")
+//    @GetMapping("/writable-list")
+//    public ResponseEntity<List<WritableReviewList>> myWritableReview(@AuthenticationPrincipal long memberId) {
+//        return ResponseEntity.ok(reviewService.findMyWritableReview(memberId));
+//    }
+
+    @Operation(summary = "마이페이지 리뷰 목록", description = "작성 가능한 리뷰와 작성한 리뷰 목록 전체 불러오기")
+    @GetMapping("/my/list")
+    public ResponseEntity<MyReviewListResponse> myReviewList(@AuthenticationPrincipal long memberId) {
+        return ResponseEntity.ok(reviewService.myReviewList(memberId));
     }
 
-    // 마이페이지 리뷰 리스트 불러오기
 
 }

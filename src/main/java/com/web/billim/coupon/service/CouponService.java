@@ -6,11 +6,12 @@ import com.web.billim.coupon.dto.AvailableCouponResponse;
 import com.web.billim.coupon.dto.CouponRegisterCommand;
 import com.web.billim.coupon.repository.CouponIssueRepository;
 import com.web.billim.coupon.repository.CouponRepository;
+import com.web.billim.exception.ForbiddenException;
+import com.web.billim.exception.NotFoundException;
+import com.web.billim.exception.handler.ErrorCode;
 import com.web.billim.member.domain.Member;
 import com.web.billim.member.repository.MemberRepository;
-import com.web.billim.member.service.MemberService;
 
-import com.web.billim.point.domain.SavedPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,10 +64,11 @@ public class CouponService {
     @Transactional
     public void useCoupon(Member member, long couponIssueId) {
         CouponIssue couponIssue = couponIssueRepository.findById(couponIssueId)
-                .orElseThrow(() -> new RuntimeException("쿠폰 정보를 찾을 수 없습니다!"));
+                .orElseThrow(() -> new NotFoundException(ErrorCode.COUPON_NOT_FOUND));
 
         if (!couponIssue.getMember().equals(member)) {
-            throw new RuntimeException("쿠폰의 사용자 정보가 일치하지 않습니다.");
+//            throw new RuntimeException("쿠폰의 사용자 정보가 일치하지 않습니다.");
+            throw new ForbiddenException(ErrorCode.MISMATCH_MEMBER);
         }
         couponIssue.use();
     }

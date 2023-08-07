@@ -27,4 +27,8 @@ public class ChatMessagePreview {
 		return new ChatMessagePreview(unreadCount, latestMessage.getMessage(), latestMessage.getCreatedAt());
 	}
 
+	public static ChatMessagePreview empty() {
+		return new ChatMessagePreview(0, "", LocalDateTime.now());
+	}
+
 }

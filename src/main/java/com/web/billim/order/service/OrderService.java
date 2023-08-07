@@ -1,11 +1,12 @@
 package com.web.billim.order.service;
 
-import com.web.billim.exception.NotFoundException;
+import com.web.billim.exception.ForbiddenException;
 import com.web.billim.exception.OrderFailedException;
 import com.web.billim.exception.handler.ErrorCode;
 import com.web.billim.member.domain.Member;
 import com.web.billim.member.service.MemberService;
 import com.web.billim.order.domain.ProductOrder;
+import com.web.billim.order.domain.service.OrderDomainService;
 import com.web.billim.order.dto.OrderCommand;
 import com.web.billim.order.dto.response.MyOrderHistory;
 import com.web.billim.order.dto.response.MyOrderListResponse;
@@ -34,17 +35,18 @@ public class OrderService {
     private final PaymentService paymentService;
     private final OrderRepository orderRepository;
     private final ProductDomainService productDomainService;
+    private final OrderDomainService orderDomainService;
 
     // 이미 예약된 날짜 조회
     public List<LocalDate> reservationDate(long productId) {
         Product product = productDomainService.find(productId);
-        List<ProductOrder> orderList = orderRepository.findAllByProductAndEndAtAfter(product,LocalDate.now());
+        List<ProductOrder> orderList = orderRepository.findAllByProductAndEndAtAfter(product, LocalDate.now());
 
         return orderList.stream()
-            .filter(order -> order.getStatus().equals(ProductOrderStatus.DONE) || order.getStatus().equals(ProductOrderStatus.IN_PROGRESS))
-            .flatMap(order -> LocalDateHelper.changeDate(order.getStartAt(),order.getEndAt()).stream())
-            .filter(date -> !date.isBefore(LocalDate.now()))
-            .collect(Collectors.toList());
+                .filter(order -> order.getStatus().equals(ProductOrderStatus.DONE) || order.getStatus().equals(ProductOrderStatus.IN_PROGRESS))
+                .flatMap(order -> LocalDateHelper.changeDate(order.getStartAt(), order.getEndAt()).stream())
+                .filter(date -> !date.isBefore(LocalDate.now()))
+                .collect(Collectors.toList());
     }
 
     // 주문 및 결제
@@ -53,26 +55,25 @@ public class OrderService {
         Member member = memberService.retrieve(memberId);
 
         // 1. 해당 사용자가 주문중인게 있는지 확인
-        orderRepository.findByMemberAndStatus(member, ProductOrderStatus.IN_PROGRESS)
-            .ifPresent(order -> {
-//                throw new RuntimeException("해당 사용자가 이미 주문중인 거래가 있습니다.");
-                throw new OrderFailedException(ErrorCode.ORDER_DUPLICATED_REQUEST);
-            });
+        if (orderDomainService.checkAlreadyInProgressOrder(member)) {
+            throw new OrderFailedException(ErrorCode.ORDER_DUPLICATED_REQUEST);
+        }
 
         // 2. 다른 사용자가 해당 Product 의 해당 기간을 결제중인게 있는지 확인
         Product product = productDomainService.find(orderCommand.getProductId());
-        orderRepository.findByProductAndStatus(product, ProductOrderStatus.IN_PROGRESS)
-            .ifPresent(order -> {
-                if (LocalDateHelper.checkDuplicatedPeriod(order.getPeriod(), orderCommand.getPeriod())) {
-//                    throw new RuntimeException("해당 제품은 다른 사용자가 거래중입니다.");
-                    throw new OrderFailedException(ErrorCode.ORDER_DUPLICATED_PERIOD);
-                }
-            });
+        if (orderDomainService.checkAlreadyInProgressOrderOfOtherUser(product, orderCommand.getPeriod())) {
+            throw new OrderFailedException(ErrorCode.ORDER_DUPLICATED_PERIOD);
+        }
 
-        // 3. 주문정보 생성
+        // 3. 자기자신의 상품을 주문하는 케이스 확인
+        if (product.isOwned(memberId)) {
+            throw new OrderFailedException(ErrorCode.ORDER_OWN_PRODUCT);
+        }
+
+        // 4. 주문정보 생성
         ProductOrder order = orderRepository.save(ProductOrder.generateNewOrder(member, product, orderCommand));
 
-        // 4. 결제정보 생성
+        // 5. 결제정보 생성
         PaymentCommand paymentCommand = new PaymentCommand(member, order, orderCommand.getCouponIssueId(), orderCommand.getUsedPoint());
         return paymentService.payment(paymentCommand);
     }
@@ -100,17 +101,17 @@ public class OrderService {
                 .orElseThrow();
     }
 
-    public long numberOfOrders(long memberId) {
-        return orderRepository.countByMember_memberId(memberId)
-                .orElseThrow(()-> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
-    }
+//    public long numberOfOrders(long memberId) {
+//        return orderRepository.countByMember_memberId(memberId)
+//                .orElseThrow(() -> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
+//    }
 
     // 마이페이지 나의 구매 내역 목록 조회
     @Transactional
     public MyOrderListResponse findMyOrder(long memberId) {
 //        List<ProductOrder> productOrders= orderRepository.findAllByMember_memberId(memberId)
 //                .orElseThrow(()-> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
-        List<ProductOrder> productOrders= orderRepository.findAllByMember_memberId_OrderByOrderIdDesc(memberId);
+        List<ProductOrder> productOrders = orderRepository.findAllByMember_memberId_OrderByOrderIdDesc(memberId);
         List<MyOrderHistory> myOrderHistories = productOrders.stream()
                 .map(MyOrderHistory::from)
                 .collect(Collectors.toList());
@@ -119,11 +120,14 @@ public class OrderService {
 
     // 마이페이지 나의 판매 내역 상세 조회
     @Transactional
-    public MySalesDetailResponse findMySalesDetail(long productId) {
+    public MySalesDetailResponse findMySalesDetail(long memberId, long productId) {
         Product product = productDomainService.find(productId);
-        List<ProductOrder> orderHistories = orderRepository.findAllByProduct(product);
-        return MySalesDetailResponse.of(product, orderHistories);
+        if (product.isOwned(memberId)) {
+            List<ProductOrder> orderHistories = orderRepository.findAllByProduct(product);
+            return MySalesDetailResponse.of(product, orderHistories);
+        } else {
+            throw new ForbiddenException(ErrorCode.MISMATCH_MEMBER);
+        }
     }
-
 
 }

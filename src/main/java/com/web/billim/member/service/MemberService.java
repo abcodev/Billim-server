@@ -1,5 +1,6 @@
 package com.web.billim.member.service;
 
+import com.web.billim.exception.DuplicatedException;
 import com.web.billim.exception.JwtException;
 import com.web.billim.email.service.EmailSendService;
 import com.web.billim.exception.NotFoundException;
@@ -11,6 +12,7 @@ import com.web.billim.infra.ImageUploadService;
 import com.web.billim.member.domain.Member;
 import com.web.billim.member.dto.request.*;
 import com.web.billim.member.dto.UpdatePasswordCommand;
+import com.web.billim.member.dto.response.HeaderInfoResponse;
 import com.web.billim.member.dto.response.MyPageInfoResponse;
 import com.web.billim.member.dto.response.MemberInfoResponse;
 import com.web.billim.member.repository.MemberRepository;
@@ -142,6 +144,14 @@ public class MemberService {
 		return memberRepository.findById(memberId)
 				.orElseThrow(()-> new JwtException(ErrorCode.MEMBER_NOT_FOUND));
 	}
+
+	@Transactional
+	public HeaderInfoResponse retrieveHeaderInfo(long memberId) {
+		Member member = memberRepository.findById(memberId)
+				.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+		return HeaderInfoResponse.of(member);
+	}
+
 
 	public Boolean existByEmail(String email) {
 		return memberRepository.existsByEmail(email);

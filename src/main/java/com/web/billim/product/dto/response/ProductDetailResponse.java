@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.web.billim.product.domain.ImageProduct;
 import com.web.billim.product.domain.Product;
 import com.web.billim.product.type.TradeMethod;
-import com.web.billim.review.dto.response.ProductReviewList;
+import com.web.billim.review.dto.response.ProductReviewListResponse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,7 +35,7 @@ public class ProductDetailResponse {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private List<LocalDate> alreadyDates;
 
-    private List<ProductReviewList> productReviewLists;
+    private List<ProductReviewListResponse> productReviewListResponses;
     private double starRating;
 
     public static ProductDetailResponse of(Product product, List<LocalDate> alreadyDates, double starRating){

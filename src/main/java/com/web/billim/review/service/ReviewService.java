@@ -3,14 +3,19 @@ package com.web.billim.review.service;
 import com.web.billim.exception.NotFoundException;
 import com.web.billim.exception.handler.ErrorCode;
 import com.web.billim.order.domain.ProductOrder;
+import com.web.billim.order.repository.OrderRepository;
 import com.web.billim.order.service.OrderService;
 import com.web.billim.point.service.PointService;
 import com.web.billim.review.domain.Review;
+import com.web.billim.review.dto.WrittenReviewList;
 import com.web.billim.review.dto.request.ReviewWriteRequest;
-import com.web.billim.review.dto.response.ProductReviewList;
+import com.web.billim.review.dto.response.MyReviewListResponse;
+import com.web.billim.review.dto.response.ProductReviewListResponse;
+import com.web.billim.review.dto.WritableReviewList;
 import com.web.billim.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,6 +26,7 @@ public class ReviewService {
 
 	private final ReviewRepository reviewRepository;
 	private final OrderService orderService;
+	private final OrderRepository orderRepository;
 	private final PointService pointService;
 
 	public double calculateStarRating(long productId) {
@@ -29,28 +35,44 @@ public class ReviewService {
 			.getAverage();
 	}
 
-	public void findMyProductReview(long memberId) {
-	}
-
 	public void productReviewWrite(ReviewWriteRequest reviewWriteRequest) {
 		ProductOrder productOrder =  orderService.findByOrder(reviewWriteRequest.getOrderId());
 		reviewRepository.save(ReviewWriteRequest.of(reviewWriteRequest,productOrder));
+		// 리뷰 작성시 포인트 주기
 
-		// 리뷰 작성시 포인트 주기 ( 주문 금액의 1% )
 	}
 
-	public long myReviewNoCount(long memberId) {
-		long orders = orderService.numberOfOrders(memberId);
-		long reviews = reviewRepository.countByMemberId(memberId)
-				.orElseThrow(()-> new NotFoundException(ErrorCode.ORDER_NOT_FOUND));
-		return orders - reviews;
-	}
-
-	public List<ProductReviewList> reviewList(long productId) {
+	public List<ProductReviewListResponse> reviewList(long productId) {
 		return reviewRepository.findAllByProductId(productId)
 				.stream()
-				.map(ProductReviewList::of)
+				.map(ProductReviewListResponse::of)
 				.collect(Collectors.toList());
 	}
+
+	// 작성 가능한 리뷰 개수
+	public long writableReviewCount(long memberId) {
+		return orderRepository.countByMemberAndStatus(memberId)
+				.orElseThrow(() -> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
+	}
+
+	// 작성 가능한 리뷰 리스트
+	@Transactional
+	public List<WritableReviewList> findMyWritableReview(long memberId) {
+		return orderRepository.findProductOrdersWritableReview(memberId)
+				.stream().map(WritableReviewList::of).collect(Collectors.toList());
+	}
+
+	@Transactional
+	public MyReviewListResponse myReviewList(long memberId) {
+
+		List<WritableReviewList> writableReviewList = orderRepository.findProductOrdersWritableReview(memberId)
+				.stream().map(WritableReviewList::of).collect(Collectors.toList());
+		List<WrittenReviewList> writtenReviewList = reviewRepository.findByProductOrder_Member_MemberId(memberId)
+				.stream().map(WrittenReviewList::of).collect(Collectors.toList());
+
+		return new MyReviewListResponse(writableReviewList, writtenReviewList);
+	}
+
+
 
 }

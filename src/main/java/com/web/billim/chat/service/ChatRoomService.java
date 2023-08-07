@@ -1,7 +1,10 @@
 package com.web.billim.chat.service;
 
+import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +34,6 @@ public class ChatRoomService {
 	private final ChatMessageRepository chatMessageRepository;
 	private final MemberRepository memberRepository;
 	private final ProductRepository productRepository;
-	private final ImageUploadService imageUploadService;
 
 	@Transactional
 	public ChatRoomResponse joinChatRoom(long memberId, long productId) {
@@ -40,7 +42,9 @@ public class ChatRoomService {
 			.orElseGet(() -> {
 				Member member = memberRepository.findById(memberId).orElseThrow();
 				Product product = productRepository.findById(productId).orElseThrow();
-				return chatRoomRepository.save(ChatRoom.of(member, product));
+				ChatRoom savedChatRoom = chatRoomRepository.save(ChatRoom.of(member, product));
+				chatMessageService.sendSystem(SendTextMessageRequest.ofJoinMessage(savedChatRoom, member));
+				return savedChatRoom;
 			});
 		return ChatRoomResponse.from(chatRoom);
 	}
@@ -64,12 +68,20 @@ public class ChatRoomService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<ChatRoomAndPreviewResponse> retrieveAllJoined(long buyerId) {
-		return chatRoomRepository.findAllJoinedByBuyerId(buyerId).stream()
+	public List<ChatRoomAndPreviewResponse> retrieveAllJoined(long memberId) {
+		Stream<ChatRoomAndPreviewResponse> buyChatRoomStream = chatRoomRepository.findAllJoinedByBuyerId(memberId).stream()
 			.map(chatRoom -> {
 				ChatMessagePreview preview = chatMessageService.retrieveChatMessagePreview(chatRoom);
 				return ChatRoomAndPreviewResponse.forBuyer(chatRoom, preview);
-			})
+			});
+		Stream<ChatRoomAndPreviewResponse> sellChatRoomStream = chatRoomRepository.findAllJoinedBySellerId(memberId).stream()
+			.map(chatRoom -> {
+				ChatMessagePreview preview = chatMessageService.retrieveChatMessagePreview(chatRoom);
+				return ChatRoomAndPreviewResponse.forSeller(chatRoom, preview);
+			});
+
+		return Stream.concat(buyChatRoomStream, sellChatRoomStream)
+			.sorted((x, y) -> (int) (x.getLatestMessageTime().toEpochSecond(ZoneOffset.UTC) - y.getLatestMessageTime().toEpochSecond(ZoneOffset.UTC)))
 			.collect(Collectors.toList());
 	}
 
