@@ -67,7 +67,7 @@ public class ChatController {
 	}
 
 	@Operation(summary = "판매자의 productId 에 따른 채팅방 목록 조회", description = "해당 상품에 대한 채팅방 전체 목록을 가져온다.")
-	@GetMapping("/rooms/product/{productId}")
+	@GetMapping("/api/chat")
 	public ResponseEntity<List<ChatRoomAndPreviewResponse>> retrieveAllProductChatRoom(@PathVariable long productId) {
 		return ResponseEntity.ok(chatRoomService.retrieveAllByProductId(productId));
 	}

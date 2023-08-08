@@ -30,7 +30,7 @@ public class WrittenReviewList {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSS")
     private LocalDateTime reviewCreatedAt;
 
-    private String isWritable;
+    private Boolean isWritable;
 
     public static WrittenReviewList of(Review review) {
         var productOrder = review.getProductOrder();
@@ -48,7 +48,7 @@ public class WrittenReviewList {
                 .content(review.getContent())
                 .starRating(review.getStarRating())
                 .reviewCreatedAt(review.getCreatedAt())
-                .isWritable("false")
+                .isWritable(false)
                 .build();
     }
 

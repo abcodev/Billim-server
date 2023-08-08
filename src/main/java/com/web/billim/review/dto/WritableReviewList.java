@@ -23,7 +23,7 @@ public class WritableReviewList {
     private LocalDate endAt;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSS")
     private LocalDateTime orderCreatedAt;
-    private String isWritable;
+    private Boolean isWritable;
 
     public static WritableReviewList of(ProductOrder productOrder) {
         var product = productOrder.getProduct();
@@ -36,7 +36,7 @@ public class WritableReviewList {
                 .startAt(productOrder.getStartAt())
                 .endAt(productOrder.getEndAt())
                 .orderCreatedAt(productOrder.getCreatedAt())
-                .isWritable("true")
+                .isWritable(true)
                 .build();
     }
 

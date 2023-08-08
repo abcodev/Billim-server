@@ -63,9 +63,7 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-//    @Operation(summary = "닉네임 중복 확인", description = "true 시 중복된 닉네임")
-    @Operation(summary = "닉네임 중복 확인",
-            responses = {@ApiResponse(responseCode = "200", description = "true - 중복된 닉네임 / false - 사용 가능 닉네임")})
+    @Operation(summary = "닉네임 중복 확인", description = "true 시 중복된 닉네임")
     @GetMapping("/check/nickname")
     public ResponseEntity<Boolean> checkDuplicateNickname(@RequestParam String nickname) {
         return ResponseEntity.ok(memberService.checkDuplicateNickname(nickname));
@@ -82,7 +80,6 @@ public class MemberController {
     @GetMapping("/my-page")
     public ResponseEntity<MyPageInfoResponse> myPageInfo(@AuthenticationPrincipal long memberId) {
         MyPageInfoResponse resp = memberService.retrieveMyPageInfo(memberId);
-//        long availableReview = reviewService.myReviewNoCount(memberId);
         long availableReview = reviewService.writableReviewCount(memberId);
         resp.setAvailableReview(availableReview);
         return ResponseEntity.ok(resp);
