@@ -37,29 +37,20 @@ public class ChatController {
 	private final ChatRoomService chatRoomService;
 	private final ChatMessageService chatMessageService;
 
-	// TODO : 기존 채팅방이 유지되는거니까 다시 입장 했을 때 "~님이 입장했습니다" 시스템 메시지 보내도록.
 	@Operation(summary = "구매자가 채팅방 생성", description = "구매자가 처음으로 채팅방을 생성하고, 채팅방이 있으면 그냥 입장한다.")
 	@PostMapping("/room/product/{productId}")
 	public ResponseEntity<ChatRoomResponse> joinChatRoomForBuyer(@PathVariable long productId, @AuthenticationPrincipal long memberId) {
 		return ResponseEntity.ok(chatRoomService.joinChatRoom(memberId, productId));
 	}
 
-	/**
-	 * 	1. 구매자와 판매자가 채팅방 A 에 있었다.
-	 * 	2. 구매자가 채팅방 A 를 나온다.
-	 * 	3. 판매자는 여전히 채팅방 A 에 참여해있다.
-	 * 	4. 구매자가 다시 판매자에게 채팅을 요청해 채팅방 B 가 만들어진다.
-	 * 	5. 판매자가 그 판매관리 쪽에서 그 사용자에게 채팅방을 열려고 하면,
-	 * 	6. 결과가 2개가 나온다.
-	 */
 	@Operation(summary = "판매자가 채팅방 생성", description = "판매자가가 판매목록에서 채팅방 생성한다.")
 	@PostMapping("/room/product/{productId}/{buyerId}")
 	public ResponseEntity<ChatRoomResponse> joinChatRoomForSeller(@PathVariable long productId, @PathVariable long buyerId) {
 		return ResponseEntity.ok(chatRoomService.joinChatRoom(buyerId, productId));
 	}
 
-	// 채팅방이 5개 있으면 [{unreadCount:5}, {unreadCount:10}, {unreadCount:0}, {unreadCount:4}, {unreadCount:0}]
-	// TODO : API 로 테스트했을 때 각각 채팅방에 대해서 unreadCount 가 독립적으로 내려오는지 확인
+
+	// TODO : unreadCount 계산이 잘 안됨
 	@Operation(summary = "채팅방 목록 조회", description = "자신의 채팅방 목록 전체 조회한다.")
 	@GetMapping("/rooms")
 	public ResponseEntity<List<ChatRoomAndPreviewResponse>> retrieveAllMyChatRoom(@AuthenticationPrincipal long buyerId) {
@@ -73,6 +64,7 @@ public class ChatController {
 	}
 
 	// TODO : 나간 후 다시 재입장했을 때 나가기 전 메시지 가리기 필요
+	// TODO : 상품 정보(상품명, 금액, 사진) 내려주기
 	@Operation(summary = "채팅방 들어갔을 때 채팅 내용 조회", description = "채팅방 들어갔을 때 전체 채팅 목록을 불러온다.")
 	@GetMapping("/messages/{chatRoomId}")
 	public ResponseEntity<List<ChatMessageResponse>> retrieveAllChatMessage(@AuthenticationPrincipal long memberId, @PathVariable long chatRoomId) {

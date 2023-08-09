@@ -70,9 +70,3 @@ public class ChatRoomAndPreviewResponse {
 	}
 
 }
-
-/*
-	판매자가 내가 올린 Product 1 을 누른다.
-    Product 1 을 사려고 메시지를 보낸 사람들이 있음
-    그 채팅방 목록
- */

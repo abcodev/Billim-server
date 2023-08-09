@@ -13,7 +13,6 @@ public class HeaderInfoResponse {
         return HeaderInfoResponse.builder()
                 .profileImageUrl(member.getProfileImageUrl())
                 .build();
-
     }
 
 }
