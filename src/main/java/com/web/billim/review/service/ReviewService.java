@@ -45,6 +45,7 @@ public class ReviewService {
         ProductOrder productOrder = orderService.findByOrder(reviewWriteRequest.getOrderId());
         Review review = reviewRepository.save(ReviewWriteRequest.toEntity(reviewWriteRequest, productOrder));
 
+        // 작성 시 적림금 부여
         long amount = pointDomainService.calculate(review);
         pointService.addPoint(new AddPointCommand(productOrder.getMember(), amount, Duration.ofDays(365)));
     }
@@ -69,6 +70,7 @@ public class ReviewService {
                 .stream().map(WritableReviewList::of).collect(Collectors.toList());
     }
 
+    // 나의 리뷰 리스트
     @Transactional
     public MyReviewListResponse myReviewList(long memberId) {
         List<WritableReviewList> writableReviewList = orderRepository.findProductOrdersWritableReview(memberId)

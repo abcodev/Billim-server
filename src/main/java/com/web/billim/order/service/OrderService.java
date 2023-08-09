@@ -97,7 +97,7 @@ public class OrderService {
             throw new RuntimeException("주문이 완료되지 않아 취소할 수 없습니다.");
         }
 
-        order.cancel(); // Dirty Checking 이 발생하면서 알아서 저장된다.
+        order.cancel(); // Dirty Checking 이 발생하면서 알아서 저장
         paymentService.cancel(order);
     }
 
@@ -106,16 +106,9 @@ public class OrderService {
                 .orElseThrow();
     }
 
-//    public long numberOfOrders(long memberId) {
-//        return orderRepository.countByMember_memberId(memberId)
-//                .orElseThrow(() -> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
-//    }
-
     // 마이페이지 나의 구매 내역 목록 조회
     @Transactional
     public MyOrderListResponse findMyOrder(long memberId) {
-//        List<ProductOrder> productOrders= orderRepository.findAllByMember_memberId(memberId)
-//                .orElseThrow(()-> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
         List<ProductOrder> productOrders = orderRepository.findAllByMember_memberId_OrderByOrderIdDesc(memberId);
         List<MyOrderHistory> myOrderHistories = productOrders.stream()
                 .map(MyOrderHistory::from)
