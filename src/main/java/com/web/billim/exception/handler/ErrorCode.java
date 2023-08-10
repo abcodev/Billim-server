@@ -20,8 +20,7 @@ public enum ErrorCode {
 
     MISMATCH_PAYMENT_INFO(BAD_REQUEST, "결제내역이 일치하지 않습니다. 결제가 취소되었습니다."),
 
-    PRODUCT_HAS_RESERVATION(BAD_REQUEST, "해당 상품에 대한 진행중인 예약이있어 삭제할 수 없습니다."),
-
+    PRODUCT_HAS_RESERVATION(BAD_REQUEST, "해당 상품에 진행중인 예약이있어 삭제할 수 없습니다. 예약 취소 후 다시 시도해 주세요."),
 
 
     /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */
@@ -43,9 +42,6 @@ public enum ErrorCode {
     /* ID-PW */
     INVALID_EMAIL_PASSWORD(UNAUTHORIZED, "이메일 혹은 비밀번호가 일치하지 않습니다."),
 
-//    INVALID_ACCESS_TOKEN(UNAUTHORIZED, "잘못된 액세스 토큰입니다."),
-//    INVALID_AUTH_TOKEN(UNAUTHORIZED, "권한 정보가 없는 토큰입니다"),
-//    UNAUTHORIZED_MEMBER(UNAUTHORIZED, "현재 내 계정 정보가 존재하지 않습니다"),
 
     /* 403 FORBIDDEN : 접근 권한 */
     MISMATCH_MEMBER(FORBIDDEN, "사용자 정보가 일치하지 않습니다."),
@@ -71,9 +67,7 @@ public enum ErrorCode {
     /* INTERNAL_SERVER_ERROR */
     IMAGE_UPLOAD_FAILED(INTERNAL_SERVER_ERROR, "이미지 업로드에 실패했습니다."),
     EMAIL_SEND_FAILED(INTERNAL_SERVER_ERROR,"이메일 전송에 실패하였습니다."),
-
     PAYMENT_FAILED(INTERNAL_SERVER_ERROR, "결제에 실패했습니다.");
-
 
     private final HttpStatus httpStatus;
     private final String message;

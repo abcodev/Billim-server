@@ -68,7 +68,6 @@ public class CouponService {
                 .orElseThrow(() -> new NotFoundException(ErrorCode.COUPON_NOT_FOUND));
 
         if (!couponIssue.getMember().equals(member)) {
-//            throw new RuntimeException("쿠폰의 사용자 정보가 일치하지 않습니다.");
             throw new ForbiddenException(ErrorCode.MISMATCH_MEMBER);
         }
         couponIssue.use();

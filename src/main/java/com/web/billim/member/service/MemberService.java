@@ -75,12 +75,13 @@ public class MemberService {
 		return memberRepository.existsByNickname(nickname);
 	}
 
-	// Domain Service
+	// Domain Service..
 	public Member retrieve(long memberId) {
 		return memberRepository.findById(memberId)
 				.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 	}
 
+	// 회원정보 수정시 기존 정보 조회
 	@Transactional
 	public MemberInfoResponse retrieveUpdateInfoPage(long memberId) {
 		return memberRepository.findById(memberId)
@@ -97,6 +98,7 @@ public class MemberService {
 		}).orElseThrow();
 	}
 
+	// 회원정보 수정
 	@Transactional
 	public void updateInfo(long memberId, MemberInfoUpdateRequest req) {
 		memberRepository.findById(memberId).ifPresent(member -> {
@@ -135,7 +137,6 @@ public class MemberService {
 		if (!passwordEncoder.matches(command.getPassword(), member.getPassword())) {
 			throw new UnAuthorizedException(ErrorCode.INVALID_EMAIL_PASSWORD);
 		}
-		// member.validatePassword(passwordEncoder, command.getPassword());
 		String encodedPassword = passwordEncoder.encode(command.getNewPassword());
 		member.changePassword(encodedPassword);
 	}

@@ -127,7 +127,9 @@ public class ProductController {
     }
 
     @GetMapping("/list/recent")
-    public ResponseEntity<List<RecentProductResponse>> recentProductList(@AuthenticationPrincipal long memberId) {
+    public ResponseEntity<List<RecentProductResponse>> recentProductList(
+            @AuthenticationPrincipal long memberId
+    ) {
         return ResponseEntity.ok(productService.recentProductList(memberId));
     }
 

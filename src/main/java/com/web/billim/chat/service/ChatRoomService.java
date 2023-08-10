@@ -25,77 +25,81 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class ChatRoomService {
 
-	private final ChatMessageService chatMessageService;
-	private final ChatRoomRepository chatRoomRepository;
-	private final ChatMessageDomainService chatMessageDomainService;
-	private final MemberRepository memberRepository;
-	private final ProductRepository productRepository;
+    private final ChatMessageService chatMessageService;
+    private final ChatRoomRepository chatRoomRepository;
+    private final ChatMessageDomainService chatMessageDomainService;
+    private final MemberRepository memberRepository;
+    private final ProductRepository productRepository;
 
-	@Transactional
-	public ChatRoomResponse joinChatRoom(long memberId, long productId) {
-		ChatRoom chatRoom = chatRoomRepository.findByProductIdAndBuyerId(productId, memberId)
-			.map(ChatRoom::reJoin)
-			.orElseGet(() -> {
-				Member member = memberRepository.findById(memberId).orElseThrow();
-				Product product = productRepository.findById(productId).orElseThrow();
-				ChatRoom savedChatRoom = chatRoomRepository.save(ChatRoom.of(member, product));
-				chatMessageService.sendSystem(SendTextMessageRequest.ofJoinMessage(savedChatRoom, member));
-				return savedChatRoom;
-			});
-		return ChatRoomResponse.from(chatRoom);
-	}
+    // 채팅방 입장
+    @Transactional
+    public ChatRoomResponse joinChatRoom(long memberId, long productId) {
+        ChatRoom chatRoom = chatRoomRepository.findByProductIdAndBuyerId(productId, memberId)
+                .map(ChatRoom::reJoin)
+                .orElseGet(() -> {
+                    Member member = memberRepository.findById(memberId).orElseThrow();
+                    Product product = productRepository.findById(productId).orElseThrow();
+                    ChatRoom savedChatRoom = chatRoomRepository.save(ChatRoom.of(member, product));
+                    chatMessageService.sendSystem(SendTextMessageRequest.ofJoinMessage(savedChatRoom, member));
+                    return savedChatRoom;
+                });
+        return ChatRoomResponse.from(chatRoom);
+    }
 
-	// 이건 서비스에서 처리하기에는 약간.. 너무 구체적이고 복잡한거같다.
-	// 뭔가 이 일을 전문적으로 잘 처리해줄 수 있는 객체가 있으면 좋을거같은데..
-	// 나는 그냥 걔한테 시키고 결과만 받는 입장이 되면 좋겠다..!
-	@Transactional
-	public List<ChatMessageResponse> retrieveAllChatMessage(long readMemberId, long chatRoomId) {
-		ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow();
-		chatMessageDomainService.readAll(readMemberId, chatRoom);
-		return chatMessageDomainService.findAll(chatRoom).stream()
-				.map(ChatMessageResponse::from)
-				.collect(Collectors.toList());
-	}
+    // 전체 채팅 메세지 조회
+    @Transactional
+    public List<ChatMessageResponse> retrieveAllChatMessage(long readMemberId, long chatRoomId) {
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow();
+        chatMessageDomainService.readAll(readMemberId, chatRoom);
+        return chatMessageDomainService.findAll(chatRoom).stream()
+                .map(ChatMessageResponse::from)
+                .collect(Collectors.toList());
+    }
 
-	@Transactional(readOnly = true)
-	public List<ChatRoomAndPreviewResponse> retrieveAllByProductId(long productId) {
-		return chatRoomRepository.findAllByProductId(productId).stream()
-			.filter(ChatRoom::isSellerJoined)
-			.map(chatRoom -> {
-				ChatMessagePreview preview = chatMessageService.retrieveChatMessagePreview(chatRoom);
-				return ChatRoomAndPreviewResponse.forSeller(chatRoom, preview);
-			})
-			.collect(Collectors.toList());
-	}
+    @Transactional(readOnly = true)
+    public List<ChatRoomAndPreviewResponse> retrieveAllByProductId(long productId) {
+        return chatRoomRepository.findAllByProductId(productId).stream()
+                .filter(ChatRoom::isSellerJoined)
+                .map(chatRoom -> {
+                    ChatMessagePreview preview = chatMessageService.retrieveChatMessagePreview(chatRoom);
+                    return ChatRoomAndPreviewResponse.forSeller(chatRoom, preview);
+                })
+                .collect(Collectors.toList());
+    }
 
-	@Transactional(readOnly = true)
-	public List<ChatRoomAndPreviewResponse> retrieveAllJoined(long memberId) {
-		Stream<ChatRoomAndPreviewResponse> buyChatRoomStream = chatRoomRepository.findAllJoinedByBuyerId(memberId).stream()
-			.map(chatRoom -> {
-				ChatMessagePreview preview = chatMessageService.retrieveChatMessagePreview(chatRoom);
-				return ChatRoomAndPreviewResponse.forBuyer(chatRoom, preview);
-			});
-		Stream<ChatRoomAndPreviewResponse> sellChatRoomStream = chatRoomRepository.findAllJoinedBySellerId(memberId).stream()
-			.map(chatRoom -> {
-				ChatMessagePreview preview = chatMessageService.retrieveChatMessagePreview(chatRoom);
-				return ChatRoomAndPreviewResponse.forSeller(chatRoom, preview);
-			});
+    @Transactional(readOnly = true)
+    public List<ChatRoomAndPreviewResponse> retrieveAllJoined(long memberId) {
+		// 내가 구매자로 들어가있는 채팅방 목록 조회
+        Stream<ChatRoomAndPreviewResponse> buyChatRoomStream = chatRoomRepository.findAllJoinedByBuyerId(memberId).stream()
+                .map(chatRoom -> {
+                    ChatMessagePreview preview = chatMessageService.retrieveChatMessagePreview(chatRoom);
+                    return ChatRoomAndPreviewResponse.forBuyer(chatRoom, preview);
+                });
 
-		return Stream.concat(buyChatRoomStream, sellChatRoomStream)
-			.sorted((x, y) -> (int) (x.getLatestMessageTime().toEpochSecond(ZoneOffset.UTC) - y.getLatestMessageTime().toEpochSecond(ZoneOffset.UTC)))
-			.collect(Collectors.toList());
-	}
+		// 내가 판매자로써 들어가있는 채팅방 목록 조회
+        Stream<ChatRoomAndPreviewResponse> sellChatRoomStream = chatRoomRepository.findAllJoinedBySellerId(memberId).stream()
+                .map(chatRoom -> {
+                    ChatMessagePreview preview = chatMessageService.retrieveChatMessagePreview(chatRoom);
+                    return ChatRoomAndPreviewResponse.forSeller(chatRoom, preview);
+                });
 
-	@Transactional
-	public void exit(long memberId, long chatRoomId) {
-		chatRoomRepository.findById(chatRoomId).ifPresent(chatRoom -> {
-			Member exitMember = chatRoom.exit(memberId);  // Dirty Checking
-			if (chatRoom.checkEmpty()) {
-				chatRoomRepository.delete(chatRoom);
-			} else {
-				chatMessageService.sendSystem(SendTextMessageRequest.ofExitMessage(chatRoom, exitMember));
-			}
-		});
-	}
+		// 두 목록을 합쳐서 마지막 메시지 순서대로 내림차순 정렬
+        return Stream.concat(buyChatRoomStream, sellChatRoomStream)
+                //JAVA Comparable
+                .sorted((x, y) -> (int) (x.getLatestMessageTime().toEpochSecond(ZoneOffset.UTC) - y.getLatestMessageTime().toEpochSecond(ZoneOffset.UTC)))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void exit(long memberId, long chatRoomId) {
+        chatRoomRepository.findById(chatRoomId).ifPresent(chatRoom -> {
+            Member exitMember = chatRoom.exit(memberId);  // Dirty Checking
+            if (chatRoom.checkEmpty()) {
+                chatRoomRepository.delete(chatRoom);
+            } else {
+                chatMessageService.sendSystem(SendTextMessageRequest.ofExitMessage(chatRoom, exitMember));
+            }
+        });
+    }
 
 }
