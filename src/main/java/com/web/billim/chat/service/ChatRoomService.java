@@ -3,11 +3,10 @@ package com.web.billim.chat.service;
 import com.web.billim.chat.domain.ChatRoom;
 import com.web.billim.chat.domain.service.ChatMessageDomainService;
 import com.web.billim.chat.dto.request.SendTextMessageRequest;
-import com.web.billim.chat.dto.response.ChatMessagePreview;
-import com.web.billim.chat.dto.response.ChatMessageResponse;
-import com.web.billim.chat.dto.response.ChatRoomAndPreviewResponse;
-import com.web.billim.chat.dto.response.ChatRoomResponse;
+import com.web.billim.chat.dto.response.*;
 import com.web.billim.chat.repository.ChatRoomRepository;
+import com.web.billim.exception.NotFoundException;
+import com.web.billim.exception.handler.ErrorCode;
 import com.web.billim.member.domain.Member;
 import com.web.billim.member.repository.MemberRepository;
 import com.web.billim.product.domain.Product;
@@ -56,6 +55,13 @@ public class ChatRoomService {
                 .collect(Collectors.toList());
     }
 
+    // 채팅방 상품 정보 조회
+    public ChatRoomProductInfo getChatRoomProductInfo(long chatRoomId) {
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow();
+        return ChatRoomProductInfo.from(chatRoom);
+    }
+
+
     @Transactional(readOnly = true)
     public List<ChatRoomAndPreviewResponse> retrieveAllByProductId(long productId) {
         return chatRoomRepository.findAllByProductId(productId).stream()
@@ -76,7 +82,7 @@ public class ChatRoomService {
                     return ChatRoomAndPreviewResponse.forBuyer(chatRoom, preview);
                 });
 
-		// 내가 판매자로써 들어가있는 채팅방 목록 조회
+		// 내가 판매자로 들어가있는 채팅방 목록 조회
         Stream<ChatRoomAndPreviewResponse> sellChatRoomStream = chatRoomRepository.findAllJoinedBySellerId(memberId).stream()
                 .map(chatRoom -> {
                     ChatMessagePreview preview = chatMessageService.retrieveChatMessagePreview(chatRoom);

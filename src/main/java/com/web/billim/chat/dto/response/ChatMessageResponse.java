@@ -20,33 +20,22 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ChatMessageResponse {
 
-	@Schema(description = "채팅 내용 고유번호")
-	private long messageId;
+    private long messageId;
+    private long senderId;
+    private ChatMessageType type;
+    private String message;
+    private boolean isRead;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    private LocalDateTime sendAt;
 
-	@Schema(description = "채팅 보낸 회원 고유번호")
-	private long senderId;
-
-	@Schema(description = "채팅 메시지 타입")
-	private ChatMessageType type;
-
-	@Schema(description = "채팅 메시지")
-	private String message;
-
-	@Schema(description = "채팅 읽음 여부")
-	private boolean isRead;
-
-	@Schema(description = "채팅 보낸 날짜")
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-	private LocalDateTime sendAt;
-
-	public static ChatMessageResponse from(ChatMessage chatMessage) {
-		return ChatMessageResponse.builder()
-			.messageId(chatMessage.getId())
-			.senderId(chatMessage.getType() != ChatMessageType.SYSTEM ? chatMessage.getSender().getMemberId() : -1)
-			.type(chatMessage.getType())
-			.message(chatMessage.getMessage())
-			.isRead(chatMessage.isRead())
-			.sendAt(chatMessage.getCreatedAt())
-			.build();
-	}
+    public static ChatMessageResponse from(ChatMessage chatMessage) {
+        return ChatMessageResponse.builder()
+                .messageId(chatMessage.getId())
+                .senderId(chatMessage.getType() != ChatMessageType.SYSTEM ? chatMessage.getSender().getMemberId() : -1)
+                .type(chatMessage.getType())
+                .message(chatMessage.getMessage())
+                .isRead(chatMessage.isRead())
+                .sendAt(chatMessage.getCreatedAt())
+                .build();
+    }
 }

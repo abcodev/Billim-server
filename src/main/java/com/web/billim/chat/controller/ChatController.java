@@ -4,6 +4,7 @@ import static com.web.billim.chat.config.ChatConfig.*;
 
 import java.util.List;
 
+import com.web.billim.chat.dto.response.ChatRoomProductInfo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -64,11 +65,16 @@ public class ChatController {
 	}
 
 	// TODO : 나간 후 다시 재입장했을 때 나가기 전 메시지 가리기 필요
-	// TODO : 상품 정보(상품명, 금액, 사진) 내려주기
 	@Operation(summary = "채팅방 들어갔을 때 채팅 내용 조회", description = "채팅방 들어갔을 때 전체 채팅 목록을 불러온다.")
 	@GetMapping("/messages/{chatRoomId}")
 	public ResponseEntity<List<ChatMessageResponse>> retrieveAllChatMessage(@AuthenticationPrincipal long memberId, @PathVariable long chatRoomId) {
 		return ResponseEntity.ok(chatRoomService.retrieveAllChatMessage(memberId, chatRoomId));
+	}
+
+	// TODO : 상품 정보(상품명, 금액, 사진) 내려주기
+	@GetMapping("/product-info/{chatRoomId}")
+	public ResponseEntity<ChatRoomProductInfo> retrieveProductInfo(@PathVariable long chatRoomId) {
+		return ResponseEntity.ok(chatRoomService.getChatRoomProductInfo(chatRoomId));
 	}
 
 	@Operation(summary = "채팅방 나가기", description = "채팅방을 나가면 상대방에게 채팅방 나갔다는 시스템 메세지가 전송된다.")
