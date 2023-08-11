@@ -128,6 +128,7 @@ public class MemberService {
 //		memberRepository.save(member);
 	}
 
+	// 비밀번호 재설정
 	@Transactional
 	public void updatePassword(UpdatePasswordCommand command) {
 
@@ -153,7 +154,6 @@ public class MemberService {
 		return HeaderInfoResponse.of(member);
 	}
 
-
 	public Boolean existByEmail(String email) {
 		return memberRepository.existsByEmail(email);
 	}
@@ -176,4 +176,5 @@ public class MemberService {
 				.build();
 		return memberRepository.save(member);
 	}
+
 }
