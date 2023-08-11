@@ -53,10 +53,7 @@ public class MySalesDetailResponse {
                         currentOrder.add(order);
                     }
                 });
-
-        // Optional : null 을 피하기 위함이다. null 은 NPE(NullPointException) 유발
-        //  => NPE 는 Runtime 시점에 발견되는 에러고, 디버깅도 까다로운 면이 있다.
-        //  => optional.get()  : 너가 값을 가지고 있으면 그 값을 꺼내줘. 근데 만약 없으면 null 을 반환해줘.
+        
         return new MySalesDetailResponse(
                 product.getMember().getMemberId(),
                 product.getProductId(),

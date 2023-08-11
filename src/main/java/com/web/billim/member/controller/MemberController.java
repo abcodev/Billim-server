@@ -126,7 +126,6 @@ public class MemberController {
         return ResponseEntity.ok(memberService.retrieveHeaderInfo(memberId));
     }
 
-
 }
 
 

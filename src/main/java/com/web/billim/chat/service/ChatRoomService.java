@@ -5,10 +5,14 @@ import com.web.billim.chat.domain.service.ChatMessageDomainService;
 import com.web.billim.chat.dto.request.SendTextMessageRequest;
 import com.web.billim.chat.dto.response.*;
 import com.web.billim.chat.repository.ChatRoomRepository;
+import com.web.billim.exception.ForbiddenException;
 import com.web.billim.exception.NotFoundException;
 import com.web.billim.exception.handler.ErrorCode;
 import com.web.billim.member.domain.Member;
+import com.web.billim.member.dto.response.MemberInfoResponse;
 import com.web.billim.member.repository.MemberRepository;
+import com.web.billim.order.domain.ProductOrder;
+import com.web.billim.order.dto.response.MySalesDetailResponse;
 import com.web.billim.product.domain.Product;
 import com.web.billim.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -56,11 +60,12 @@ public class ChatRoomService {
     }
 
     // 채팅방 상품 정보 조회
+    @Transactional
     public ChatRoomProductInfo getChatRoomProductInfo(long chatRoomId) {
-        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow();
-        return ChatRoomProductInfo.from(chatRoom);
+        return chatRoomRepository.findById(chatRoomId)
+                .map(ChatRoomProductInfo::from)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
     }
-
 
     @Transactional(readOnly = true)
     public List<ChatRoomAndPreviewResponse> retrieveAllByProductId(long productId) {
@@ -91,7 +96,6 @@ public class ChatRoomService {
 
 		// 두 목록을 합쳐서 마지막 메시지 순서대로 내림차순 정렬
         return Stream.concat(buyChatRoomStream, sellChatRoomStream)
-                //JAVA Comparable
                 .sorted((x, y) -> (int) (x.getLatestMessageTime().toEpochSecond(ZoneOffset.UTC) - y.getLatestMessageTime().toEpochSecond(ZoneOffset.UTC)))
                 .collect(Collectors.toList());
     }

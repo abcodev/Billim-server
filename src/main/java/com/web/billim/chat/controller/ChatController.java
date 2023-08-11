@@ -72,6 +72,7 @@ public class ChatController {
 	}
 
 	// TODO : 상품 정보(상품명, 금액, 사진) 내려주기
+	@Operation(summary = "채팅방 해당 상품 정보", description = "해당 채팅뱅에 해당하는 상품 정보를 조회한다.")
 	@GetMapping("/product-info/{chatRoomId}")
 	public ResponseEntity<ChatRoomProductInfo> retrieveProductInfo(@PathVariable long chatRoomId) {
 		return ResponseEntity.ok(chatRoomService.getChatRoomProductInfo(chatRoomId));

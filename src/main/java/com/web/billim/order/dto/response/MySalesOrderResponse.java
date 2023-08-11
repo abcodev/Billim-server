@@ -23,6 +23,7 @@ public class MySalesOrderResponse {
 	private long orderId;
 	private long buyerId;
 	private String buyerNickname;
+	private String buyerProfileImageUrl;
 	private TradeMethod tradeMethods;
 	private String name;  // nullable
 	private String address;  // nullable
@@ -40,6 +41,7 @@ public class MySalesOrderResponse {
 			order.getOrderId(),
 			order.getMember().getMemberId(),
 			order.getMember().getNickname(),
+			order.getMember().getProfileImageUrl(),
 			order.getTradeMethod(),
 			Optional.ofNullable(order.getBuyer()).map(ProductBuyer::getName).orElse(null),
 			Optional.ofNullable(order.getBuyer()).map(ProductBuyer::getAddress).orElse(null),

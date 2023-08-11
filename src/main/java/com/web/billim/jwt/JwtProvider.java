@@ -54,8 +54,7 @@ public class JwtProvider implements InitializingBean {
 				.setSubject(memberId)
 				.setAudience(memberGrade.toString())
 				.setIssuedAt(new Date(System.currentTimeMillis()))
-//				.setExpiration(new Date(System.currentTimeMillis() + ACCESS_TIME))
-				.setExpiration(new Date(System.currentTimeMillis() + (1800000)))
+				.setExpiration(new Date(System.currentTimeMillis() + ACCESS_TIME))
 				.signWith(key, SignatureAlgorithm.HS512)
 				.compact();
 	}
@@ -66,8 +65,7 @@ public class JwtProvider implements InitializingBean {
 				.setHeaderParam("typ", "REFRESH")
 				.setSubject(memberId)
 				.setIssuedAt(new Date(System.currentTimeMillis()))
-//				.setExpiration(new Date(System.currentTimeMillis() + REFRESH_TIME))
-				.setExpiration(new Date(System.currentTimeMillis() + 6000000))
+				.setExpiration(new Date(System.currentTimeMillis() + REFRESH_TIME))
 				.signWith(key, SignatureAlgorithm.HS512)
 				.compact();
 	}

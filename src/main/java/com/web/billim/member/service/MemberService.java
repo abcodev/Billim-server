@@ -81,14 +81,6 @@ public class MemberService {
 				.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 	}
 
-	// 회원정보 수정시 기존 정보 조회
-	@Transactional
-	public MemberInfoResponse retrieveUpdateInfoPage(long memberId) {
-		return memberRepository.findById(memberId)
-				.map(MemberInfoResponse::from)
-				.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
-	}
-
 	@Transactional
 	public MyPageInfoResponse retrieveMyPageInfo(long memberId) {
 		return memberRepository.findById(memberId).map(member -> {
@@ -96,6 +88,14 @@ public class MemberService {
 			long availableCouponCount = couponService.retrieveAvailableCouponList(memberId).size();
 			return MyPageInfoResponse.of(member, availableAmount, availableCouponCount);
 		}).orElseThrow();
+	}
+
+	// 회원정보 수정시 기존 정보 조회
+	@Transactional
+	public MemberInfoResponse retrieveUpdateInfoPage(long memberId) {
+		return memberRepository.findById(memberId)
+				.map(MemberInfoResponse::from)
+				.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 	}
 
 	// 회원정보 수정
