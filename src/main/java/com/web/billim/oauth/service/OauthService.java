@@ -42,11 +42,12 @@ public class OauthService extends DefaultOAuth2UserService {
 
     private OAuth2User oAuth2UserLogin(OAuth2UserRequest userRequest, OAuth2User oAuth2User) {
         // SNS TYPE
-//        String provider = userRequest.getClientRegistration().getClientName();
-//        OAuthLogin oAuthLogin = null;
-//        if (provider.equals("KAKAO")) {
-//            oAuthLogin = KakaoLogin.ofKaKao(oAuth2User.getAttributes());
-//        }
+        String provider = userRequest.getClientRegistration().getClientName();
+        OAuthLogin oAuthLogin = null;
+        if (provider.equals("KAKAO")) {
+            oAuthLogin = KakaoLogin.ofKaKao(oAuth2User.getAttributes());
+        }
+
 //        // 1. 일반 회원가입을 했어 slolee@naver.com 이걸로
 //        // 2. 카카오 로그인을 눌렀어
 //        //     2-1. 만약 로그인 화면에서 카카오 로그인을 누른거면 에러를 내고,
@@ -69,11 +70,8 @@ public class OauthService extends DefaultOAuth2UserService {
 //        log.info("social 회원");
 //        return new OauthMember(oAuthLogin, member);
 
-        String provider = userRequest.getClientRegistration().getClientName();
-        OAuthLogin oAuthLogin = null;
-        if(provider.equals("KAKAO")){
-            oAuthLogin = KakaoLogin.ofKaKao(oAuth2User.getAttributes());
-        }
+
+
 
         // email 이 존재하는지 확인
 //        if(memberService.existByEmail(Objects.requireNonNull(oAuthLogin).getEmail())){
