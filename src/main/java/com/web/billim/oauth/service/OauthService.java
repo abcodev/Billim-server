@@ -1,6 +1,5 @@
 package com.web.billim.oauth.service;
 
-import com.web.billim.exception.DuplicatedException;
 import com.web.billim.member.domain.Member;
 import com.web.billim.member.service.MemberService;
 import com.web.billim.oauth.domain.SocialMember;
@@ -16,8 +15,6 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Objects;
 
 @Slf4j
 @Service
@@ -68,4 +65,5 @@ public class OauthService extends DefaultOAuth2UserService {
     public Boolean existByAccountId(String accountId){
         return oAuthRepository.existsByAccountId(accountId);
     }
+
 }
