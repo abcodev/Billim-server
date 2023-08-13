@@ -93,10 +93,12 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public SecurityFilterConfigurer jwtTokenFilterConfigurer(JwtProvider jwtProvider,
-                                                             AuthenticationManager authenticationManager,
-                                                             JwtService jwtService,
-                                                             SecurityFilterSkipMatcher securityFilterSkipMatcher) {
+    public SecurityFilterConfigurer jwtTokenFilterConfigurer(
+            JwtProvider jwtProvider,
+            AuthenticationManager authenticationManager,
+            JwtService jwtService,
+            SecurityFilterSkipMatcher securityFilterSkipMatcher
+    ) {
         return new SecurityFilterConfigurer(jwtProvider, authenticationManager, jwtService, securityFilterSkipMatcher);
     }
 
@@ -111,9 +113,11 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public LoginAuthenticationFilter loginAuthenticationFilter(AuthenticationManager configureAuthenticationManager,
-                                                               JwtProvider jwtProvider,
-                                                               JwtService jwtService) {
+    public LoginAuthenticationFilter loginAuthenticationFilter(
+            AuthenticationManager configureAuthenticationManager,
+            JwtProvider jwtProvider,
+            JwtService jwtService
+    ) {
         LoginAuthenticationFilter loginAuthenticationFilter = new LoginAuthenticationFilter(configureAuthenticationManager, jwtProvider, jwtService);
         loginAuthenticationFilter.setAuthenticationManager(configureAuthenticationManager);
         return loginAuthenticationFilter;
