@@ -9,8 +9,6 @@
 # 프로젝트 구조
 <img width="1210" alt="스크린샷 2023-07-06 오전 12 37 28" src="https://github.com/HyunjeongJang/Billim-server/assets/113197284/13990774-5f1a-499c-8906-55e282c42f50">
 
-
-
 <br>
 
 # 구현 기능
@@ -19,14 +17,14 @@
 |:----:|:----:|
 |회원|이메일 인증 / Spring Security / Jwt / OAuth2.0 카카오 소셜로그인 |
 |상품|상품 CRUD / 상품 검색 - 카테고리 & 키워드 |
-|쿠폰 및 적립금|회원 가입시 발급 / 회원 등급에 따른 적립률 적용 / 주문시 사용|
-|주문 및 결제|상품 예약 시스템 / 상품 결제 및 취소 시스템 - PortOne 연동|
-|채팅|판매자 구매자 간 1:1 채팅 / 회원 차단|
+|쿠폰 및 적립금| 회원 가입시 발급 / 회원 등급에 따른 적립률 적용 / 주문시 사용|
+|주문 및 결제|상품 예약 시스템 / 상품 결제 및 취소 시스템 - 카카오페이 연동|
+|채팅|판매자 구매자 간 1:1 채팅 / 읽음 처리|
 
 <br>
 
 # Jenkins CI/CD 파이프라인 구축
-<img width="1726" alt="스크린샷 젠킨스" src="https://github.com/HyunjeongJang/Billim-server/assets/113197284/11c82e15-f226-47cb-92af-761f7f0962b2">
+<img width="1728" alt="젠킨스" src="https://github.com/HyunjeongJang/Billim-server/assets/113197284/55d05056-284f-4350-bf14-54ba0d18a7ad">
 
 
 <br>
