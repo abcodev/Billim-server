@@ -158,6 +158,7 @@ public class MemberService {
 		return memberRepository.existsByEmail(email);
 	}
 
+	// 카카오 회원가입
 	public Member register(OAuthLogin kakaoLogin) {
 		String nickname;
 		do {

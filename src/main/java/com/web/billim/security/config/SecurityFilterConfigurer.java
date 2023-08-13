@@ -19,7 +19,6 @@ public class SecurityFilterConfigurer extends SecurityConfigurerAdapter<DefaultS
     private final JwtService jwtService;
     private final SecurityFilterSkipMatcher securityFilterSkipMatcher;
 
-
     public SecurityFilterConfigurer(JwtProvider jwtProvider, AuthenticationManager authenticationManager, JwtService jwtService, SecurityFilterSkipMatcher securityFilterSkipMatcher) {
         this.jwtProvider = jwtProvider;
         this.authenticationManager = authenticationManager;

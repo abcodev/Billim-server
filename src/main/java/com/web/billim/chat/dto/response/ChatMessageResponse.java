@@ -1,17 +1,15 @@
 package com.web.billim.chat.dto.response;
 
-import java.time.LocalDateTime;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.web.billim.chat.domain.ChatMessage;
 import com.web.billim.chat.type.ChatMessageType;
-
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -20,6 +18,7 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ChatMessageResponse {
 
+    private boolean isNewMessage; // true 면 기존대로 밑에 추가하는거고, false 면 기존 값(messageId 기준)을 찾아서 변경하는거다.
     private long messageId;
     private long senderId;
     private ChatMessageType type;
@@ -28,8 +27,9 @@ public class ChatMessageResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime sendAt;
 
-    public static ChatMessageResponse from(ChatMessage chatMessage) {
+    public static ChatMessageResponse createNewMessage(ChatMessage chatMessage) {
         return ChatMessageResponse.builder()
+                .isNewMessage(true)
                 .messageId(chatMessage.getId())
                 .senderId(chatMessage.getType() != ChatMessageType.SYSTEM ? chatMessage.getSender().getMemberId() : -1)
                 .type(chatMessage.getType())
@@ -38,4 +38,17 @@ public class ChatMessageResponse {
                 .sendAt(chatMessage.getCreatedAt())
                 .build();
     }
+
+    public static ChatMessageResponse updatedMessage(ChatMessage chatMessage) {
+        return ChatMessageResponse.builder()
+                .isNewMessage(false)
+                .messageId(chatMessage.getId())
+                .senderId(chatMessage.getType() != ChatMessageType.SYSTEM ? chatMessage.getSender().getMemberId() : -1)
+                .type(chatMessage.getType())
+                .message(chatMessage.getMessage())
+                .isRead(chatMessage.isRead())
+                .sendAt(chatMessage.getCreatedAt())
+                .build();
+    }
+
 }

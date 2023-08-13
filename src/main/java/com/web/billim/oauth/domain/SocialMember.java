@@ -31,6 +31,7 @@ public class SocialMember extends JpaEntity {
                 .member(member)
                 .build();
     }
+
 }
 
 

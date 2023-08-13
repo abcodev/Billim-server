@@ -17,6 +17,7 @@ import com.web.billim.member.domain.Member;
 import com.web.billim.member.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +34,7 @@ public class ChatMessageService {
         Member sender = memberRepository.findById(req.getSenderId()).orElseThrow();
         ChatMessage message = ChatMessage.ofText(sender, chatRoom, req.getMessage());
         ChatMessage saved = chatMessageRepository.save(message);
-        return ChatMessageResponse.from(saved);
+        return ChatMessageResponse.createNewMessage(saved);
     }
 
     public ChatMessageResponse sendSystem(SendTextMessageRequest req) {
@@ -41,7 +42,7 @@ public class ChatMessageService {
 
         ChatMessage message = ChatMessage.ofSystem(chatRoom, req.getMessage());
         ChatMessage saved = chatMessageRepository.save(message);
-        return ChatMessageResponse.from(saved);
+        return ChatMessageResponse.createNewMessage(saved);
     }
 
     public ChatMessageResponse sendImage(SendImageMessageRequest req) {
@@ -51,15 +52,25 @@ public class ChatMessageService {
         String imageUrl = imageUploadService.upload(req.getEncodedImage(), "chat_" + req.getChatRoomId());
         ChatMessage message = ChatMessage.ofImage(sender, chatRoom, imageUrl);
         ChatMessage saved = chatMessageRepository.save(message);
-        return ChatMessageResponse.from(saved);
+        return ChatMessageResponse.createNewMessage(saved);
     }
 
-    public ChatMessagePreview retrieveChatMessagePreview(ChatRoom chatRoom) {
+    public ChatMessagePreview retrieveChatMessagePreview(ChatRoom chatRoom, long readMemberId) {
         return chatMessageRepository.findTopByChatRoomOrderByCreatedAtDesc(chatRoom)
                 .map(latestMessage -> {
-                    int unreadCount = chatMessageRepository.calculateUnreadCount(chatRoom, chatRoom.getProduct().getMember());
+                    int unreadCount = chatMessageRepository.calculateUnreadCount(chatRoom, readMemberId);
                     return ChatMessagePreview.of(latestMessage, unreadCount);
                 }).orElse(ChatMessagePreview.empty());
+    }
+
+    @Transactional
+    public ChatMessageResponse read(long messageId) {
+        return chatMessageRepository.findById(messageId)
+                .map(message -> {
+                    message.read();
+                    return ChatMessageResponse.updatedMessage(message);
+                })
+                .orElseThrow();
     }
 
 }

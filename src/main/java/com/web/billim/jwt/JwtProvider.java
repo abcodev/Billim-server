@@ -92,8 +92,7 @@ public class JwtProvider implements InitializingBean {
 
 	public boolean tokenValidation(String token) {
 		try {
-			Jwts.parserBuilder().setSigningKey(key).build().
-					parseClaimsJws(token);
+			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
 			return true;
 		} catch (SignatureException ex) {
 			log.error("wrong signature JWT", ex);

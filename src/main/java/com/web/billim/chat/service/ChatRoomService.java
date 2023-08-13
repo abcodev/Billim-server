@@ -31,6 +31,7 @@ public class ChatRoomService {
     private final ChatMessageService chatMessageService;
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageDomainService chatMessageDomainService;
+    private final ChatMessageSocketSendService chatMessageSocketSendService;
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
 
@@ -55,7 +56,11 @@ public class ChatRoomService {
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow();
         chatMessageDomainService.readAll(readMemberId, chatRoom);
         return chatMessageDomainService.findAll(chatRoom).stream()
-                .map(ChatMessageResponse::from)
+                .map(message -> {
+                    var resp = ChatMessageResponse.updatedMessage(message);
+                    chatMessageSocketSendService.sendMessage(chatRoomId, resp);
+                    return resp;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -72,7 +77,7 @@ public class ChatRoomService {
         return chatRoomRepository.findAllByProductId(productId).stream()
                 .filter(ChatRoom::isSellerJoined)
                 .map(chatRoom -> {
-                    ChatMessagePreview preview = chatMessageService.retrieveChatMessagePreview(chatRoom);
+                    ChatMessagePreview preview = chatMessageService.retrieveChatMessagePreview(chatRoom, chatRoom.getProduct().getMember().getMemberId());
                     return ChatRoomAndPreviewResponse.forSeller(chatRoom, preview);
                 })
                 .collect(Collectors.toList());
@@ -83,14 +88,14 @@ public class ChatRoomService {
 		// 내가 구매자로 들어가있는 채팅방 목록 조회
         Stream<ChatRoomAndPreviewResponse> buyChatRoomStream = chatRoomRepository.findAllJoinedByBuyerId(memberId).stream()
                 .map(chatRoom -> {
-                    ChatMessagePreview preview = chatMessageService.retrieveChatMessagePreview(chatRoom);
+                    ChatMessagePreview preview = chatMessageService.retrieveChatMessagePreview(chatRoom, memberId);
                     return ChatRoomAndPreviewResponse.forBuyer(chatRoom, preview);
                 });
 
 		// 내가 판매자로 들어가있는 채팅방 목록 조회
         Stream<ChatRoomAndPreviewResponse> sellChatRoomStream = chatRoomRepository.findAllJoinedBySellerId(memberId).stream()
                 .map(chatRoom -> {
-                    ChatMessagePreview preview = chatMessageService.retrieveChatMessagePreview(chatRoom);
+                    ChatMessagePreview preview = chatMessageService.retrieveChatMessagePreview(chatRoom, memberId);
                     return ChatRoomAndPreviewResponse.forSeller(chatRoom, preview);
                 });
 

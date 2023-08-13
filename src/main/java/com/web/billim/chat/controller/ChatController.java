@@ -1,22 +1,16 @@
 package com.web.billim.chat.controller;
 
-import static com.web.billim.chat.config.ChatConfig.*;
-
 import java.util.List;
 
+import com.web.billim.chat.dto.request.ChatReadRequest;
 import com.web.billim.chat.dto.response.ChatRoomProductInfo;
+import com.web.billim.chat.service.ChatMessageSocketSendService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.web.billim.chat.dto.response.ChatMessageResponse;
 import com.web.billim.chat.dto.response.ChatRoomAndPreviewResponse;
@@ -34,9 +28,9 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/chat")
 public class ChatController {
 
-	private final SimpMessagingTemplate messagingTemplate;
 	private final ChatRoomService chatRoomService;
 	private final ChatMessageService chatMessageService;
+	private final ChatMessageSocketSendService chatMessageSocketSendService;
 
 	@Operation(summary = "구매자가 채팅방 생성", description = "구매자가 처음으로 채팅방을 생성하고, 채팅방이 있으면 그냥 입장한다.")
 	@PostMapping("/room/product/{productId}")
@@ -50,8 +44,6 @@ public class ChatController {
 		return ResponseEntity.ok(chatRoomService.joinChatRoom(buyerId, productId));
 	}
 
-
-	// TODO : unreadCount 계산이 잘 안됨
 	@Operation(summary = "채팅방 목록 조회", description = "자신의 채팅방 목록 전체 조회한다.")
 	@GetMapping("/rooms")
 	public ResponseEntity<List<ChatRoomAndPreviewResponse>> retrieveAllMyChatRoom(@AuthenticationPrincipal long buyerId) {
@@ -71,8 +63,7 @@ public class ChatController {
 		return ResponseEntity.ok(chatRoomService.retrieveAllChatMessage(memberId, chatRoomId));
 	}
 
-	// TODO : 상품 정보(상품명, 금액, 사진) 내려주기
-	@Operation(summary = "채팅방 해당 상품 정보", description = "해당 채팅뱅에 해당하는 상품 정보를 조회한다.")
+	@Operation(summary = "채팅방 해당 상품 정보", description = "해당 채팅방에 해당하는 상품 정보를 조회한다.")
 	@GetMapping("/product-info/{chatRoomId}")
 	public ResponseEntity<ChatRoomProductInfo> retrieveProductInfo(@PathVariable long chatRoomId) {
 		return ResponseEntity.ok(chatRoomService.getChatRoomProductInfo(chatRoomId));
@@ -89,14 +80,24 @@ public class ChatController {
 	public void sendMessage(SendTextMessageRequest req) {
 		System.out.println("req = " + req);
 		ChatMessageResponse message = chatMessageService.sendText(req);
-		messagingTemplate.convertAndSend(MESSAGE_BROKER_SUBSCRIBE_PREFIX + "/chat/" + req.getChatRoomId(), message);
+		chatMessageSocketSendService.sendMessage(req.getChatRoomId(), message);
 	}
 
 	@Operation(summary = "채팅 이미지 전송", description = "이미지 형식의 채팅을 보낸다.")
 	@MessageMapping("/send/image")
 	public void sendMessage(SendImageMessageRequest req) {
 		ChatMessageResponse message = chatMessageService.sendImage(req);
-		messagingTemplate.convertAndSend(MESSAGE_BROKER_SUBSCRIBE_PREFIX + "/chat/" + req.getChatRoomId(), message);
+		chatMessageSocketSendService.sendMessage(req.getChatRoomId(), message);
+	}
+
+	// 1. 내가 읽었으면 읽었다고 서버 및 상대한테 알려줘야한다. (실시간)
+	// 2. 서버는 해당 메시지를 읽음 상태로 만들거고,
+	// 3. 상대한테는 해당 메시지의 상태가 변경되었음을 알려줘야한다.
+	// 4. 상대(FE)는 상태가 변경된 메시지를 반영해줘야한다. <<
+	@PostMapping("/message/read")
+	public void readMessage(@RequestBody ChatReadRequest req) {
+		ChatMessageResponse message = chatMessageService.read(req.getMessageId());
+		chatMessageSocketSendService.sendMessage(req.getChatRoomId(), message);
 	}
 
 }

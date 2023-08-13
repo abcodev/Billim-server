@@ -31,7 +31,7 @@ public class AuthService {
         String memberId = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
 
         // refresh Token 유효한지
-        if(jwtService.existsById(memberId)){
+        if (jwtService.existsById(memberId)) {
             String refreshToken = jwtService.getRefreshToken(memberId);
 
             jwtProvider.tokenValidation(refreshToken);
@@ -41,7 +41,7 @@ public class AuthService {
 
             log.info("기존 accessToken BlackList 로 저장");
             Date expiration = jwtProvider.getExpriedAt(accessToken);
-            jwtService.blackList(memberId,accessToken,expiration);
+            jwtService.blackList(memberId, accessToken, expiration);
         }
     }
 
@@ -64,16 +64,17 @@ public class AuthService {
         Member member = memberService.findById(Long.parseLong(authentication.getPrincipal().toString()));
 
         log.info("회원번호 검사");
-        jwtService.compareToken(refreshToken,member.getMemberId());
+        jwtService.compareToken(refreshToken, member.getMemberId());
 
         log.info("기존 token 삭제");
         jwtService.deleteRefreshToken(String.valueOf(member.getMemberId()));
 
-        String newAccessToken = jwtProvider.createAccessToken(String.valueOf(member.getMemberId()),member.getGrade());
+        String newAccessToken = jwtProvider.createAccessToken(String.valueOf(member.getMemberId()), member.getGrade());
         String newRefreshToken = jwtProvider.createRefreshToken(String.valueOf(member.getMemberId()));
 
         log.info("새로운 토큰 redis 저장");
-        jwtService.saveToken(new RedisJwt(member.getMemberId(),newRefreshToken));
-        return new ReIssueTokenResponse(member.getMemberId(),newAccessToken,newRefreshToken);
+        jwtService.saveToken(new RedisJwt(member.getMemberId(), newRefreshToken));
+        return new ReIssueTokenResponse(member.getMemberId(), newAccessToken, newRefreshToken);
     }
+
 }

@@ -203,12 +203,10 @@ CREATE TABLE `review`
 (
     `review_id`        bigint primary key auto_increment COMMENT '리뷰번호',
     `product_order_id` bigint                                                          NOT NULL COMMENT '상품번호',
-    `member_id`        bigint                                                          NOT NULL COMMENT '구매회원번호',
     `content`          varchar(1000)                                                   NOT NULL COMMENT '리뷰내용',
     `star_rating`      bigint                                                          NOT NULL COMMENT '별점',
     `created_at`       timestamp default current_timestamp                             NOT NULL COMMENT '작성일자',
     `updated_at`       timestamp default current_timestamp on update current_timestamp NOT NULL COMMENT '업데이트일자',
-    `status`           varchar(10)                                                     NOT NULL COMMENT '삭제여부'
 );
 
 DROP TABLE IF EXISTS `image_product`;

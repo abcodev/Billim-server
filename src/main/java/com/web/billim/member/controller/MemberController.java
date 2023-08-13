@@ -101,7 +101,6 @@ public class MemberController {
         return ResponseEntity.ok(memberService.retrieveUpdateInfoPage(memberId));
     }
 
-
     @Operation(summary = "비밀번호 재설정", description = "회원 정보 수정 시 비밀번호 재설정")
     @PutMapping("/info/password")
     public ResponseEntity<Void> updatePassword(
