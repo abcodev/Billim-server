@@ -3,6 +3,7 @@ package com.web.billim.jwt.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.web.billim.exception.JwtException;
 import com.web.billim.security.config.SecurityFilterSkipMatcher;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 public class JwtExceptionFilter extends OncePerRequestFilter {
 
     private final SecurityFilterSkipMatcher securityFilterSkipMatcher;

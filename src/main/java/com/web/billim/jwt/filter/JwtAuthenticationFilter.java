@@ -21,9 +21,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
     private final JwtProvider jwtProvider;
-
     private final SecurityFilterSkipMatcher securityFilterSkipMatcher;
-
     private final JwtService jwtService;
 
     public JwtAuthenticationFilter(JwtProvider jwtProvider, SecurityFilterSkipMatcher securityFilterSkipMatcher, JwtService jwtService) {
@@ -34,8 +32,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
-        String jwt = resolveToken(request, AUTHORIZATION_HEADER);
+        log.info("요청1 : " + request.getRequestURL());
+        String jwt = resolveToken(request);
         if (jwtProvider.tokenValidation(jwt)) {
             if(jwtService.checkBlackList(jwt)){
                 log.error("해당 토큰은 blackList 에 등록된 토큰 입니다.");
@@ -47,8 +45,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
     }
 
-    private String resolveToken(HttpServletRequest request, String header) {
-        String bearerToken = request.getHeader(header);
+    private String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader(JwtAuthenticationFilter.AUTHORIZATION_HEADER);
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
