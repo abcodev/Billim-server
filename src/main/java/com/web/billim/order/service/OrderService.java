@@ -97,7 +97,7 @@ public class OrderService {
             throw new RuntimeException("주문이 완료되지 않아 취소할 수 없습니다.");
         }
 
-        order.cancel(); // Dirty Checking 이 발생하면서 알아서 저장
+        order.cancel(); // Dirty Checking
         paymentService.cancel(order);
     }
 

@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ChatMessageResponse {
 
-    private boolean isNewMessage; // true 면 기존대로 밑에 추가하는거고, false 면 기존 값(messageId 기준)을 찾아서 변경하는거다.
+    private boolean isNewMessage; // true 면 기존대로 밑에 추가하는거고, false 면 기존 값(messageId 기준)을 찾아서 변경
     private long messageId;
     private long senderId;
     private ChatMessageType type;

@@ -65,13 +65,11 @@ public class PaymentService {
                 paymentDomainService.payment(payment);
             } else {
                 paymentDomainService.rollback(merchantUid);
-//                throw new RuntimeException("결제내역이 일치하지 않습니다. 결제가 취소되었습니다.");
                 throw new OrderFailedException(ErrorCode.MISMATCH_PAYMENT_INFO);
             }
         } catch (Exception ex) {
             log.error("결제를 완료 처리하는 과정에서 에러가 발생했습니다.", ex);
             paymentDomainService.rollback(merchantUid);
-//            throw new RuntimeException("결제 실패. 다시시도해주세요.");
             throw new OrderFailedException(ErrorCode.PAYMENT_FAILED, ex);
         }
     }
