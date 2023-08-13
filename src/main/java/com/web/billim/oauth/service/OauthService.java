@@ -1,7 +1,6 @@
 package com.web.billim.oauth.service;
 
 import com.web.billim.exception.DuplicatedException;
-import com.web.billim.exception.handler.ErrorCode;
 import com.web.billim.member.domain.Member;
 import com.web.billim.member.service.MemberService;
 import com.web.billim.oauth.domain.SocialMember;
@@ -46,27 +45,27 @@ public class OauthService extends DefaultOAuth2UserService {
         OAuthLogin oAuthLogin = null;
         if (provider.equals("KAKAO")) {
             oAuthLogin = KakaoLogin.ofKaKao(oAuth2User.getAttributes());
+            log.info("카카오 소셜 사용자");
         }
 
-        // email 이 존재하는지 확인
-//        if(memberService.existByEmail(Objects.requireNonNull(oAuthLogin).getEmail())){
-//            throw new DuplicatedException(ErrorCode.DUPLICATE_EMAIL);
-//        }
-
-        // 없다면 member 등록
-        Member member = memberService.register(oAuthLogin);
-
-        // 소셜 테이블에도 저장
-        SocialMember socialMember = SocialMember.of(member,oAuthLogin);
-        save(socialMember);
-        log.info("social 회원");
-        return new OauthMember(oAuthLogin,member);
-
+        SocialMember socialMember;
+        if(existByAccountId(oAuthLogin.getProviderId())) {
+            log.info("기존 카카오톡 로그인 회원");
+            socialMember = oAuthRepository.findByAccountId(oAuthLogin.getProviderId());
+        }else {
+            log.info("신규 카카오톡 로그인 회원");
+            Member member = memberService.register(oAuthLogin);  // member 티이블에 저장 -> 신규
+            socialMember = SocialMember.of(member,oAuthLogin); // 객체 만들기 --> 공통
+            save(socialMember); // 소셜 테이블에 저장 -> 신규 로그인
+        }
+        return new OauthMember(socialMember);
     }
 
     public SocialMember save(SocialMember socialMember) {
         return oAuthRepository.save(socialMember);
     }
 
-
+    public Boolean existByAccountId(String accountId){
+        return oAuthRepository.existsByAccountId(accountId);
+    }
 }

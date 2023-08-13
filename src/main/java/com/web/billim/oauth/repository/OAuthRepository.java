@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OAuthRepository extends JpaRepository<SocialMember,Long> {
+    Boolean existsByAccountId(String accountId);
+
+    SocialMember findByAccountId(String providerId);
 }

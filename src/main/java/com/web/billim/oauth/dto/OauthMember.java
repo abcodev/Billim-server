@@ -2,6 +2,7 @@ package com.web.billim.oauth.dto;
 
 import com.web.billim.member.domain.Member;
 import com.web.billim.member.type.MemberGrade;
+import com.web.billim.oauth.domain.SocialMember;
 import com.web.billim.oauth.dto.OAuthLogin;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,10 +19,10 @@ public class OauthMember implements  OAuth2User {
     private final String accountId;
     private final MemberGrade grade;
 
-    public OauthMember (OAuthLogin oAuthLogin, Member member){
-        this.memberId = member.getMemberId();
-        this.accountId = oAuthLogin.getProviderId();
-        this.grade = member.getGrade();
+    public OauthMember (SocialMember socialMember){
+        this.memberId = socialMember.getMember().getMemberId();
+        this.accountId = socialMember.getAccountId();
+        this.grade = socialMember.getMember().getGrade();
     }
 
     @Override

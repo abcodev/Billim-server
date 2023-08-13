@@ -43,6 +43,6 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         LoginResponse loginResponse = new LoginResponse(memberId, accessToken, refreshToken);
         String body = new ObjectMapper().writeValueAsString(loginResponse);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.getWriter().write("KAKAKAKAKAKAO: "+ body);
+        response.getWriter().write(body);
     }
 }
