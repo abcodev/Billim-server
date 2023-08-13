@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 public class ChatMessageResponse {
 
     private boolean isNewMessage; // true 면 기존대로 밑에 추가하는거고, false 면 기존 값(messageId 기준)을 찾아서 변경
+    private long chatRoomId;
     private long messageId;
     private long senderId;
     private ChatMessageType type;
@@ -30,6 +31,7 @@ public class ChatMessageResponse {
     public static ChatMessageResponse createNewMessage(ChatMessage chatMessage) {
         return ChatMessageResponse.builder()
                 .isNewMessage(true)
+                .chatRoomId(chatMessage.getChatRoom().getId())
                 .messageId(chatMessage.getId())
                 .senderId(chatMessage.getType() != ChatMessageType.SYSTEM ? chatMessage.getSender().getMemberId() : -1)
                 .type(chatMessage.getType())
@@ -43,6 +45,7 @@ public class ChatMessageResponse {
         return ChatMessageResponse.builder()
                 .isNewMessage(false)
                 .messageId(chatMessage.getId())
+                .chatRoomId(chatMessage.getChatRoom().getId())
                 .senderId(chatMessage.getType() != ChatMessageType.SYSTEM ? chatMessage.getSender().getMemberId() : -1)
                 .type(chatMessage.getType())
                 .message(chatMessage.getMessage())
