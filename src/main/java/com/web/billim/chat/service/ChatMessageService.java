@@ -1,7 +1,5 @@
 package com.web.billim.chat.service;
 
-import java.util.Optional;
-
 import com.web.billim.infra.ImageUploadService;
 import org.springframework.stereotype.Service;
 
@@ -69,8 +67,7 @@ public class ChatMessageService {
                 .map(message -> {
                     message.read();
                     return ChatMessageResponse.updatedMessage(message);
-                })
-                .orElseThrow();
+                }).orElseThrow();
     }
 
 }

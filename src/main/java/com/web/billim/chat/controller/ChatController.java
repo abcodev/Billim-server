@@ -7,6 +7,7 @@ import com.web.billim.chat.dto.response.ChatRoomProductInfo;
 import com.web.billim.chat.service.ChatMessageSocketSendService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,6 +23,7 @@ import com.web.billim.chat.service.ChatRoomService;
 
 import lombok.RequiredArgsConstructor;
 
+@Slf4j
 @Tag(name = "채팅", description = "ChatController")
 @RestController
 @RequiredArgsConstructor
@@ -59,7 +61,10 @@ public class ChatController {
 	// TODO : 나간 후 다시 재입장했을 때 나가기 전 메시지 가리기 필요
 	@Operation(summary = "채팅방 들어갔을 때 채팅 내용 조회", description = "채팅방 들어갔을 때 전체 채팅 목록을 불러온다.")
 	@GetMapping("/messages/{chatRoomId}")
-	public ResponseEntity<List<ChatMessageResponse>> retrieveAllChatMessage(@AuthenticationPrincipal long memberId, @PathVariable long chatRoomId) {
+	public ResponseEntity<List<ChatMessageResponse>> retrieveAllChatMessage(
+			@AuthenticationPrincipal long memberId,
+			@PathVariable long chatRoomId
+	) {
 		return ResponseEntity.ok(chatRoomService.retrieveAllChatMessage(memberId, chatRoomId));
 	}
 
@@ -90,11 +95,11 @@ public class ChatController {
 		chatMessageSocketSendService.sendMessage(req.getChatRoomId(), message);
 	}
 
-
 	// 1. 내가 읽었으면 읽었다고 서버 및 상대한테 알려줘야한다. (실시간)
 	// 2. 서버는 해당 메시지를 읽음 상태로 만들거고,
 	// 3. 상대한테는 해당 메시지의 상태가 변경되었음을 알려줘야한다.
 	// 4. 상대(FE)는 상태가 변경된 메시지를 반영해줘야한다.
+	@Operation(summary = "채팅 읽음 여부")
 	@PostMapping("/message/read")
 	public void readMessage(@RequestBody ChatReadRequest req) {
 		ChatMessageResponse message = chatMessageService.read(req.getMessageId());
