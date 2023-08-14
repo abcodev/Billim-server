@@ -12,7 +12,7 @@ public class SecurityFilterSkipMatcher{
 
     private final String[] excludedPaths = {
             "/", "/ping",
-            "/email/**", "/oauth/kakao",
+            "/email/**",
             "/member/email/**",
             "/member/signup",
             "/member/check/nickname",
@@ -21,7 +21,7 @@ public class SecurityFilterSkipMatcher{
             "/product/detail/**",
             "/auth/reIssue/token",
             "/subscribe/**", "/publish/**", "/stomp/**",
-            "/oauth2/authorization/kakao",
+            "/oauth/kakao", "/oauth2/authorization/kakao",
 
             "/v3/api-docs", "/configuration/ui", "/swagger-resources/**",
             "/configuration/security", "/swagger-ui.html/**", "/swagger-ui/**", "/webjars/**", "/swagger/**",
