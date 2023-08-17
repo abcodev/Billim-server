@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 public class AuthController {
     private static final String AUTHORIZATION_HEADER_PREFIX = "Bearer ";
-    private final AuthService authService;
+    private final AuthService AuthService;
 
     @Operation(summary = "토큰 재발급", description = "refresh token 유효성 검사후 access token 재발급")
     @PostMapping("/reIssue/token")
     public ResponseEntity<ReIssueTokenResponse> reIssueToken(@RequestBody ReIssueTokenRequest req){
-        ReIssueTokenResponse response = authService.reIssueToken(req);
+        ReIssueTokenResponse response = AuthService.reIssueToken(req);
         return ResponseEntity.ok(response);
     }
 
@@ -28,7 +28,7 @@ public class AuthController {
     @DeleteMapping("/logout")
     public ResponseEntity<Void> logout(@RequestHeader(name = "Authorization") String authorization) {
         String accessToken = authorization.substring(AUTHORIZATION_HEADER_PREFIX.length());
-        authService.logout(accessToken);
+        AuthService.logout(accessToken);
         return ResponseEntity.ok().build();
     }
 }

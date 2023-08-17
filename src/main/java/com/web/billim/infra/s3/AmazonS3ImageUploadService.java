@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.web.billim.exception.FailedImageUploadException;
 import com.web.billim.infra.ImageUploadService;
+import com.web.billim.infra.helper.ImageFileConvertHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.io.FileOutputStream;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +26,9 @@ public class AmazonS3ImageUploadService implements ImageUploadService {
 
 	@Value("${cloud.aws.s3.bucket}")
 	private String bucket;
+
+	@Value("${cloud.aws.s3.url}")
+	private String s3Url;
 
 	@Override
 	public String upload(MultipartFile image, String path) {
@@ -47,14 +52,30 @@ public class AmazonS3ImageUploadService implements ImageUploadService {
 
 	@Override
 	public String upload(String encodedImage, String path) {
-		// TODO
-		return null;
+		// data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/7QAsUGhvdG9zaG9wIDMuMAA4QklNBCUA .....
+		// Base64 로 인코딩된 이 이미지를 File 객체로 만들어 내야한다.
+		String fileName = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) + "_" + UUID.randomUUID();
+		File convertFile = ImageFileConvertHelper.convertBase64EncodedStringToImageFile(encodedImage, fileName);
+
+		try {
+			String uploadUrl = this.put(convertFile, path + "/" + fileName);
+			convertFile.delete();
+			return uploadUrl;
+		} catch (Exception ex) {
+			convertFile.delete();
+			throw new FailedImageUploadException(ex);
+		}
 	}
 
 	@Override
 	public void delete(String url) {
-		// TODO
+		// https://billim.s3.ap-northeast-2.amazonaws.com/product/1692121125_a_6e6c7e3417154a59ba69b1adaa8ad015.webp
+		//   -> product/1692121125_a_6e6c7e3417154a59ba69b1adaa8ad015.webp
+		String fileName = url.substring(s3Url.length() + 1);
+		System.out.println(fileName);
+		amazonS3Client.deleteObject(bucket, fileName);
 	}
+
 
 	private String put(File file, String fileName) {
 		amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, file)

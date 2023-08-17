@@ -11,6 +11,7 @@ public class SecurityFilterSkipMatcher{
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
     private final String[] excludedPaths = {
+            "/image-delete-test",
             "/", "/ping",
             "/email/**",
             "/member/email/**",

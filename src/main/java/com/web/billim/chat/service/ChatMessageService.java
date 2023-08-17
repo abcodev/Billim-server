@@ -47,7 +47,7 @@ public class ChatMessageService {
         Member sender = memberRepository.findById(req.getSenderId()).orElseThrow();
         ChatRoom chatRoom = chatRoomRepository.findById(req.getChatRoomId()).orElseThrow();
 
-        String imageUrl = imageUploadService.upload(req.getEncodedImage(), "chat_" + req.getChatRoomId());
+        String imageUrl = imageUploadService.upload(req.getEncodedImage(), "chat/chat_" + req.getChatRoomId());
         ChatMessage message = ChatMessage.ofImage(sender, chatRoom, imageUrl);
         ChatMessage saved = chatMessageRepository.save(message);
         return ChatMessageResponse.createNewMessage(saved);
