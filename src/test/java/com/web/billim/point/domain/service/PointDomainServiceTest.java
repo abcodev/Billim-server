@@ -35,7 +35,7 @@ class PointDomainServiceTest {
 	@Test
 	public void use_SavedPoint_빈_리스트_반환하면_에러나는지_확인() {
 		// given
-		Member member = Member.builder().memberId(1).build();
+		Member member = Member.builder().memberId(1L).build();
 		given(savedPointRepository.findAllNotExpired(1))
 				.willReturn(Collections.emptyList());
 
@@ -47,7 +47,7 @@ class PointDomainServiceTest {
 	@Test
 	public void use_사용가능_적립금_부족하면_에러나는지_확인() {
 		// given
-		Member member = Member.builder().memberId(1).build();
+		Member member = Member.builder().memberId(1L).build();
 		long amount = 5000;
 		SavedPoint point_2000 = SavedPoint.builder().availableAmount(2000).build();
 		given(savedPointRepository.findAllNotExpired(1))
@@ -81,7 +81,7 @@ class PointDomainServiceTest {
 	@Test
 	public void use_사용된_포인트_반환값_확인() {
 		// given
-		Member member = Member.builder().memberId(1).build();
+		Member member = Member.builder().memberId(1L).build();
 		long amount = 2000;
 		SavedPoint point_1000 = SavedPoint.builder().availableAmount(1000).build();
 		SavedPoint point_2000 = SavedPoint.builder().availableAmount(2000).build();
