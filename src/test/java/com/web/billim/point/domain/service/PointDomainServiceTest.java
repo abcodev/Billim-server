@@ -61,7 +61,7 @@ class PointDomainServiceTest {
 	@Test
 	public void use_정상동작_확인() {
 		// given
-		Member member = Member.builder().memberId(1).build();
+		Member member = Member.builder().memberId(1L).build();
 		long amount = 5000;
 		SavedPoint point_1000 = SavedPoint.builder().availableAmount(1000).build();
 		SavedPoint point_2000 = SavedPoint.builder().availableAmount(2000).build();
