@@ -32,7 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        log.info("요청1 : " + request.getRequestURL());
+        log.info("요청 : " + request.getRequestURL());
         String jwt = resolveToken(request);
         if (jwtProvider.tokenValidation(jwt)) {
             if(jwtService.checkBlackList(jwt)){
