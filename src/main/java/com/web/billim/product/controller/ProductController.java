@@ -126,6 +126,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.findMostPopularProduct());
     }
 
+    @Operation(summary = "최근 본 상품 조회", description = "로그인 시 최근 본 상품 리스트")
     @GetMapping("/list/recent")
     public ResponseEntity<List<RecentProductResponse>> recentProductList(
             @AuthenticationPrincipal long memberId
