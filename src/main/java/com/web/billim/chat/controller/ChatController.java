@@ -91,7 +91,9 @@ public class ChatController {
 	@Operation(summary = "채팅 이미지 전송", description = "이미지 형식의 채팅을 보낸다.")
 	@MessageMapping("/send/image")
 	public void sendMessage(SendImageMessageRequest req) {
+		log.info("인코딩 : " + req);
 		ChatMessageResponse message = chatMessageService.sendImage(req);
+		log.info("메세지 : " + message);
 		chatMessageSocketSendService.sendMessage(req.getChatRoomId(), message);
 	}
 
