@@ -14,7 +14,7 @@ import java.util.Optional;
 @Repository
 public interface ProductInterestRepository extends JpaRepository<ProductInterest, Long> {
 
-    Optional<ProductInterest> findByMemberAndProduct(Member member, Product product);
+//    Optional<ProductInterest> findByMemberAndProduct(Member member, Product product);
 
     Optional<List<ProductInterest>> findAllByMember_memberId(long memberId);
 
