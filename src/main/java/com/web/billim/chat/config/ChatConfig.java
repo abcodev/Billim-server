@@ -5,6 +5,7 @@ import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
 
 @Configuration
 @EnableWebSocketMessageBroker
@@ -27,6 +28,12 @@ public class ChatConfig implements WebSocketMessageBrokerConfigurer {
 	public void configureMessageBroker(MessageBrokerRegistry registry) {
 		registry.enableSimpleBroker(MESSAGE_BROKER_SUBSCRIBE_PREFIX);
 		registry.setApplicationDestinationPrefixes(MESSAGE_BROKER_PUBLISH_PREFIX);
+	}
+
+	// Stomp 대용량 연결 유지
+	@Override
+	public void configureWebSocketTransport(WebSocketTransportRegistration registration) {
+		registration.setDecoratorFactories(new AgentWebSocketHandlerDecoratorFactory());
 	}
 
 }
