@@ -107,5 +107,4 @@ public class ChatController {
 		ChatMessageResponse message = chatMessageService.read(req.getMessageId());
 		chatMessageSocketSendService.sendMessage(req.getChatRoomId(), message);
 	}
-
 }
