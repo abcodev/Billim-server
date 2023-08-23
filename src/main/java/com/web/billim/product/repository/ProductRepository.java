@@ -30,8 +30,6 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Product
 //     @Query("SELECT p FROM Product p WHERE p.member.memberId = :memberId")
 //     List<Product> findByMemberId(@Param("memberId") int memberId);
 
-//    Page<Product> findByProductNameAndDetailContaining(String keyword, Pageable pageable);
-
 }
 
 

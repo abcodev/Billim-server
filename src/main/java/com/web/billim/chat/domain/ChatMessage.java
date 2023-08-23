@@ -84,4 +84,5 @@ public class ChatMessage extends JpaEntity {
     public void read() {
 		this.read = true;
     }
+
 }

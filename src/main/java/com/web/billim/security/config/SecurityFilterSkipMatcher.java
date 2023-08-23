@@ -18,7 +18,7 @@ public class SecurityFilterSkipMatcher{
             "/member/signup",
             "/member/check/nickname",
             "/member/find/password",
-            "/product/list/search", "/list/most/popular", "/product/detail/**",
+            "/product/list/search", "/product/list/most/popular", "/product/detail/**",
             "/auth/reIssue/token",
             "/subscribe/**", "/publish/**", "/stomp/**",
             "/oauth/kakao", "/oauth2/authorization/kakao",

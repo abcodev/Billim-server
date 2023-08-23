@@ -112,22 +112,6 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "소셜 연동", description = "소셜 연동하기")
-    @PutMapping("/info/social/connect")
-    public ResponseEntity<Void> socialConnect(){
-
-
-        return ResponseEntity.ok().build();
-    }
-
-
-
-
-    // 회원 차단
-
-    // 회원 탈퇴
-
-    // 마이페이지 헤더
     @Operation(summary = "메인페이지 헤더 조회", description = "메인페이지 헤더 사용자 프로필 이미지를 조회한다.")
     @GetMapping("/header")
     public ResponseEntity<HeaderInfoResponse> header(@AuthenticationPrincipal long memberId) {

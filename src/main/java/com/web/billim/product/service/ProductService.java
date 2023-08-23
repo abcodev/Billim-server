@@ -131,7 +131,6 @@ public class ProductService {
                 .filter(product -> product.getMember().getMemberId() == memberId)
                 .ifPresent(product -> {
                     if (!orderRepository.findAllByProductAndEndAtAfter(product, LocalDate.now()).isEmpty()) {
-//                        throw new RuntimeException("해당 상품에 대한 예약이있어 삭제할 수 없습니다.");
                         throw new BadRequestException(ErrorCode.PRODUCT_HAS_RESERVATION);
                     }
                     // TODO : 실제로 이미지가 삭제되도록 수정
@@ -141,6 +140,7 @@ public class ProductService {
     }
 
     // 인기 상품 목록
+    @Transactional
     public List<MostProductList> findMostPopularProduct() {
         return productRepository.findAllByProductIdInAndIsDeleted(productRedisService.rankPopularProduct(), false)
                 .stream()

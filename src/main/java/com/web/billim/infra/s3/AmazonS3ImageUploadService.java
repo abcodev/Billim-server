@@ -85,7 +85,6 @@ public class AmazonS3ImageUploadService implements ImageUploadService {
 
 }
 
-
 /*
     AWS S3 저장소에 Image 를 저장
      1. AWS S3 에 Image 를 업로드 -> S3 는 정적 파일(Image, JS, CSS, HTML ..)을 저장하는 웹하드
