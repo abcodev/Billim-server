@@ -31,10 +31,10 @@ public class ChatConfig implements WebSocketMessageBrokerConfigurer {
 	}
 
 	// Stomp 대용량 연결 유지
-	@Override
-	public void configureWebSocketTransport(WebSocketTransportRegistration registration) {
-		registration.setDecoratorFactories(new AgentWebSocketHandlerDecoratorFactory());
-	}
+//	@Override
+//	public void configureWebSocketTransport(WebSocketTransportRegistration registration) {
+//		registration.setDecoratorFactories(new AgentWebSocketHandlerDecoratorFactory());
+//	}
 
 }
 
