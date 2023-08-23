@@ -16,4 +16,5 @@ public interface ImageProductRepository extends JpaRepository<ImageProduct, Long
 
 	@Query(nativeQuery = true, value = "SELECT count(*) FROM image_product WHERE product_id = :productId")
 	int countByProductId(@Param("productId") long productId);
+
 }

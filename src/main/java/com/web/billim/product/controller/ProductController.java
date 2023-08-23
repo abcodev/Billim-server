@@ -120,7 +120,7 @@ public class ProductController {
         return ResponseEntity.ok(productInterestService.myInterestProductList(memberId));
     }
 
-    @Operation(summary = "*인기 상품 조회", description = "사람들이 많이 본 상품 상품 리스트")
+    @Operation(summary = "인기 상품 조회", description = "많이 본 상품 상품 리스트")
     @GetMapping("/list/most/popular")
     public ResponseEntity<List<MostProductList>> mostProductList() {
         return ResponseEntity.ok(productService.findMostPopularProduct());

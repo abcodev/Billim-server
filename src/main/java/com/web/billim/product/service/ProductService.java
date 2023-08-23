@@ -140,6 +140,7 @@ public class ProductService {
     }
 
     // 인기 상품 목록
+    @Transactional
     public List<MostProductList> findMostPopularProduct() {
         return productRepository.findAllByProductIdInAndIsDeleted(productRedisService.rankPopularProduct(), false)
                 .stream()
