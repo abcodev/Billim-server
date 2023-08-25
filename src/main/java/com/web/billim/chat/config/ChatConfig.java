@@ -29,13 +29,6 @@ public class ChatConfig implements WebSocketMessageBrokerConfigurer {
 		registry.enableSimpleBroker(MESSAGE_BROKER_SUBSCRIBE_PREFIX);
 		registry.setApplicationDestinationPrefixes(MESSAGE_BROKER_PUBLISH_PREFIX);
 	}
-
-	// Stomp 대용량 연결 유지
-//	@Override
-//	public void configureWebSocketTransport(WebSocketTransportRegistration registration) {
-//		registration.setDecoratorFactories(new AgentWebSocketHandlerDecoratorFactory());
-//	}
-
 }
 
 /*

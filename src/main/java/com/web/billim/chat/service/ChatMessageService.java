@@ -43,6 +43,7 @@ public class ChatMessageService {
         return ChatMessageResponse.createNewMessage(saved);
     }
 
+    // 이미지 s3 서버에서 업로드
     public ChatMessageResponse sendImage(SendImageMessageRequest req) {
         Member sender = memberRepository.findById(req.getSenderId()).orElseThrow();
         ChatRoom chatRoom = chatRoomRepository.findById(req.getChatRoomId()).orElseThrow();
@@ -52,6 +53,20 @@ public class ChatMessageService {
         ChatMessage saved = chatMessageRepository.save(message);
         return ChatMessageResponse.createNewMessage(saved);
     }
+
+    // 이미지 s3 프론트에서 업로드
+//    public ChatMessageResponse sendImage(SendImageMessageRequest req) {
+//        Member sender = memberRepository.findById(req.getSenderId()).orElseThrow();
+//        ChatRoom chatRoom = chatRoomRepository.findById(req.getChatRoomId()).orElseThrow();
+//
+//        // TODO : FE 에서 Upload 해서 URL 만 넘겨주는 상황이라면 빠지게 될 코드
+//        // 	      서버에서 업로드 해야한다면 추가되어야 할 코드
+//        // String imageUrl = imageUploadService.upload(req.getImageUrl(), "chat_" + req.getChatRoomId());
+//        ChatMessage message = ChatMessage.ofImage(sender, chatRoom, req.getImageUrl());
+//        ChatMessage saved = chatMessageRepository.save(message);
+//        return ChatMessageResponse.from(saved);
+//    }
+
 
     public ChatMessagePreview retrieveChatMessagePreview(ChatRoom chatRoom, long readMemberId) {
         return chatMessageRepository.findTopByChatRoomOrderByCreatedAtDesc(chatRoom)

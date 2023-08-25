@@ -23,6 +23,8 @@ import com.web.billim.chat.service.ChatRoomService;
 
 import lombok.RequiredArgsConstructor;
 
+import static com.web.billim.chat.config.ChatConfig.MESSAGE_BROKER_SUBSCRIBE_PREFIX;
+
 @Slf4j
 @Tag(name = "채팅", description = "ChatController")
 @RestController
@@ -96,6 +98,7 @@ public class ChatController {
 		log.info("메세지 : " + message);
 		chatMessageSocketSendService.sendMessage(req.getChatRoomId(), message);
 	}
+
 
 	// 1. 내가 읽었으면 읽었다고 서버 및 상대한테 알려줘야한다. (실시간)
 	// 2. 서버는 해당 메시지를 읽음 상태로 만들거고,
