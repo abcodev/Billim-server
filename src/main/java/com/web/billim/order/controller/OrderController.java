@@ -13,6 +13,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -54,21 +56,32 @@ public class OrderController {
     }
 
     // 페이징
+//    @Operation(summary = "마이페이지 판매 목록 조회", description = "마이페이지에서 판매중인 상품 목록을 전체 조회한다.")
+//    @GetMapping("/my/sales")
+//    public ResponseEntity<Page<MySalesListResponse>> mySalesList(
+//            @AuthenticationPrincipal long memberId,
+//            @RequestParam(required = false, defaultValue = "0", value = "page") int page
+//    ) {
+//        Page<MySalesListResponse> mySalesList = productService.findMySalesList(memberId, page);
+//        return ResponseEntity.ok(mySalesList);
+//    }
+
+//    @Operation(summary = "마이페이지 판매 목록 조회", description = "마이페이지에서 판매중인 상품 목록을 전체 조회한다.")
+//    @GetMapping("/my/sales")징
+//    public ResponseEntity<List<MySalesListResponse>> mySalesList(@AuthenticationPrincipal long memberId) {
+//        return ResponseEntity.ok(productService.findMySalesList(memberId));
+//    }
+
     @Operation(summary = "마이페이지 판매 목록 조회", description = "마이페이지에서 판매중인 상품 목록을 전체 조회한다.")
     @GetMapping("/my/sales")
     public ResponseEntity<Page<MySalesListResponse>> mySalesList(
             @AuthenticationPrincipal long memberId,
-            @RequestParam(required = false, defaultValue = "0", value = "page") int page
+            @RequestParam(required = false, defaultValue = "1") int page
     ) {
-        Page<MySalesListResponse> mySalesList = productService.findMySalesList(memberId, page);
+        PageRequest paging = PageRequest.of(page - 1, 6);
+        Page<MySalesListResponse> mySalesList = productService.findMySalesList(memberId, paging);
         return ResponseEntity.ok(mySalesList);
     }
-
-//    @Operation(summary = "마이페이지 판매 목록 조회", description = "마이페이지에서 판매중인 상품 목록을 전체 조회한다.")
-//    @GetMapping("/my/sales")
-//    public ResponseEntity<List<MySalesListResponse>> mySalesList(@AuthenticationPrincipal long memberId) {
-//        return ResponseEntity.ok(productService.findMySalesList(memberId));
-//    }
 
     @Operation(summary = "마이페이지 판매 상품 상세정보", description = "판매중인 상품 클릭시 판매 주문 내역을 조회한다.")
     @GetMapping("/my/sales/{productId}")
