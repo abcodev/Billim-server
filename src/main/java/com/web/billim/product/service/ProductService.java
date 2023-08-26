@@ -23,6 +23,7 @@ import com.web.billim.review.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -157,11 +158,25 @@ public class ProductService {
     }
 
     // 마이페이지 상품 판매 목록 조회
+//    @Transactional
+//    public List<MySalesListResponse> findMySalesList(long memberId) {
+//        return productRepository.findByMemberId(memberId)
+//                .stream().map(MySalesListResponse::of)
+//                .collect(Collectors.toList());
+//    }
+
     @Transactional
-    public List<MySalesListResponse> findMySalesList(long memberId) {
-        return productRepository.findByMemberId(memberId)
-                .stream().map(MySalesListResponse::of)
-                .collect(Collectors.toList());
+    public Page<MySalesListResponse> findMySalesList(long memberId, int page) {
+        PageRequest paging = PageRequest.of(page, 6);
+        Page<Product> productPage = productRepository.findByMemberId(memberId, paging);
+
+        return new PageImpl<>(
+                productPage.getContent().stream()
+                        .map(MySalesListResponse::of)
+                        .collect(Collectors.toList()),
+                paging,
+                productPage.getTotalElements()
+        );
     }
 
 }
