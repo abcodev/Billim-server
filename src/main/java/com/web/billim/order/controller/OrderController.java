@@ -66,12 +66,6 @@ public class OrderController {
 //        return ResponseEntity.ok(mySalesList);
 //    }
 
-//    @Operation(summary = "마이페이지 판매 목록 조회", description = "마이페이지에서 판매중인 상품 목록을 전체 조회한다.")
-//    @GetMapping("/my/sales")징
-//    public ResponseEntity<List<MySalesListResponse>> mySalesList(@AuthenticationPrincipal long memberId) {
-//        return ResponseEntity.ok(productService.findMySalesList(memberId));
-//    }
-
     @Operation(summary = "마이페이지 판매 목록 조회", description = "마이페이지에서 판매중인 상품 목록을 전체 조회한다.")
     @GetMapping("/my/sales")
     public ResponseEntity<Page<MySalesListResponse>> mySalesList(
