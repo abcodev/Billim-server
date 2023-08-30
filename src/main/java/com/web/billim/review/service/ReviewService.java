@@ -17,6 +17,8 @@ import com.web.billim.review.dto.response.ProductReviewListResponse;
 import com.web.billim.review.dto.WritableReviewList;
 import com.web.billim.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,12 +52,20 @@ public class ReviewService {
         pointService.addPoint(new AddPointCommand(productOrder.getMember(), amount, Duration.ofDays(365)));
     }
 
+    // 상품 디테일 리뷰 리스트
     public List<ProductReviewListResponse> reviewList(long productId) {
         return reviewRepository.findAllByProductId(productId)
                 .stream()
                 .map(ProductReviewListResponse::of)
                 .collect(Collectors.toList());
     }
+
+    // 상품 디테일 리뷰 리스트 - 리뷰 호출만 하는 api
+    public Page<ProductReviewListResponse> productReviewList(long productId, Pageable pageable) {
+        Page<Review> reviewPage = reviewRepository.findAllByProductId(productId, pageable);
+        return reviewPage.map(ProductReviewListResponse::of);
+    }
+
 
     // 작성 가능한 리뷰 개수
     public long writableReviewCount(long memberId) {

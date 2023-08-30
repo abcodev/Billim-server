@@ -15,4 +15,5 @@ public class ChatMessageSocketSendService {
     public void sendMessage(long chatRoomId, ChatMessageResponse message) {
         messagingTemplate.convertAndSend(MESSAGE_BROKER_SUBSCRIBE_PREFIX + "/chat/" + chatRoomId, message);
     }
+
 }

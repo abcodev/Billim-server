@@ -165,20 +165,6 @@ public class ProductService {
 //                .collect(Collectors.toList());
 //    }
 
-//    @Transactional
-//    public Page<MySalesListResponse> findMySalesList(long memberId, int page) {
-//        PageRequest paging = PageRequest.of(page, 6);
-//        Page<Product> productPage = productRepository.findByMemberId(memberId, paging);
-//
-//        return new PageImpl<>(
-//                productPage.getContent().stream()
-//                        .map(MySalesListResponse::of)
-//                        .collect(Collectors.toList()),
-//                paging,
-//                productPage.getTotalElements()
-//        );
-//    }
-
     @Transactional
     public Page<MySalesListResponse> findMySalesList(long memberId, Pageable pageable) {
         Page<Product> productPage = productRepository.findByMemberId(memberId, pageable);
