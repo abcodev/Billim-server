@@ -76,14 +76,14 @@ public class ProductService {
 
     // 상품 상세 정보 조회
     @Transactional
-    public ProductDetailResponse retrieveDetail(long productId) {
+    public ProductDetailResponse retrieveDetail(long memberId, long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
         List<LocalDate> alreadyDates = orderService.reservationDate(productId);
         double starRating = reviewService.calculateStarRating(product.getProductId());
         productRedisService.saveProduct(productId);
 
-        recentProductRedisService.push(3, productId);
+        recentProductRedisService.push(memberId, productId);
 
         return ProductDetailResponse.of(product, alreadyDates, starRating);
     }

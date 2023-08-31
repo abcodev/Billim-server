@@ -41,7 +41,7 @@ public class ReviewController {
     @GetMapping("/list/{productId}")
     public ResponseEntity<Page<ProductReviewListResponse>> productReviewList(
             @PathVariable long productId,
-            @PageableDefault(size = 4) Pageable pageable
+            @PageableDefault(size = 4) Pageable pageable   // TODO : HandlerMethodArgumentResolver
     ) {
         Page<ProductReviewListResponse> reviewList = reviewService.productReviewList(productId, pageable);
         return ResponseEntity.ok(reviewList);

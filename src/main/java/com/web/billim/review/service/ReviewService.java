@@ -69,8 +69,7 @@ public class ReviewService {
 
     // 작성 가능한 리뷰 개수
     public long writableReviewCount(long memberId) {
-        return orderRepository.countByMemberAndStatus(memberId)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
+        return orderRepository.findProductOrdersWritableReview(memberId).size();
     }
 
     // 작성 가능한 리뷰 리스트
@@ -83,10 +82,12 @@ public class ReviewService {
     // 나의 리뷰 리스트
     @Transactional
     public MyReviewListResponse myReviewList(long memberId) {
-        List<WritableReviewList> writableReviewList = orderRepository.findProductOrdersWritableReview(memberId)
-                .stream().map(WritableReviewList::of).collect(Collectors.toList());
-        List<WrittenReviewList> writtenReviewList = reviewRepository.findByProductOrder_Member_MemberId(memberId)
-                .stream().map(WrittenReviewList::of).collect(Collectors.toList());
+        List<WritableReviewList> writableReviewList = orderRepository.findProductOrdersWritableReview(memberId).stream()
+                .map(WritableReviewList::of)
+                .collect(Collectors.toList());
+        List<WrittenReviewList> writtenReviewList = reviewRepository.findByProductOrder_Member_MemberId(memberId).stream()
+                .map(WrittenReviewList::of)
+                .collect(Collectors.toList());
         return new MyReviewListResponse(writableReviewList, writtenReviewList);
     }
 
