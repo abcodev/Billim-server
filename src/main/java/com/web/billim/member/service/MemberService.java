@@ -107,7 +107,7 @@ public class MemberService {
 				throw new RuntimeException("중복된 닉네임 입니다.");
 			}
 			String imageUrl = null;
-			if (!(req.getNewProfileImage().isEmpty())) {
+			if (req.getNewProfileImage() != null && !req.getNewProfileImage().isEmpty()) {
 				imageUploadService.delete(member.getProfileImageUrl());
 				imageUrl = imageUploadService.upload(req.getNewProfileImage(), "profile");
 			}
