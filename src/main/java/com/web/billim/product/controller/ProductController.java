@@ -61,14 +61,23 @@ public class ProductController {
         return ResponseEntity.ok(productService.search(category, keyword, paging));
     }
 
+//    @Operation(summary = "상품 상세정보", description = "productId에 따른 상품 상세정보 & 이미 예약되어 이용할 수 없는 날짜")
+//    @GetMapping("/detail/{productId}")
+//    public ResponseEntity<ProductDetailResponse> productDetail(
+//            @AuthenticationPrincipal long memberId,
+//            @PathVariable("productId") long productId
+//    ) {
+//        ProductDetailResponse resp = productService.retrieveDetail(memberId, productId);
+////        resp.setProductReviewListResponses(reviewService.reviewList(productId));
+//        return ResponseEntity.ok(resp);
+//    }
+
     @Operation(summary = "상품 상세정보", description = "productId에 따른 상품 상세정보 & 이미 예약되어 이용할 수 없는 날짜")
     @GetMapping("/detail/{productId}")
     public ResponseEntity<ProductDetailResponse> productDetail(
-            @AuthenticationPrincipal long memberId,
             @PathVariable("productId") long productId
     ) {
-        ProductDetailResponse resp = productService.retrieveDetail(memberId, productId);
-//        resp.setProductReviewListResponses(reviewService.reviewList(productId));
+        ProductDetailResponse resp = productService.retrieveDetail(productId);
         return ResponseEntity.ok(resp);
     }
 
