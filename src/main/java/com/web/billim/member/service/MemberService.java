@@ -56,6 +56,7 @@ public class MemberService {
 		return validatorResult;
 	}
 
+	// 회원가입
 	@Transactional
 	public void signUp(MemberSignupRequest memberSignupRequest) {
 		memberSignupRequest.PasswordChange(passwordEncoder);

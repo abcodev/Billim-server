@@ -74,7 +74,6 @@ public class ProductService {
                 });
     }
 
-    // 상품 상세 정보 조회
 //    @Transactional
 //    public ProductDetailResponse retrieveDetail(long memberId, long productId) {
 //        Product product = productRepository.findById(productId)
@@ -88,6 +87,7 @@ public class ProductService {
 //        return ProductDetailResponse.of(product, alreadyDates, starRating);
 //    }
 
+    // 상품 상세 정보 조회
     @Transactional
     public ProductDetailResponse retrieveDetail(long productId) {
         Product product = productRepository.findById(productId)
@@ -167,7 +167,6 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    // 마이페이지 상품 판매 목록 조회
 //    @Transactional
 //    public List<MySalesListResponse> findMySalesList(long memberId) {
 //        return productRepository.findByMemberId(memberId)
@@ -175,6 +174,7 @@ public class ProductService {
 //                .collect(Collectors.toList());
 //    }
 
+    // 마이페이지 상품 판매 목록 조회
     @Transactional
     public Page<MySalesListResponse> findMySalesList(long memberId, Pageable pageable) {
         Page<Product> productPage = productRepository.findByMemberId(memberId, pageable);
