@@ -23,8 +23,6 @@ import com.web.billim.chat.service.ChatRoomService;
 
 import lombok.RequiredArgsConstructor;
 
-import static com.web.billim.chat.config.ChatConfig.MESSAGE_BROKER_SUBSCRIBE_PREFIX;
-
 @Slf4j
 @Tag(name = "채팅", description = "ChatController")
 @RestController

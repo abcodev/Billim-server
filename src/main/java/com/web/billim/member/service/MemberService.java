@@ -1,6 +1,5 @@
 package com.web.billim.member.service;
 
-import com.web.billim.exception.DuplicatedException;
 import com.web.billim.exception.JwtException;
 import com.web.billim.email.service.EmailSendService;
 import com.web.billim.exception.NotFoundException;

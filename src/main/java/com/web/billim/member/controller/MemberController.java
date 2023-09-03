@@ -12,8 +12,6 @@ import com.web.billim.member.dto.response.MemberInfoResponse;
 import com.web.billim.member.service.MemberService;
 import com.web.billim.review.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +24,6 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
 import java.util.Map;
 
 @Tag(name = "회원", description = "MemberController")
