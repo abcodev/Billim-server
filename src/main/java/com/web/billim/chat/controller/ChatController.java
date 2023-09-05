@@ -97,10 +97,6 @@ public class ChatController {
 		chatMessageSocketSendService.sendMessage(req.getChatRoomId(), message);
 	}
 
-	// 1. 내가 읽었으면 읽었다고 서버 및 상대한테 알려줘야한다. (실시간)
-	// 2. 서버는 해당 메시지를 읽음 상태로 만들거고,
-	// 3. 상대한테는 해당 메시지의 상태가 변경되었음을 알려줘야한다.
-	// 4. 상대(FE)는 상태가 변경된 메시지를 반영해줘야한다.
 	@Operation(summary = "채팅 읽음 여부", description = "true: 새로운 메세지, false: 기존 메세지, true 일 경우에만 메세지를 새로 보여줍니다.")
 	@PostMapping("/message/read")
 	public void readMessage(@RequestBody ChatReadRequest req) {

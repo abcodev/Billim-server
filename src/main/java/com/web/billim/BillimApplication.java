@@ -4,6 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import javax.annotation.PostConstruct;
+import java.util.TimeZone;
+
 @EnableScheduling
 @SpringBootApplication(exclude = {
 		org.springframework.cloud.aws.autoconfigure.context.ContextInstanceDataAutoConfiguration.class,
@@ -11,8 +14,12 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 })
 public class BillimApplication {
 
-	public static void main(String[] args) {
+	@PostConstruct
+	void started() {
+		TimeZone.setDefault(TimeZone.getTimeZone("KST"));
+	}
 
+	public static void main(String[] args) {
 		SpringApplication.run(BillimApplication.class, args);
 	}
 

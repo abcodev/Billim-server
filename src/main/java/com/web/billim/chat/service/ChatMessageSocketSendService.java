@@ -10,7 +10,6 @@ import static com.web.billim.chat.config.ChatConfig.MESSAGE_BROKER_SUBSCRIBE_PRE
 @Service
 @RequiredArgsConstructor
 public class ChatMessageSocketSendService {
-
     private final SimpMessagingTemplate messagingTemplate;
 
     public void sendMessage(long chatRoomId, ChatMessageResponse message) {

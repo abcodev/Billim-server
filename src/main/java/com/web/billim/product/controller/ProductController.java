@@ -18,6 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -61,13 +63,23 @@ public class ProductController {
         return ResponseEntity.ok(productService.search(category, keyword, paging));
     }
 
+//    @Operation(summary = "상품 상세정보", description = "productId에 따른 상품 상세정보 & 이미 예약되어 이용할 수 없는 날짜")
+//    @GetMapping("/detail/{productId}")
+//    public ResponseEntity<ProductDetailResponse> productDetail(
+//            @AuthenticationPrincipal long memberId,
+//            @PathVariable("productId") long productId
+//    ) {
+//        ProductDetailResponse resp = productService.retrieveDetail(memberId, productId);
+////        resp.setProductReviewListResponses(reviewService.reviewList(productId));
+//        return ResponseEntity.ok(resp);
+//    }
+
     @Operation(summary = "상품 상세정보", description = "productId에 따른 상품 상세정보 & 이미 예약되어 이용할 수 없는 날짜")
     @GetMapping("/detail/{productId}")
     public ResponseEntity<ProductDetailResponse> productDetail(
             @PathVariable("productId") long productId
     ) {
         ProductDetailResponse resp = productService.retrieveDetail(productId);
-        resp.setProductReviewListResponses(reviewService.reviewList(productId));
         return ResponseEntity.ok(resp);
     }
 
@@ -118,6 +130,14 @@ public class ProductController {
             @AuthenticationPrincipal long memberId
     ) {
         return ResponseEntity.ok(productInterestService.myInterestProductList(memberId));
+    }
+
+    // 페이징
+    public ResponseEntity<Page<MyInterestProduct>> myInterestProduct(
+            @AuthenticationPrincipal long memberId,
+            @PageableDefault(size = 9) Pageable pageable
+    ) {
+        return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "인기 상품 조회", description = "많이 본 상품 상품 리스트")

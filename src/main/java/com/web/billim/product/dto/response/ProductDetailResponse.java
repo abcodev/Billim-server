@@ -35,7 +35,7 @@ public class ProductDetailResponse {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private List<LocalDate> alreadyDates;
 
-    private List<ProductReviewListResponse> productReviewListResponses;
+//    private List<ProductReviewListResponse> productReviewListResponses;
     private double starRating;
 
     public static ProductDetailResponse of(Product product, List<LocalDate> alreadyDates, double starRating){

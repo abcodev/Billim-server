@@ -1,6 +1,5 @@
 package com.web.billim.member.service;
 
-import com.web.billim.exception.DuplicatedException;
 import com.web.billim.exception.JwtException;
 import com.web.billim.email.service.EmailSendService;
 import com.web.billim.exception.NotFoundException;
@@ -56,6 +55,7 @@ public class MemberService {
 		return validatorResult;
 	}
 
+	// 회원가입
 	@Transactional
 	public void signUp(MemberSignupRequest memberSignupRequest) {
 		memberSignupRequest.PasswordChange(passwordEncoder);
@@ -107,7 +107,7 @@ public class MemberService {
 				throw new RuntimeException("중복된 닉네임 입니다.");
 			}
 			String imageUrl = null;
-			if (!(req.getNewProfileImage().isEmpty())) {
+			if (req.getNewProfileImage() != null && !req.getNewProfileImage().isEmpty()) {
 				imageUploadService.delete(member.getProfileImageUrl());
 				imageUrl = imageUploadService.upload(req.getNewProfileImage(), "profile");
 			}

@@ -9,7 +9,11 @@ import com.web.billim.product.dto.response.MyInterestProduct;
 import com.web.billim.product.dto.response.MyInterestProductList;
 import com.web.billim.product.repository.ProductInterestRepository;
 import com.web.billim.product.repository.ProductRepository;
+import com.web.billim.review.domain.Review;
+import com.web.billim.review.dto.response.ProductReviewListResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,4 +54,6 @@ public class ProductInterestService {
                 .collect(Collectors.toList());
         return new MyInterestProductList(myInterestProduct);
     }
+
+
 }

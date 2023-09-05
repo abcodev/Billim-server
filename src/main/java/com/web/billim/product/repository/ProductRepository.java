@@ -1,6 +1,8 @@
 package com.web.billim.product.repository;
 
 import com.web.billim.product.domain.Product;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,8 +15,11 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Product
 
     List<Product> findAllByProductIdInAndIsDeleted(List<Long> mostProductLists, boolean deleted);
 
+//    @Query("SELECT p FROM Product p WHERE p.member.memberId = :memberId AND p.isDeleted = false")
+//    List<Product> findByMemberId(@Param("memberId") long memberId);
+
     @Query("SELECT p FROM Product p WHERE p.member.memberId = :memberId AND p.isDeleted = false")
-    List<Product> findByMemberId(@Param("memberId") long memberId);
+    Page<Product> findByMemberId(@Param("memberId") long memberId, Pageable pageable);
 
 
 //    Page<Product> findAllByOrderByCreatedAtDesc(Pageable paging);
