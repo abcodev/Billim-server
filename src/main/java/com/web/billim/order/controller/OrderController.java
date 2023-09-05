@@ -1,10 +1,7 @@
 package com.web.billim.order.controller;
 
 import com.web.billim.order.dto.OrderCommand;
-import com.web.billim.order.dto.response.MyOrderListResponse;
-import com.web.billim.order.dto.response.MySalesDetailResponse;
-import com.web.billim.order.dto.response.MySalesListResponse;
-import com.web.billim.order.dto.response.PaymentInfoResponse;
+import com.web.billim.order.dto.response.*;
 import com.web.billim.order.service.OrderService;
 import com.web.billim.product.dto.response.ProductListResponse;
 import com.web.billim.product.service.ProductService;
@@ -15,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -48,7 +46,6 @@ public class OrderController {
         return ResponseEntity.ok().build();
     }
 
-    // 페이징
     @Operation(summary = "마이페이지 상품 구매 목록 조회", description = "마이페이지에서 구매 목록을 조회한다.")
     @GetMapping("/my/purchase")
     public ResponseEntity<MyOrderListResponse> myOrder(@AuthenticationPrincipal long memberId) {
@@ -56,15 +53,12 @@ public class OrderController {
     }
 
     // 페이징
-//    @Operation(summary = "마이페이지 판매 목록 조회", description = "마이페이지에서 판매중인 상품 목록을 전체 조회한다.")
-//    @GetMapping("/my/sales")
-//    public ResponseEntity<Page<MySalesListResponse>> mySalesList(
-//            @AuthenticationPrincipal long memberId,
-//            @RequestParam(required = false, defaultValue = "0", value = "page") int page
-//    ) {
-//        Page<MySalesListResponse> mySalesList = productService.findMySalesList(memberId, page);
-//        return ResponseEntity.ok(mySalesList);
-//    }
+    public ResponseEntity<Page<MyOrderHistory>> myOrderList(
+            @AuthenticationPrincipal long memberId,
+            @PageableDefault(size = 4) Pageable pageable
+    ) {
+        return ResponseEntity.ok().build();
+    }
 
     @Operation(summary = "마이페이지 판매 목록 조회", description = "마이페이지에서 판매중인 상품 목록을 전체 조회한다.")
     @GetMapping("/my/sales")

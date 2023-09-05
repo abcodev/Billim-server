@@ -66,7 +66,6 @@ public class ReviewService {
         return reviewPage.map(ProductReviewListResponse::of);
     }
 
-
     // 작성 가능한 리뷰 개수
     public long writableReviewCount(long memberId) {
         return orderRepository.findProductOrdersWritableReview(memberId).size();

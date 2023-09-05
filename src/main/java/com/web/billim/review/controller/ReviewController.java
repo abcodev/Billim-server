@@ -49,7 +49,9 @@ public class ReviewController {
 
     @Operation(summary = "마이페이지 리뷰 목록", description = "작성 가능한 리뷰와 작성한 리뷰 목록 전체 불러오기")
     @GetMapping("/my/list")
-    public ResponseEntity<MyReviewListResponse> myReviewList(@AuthenticationPrincipal long memberId) {
+    public ResponseEntity<MyReviewListResponse> myReviewList(
+            @AuthenticationPrincipal long memberId
+    ) {
         return ResponseEntity.ok(reviewService.myReviewList(memberId));
     }
 
