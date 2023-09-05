@@ -9,7 +9,6 @@ import com.web.billim.product.dto.request.ProductUpdateRequest;
 import com.web.billim.product.dto.response.*;
 import com.web.billim.product.service.ProductInterestService;
 import com.web.billim.product.service.ProductService;
-import com.web.billim.review.service.ReviewService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,7 +37,6 @@ import java.util.List;
 public class ProductController {
     private final ProductService productService;
     private final ProductInterestService productInterestService;
-    private final ReviewService reviewService;
 
     @Operation(summary = "상품 등록", description = "이미지 1장부터 최대 5장까지 첨부 가능")
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -124,20 +122,23 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "관심목록 조회")
-    @GetMapping("/my/interest")
-    public ResponseEntity<MyInterestProductList> myInterestProductList(
-            @AuthenticationPrincipal long memberId
-    ) {
-        return ResponseEntity.ok(productInterestService.myInterestProductList(memberId));
-    }
+//    @Operation(summary = "관심목록 조회")
+//    @GetMapping("/my/interest")
+//    public ResponseEntity<MyInterestProductList> myInterestProductList(
+//            @AuthenticationPrincipal long memberId
+//    ) {
+//        return ResponseEntity.ok(productInterestService.myInterestProductList(memberId));
+//    }
 
     // 페이징
+    @Operation(summary = "관심 상품 목록 조회")
+    @GetMapping("/my/interest")
     public ResponseEntity<Page<MyInterestProduct>> myInterestProduct(
             @AuthenticationPrincipal long memberId,
             @PageableDefault(size = 9) Pageable pageable
     ) {
-        return ResponseEntity.ok().build();
+        Page<MyInterestProduct> interestProductList = productInterestService.myInterestProduct(memberId, pageable);
+        return ResponseEntity.ok(interestProductList);
     }
 
     @Operation(summary = "인기 상품 조회", description = "많이 본 상품 상품 리스트")

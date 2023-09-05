@@ -45,14 +45,20 @@ public class ProductInterestService {
         }
     }
 
+//    @Transactional
+//    public MyInterestProductList myInterestProductList(long memberId) {
+//        List<MyInterestProduct> myInterestProduct= productInterestRepository.findAllByMember_memberId(memberId)
+//                .orElseThrow()
+//                .stream()
+//                .map(MyInterestProduct::of)
+//                .collect(Collectors.toList());
+//        return new MyInterestProductList(myInterestProduct);
+//    }
+
     @Transactional
-    public MyInterestProductList myInterestProductList(long memberId) {
-        List<MyInterestProduct> myInterestProduct= productInterestRepository.findAllByMember_memberId(memberId)
-                .orElseThrow()
-                .stream()
-                .map(MyInterestProduct::of)
-                .collect(Collectors.toList());
-        return new MyInterestProductList(myInterestProduct);
+    public Page<MyInterestProduct> myInterestProduct(long memberId, Pageable pageable) {
+        Page<ProductInterest> interestsPage = productInterestRepository.findAllByMember_memberId(memberId, pageable);
+        return interestsPage.map(MyInterestProduct::of);
     }
 
 
