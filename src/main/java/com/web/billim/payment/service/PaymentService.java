@@ -34,7 +34,6 @@ public class PaymentService {
     public PaymentInfoResponse payment(PaymentCommand command) {
         CouponIssue coupon = couponIssueRepository.findById(command.getCouponIssueId()).orElse(null);
 
-        // 하나의 사용자는 하나의 결제만 진행할 수 있다.
         // TODO: 진짜 아직도 여전히 쓸수있는 쿠폰일까?
         // TODO: 진짜 아직도 그만큼의 포인트가 남아있을까?
         PaymentInfoDto info = paymentAmountCalculateService.calculateAmount(command.getOrder(), coupon, command.getUsedPoint());
