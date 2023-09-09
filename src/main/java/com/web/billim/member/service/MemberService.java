@@ -31,6 +31,7 @@ import org.springframework.validation.FieldError;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -178,4 +179,9 @@ public class MemberService {
 		return memberRepository.save(member);
 	}
 
+    public void memberGradeCheck() {
+		// 회원 정보 가져오기 List로
+		List<Member> memberList = memberRepository.findAll();
+
+    }
 }
