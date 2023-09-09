@@ -135,9 +135,10 @@ public class ProductController {
     @GetMapping("/my/interest")
     public ResponseEntity<Page<MyInterestProduct>> myInterestProduct(
             @AuthenticationPrincipal long memberId,
-            @PageableDefault(size = 9) Pageable pageable
+            @RequestParam(required = false, defaultValue = "1", value = "page") int page
     ) {
-        Page<MyInterestProduct> interestProductList = productInterestService.myInterestProduct(memberId, pageable);
+        PageRequest paging = PageRequest.of(page - 1, 9);
+        Page<MyInterestProduct> interestProductList = productInterestService.myInterestProduct(memberId, paging);
         return ResponseEntity.ok(interestProductList);
     }
 

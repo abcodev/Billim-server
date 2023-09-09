@@ -13,6 +13,7 @@ import com.web.billim.review.domain.Review;
 import com.web.billim.review.dto.response.ProductReviewListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,8 +57,8 @@ public class ProductInterestService {
 //    }
 
     @Transactional
-    public Page<MyInterestProduct> myInterestProduct(long memberId, Pageable pageable) {
-        Page<ProductInterest> interestsPage = productInterestRepository.findAllByMember_memberId(memberId, pageable);
+    public Page<MyInterestProduct> myInterestProduct(long memberId, PageRequest paging) {
+        Page<ProductInterest> interestsPage = productInterestRepository.findAllByMember_memberId(memberId, paging);
         return interestsPage.map(MyInterestProduct::of);
     }
 
