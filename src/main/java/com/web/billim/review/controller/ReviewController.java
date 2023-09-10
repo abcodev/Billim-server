@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -41,9 +42,10 @@ public class ReviewController {
     @GetMapping("/list/{productId}")
     public ResponseEntity<Page<ProductReviewListResponse>> productReviewList(
             @PathVariable long productId,
-            @PageableDefault(size = 4) Pageable pageable   // TODO : HandlerMethodArgumentResolver
+            @RequestParam(required = false, defaultValue = "1") int page
     ) {
-        Page<ProductReviewListResponse> reviewList = reviewService.productReviewList(productId, pageable);
+        PageRequest paging = PageRequest.of(page - 1, 6);
+        Page<ProductReviewListResponse> reviewList = reviewService.productReviewList(productId, paging);
         return ResponseEntity.ok(reviewList);
     }
 
