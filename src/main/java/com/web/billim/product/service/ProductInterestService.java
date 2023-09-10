@@ -46,16 +46,7 @@ public class ProductInterestService {
         }
     }
 
-//    @Transactional
-//    public MyInterestProductList myInterestProductList(long memberId) {
-//        List<MyInterestProduct> myInterestProduct= productInterestRepository.findAllByMember_memberId(memberId)
-//                .orElseThrow()
-//                .stream()
-//                .map(MyInterestProduct::of)
-//                .collect(Collectors.toList());
-//        return new MyInterestProductList(myInterestProduct);
-//    }
-
+    // 내 관신목록 조회
     @Transactional
     public Page<MyInterestProduct> myInterestProduct(long memberId, PageRequest paging) {
         Page<ProductInterest> interestsPage = productInterestRepository.findAllByMember_memberId(memberId, paging);
