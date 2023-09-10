@@ -18,12 +18,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @Tag(name = "회원", description = "MemberController")
@@ -114,6 +116,12 @@ public class MemberController {
     public ResponseEntity<HeaderInfoResponse> header(@AuthenticationPrincipal long memberId) {
         return ResponseEntity.ok(memberService.retrieveHeaderInfo(memberId));
     }
+
+//    @Scheduled
+//    public void memberGradeScheduler(){
+//        log.info(String.format("[PointController] savingPointScheduler Action! (Time: %s)", LocalDateTime.now()));
+//        memberService.memberGradeCheck();
+//    }
 
 }
 

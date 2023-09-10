@@ -46,19 +46,23 @@ public class OrderController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "마이페이지 상품 구매 목록 조회", description = "마이페이지에서 구매 목록을 조회한다.")
-    @GetMapping("/my/purchase")
-    public ResponseEntity<MyOrderListResponse> myOrder(@AuthenticationPrincipal long memberId) {
-        return ResponseEntity.ok(orderService.findMyOrder(memberId));
-    }
+//    @Operation(summary = "마이페이지 상품 구매 목록 조회", description = "마이페이지에서 구매 목록을 조회한다.")
+//    @GetMapping("/my/purchase")
+//    public ResponseEntity<MyOrderListResponse> myOrder(@AuthenticationPrincipal long memberId) {
+//        return ResponseEntity.ok(orderService.findMyOrder(memberId));
+//    }
 
     // 페이징
+    @Operation(summary = "마이페이지 상품 구매 목록 조회", description = "마이페이지에서 구매 목록을 조회한다.")
+    @GetMapping("/my/purchase")
     public ResponseEntity<Page<MyOrderHistory>> myOrderList(
             @AuthenticationPrincipal long memberId,
-            @PageableDefault(size = 4) Pageable pageable
-    ) {
+            @RequestParam(required = false, defaultValue = "1") int page
 
-        return ResponseEntity.ok().build();
+    ) {
+        PageRequest paging = PageRequest.of(page - 1, 6);
+        Page<MyOrderHistory> myOrderHistoryPage = orderService.myOrderHistory(memberId, paging);
+        return ResponseEntity.ok(myOrderHistoryPage);
     }
 
     @Operation(summary = "마이페이지 판매 목록 조회", description = "마이페이지에서 판매중인 상품 목록을 전체 조회한다.")

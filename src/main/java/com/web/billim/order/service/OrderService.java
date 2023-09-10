@@ -21,6 +21,8 @@ import com.web.billim.product.domain.Product;
 import com.web.billim.product.domain.service.ProductDomainService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -106,15 +108,15 @@ public class OrderService {
                 .orElseThrow();
     }
 
-    // 마이페이지 나의 구매 내역 목록 조회
-    @Transactional
-    public MyOrderListResponse findMyOrder(long memberId) {
-        List<ProductOrder> productOrders = orderRepository.findAllByMember_memberId_OrderByOrderIdDesc(memberId);
-        List<MyOrderHistory> myOrderHistories = productOrders.stream()
-                .map(MyOrderHistory::from)
-                .collect(Collectors.toList());
-        return new MyOrderListResponse(myOrderHistories);
-    }
+//    // 마이페이지 나의 구매 내역 목록 조회
+//    @Transactional
+//    public MyOrderListResponse findMyOrder(long memberId) {
+//        List<ProductOrder> productOrders = orderRepository.findAllByMember_memberId_OrderByOrderIdDesc(memberId);
+//        List<MyOrderHistory> myOrderHistories = productOrders.stream()
+//                .map(MyOrderHistory::from)
+//                .collect(Collectors.toList());
+//        return new MyOrderListResponse(myOrderHistories);
+//    }
 
     // 마이페이지 나의 판매 내역 상세 조회
     @Transactional
@@ -126,6 +128,12 @@ public class OrderService {
         } else {
             throw new ForbiddenException(ErrorCode.MISMATCH_MEMBER);
         }
+    }
+
+    @Transactional
+    public Page<MyOrderHistory> myOrderHistory(long memberId, Pageable pageable) {
+        Page<ProductOrder> orderPage =  orderRepository.findAllByMember_memberId_OrderByOrderIdDesc(memberId,pageable);
+        return orderPage.map(MyOrderHistory::from);
     }
 
 }
