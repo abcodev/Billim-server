@@ -46,12 +46,6 @@ public class OrderController {
         return ResponseEntity.ok().build();
     }
 
-//    @Operation(summary = "마이페이지 상품 구매 목록 조회", description = "마이페이지에서 구매 목록을 조회한다.")
-//    @GetMapping("/my/purchase")
-//    public ResponseEntity<MyOrderListResponse> myOrder(@AuthenticationPrincipal long memberId) {
-//        return ResponseEntity.ok(orderService.findMyOrder(memberId));
-//    }
-
     // 페이징
     @Operation(summary = "마이페이지 상품 구매 목록 조회", description = "마이페이지에서 구매 목록을 조회한다.")
     @GetMapping("/my/purchase")
@@ -78,7 +72,10 @@ public class OrderController {
 
     @Operation(summary = "마이페이지 판매 상품 상세정보", description = "판매중인 상품 클릭시 판매 주문 내역을 조회한다.")
     @GetMapping("/my/sales/{productId}")
-    public ResponseEntity<MySalesDetailResponse> mySalesDetail(@AuthenticationPrincipal long memberId, @PathVariable("productId") long productId) {
+    public ResponseEntity<MySalesDetailResponse> mySalesDetail(
+            @AuthenticationPrincipal long memberId,
+            @PathVariable("productId") long productId
+    ) {
         return ResponseEntity.ok(orderService.findMySalesDetail(memberId, productId));
     }
 

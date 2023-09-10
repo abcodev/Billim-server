@@ -24,7 +24,6 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,19 +72,6 @@ public class ProductService {
                     return ProductListResponse.of(product, starRating);
                 });
     }
-
-//    @Transactional
-//    public ProductDetailResponse retrieveDetail(long memberId, long productId) {
-//        Product product = productRepository.findById(productId)
-//                .orElseThrow(() -> new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
-//        List<LocalDate> alreadyDates = orderService.reservationDate(productId);
-//        double starRating = reviewService.calculateStarRating(product.getProductId());
-//        productRedisService.saveProduct(productId);
-//
-//        recentProductRedisService.push(memberId, productId);
-//
-//        return ProductDetailResponse.of(product, alreadyDates, starRating);
-//    }
 
     // 상품 상세 정보 조회
     @Transactional
@@ -167,17 +153,10 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-//    @Transactional
-//    public List<MySalesListResponse> findMySalesList(long memberId) {
-//        return productRepository.findByMemberId(memberId)
-//                .stream().map(MySalesListResponse::of)
-//                .collect(Collectors.toList());
-//    }
-
     // 마이페이지 상품 판매 목록 조회
     @Transactional
-    public Page<MySalesListResponse> findMySalesList(long memberId, Pageable pageable) {
-        Page<Product> productPage = productRepository.findByMemberId(memberId, pageable);
+    public Page<MySalesListResponse> findMySalesList(long memberId, PageRequest paging) {
+        Page<Product> productPage = productRepository.findByMemberId(memberId, paging);
         return productPage.map(MySalesListResponse::of);
     }
 

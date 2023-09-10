@@ -22,6 +22,7 @@ import com.web.billim.product.domain.service.ProductDomainService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -131,8 +132,8 @@ public class OrderService {
     }
 
     @Transactional
-    public Page<MyOrderHistory> myOrderHistory(long memberId, Pageable pageable) {
-        Page<ProductOrder> orderPage =  orderRepository.findAllByMember_memberId_OrderByOrderIdDesc(memberId,pageable);
+    public Page<MyOrderHistory> myOrderHistory(long memberId, PageRequest paging) {
+        Page<ProductOrder> orderPage =  orderRepository.findAllByMember_memberId_OrderByOrderIdDesc(memberId, paging);
         return orderPage.map(MyOrderHistory::from);
     }
 
