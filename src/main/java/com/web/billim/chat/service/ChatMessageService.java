@@ -60,12 +60,13 @@ public class ChatMessageService {
     }
 
     @Transactional
-    public ChatMessageResponse read(long messageId) {
-        return chatMessageRepository.findById(messageId)
-                .map(message -> {
-                    message.read();
-                    return ChatMessageResponse.updatedMessage(message);
-                }).orElseThrow();
+    public ChatMessageResponse read(long memberId, long messageId) {
+        return chatMessageRepository.findById(messageId).map(message -> {
+            if (message.getSender().getMemberId() != memberId) {
+                message.read();
+            }
+            return ChatMessageResponse.updatedMessage(message);
+        }).orElseThrow();
     }
 
 }

@@ -15,7 +15,7 @@ import com.web.billim.review.dto.WritableReviewList;
 import com.web.billim.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,8 +58,8 @@ public class ReviewService {
     }
 
     // 상품 디테일 리뷰 리스트 - 리뷰 호출만 하는 api
-    public Page<ProductReviewListResponse> productReviewList(long productId, Pageable pageable) {
-        Page<Review> reviewPage = reviewRepository.findAllByProductId(productId, pageable);
+    public Page<ProductReviewListResponse> productReviewList(long productId, PageRequest paging) {
+        Page<Review> reviewPage = reviewRepository.findAllByProductId(productId, paging);
         return reviewPage.map(ProductReviewListResponse::of);
     }
 
