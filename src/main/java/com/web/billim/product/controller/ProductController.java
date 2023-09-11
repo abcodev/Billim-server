@@ -17,8 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -60,17 +58,6 @@ public class ProductController {
         PageRequest paging = PageRequest.of(page - 1, 20);
         return ResponseEntity.ok(productService.search(category, keyword, paging));
     }
-
-//    @Operation(summary = "상품 상세정보", description = "productId에 따른 상품 상세정보 & 이미 예약되어 이용할 수 없는 날짜")
-//    @GetMapping("/detail/{productId}")
-//    public ResponseEntity<ProductDetailResponse> productDetail(
-//            @AuthenticationPrincipal long memberId,
-//            @PathVariable("productId") long productId
-//    ) {
-//        ProductDetailResponse resp = productService.retrieveDetail(memberId, productId);
-////        resp.setProductReviewListResponses(reviewService.reviewList(productId));
-//        return ResponseEntity.ok(resp);
-//    }
 
     @Operation(summary = "상품 상세정보", description = "productId에 따른 상품 상세정보 & 이미 예약되어 이용할 수 없는 날짜")
     @GetMapping("/detail/{productId}")
@@ -122,16 +109,15 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
-//    @Operation(summary = "관심목록 조회")
-//    @GetMapping("/my/interest")
-//    public ResponseEntity<MyInterestProductList> myInterestProductList(
-//            @AuthenticationPrincipal long memberId
-//    ) {
-//        return ResponseEntity.ok(productInterestService.myInterestProductList(memberId));
-//    }
+    @Operation(summary = "관심목록 조회")
+    @GetMapping("/interest")
+    public ResponseEntity<MyInterestProductList> myInterestProductList(
+            @AuthenticationPrincipal long memberId
+    ) {
+        return ResponseEntity.ok(productInterestService.myInterestProductList(memberId));
+    }
 
-    // 페이징
-    @Operation(summary = "관심 상품 목록 조회")
+    @Operation(summary = "마이페이지 관심 상품 목록 조회")
     @GetMapping("/my/interest")
     public ResponseEntity<Page<MyInterestProduct>> myInterestProduct(
             @AuthenticationPrincipal long memberId,

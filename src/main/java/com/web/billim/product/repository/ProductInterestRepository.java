@@ -10,10 +10,12 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Repository
 public interface ProductInterestRepository extends JpaRepository<ProductInterest, Long> {
 
-//    Optional<List<ProductInterest>> findAllByMember_memberId(long memberId);
+    List<ProductInterest> findAllByMember_memberId(long memberId);
 
     Page<ProductInterest> findAllByMember_memberId(long memberId, Pageable pageable);
 
