@@ -23,8 +23,7 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(value = {JwtException.class})
 	public ResponseEntity<ErrorResponse> handlerException(JwtException e){
-		return ErrorResponse.toResponseEntity(e.
-				getErrorCode());
+		return ErrorResponse.toResponseEntity(e.getErrorCode());
 	}
 
 	@ExceptionHandler(value = ConstraintViolationException.class)

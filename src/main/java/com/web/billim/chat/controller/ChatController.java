@@ -97,15 +97,6 @@ public class ChatController {
 		chatMessageSocketSendService.sendMessage(req.getChatRoomId(), message);
 	}
 
-	// 소켓으로 신규 메시지(isNewMessage = true)가 오면 /message/read 를 호출
-	// 내 메시지가 아닐때만 호출해야하는데, 이 분기문이 FE 에서 빠진 것 같다.
-	//   => FE 에서 처리하거나
-	
-	// - 구조를 아예 바꾼다. 어떻게 바꿀지는 모르겠다?
-
-	//  1. 목록만 보고있어도 웹소켓은 구독한 상태기 때문에 상대방 메시지가오면 /message/read API 를 호출해버린다.
-			// - FE 에서 현재 들어가있는 채팅방이 뭔지를 따로 가지고 있는게 어떨지..?
-	//  2. 내가 보낸 메시지도 웹소켓으로 다시 오니까, 내 메시지를 읽어버리는 상황이 생길수도 있다.
 	@Operation(summary = "채팅 읽음 여부", description = "true: 새로운 메세지, false: 기존 메세지, true 일 경우에만 메세지를 새로 보여줍니다.")
 	@PostMapping("/message/read")
 	public void readMessage(@AuthenticationPrincipal long memberId, @RequestBody ChatReadRequest req) {
@@ -119,6 +110,5 @@ public class ChatController {
 //		ChatMessageResponse message = chatMessageService.read(req.getMessageId());
 //		chatMessageSocketSendService.sendMessage(req.getChatRoomId(), message);
 //	}
-
 
 }
