@@ -76,12 +76,6 @@ public class MemberService {
 		return memberRepository.existsByNickname(nickname);
 	}
 
-	// Domain Service..
-	public Member retrieve(long memberId) {
-		return memberRepository.findById(memberId)
-				.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
-	}
-
 	@Transactional
 	public MyPageInfoResponse retrieveMyPageInfo(long memberId) {
 		return memberRepository.findById(memberId).map(member -> {

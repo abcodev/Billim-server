@@ -4,6 +4,7 @@ import com.web.billim.exception.ForbiddenException;
 import com.web.billim.exception.OrderFailedException;
 import com.web.billim.exception.handler.ErrorCode;
 import com.web.billim.member.domain.Member;
+import com.web.billim.member.domain.service.MemberDomainService;
 import com.web.billim.member.service.MemberService;
 import com.web.billim.order.domain.ProductOrder;
 import com.web.billim.order.domain.service.OrderDomainService;
@@ -33,7 +34,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class OrderService {
-    private final MemberService memberService;
+    private final MemberDomainService memberDomainService;
     private final PaymentService paymentService;
     private final OrderRepository orderRepository;
     private final ProductDomainService productDomainService;
@@ -59,7 +60,7 @@ public class OrderService {
     //   FE -> 2번 (500) -> /failure
     @Transactional
     public PaymentInfoResponse order(long memberId, OrderCommand orderCommand) {
-        Member member = memberService.retrieve(memberId);
+        Member member = memberDomainService.retrieve(memberId);
 
         // 1. 해당 사용자가 주문중인게 있는지 확인
         if (orderDomainService.checkAlreadyInProgressOrder(member)) {
