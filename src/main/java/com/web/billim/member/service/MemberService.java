@@ -9,6 +9,7 @@ import com.web.billim.coupon.repository.CouponRepository;
 import com.web.billim.coupon.service.CouponService;
 import com.web.billim.infra.ImageUploadService;
 import com.web.billim.member.domain.Member;
+import com.web.billim.member.domain.service.MemberDomainService;
 import com.web.billim.member.dto.request.*;
 import com.web.billim.member.dto.UpdatePasswordCommand;
 import com.web.billim.member.dto.response.HeaderInfoResponse;
@@ -38,6 +39,7 @@ import java.util.Map;
 @Service
 public class MemberService {
 
+	private final MemberDomainService memberDomainService;
 	private final ImageUploadService imageUploadService;
 	private final CouponRepository couponRepository;
 	private final CouponService couponService;
@@ -64,8 +66,8 @@ public class MemberService {
 
 		// 쿠폰 주기
 		couponRepository.findByName("회원가입 쿠폰")
-			.map(coupon -> couponService.issueCoupon(member, coupon))
-			.orElseThrow();
+				.map(coupon -> couponService.issueCoupon(member, coupon))
+				.orElseThrow();
 
 		// 포인트 주기
 		AddPointCommand command = new AddPointCommand(member, 1000, LocalDateTime.now().plusDays(365));
@@ -98,7 +100,7 @@ public class MemberService {
 	public void updateInfo(long memberId, MemberInfoUpdateRequest req) {
 		memberRepository.findById(memberId).ifPresent(member -> {
 			if (!member.getNickname().equals(req.getNickname())
-				&& memberRepository.existsByNickname(req.getNickname())) {
+					&& memberRepository.existsByNickname(req.getNickname())) {
 				throw new RuntimeException("중복된 닉네임 입니다.");
 			}
 			String imageUrl = null;
@@ -112,6 +114,7 @@ public class MemberService {
 		});
 	}
 
+	// 비밀번호 찾기 (임시비밀번호 전송)
 	@Transactional
 	public void findPassword(FindPasswordRequest req) {
 		Member member = memberRepository.findByEmailAndName(req.getEmail(), req.getName())
@@ -127,9 +130,9 @@ public class MemberService {
 	@Transactional
 	public void updatePassword(UpdatePasswordCommand command) {
 
-		Member member = memberRepository.findById(command.getMemberId())
-			.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
-
+//		Member member = memberRepository.findById(command.getMemberId())
+//			.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+		Member member = memberDomainService.retrieve(command.getMemberId());
 		if (!passwordEncoder.matches(command.getPassword(), member.getPassword())) {
 			throw new UnAuthorizedException(ErrorCode.INVALID_EMAIL_PASSWORD);
 		}
@@ -137,15 +140,16 @@ public class MemberService {
 		member.changePassword(encodedPassword);
 	}
 
-	public Member findById(long memberId) {
-		return memberRepository.findById(memberId)
-				.orElseThrow(()-> new JwtException(ErrorCode.MEMBER_NOT_FOUND));
-	}
+//	public Member findById(long memberId) {
+//		return memberRepository.findById(memberId)
+//				.orElseThrow(()-> new JwtException(ErrorCode.MEMBER_NOT_FOUND));
+//	}
 
 	@Transactional
 	public HeaderInfoResponse retrieveHeaderInfo(long memberId) {
-		Member member = memberRepository.findById(memberId)
-				.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+//		Member member = memberRepository.findById(memberId)
+//				.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+		Member member = memberDomainService.retrieve(memberId);
 		return HeaderInfoResponse.of(member);
 	}
 
@@ -161,7 +165,7 @@ public class MemberService {
 		}
 		while (memberRepository.existsByNickname(nickname));
 
-		Member member = com.web.billim.member.domain.Member.builder()
+		Member member = Member.builder()
 				.email(kakaoLogin.getEmail())
 				.password(" ")
 				.name(kakaoLogin.getName())
@@ -173,9 +177,10 @@ public class MemberService {
 		return memberRepository.save(member);
 	}
 
-    public void memberGradeCheck() {
+	public void memberGradeCheck() {
 		// 회원 정보 가져오기 List로
 		List<Member> memberList = memberRepository.findAll();
 
-    }
+	}
 }
+
