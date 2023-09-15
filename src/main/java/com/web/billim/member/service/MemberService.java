@@ -140,10 +140,10 @@ public class MemberService {
 		member.changePassword(encodedPassword);
 	}
 
-//	public Member findById(long memberId) {
-//		return memberRepository.findById(memberId)
-//				.orElseThrow(()-> new JwtException(ErrorCode.MEMBER_NOT_FOUND));
-//	}
+	public Member findById(long memberId) {
+		return memberRepository.findById(memberId)
+				.orElseThrow(()-> new JwtException(ErrorCode.MEMBER_NOT_FOUND));
+	}
 
 	@Transactional
 	public HeaderInfoResponse retrieveHeaderInfo(long memberId) {
