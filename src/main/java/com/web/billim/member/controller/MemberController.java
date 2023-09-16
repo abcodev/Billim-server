@@ -117,9 +117,9 @@ public class MemberController {
         return ResponseEntity.ok(memberService.retrieveHeaderInfo(memberId));
     }
 
-//    @Scheduled(cron = "0 0 0 1 * ?") -- 실제 구동 시간 / 매월 1일 오전 12시
 //    @GetMapping("/projectiontest/test")  -- postMan test
-    @Scheduled(fixedRate = 180000) // 3분마다 실행
+//    @Scheduled(fixedRate = 180000) // 3분마다 실행
+    @Scheduled(cron = "0 0 0 1 * ?")  //-- 실제 구동 시간 / 매월 1일 오전 12시
     public void memberGradeScheduler(){
         log.info(String.format("[PointController] savingPointScheduler Action! (Time: %s)", LocalDateTime.now()));
         log.info("test 시작");

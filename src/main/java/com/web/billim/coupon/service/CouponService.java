@@ -12,18 +12,28 @@ import com.web.billim.exception.handler.ErrorCode;
 import com.web.billim.member.domain.Member;
 import com.web.billim.member.repository.MemberRepository;
 
+import com.web.billim.member.type.MemberGrade;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class CouponService {
+    private static final Map<MemberGrade, String> GRADE_TO_COUPON_NAME_MAP = Map.of(
+            MemberGrade.BRONZE, "BRONZE 쿠폰",
+            MemberGrade.SILVER, "SILVER 쿠폰",
+            MemberGrade.GOLD, "GOLD 쿠폰",
+            MemberGrade.DIAMOND, "DIAMOND 쿠폰"
+    );
 
     private final MemberRepository memberRepository;
     private final CouponRepository couponRepository;
@@ -79,4 +89,30 @@ public class CouponService {
                 .ifPresent(CouponIssue::available);
 	}
 
+
+    public void issueCouponByGrade() {
+        List<Member> memberList = memberRepository.findAll();
+        List<Coupon> couponList = couponRepository.findAll();
+
+        memberList.stream().forEach(member ->{
+            log.info(member.getMemberId() + "의 쿠폰 발급");
+            log.info(member.getMemberId()+" 등급 : " + member.getGrade());
+
+            Coupon coupon = couponByGrade(member.getGrade() , couponList);
+            log.info(coupon.getName() + " 쿠폰 발급.");
+
+            issueCoupon(member,coupon);
+        });
+
+    }
+    private Coupon couponByGrade(MemberGrade grade, List<Coupon> couponList) {
+        String couponName = GRADE_TO_COUPON_NAME_MAP.get(grade);
+        if (couponName != null) {
+            return couponList.stream()
+                    .filter(coupon -> coupon.getName().equals(couponName))
+                    .findFirst()
+                    .orElse(null);
+        }
+        return null;
+    }
 }
