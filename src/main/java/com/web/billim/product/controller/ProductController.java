@@ -99,7 +99,7 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "관심상품 등록, 삭제", description = "true 관심상품등록, false 관심등록삭제")
+    @Operation(summary = "관심상품 등록, 삭제", description = "true 관심상품 등록, false 관심상품 삭제")
     @PostMapping("/interest")
     public ResponseEntity<Void> saveOrDeleteInterest(
             @AuthenticationPrincipal long memberId,
@@ -117,7 +117,7 @@ public class ProductController {
         return ResponseEntity.ok(productInterestService.myInterestProductList(memberId));
     }
 
-    @Operation(summary = "마이페이지 관심 상품 목록 조회", description = "마이페이지에서 관심상품 목록 조회(페이징)")
+    @Operation(summary = "마이페이지 관심 상품 목록 조회", description = "마이페이지에서 관심상품 목록 조회 - 페이징")
     @GetMapping("/my/interest")
     public ResponseEntity<Page<MyInterestProduct>> myInterestProduct(
             @AuthenticationPrincipal long memberId,
