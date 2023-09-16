@@ -13,11 +13,7 @@ import javax.persistence.Table;
 import com.web.billim.common.domain.JpaEntity;
 import com.web.billim.member.type.MemberGrade;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -25,6 +21,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "member")
 @Builder
 @Getter
+@Setter
 public class Member extends JpaEntity {
 
     @Id

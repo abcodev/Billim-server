@@ -16,12 +16,15 @@ import com.web.billim.member.dto.response.MyPageInfoResponse;
 import com.web.billim.member.dto.response.MemberInfoResponse;
 import com.web.billim.member.repository.MemberRepository;
 import com.web.billim.member.type.MemberGrade;
+import com.web.billim.order.domain.ProductOrder;
+import com.web.billim.order.repository.OrderRepository;
 import com.web.billim.point.dto.AddPointCommand;
 import com.web.billim.point.service.PointService;
 
 import com.web.billim.oauth.dto.OAuthLogin;
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,7 +36,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class MemberService {
@@ -45,6 +48,7 @@ public class MemberService {
 	private final MemberRepository memberRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final EmailSendService emailSendService;
+	private final OrderRepository orderRepository;
 
 	public Map<String, String> validateHandling(BindingResult bindingResult) {
 		Map<String, String> validatorResult = new HashMap<>();
@@ -180,8 +184,44 @@ public class MemberService {
 	}
 
     public void memberGradeCheck() {
-		// 회원 정보 가져오기 List로
-		List<Member> memberList = memberRepository.findAll();
+		// 회원들의 총 구매 금액을 확인 → 10만원 이상 30만원 미만 회원이라면 등급을 확인해서 bronze 면 실버로
+		// 실버라면 기존 유지 ...
+		List<Long> memberIdLists = memberRepository.findAllMemberId();
 
-    }
+		memberIdLists.stream().forEach(memberId -> {
+
+			Long totalPurchaseAmount = calculateTotalPurchaseAmount(memberId);
+			log.info(memberId + "의 총 구매금액은 " + totalPurchaseAmount);
+
+			MemberGrade memberGrade = calculateNewGrade(totalPurchaseAmount);
+			log.info(memberId + "의 바뀐등급은 " + memberGrade);
+
+			memberRepository.findById(memberId)
+					.filter(member -> !(member.getGrade().equals(memberGrade)))
+					.ifPresent(member -> {
+						member.setGrade(memberGrade);
+						memberRepository.save(member);
+			});
+		});
+
+	}
+
+	private long calculateTotalPurchaseAmount(Long memberId){
+		List<ProductOrder> productOrders = orderRepository.findByMember_memberId(memberId);
+		return productOrders.stream()
+				.mapToLong(ProductOrder::getPrice)
+				.sum();
+	}
+
+	private MemberGrade calculateNewGrade(long totalPurchaseAmount) {
+		if (totalPurchaseAmount <= 100000) {
+			return MemberGrade.BRONZE;
+		} else if (totalPurchaseAmount <= 300000) {
+			return MemberGrade.SILVER;
+		} else if (totalPurchaseAmount <= 500000) {
+			return MemberGrade.GOLD;
+		} else {
+			return MemberGrade.DIAMOND;
+		}
+	}
 }
