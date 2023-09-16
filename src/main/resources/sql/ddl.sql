@@ -11,7 +11,8 @@ CREATE TABLE `member`
     `grade`             varchar(10)                                                     NOT NULL COMMENT '회원등급',
     `created_at`        timestamp default current_timestamp                             NOT NULL COMMENT '가입일자',
     `updated_at`        timestamp default current_timestamp on update current_timestamp NOT NULL COMMENT '접속일자',
-    `profile_image_url` varchar(1024)                                                   NOT NULL COMMENT '프로필 url'
+    `profile_image_url` varchar(1024)                                                   NOT NULL COMMENT '프로필 url',
+    `use_yn`            varchar(1)                                                      NOT NULL COMMENT '사용여부'
 );
 
 DROP TABLE IF EXISTS `social_member`;
