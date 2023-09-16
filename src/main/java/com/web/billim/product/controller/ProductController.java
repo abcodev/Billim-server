@@ -109,7 +109,7 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "관심목록 조회")
+    @Operation(summary = "관심목록 조회", description = "상품 페이지에서 관심상품 목록 조회")
     @GetMapping("/interest")
     public ResponseEntity<MyInterestProductList> myInterestProductList(
             @AuthenticationPrincipal long memberId
@@ -117,7 +117,7 @@ public class ProductController {
         return ResponseEntity.ok(productInterestService.myInterestProductList(memberId));
     }
 
-    @Operation(summary = "마이페이지 관심 상품 목록 조회")
+    @Operation(summary = "마이페이지 관심 상품 목록 조회", description = "마이페이지에서 관심상품 목록 조회(페이징)")
     @GetMapping("/my/interest")
     public ResponseEntity<Page<MyInterestProduct>> myInterestProduct(
             @AuthenticationPrincipal long memberId,
