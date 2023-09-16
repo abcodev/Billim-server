@@ -3,7 +3,6 @@ package com.web.billim.order.controller;
 import com.web.billim.order.dto.OrderCommand;
 import com.web.billim.order.dto.response.*;
 import com.web.billim.order.service.OrderService;
-import com.web.billim.product.dto.response.ProductListResponse;
 import com.web.billim.product.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,13 +10,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Tag(name = "주문", description = "OrderController")
 @Slf4j

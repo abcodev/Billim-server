@@ -99,9 +99,16 @@ public class ChatController {
 
 	@Operation(summary = "채팅 읽음 여부", description = "true: 새로운 메세지, false: 기존 메세지, true 일 경우에만 메세지를 새로 보여줍니다.")
 	@PostMapping("/message/read")
-	public void readMessage(@RequestBody ChatReadRequest req) {
-		ChatMessageResponse message = chatMessageService.read(req.getMessageId());
+	public void readMessage(@AuthenticationPrincipal long memberId, @RequestBody ChatReadRequest req) {
+		ChatMessageResponse message = chatMessageService.read(memberId, req.getMessageId());
 		chatMessageSocketSendService.sendMessage(req.getChatRoomId(), message);
 	}
+
+//	@Operation(summary = "채팅 읽음 여부", description = "true: 새로운 메세지, false: 기존 메세지, true 일 경우에만 메세지를 새로 보여줍니다.")
+//	@PostMapping("/message/read")
+//	public void readMessage(@RequestBody ChatReadRequest req) {
+//		ChatMessageResponse message = chatMessageService.read(req.getMessageId());
+//		chatMessageSocketSendService.sendMessage(req.getChatRoomId(), message);
+//	}
 
 }
