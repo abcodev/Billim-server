@@ -49,7 +49,7 @@ public class OrderController {
             @RequestParam(required = false, defaultValue = "1") int page
 
     ) {
-        PageRequest paging = PageRequest.of(page - 1, 6);
+        PageRequest paging = PageRequest.of(page - 1, 4);
         Page<MyOrderHistory> myOrderHistoryPage = orderService.myOrderHistory(memberId, paging);
         return ResponseEntity.ok(myOrderHistoryPage);
     }
@@ -60,7 +60,7 @@ public class OrderController {
             @AuthenticationPrincipal long memberId,
             @RequestParam(required = false, defaultValue = "1") int page
     ) {
-        PageRequest paging = PageRequest.of(page - 1, 6);
+        PageRequest paging = PageRequest.of(page - 1, 4);
         Page<MySalesListResponse> mySalesList = productService.findMySalesList(memberId, paging);
         return ResponseEntity.ok(mySalesList);
     }
