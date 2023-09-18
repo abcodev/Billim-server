@@ -17,25 +17,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ChatRoomAndPreviewResponse {
 
-	@Schema(description = "채팅방 고유번호")
 	private long chatRoomId;
-
-	@Schema(description = "채팅 상대방 회원 고유번호")
 	private long receiverId;
-
-	@Schema(description = "채팅 상대방 회원 닉네임")
 	private String receiverNickname;
-
-	@Schema(description = "채팅 상대방 회원 프로필 이미지 주소")
 	private String receiverProfileImageUrl;
-
-	@Schema(description = "읽지 않은 메시지 개수")
 	private int unreadCount;
-
-	@Schema(description = "최신 채팅 메시지")
 	private String latestMessage;
 
-	@Schema(description = "최신 채팅 시간")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
 	private LocalDateTime latestMessageTime;
 

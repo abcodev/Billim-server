@@ -26,6 +26,7 @@ public class ChatMessageResponse {
     private ChatMessageType type;
     private String message;
     private boolean isRead;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime sendAt;
 
@@ -56,6 +57,5 @@ public class ChatMessageResponse {
                 .sendAt(chatMessage.getCreatedAt())
                 .build();
     }
-
 
 }

@@ -58,8 +58,8 @@ public class ChatController {
 		return ResponseEntity.ok(chatRoomService.retrieveAllByProductId(productId));
 	}
 
-	// TODO : 나간 후 다시 재입장했을 때 나가기 전 메시지 가리기
-	@Operation(summary = "채팅방 들어갔을 때 채팅 내용 조회", description = "채팅방 들어갔을 때 전체 채팅 목록을 불러온다.")
+	// TODO : 나간 후 다시 재입장 했을 때 나가기 전 메시지 가리기
+	@Operation(summary = "채팅방 들어 갔을 때 채팅 내용 조회", description = "채팅방 들어 갔을 때 전체 채팅 목록을 불러 온다.")
 	@GetMapping("/messages/{chatRoomId}")
 	public ResponseEntity<List<ChatMessageResponse>> retrieveAllChatMessage(
 			@AuthenticationPrincipal long memberId,
@@ -103,12 +103,5 @@ public class ChatController {
 		ChatMessageResponse message = chatMessageService.read(memberId, req.getMessageId());
 		chatMessageSocketSendService.sendMessage(req.getChatRoomId(), message);
 	}
-
-//	@Operation(summary = "채팅 읽음 여부", description = "true: 새로운 메세지, false: 기존 메세지, true 일 경우에만 메세지를 새로 보여줍니다.")
-//	@PostMapping("/message/read")
-//	public void readMessage(@RequestBody ChatReadRequest req) {
-//		ChatMessageResponse message = chatMessageService.read(req.getMessageId());
-//		chatMessageSocketSendService.sendMessage(req.getChatRoomId(), message);
-//	}
 
 }

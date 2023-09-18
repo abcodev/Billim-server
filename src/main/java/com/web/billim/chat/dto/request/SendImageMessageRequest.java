@@ -11,6 +11,6 @@ public class SendImageMessageRequest {
 
 	private long chatRoomId;
 	private long senderId;
-	private String encodedImage; // url
+	private String encodedImage;
 
 }
