@@ -28,6 +28,11 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 public class CouponService {
+
+    private final MemberRepository memberRepository;
+    private final CouponRepository couponRepository;
+    private final CouponIssueRepository couponIssueRepository;
+
     private static final Map<MemberGrade, String> GRADE_TO_COUPON_NAME_MAP = Map.of(
             MemberGrade.BRONZE, "BRONZE 쿠폰",
             MemberGrade.SILVER, "SILVER 쿠폰",
@@ -35,9 +40,6 @@ public class CouponService {
             MemberGrade.DIAMOND, "DIAMOND 쿠폰"
     );
 
-    private final MemberRepository memberRepository;
-    private final CouponRepository couponRepository;
-    private final CouponIssueRepository couponIssueRepository;
 
     // 0. 새로운 쿠폰 등록
     public Coupon registerNewCoupon(CouponRegisterCommand command) {
@@ -70,7 +72,6 @@ public class CouponService {
                 .collect(Collectors.toList());
     }
 
-
     // 3. 쿠폰 사용
     @Transactional
     public void useCoupon(Member member, long couponIssueId) {
@@ -83,13 +84,14 @@ public class CouponService {
         couponIssue.use();
     }
 
+    // 주문 취소시 기존 쿠폰 재발급
     @Transactional
 	public void refund(CouponIssue couponIssue) {
         Optional.ofNullable(couponIssue)
                 .ifPresent(CouponIssue::available);
 	}
 
-
+    // 등급에 따른 쿠폰 발급
     public void issueCouponByGrade() {
         List<Member> memberList = memberRepository.findAll();
         List<Coupon> couponList = couponRepository.findAll();
@@ -105,6 +107,8 @@ public class CouponService {
         });
 
     }
+
+    // 등급에 따른 쿠폰 발급
     private Coupon couponByGrade(MemberGrade grade, List<Coupon> couponList) {
         String couponName = GRADE_TO_COUPON_NAME_MAP.get(grade);
         if (couponName != null) {
@@ -115,4 +119,5 @@ public class CouponService {
         }
         return null;
     }
+
 }

@@ -44,4 +44,5 @@ public class CouponController {
         log.info(String.format("[PointController] savingPointScheduler Action! (Time: %s)", LocalDateTime.now()));
         couponService.issueCouponByGrade();
     }
+
 }

@@ -48,7 +48,6 @@ public class Member extends JpaEntity {
         if (imageUrl != null) {
             this.profileImageUrl = imageUrl;
         }
-//        this.profileImageUrl = imageUrl;
         this.nickname = nickname;
         this.address = address;
     }
