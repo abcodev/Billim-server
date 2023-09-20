@@ -44,6 +44,14 @@ public class RedisConfig {
         return redisTemplate;
     }
 
+    @Bean(name = "chatRedisTemplate")
+    public RedisTemplate<Long, Long> chatRedisTemplate() {
+        RedisTemplate<Long, Long> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setConnectionFactory(redisConnectionFactory());
+        return redisTemplate;
+    }
+
     @Bean
     public RedisCacheManager redisCacheManager(RedisConnectionFactory redisConnectionFactory) {
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
