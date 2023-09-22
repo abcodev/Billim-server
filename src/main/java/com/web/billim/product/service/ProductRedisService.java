@@ -11,14 +11,14 @@ import java.util.Objects;
 @Service
 public class ProductRedisService {
 
-    private final RedisTemplate<String, Long> redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
 
-    public ProductRedisService(RedisTemplate<String,Long> redisTemplate) {
+    public ProductRedisService(RedisTemplate<String,String> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 
     public void saveProduct(long productId) {
-        redisTemplate.opsForZSet().incrementScore("MOST_POPULAR_PRODUCT", productId, 1);
+        redisTemplate.opsForZSet().incrementScore("MOST_POPULAR_PRODUCT", String.valueOf(productId), 1);
     }
 
     @Transactional

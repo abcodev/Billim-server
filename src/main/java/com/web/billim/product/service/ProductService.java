@@ -130,7 +130,6 @@ public class ProductService {
                     if (!orderRepository.findAllByProductAndEndAtAfter(product, LocalDate.now()).isEmpty()) {
                         throw new BadRequestException(ErrorCode.PRODUCT_HAS_RESERVATION);
                     }
-                    // TODO : 실제로 이미지가 삭제되도록 수정
                     imageProductRepository.deleteAllInBatch(product.getImages());
                     product.delete();
                 });

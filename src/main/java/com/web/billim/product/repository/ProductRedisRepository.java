@@ -11,17 +11,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductRedisRepository {
 
-	private final RedisTemplate<String, Long> redisTemplate;
+	private final RedisTemplate<String, Long> longRedisTemplate;
 
 	public void push(long memberId, long productId) {
-		redisTemplate.opsForList().leftPush("RECENT_VIEW_PRODUCT:" + memberId, productId);
+		longRedisTemplate.opsForList().leftPush("RECENT_VIEW_PRODUCT:" + memberId, productId);
 	}
 
 	public void remove(long memberId, long productId) {
-		redisTemplate.opsForList().remove("RECENT_VIEW_PRODUCT:" + memberId, 0, productId);
+		longRedisTemplate.opsForList().remove("RECENT_VIEW_PRODUCT:" + memberId, 0, productId);
 	}
 
 	public List<Long> findTopN(long memberId, int n) {
-		return redisTemplate.opsForList().range("RECENT_VIEW_PRODUCT:" + memberId, 0, n - 1);
+		return longRedisTemplate.opsForList().range("RECENT_VIEW_PRODUCT:" + memberId, 0, n - 1);
 	}
 }
