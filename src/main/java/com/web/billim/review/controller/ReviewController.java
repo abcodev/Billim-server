@@ -38,7 +38,7 @@ public class ReviewController {
             @PathVariable long productId,
             @RequestParam(required = false, defaultValue = "1") int page
     ) {
-        PageRequest paging = PageRequest.of(page - 1, 6);
+        PageRequest paging = PageRequest.of(page - 1, 4);
         Page<ProductReviewListResponse> reviewList = reviewService.productReviewList(productId, paging);
         return ResponseEntity.ok(reviewList);
     }

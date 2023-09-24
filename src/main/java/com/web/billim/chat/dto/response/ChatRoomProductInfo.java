@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChatRoomProductInfo {
+    private long productId;
     private String productName;
     private long price;
     private String productImageUrl;
@@ -18,6 +19,7 @@ public class ChatRoomProductInfo {
     public static ChatRoomProductInfo from(ChatRoom chatRoom) {
         var product = chatRoom.getProduct();
         return ChatRoomProductInfo.builder()
+                .productId(product.getProductId())
                 .productName(product.getProductName())
                 .price(product.getPrice())
                 .productImageUrl(product.mainImage())

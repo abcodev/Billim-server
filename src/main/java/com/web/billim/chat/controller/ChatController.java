@@ -3,7 +3,6 @@ package com.web.billim.chat.controller;
 import java.util.List;
 
 import com.web.billim.chat.dto.request.ChatReadRequest;
-import com.web.billim.chat.dto.request.WebSocketConnectRequest;
 import com.web.billim.chat.dto.response.ChatRoomProductInfo;
 import com.web.billim.chat.service.ChatMessageSocketSendService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -105,10 +104,6 @@ public class ChatController {
 		chatMessageSocketSendService.sendMessage(req.getChatRoomId(), message);
 	}
 
-	@Operation(summary = "채팅방 입장 여부")
-	@PostMapping("/enter")
-	public ResponseEntity<Void> connectChatRoom(@AuthenticationPrincipal long memberId, @RequestBody WebSocketConnectRequest req) {
-		return ResponseEntity.ok().build();
-	}
-
 }
+
+

@@ -60,7 +60,7 @@ public class OrderController {
             @AuthenticationPrincipal long memberId,
             @RequestParam(required = false, defaultValue = "1") int page
     ) {
-        PageRequest paging = PageRequest.of(page - 1, 4);
+        PageRequest paging = PageRequest.of(page - 1, 6);
         Page<MySalesListResponse> mySalesList = productService.findMySalesList(memberId, paging);
         return ResponseEntity.ok(mySalesList);
     }
