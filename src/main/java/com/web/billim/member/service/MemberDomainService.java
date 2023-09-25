@@ -1,4 +1,4 @@
-package com.web.billim.member.domain.service;
+package com.web.billim.member.service;
 
 import com.web.billim.exception.NotFoundException;
 import com.web.billim.exception.handler.ErrorCode;

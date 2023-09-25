@@ -1,4 +1,4 @@
-package com.web.billim.client.config;
+package com.web.billim.common.config;
 
 import org.apache.http.entity.ContentType;
 import org.springframework.boot.web.client.RestTemplateBuilder;

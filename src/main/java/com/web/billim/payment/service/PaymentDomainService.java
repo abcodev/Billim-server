@@ -1,4 +1,4 @@
-package com.web.billim.payment.domain.service;
+package com.web.billim.payment.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;

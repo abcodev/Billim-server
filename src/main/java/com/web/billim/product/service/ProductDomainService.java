@@ -1,4 +1,4 @@
-package com.web.billim.product.domain.service;
+package com.web.billim.product.service;
 
 import com.web.billim.exception.NotFoundException;
 import org.springframework.stereotype.Service;

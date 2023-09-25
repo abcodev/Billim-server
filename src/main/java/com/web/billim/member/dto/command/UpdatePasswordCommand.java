@@ -1,4 +1,4 @@
-package com.web.billim.member.dto;
+package com.web.billim.member.dto.command;
 
 import com.web.billim.member.dto.request.UpdatePasswordRequest;
 

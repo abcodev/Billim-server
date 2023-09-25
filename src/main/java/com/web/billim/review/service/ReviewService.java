@@ -3,7 +3,7 @@ package com.web.billim.review.service;
 import com.web.billim.order.domain.ProductOrder;
 import com.web.billim.order.repository.OrderRepository;
 import com.web.billim.order.service.OrderService;
-import com.web.billim.point.domain.service.PointDomainService;
+import com.web.billim.point.service.PointDomainService;
 import com.web.billim.point.dto.AddPointCommand;
 import com.web.billim.point.service.PointService;
 import com.web.billim.review.domain.Review;

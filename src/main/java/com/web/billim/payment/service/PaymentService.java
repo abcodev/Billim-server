@@ -8,7 +8,6 @@ import com.web.billim.exception.handler.ErrorCode;
 import com.web.billim.order.domain.ProductOrder;
 import com.web.billim.order.dto.response.PaymentInfoResponse;
 import com.web.billim.payment.domain.Payment;
-import com.web.billim.payment.domain.service.PaymentDomainService;
 import com.web.billim.payment.dto.PaymentCommand;
 import com.web.billim.payment.dto.PaymentInfoDto;
 import com.web.billim.payment.repository.PaymentRepository;

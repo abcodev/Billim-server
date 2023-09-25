@@ -1,4 +1,4 @@
-package com.web.billim.common.config.redis;
+package com.web.billim.common.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

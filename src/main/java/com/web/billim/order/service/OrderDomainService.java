@@ -1,4 +1,4 @@
-package com.web.billim.order.domain.service;
+package com.web.billim.order.service;
 
 import com.web.billim.exception.OrderFailedException;
 import com.web.billim.exception.handler.ErrorCode;

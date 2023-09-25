@@ -4,7 +4,7 @@ import com.web.billim.common.validation.CheckIdValidator;
 import com.web.billim.common.validation.CheckNickNameValidator;
 import com.web.billim.common.validation.CheckPasswordValidator;
 import com.web.billim.member.dto.request.FindPasswordRequest;
-import com.web.billim.member.dto.UpdatePasswordCommand;
+import com.web.billim.member.dto.command.UpdatePasswordCommand;
 import com.web.billim.member.dto.request.*;
 import com.web.billim.member.dto.response.HeaderInfoResponse;
 import com.web.billim.member.dto.response.MyPageInfoResponse;

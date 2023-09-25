@@ -1,4 +1,4 @@
-package com.web.billim.common.config.jpa;
+package com.web.billim.common.config;
 
 import javax.persistence.EntityManager;
 

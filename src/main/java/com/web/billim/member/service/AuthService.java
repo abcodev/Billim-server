@@ -7,7 +7,7 @@ import com.web.billim.jwt.dto.RedisJwt;
 import com.web.billim.jwt.service.JwtService;
 import com.web.billim.jwt.JwtProvider;
 import com.web.billim.member.domain.Member;
-import com.web.billim.member.domain.service.MemberDomainService;
+import com.web.billim.member.service.MemberDomainService;
 import com.web.billim.member.dto.response.ReIssueTokenResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,6 @@ public class AuthService {
 
     private final JwtProvider jwtProvider;
     private final JwtService jwtService;
-    private final MemberService memberService;
     private final MemberDomainService memberDomainService;
 
     @Transactional
