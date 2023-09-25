@@ -158,9 +158,9 @@ public class MemberService {
 		return HeaderInfoResponse.of(member);
 	}
 
-	public Boolean existByEmail(String email) {
-		return memberRepository.existsByEmail(email);
-	}
+//	public Boolean existByEmail(String email) {
+//		return memberRepository.existsByEmail(email);
+//	}
 
 	// 카카오 회원가입
 	public Member register(OAuthLogin kakaoLogin) {
