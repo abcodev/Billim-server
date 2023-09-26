@@ -1,4 +1,4 @@
-package com.web.billim.chat.domain.service;
+package com.web.billim.chat.service;
 
 import com.web.billim.chat.domain.ChatMessage;
 import com.web.billim.chat.domain.ChatRoom;

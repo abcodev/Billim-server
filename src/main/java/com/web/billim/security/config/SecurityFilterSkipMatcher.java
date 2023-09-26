@@ -22,7 +22,7 @@ public class SecurityFilterSkipMatcher{
             "/review/list/**",
             "/auth/reIssue/token",
             "/subscribe/**", "/publish/**", "/stomp/**",
-            "/oauth/kakao", "/oauth2/authorization/kakao", "/login",
+            "/oauth/kakao", "/oauth2/authorization/kakao",
 
             "/v3/api-docs", "/configuration/ui", "/swagger-resources/**",
             "/configuration/security", "/swagger-ui.html/**", "/swagger-ui/**", "/webjars/**", "/swagger/**",

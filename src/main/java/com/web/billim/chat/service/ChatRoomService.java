@@ -1,7 +1,6 @@
 package com.web.billim.chat.service;
 
 import com.web.billim.chat.domain.ChatRoom;
-import com.web.billim.chat.domain.service.ChatMessageDomainService;
 import com.web.billim.chat.dto.request.SendTextMessageRequest;
 import com.web.billim.chat.dto.response.*;
 import com.web.billim.chat.repository.ChatRoomRepository;

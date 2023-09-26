@@ -39,7 +39,6 @@ public class WebSecurityConfig {
     private final SecurityFilterSkipMatcher securityFilterSkipMatcher;
     private final OauthService oauthService;
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
-
     private final PasswordEncoder passwordEncoder;
 
     @Bean
