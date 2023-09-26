@@ -1,4 +1,4 @@
-package com.web.billim.common.domain;
+package com.web.billim.common.converter;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;

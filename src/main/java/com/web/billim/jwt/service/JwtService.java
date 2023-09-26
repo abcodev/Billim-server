@@ -2,7 +2,7 @@ package com.web.billim.jwt.service;
 
 import com.web.billim.exception.JwtException;
 import com.web.billim.exception.handler.ErrorCode;
-import com.web.billim.jwt.JwtBlackListRepository;
+import com.web.billim.jwt.repository.JwtBlackListRepository;
 import com.web.billim.jwt.dto.RedisJwt;
 import com.web.billim.jwt.repository.JwtTokenRedisRepository;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.web.billim.exception;
+package com.web.billim.exception.handler;
 
 import com.web.billim.exception.handler.ErrorCode;
 

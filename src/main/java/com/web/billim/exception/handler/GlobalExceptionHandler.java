@@ -1,6 +1,5 @@
 package com.web.billim.exception.handler;
 
-import com.web.billim.exception.BusinessException;
 import com.web.billim.exception.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

@@ -33,6 +33,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/product")
 public class ProductController {
+
     private final ProductService productService;
     private final ProductInterestService productInterestService;
 

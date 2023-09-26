@@ -6,7 +6,6 @@ import lombok.Getter;
 import org.springframework.http.ResponseEntity;
 
 import com.web.billim.exception.AuthenticationBusinessException;
-import com.web.billim.exception.BusinessException;
 
 @Getter
 @Builder
