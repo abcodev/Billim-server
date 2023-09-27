@@ -1,6 +1,9 @@
 package com.web.billim.chat.config;
 
+import com.web.billim.chat.handler.ChatInterceptor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
@@ -8,11 +11,13 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 
 @Configuration
 @EnableWebSocketMessageBroker
+@RequiredArgsConstructor
 public class ChatConfig implements WebSocketMessageBrokerConfigurer {
 
 	public static final String STOMP_ENDPOINT = "/stomp/chat";
 	public static final String MESSAGE_BROKER_SUBSCRIBE_PREFIX = "/subscribe";
 	public static final String MESSAGE_BROKER_PUBLISH_PREFIX = "/publish";
+	private final ChatInterceptor chatInterceptor;
 
 	// STOMP Endpoint 에 대한 설정 추가
 	@Override
@@ -28,6 +33,14 @@ public class ChatConfig implements WebSocketMessageBrokerConfigurer {
 		registry.enableSimpleBroker(MESSAGE_BROKER_SUBSCRIBE_PREFIX);
 		registry.setApplicationDestinationPrefixes(MESSAGE_BROKER_PUBLISH_PREFIX);
 	}
+
+	// JWT 검증
+//	@Override
+//	public void configureClientInboundChannel(ChannelRegistration registration) {
+//		registration.interceptors(chatInterceptor);
+//	}
+
+
 }
 
 /*

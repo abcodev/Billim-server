@@ -57,6 +57,7 @@ public class WebSecurityConfig {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/**").permitAll()
+//                .antMatchers("/stomp/chat").authenticated()
                 .anyRequest().authenticated()
 
                 .and()
