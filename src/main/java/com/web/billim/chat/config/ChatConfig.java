@@ -40,7 +40,6 @@ public class ChatConfig implements WebSocketMessageBrokerConfigurer {
 //		registration.interceptors(chatInterceptor);
 //	}
 
-
 }
 
 /*
