@@ -2,7 +2,7 @@ package com.web.billim.security.config;
 
 import com.web.billim.jwt.filter.JwtAuthenticationFilter;
 import com.web.billim.jwt.filter.JwtExceptionFilter;
-import com.web.billim.jwt.JwtProvider;
+import com.web.billim.jwt.provider.JwtProvider;
 import com.web.billim.jwt.service.JwtService;
 import com.web.billim.security.LoginAuthenticationFilter;
 

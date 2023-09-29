@@ -3,7 +3,7 @@ package com.web.billim.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.web.billim.exception.AuthenticationBusinessException;
 import com.web.billim.exception.handler.ErrorResponse;
-import com.web.billim.jwt.JwtProvider;
+import com.web.billim.jwt.provider.JwtProvider;
 import com.web.billim.jwt.service.JwtService;
 import com.web.billim.member.type.MemberGrade;
 import com.web.billim.security.dto.LoginRequest;

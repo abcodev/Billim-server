@@ -1,4 +1,4 @@
-package com.web.billim.jwt;
+package com.web.billim.jwt.provider;
 
 import com.web.billim.exception.JwtException;
 import com.web.billim.exception.handler.ErrorCode;

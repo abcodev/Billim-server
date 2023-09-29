@@ -1,6 +1,6 @@
 package com.web.billim.chat.handler;
 
-import com.web.billim.jwt.JwtProvider;
+import com.web.billim.jwt.provider.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
