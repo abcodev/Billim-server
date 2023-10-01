@@ -13,7 +13,4 @@ public interface ProductCategoryRepository extends JpaRepository<ProductCategory
 
     Optional<ProductCategory> findByCategoryName(String category);
 
-//    @Query("SELECT p FROM Product p left join fetch p.member where p.productId = :productId")
-//    Optional<Product> createQuery(long productId);
-
 }

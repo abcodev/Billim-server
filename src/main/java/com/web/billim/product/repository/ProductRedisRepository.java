@@ -24,4 +24,5 @@ public class ProductRedisRepository {
 	public List<Long> findTopN(long memberId, int n) {
 		return longRedisTemplate.opsForList().range("RECENT_VIEW_PRODUCT:" + memberId, 0, n - 1);
 	}
+
 }
