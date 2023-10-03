@@ -1,4 +1,4 @@
-package com.web.billim.security;
+package com.web.billim.security.service;
 
 import com.web.billim.member.domain.Member;
 import com.web.billim.member.repository.MemberRepository;

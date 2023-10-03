@@ -1,4 +1,4 @@
-package com.web.billim.client.iamport;
+package com.web.billim.client.iamport.vo;
 
 import com.web.billim.client.iamport.response.IamPortAccessTokenResponse;
 import com.web.billim.client.iamport.response.IamPortPaymentCancelResponse;
@@ -34,8 +34,8 @@ public class IamPortClient {
 	@Value("${import.imp_api_key}")
 	private String impApiKey;
 
-	@Value("${import.imp_key}")
-	private String impKey;
+//	@Value("${import.imp_key}")
+//	private String impKey;
 
 	@Value("${import.imp_secret}")
 	private String impSecret;

@@ -7,7 +7,7 @@ import com.web.billim.exception.UnAuthorizedException;
 import com.web.billim.exception.handler.ErrorCode;
 import com.web.billim.coupon.repository.CouponRepository;
 import com.web.billim.coupon.service.CouponService;
-import com.web.billim.infra.ImageUploadService;
+import com.web.billim.common.infra.ImageUploadService;
 import com.web.billim.member.domain.Member;
 import com.web.billim.member.dto.request.*;
 import com.web.billim.member.dto.command.UpdatePasswordCommand;

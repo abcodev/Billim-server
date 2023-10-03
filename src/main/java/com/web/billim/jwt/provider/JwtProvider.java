@@ -5,7 +5,7 @@ import com.web.billim.exception.handler.ErrorCode;
 import com.web.billim.jwt.dto.JwtAuthenticationToken;
 import com.web.billim.member.type.MemberGrade;
 import com.web.billim.security.domain.UserDetailsEntity;
-import com.web.billim.security.UserDetailServiceImpl;
+import com.web.billim.security.service.UserDetailServiceImpl;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;

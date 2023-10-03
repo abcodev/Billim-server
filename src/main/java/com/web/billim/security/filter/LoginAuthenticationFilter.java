@@ -1,4 +1,4 @@
-package com.web.billim.security;
+package com.web.billim.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.web.billim.exception.AuthenticationBusinessException;

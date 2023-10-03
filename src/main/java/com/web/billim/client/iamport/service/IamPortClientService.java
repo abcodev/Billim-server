@@ -1,7 +1,8 @@
-package com.web.billim.client.iamport;
+package com.web.billim.client.iamport.service;
 
 import java.util.UUID;
 
+import com.web.billim.client.iamport.vo.IamPortClient;
 import org.springframework.stereotype.Service;
 
 import com.web.billim.client.iamport.response.IamPortPaymentData;

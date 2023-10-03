@@ -1,6 +1,6 @@
 package com.web.billim.payment.service;
 
-import com.web.billim.client.iamport.IamPortClientService;
+import com.web.billim.client.iamport.service.IamPortClientService;
 import com.web.billim.coupon.domain.CouponIssue;
 import com.web.billim.coupon.repository.CouponIssueRepository;
 import com.web.billim.exception.OrderFailedException;

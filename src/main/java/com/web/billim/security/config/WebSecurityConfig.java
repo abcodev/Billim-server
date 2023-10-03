@@ -4,10 +4,10 @@ import com.web.billim.jwt.filter.JwtAuthenticationFilter;
 import com.web.billim.jwt.filter.JwtExceptionFilter;
 import com.web.billim.jwt.provider.JwtProvider;
 import com.web.billim.jwt.service.JwtService;
-import com.web.billim.security.LoginAuthenticationFilter;
-import com.web.billim.security.UsernamPasswordAuthenticationProvider;
+import com.web.billim.security.filter.LoginAuthenticationFilter;
+import com.web.billim.security.provider.UsernamPasswordAuthenticationProvider;
 
-import com.web.billim.security.UserDetailServiceImpl;
+import com.web.billim.security.service.UserDetailServiceImpl;
 
 import com.web.billim.oauth.OAuth2LoginSuccessHandler;
 import com.web.billim.oauth.service.OauthService;
@@ -74,8 +74,7 @@ public class WebSecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
-        configuration.setAllowedOrigins(List.of("http://localhost:8080"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);

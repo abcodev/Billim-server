@@ -1,4 +1,4 @@
-package com.web.billim.infra.helper;
+package com.web.billim.common.infra;
 
 import javax.xml.bind.DatatypeConverter;
 import java.io.*;
