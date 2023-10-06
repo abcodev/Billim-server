@@ -1,4 +1,5 @@
 application-aws.yml
+application-s3.yml
 application-datasource.yml
 application-email.yml
 application-import.yml
