@@ -38,8 +38,9 @@ public class CorsConfig {
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
+        config.addAllowedOrigin("https://billim.vercel.app");
+        config.addAllowedOrigin("^https?:\\/\\/billim.vercel.app$");
         config.addAllowedOrigin("http://localhost:3000");
-        config.addAllowedOrigin("^https?:\\/\\/billim.vercel.app");
         config.addAllowedHeader(CorsConfiguration.ALL);
         config.addAllowedMethod(HttpMethod.GET);
         config.addAllowedMethod(HttpMethod.POST);
@@ -51,6 +52,7 @@ public class CorsConfig {
         config.setAllowCredentials(true);
         config.setMaxAge(3600L);
 
+        source.registerCorsConfiguration("/**", config);
         source.registerCorsConfiguration("^https?:\\/\\/billim.vercel.app$", config);
         return new CorsFilter(source);
     }
