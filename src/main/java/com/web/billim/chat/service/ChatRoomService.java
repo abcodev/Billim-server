@@ -59,6 +59,8 @@ public class ChatRoomService {
                 .collect(Collectors.toList());
     }
 
+    // TODO: 채팅방 나갔다 재입장 했을 때 이전 메세지 안보이게?
+
     // 채팅방 상품 정보 조회
     @Transactional
     public ChatRoomProductInfo getChatRoomProductInfo(long chatRoomId) {
@@ -94,7 +96,7 @@ public class ChatRoomService {
                     return ChatRoomAndPreviewResponse.forSeller(chatRoom, preview);
                 });
 
-		// 두 목록을 합쳐서 마지막 메시지 순서대로 내림차순 정렬
+		// 두 목록을 합쳐서 마지막 메시지 순서 대로 내림차순 정렬
         return Stream.concat(buyChatRoomStream, sellChatRoomStream)
                 .sorted((x, y) -> (int) (x.getLatestMessageTime().toEpochSecond(ZoneOffset.UTC) - y.getLatestMessageTime().toEpochSecond(ZoneOffset.UTC)))
                 .collect(Collectors.toList());
