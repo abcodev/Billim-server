@@ -17,15 +17,15 @@ CREATE TABLE `member`
 
 DROP TABLE IF EXISTS `social_member`;
 
-CREATE TABLE social_member
-(
-    social_id     bigint auto_increment primary key,
-    provider_name varchar(128)                                                    not null,
-    account_id    varchar(255)                                                    not null,
-    member_id     bigint                                                          not null,
-    `created_at`  timestamp default current_timestamp                             NOT NULL,
-    `updated_at`  timestamp default current_timestamp on update current_timestamp NOT NULL
-);
+# CREATE TABLE social_member
+# (
+#     social_id     bigint auto_increment primary key,
+#     provider_name varchar(128)                                                    not null,
+#     account_id    varchar(255)                                                    not null,
+#     member_id     bigint                                                          not null,
+#     `created_at`  timestamp default current_timestamp                             NOT NULL,
+#     `updated_at`  timestamp default current_timestamp on update current_timestamp NOT NULL
+# );
 
 DROP TABLE IF EXISTS `product`;
 
