@@ -34,7 +34,8 @@ public class ChatRoomService {
     @Transactional
     public ChatRoomResponse joinChatRoom(long memberId, long productId) {
         ChatRoom chatRoom = chatRoomRepository.findByProductIdAndBuyerId(productId, memberId)
-                .map(ChatRoom::reJoin)
+//                .map(ChatRoom::reJoin) -> 이걸 없애고, isAvailable 을 추가
+                .filter(ChatRoom::isAvailable)
                 .orElseGet(() -> {
                     Member member = memberRepository.findById(memberId).orElseThrow();
                     Product product = productRepository.findById(productId).orElseThrow();
@@ -106,10 +107,12 @@ public class ChatRoomService {
     public void exit(long memberId, long chatRoomId) {
         chatRoomRepository.findById(chatRoomId).ifPresent(chatRoom -> {
             Member exitMember = chatRoom.exit(memberId);  // Dirty Checking
-            if (chatRoom.checkEmpty()) {
+            if (chatRoom.isEmpty()) {
                 chatRoomRepository.delete(chatRoom);
             } else {
-                chatMessageService.sendSystem(SendTextMessageRequest.ofExitMessage(chatRoom, exitMember));
+                // FIXME
+                var message = chatMessageService.sendSystem(SendTextMessageRequest.ofExitMessage(chatRoom, exitMember));
+                chatMessageSocketSendService.sendMessage(chatRoomId, message);
             }
         });
     }

@@ -23,6 +23,7 @@ public class ChatRoomAndPreviewResponse {
 	private String receiverProfileImageUrl;
 	private int unreadCount;
 	private String latestMessage;
+	private boolean isDisable; // 이게 TRUE 면 입력창 막기
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
 	private LocalDateTime latestMessageTime;
@@ -33,7 +34,8 @@ public class ChatRoomAndPreviewResponse {
 			.receiverId(chatRoom.getBuyer().getMemberId())
 			.receiverNickname(chatRoom.getBuyer().getNickname())
 			.receiverProfileImageUrl(chatRoom.getBuyer().getProfileImageUrl())
-			.unreadCount(preview.getUnreadCount());
+			.unreadCount(preview.getUnreadCount())
+			.isDisable(!chatRoom.isBuyerJoined());
 
 		if (preview.getLatestMessage() != null) {
 			builder = builder.latestMessageTime(preview.getLatestMessageTime())
@@ -48,7 +50,8 @@ public class ChatRoomAndPreviewResponse {
 			.receiverId(chatRoom.getSeller().getMemberId())
 			.receiverNickname(chatRoom.getSeller().getNickname())
 			.receiverProfileImageUrl(chatRoom.getSeller().getProfileImageUrl())
-			.unreadCount(preview.getUnreadCount());
+			.unreadCount(preview.getUnreadCount())
+			.isDisable(!chatRoom.isSellerJoined());
 
 		if (preview.getLatestMessage() != null) {
 			builder = builder.latestMessageTime(preview.getLatestMessageTime())

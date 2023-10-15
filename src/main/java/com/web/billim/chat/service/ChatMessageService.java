@@ -62,7 +62,8 @@ public class ChatMessageService {
     @Transactional
     public ChatMessageResponse read(long memberId, long messageId) {
         return chatMessageRepository.findById(messageId).map(message -> {
-            if (message.getSender().getMemberId() != memberId) {
+            if (message.getSender() != null  // SYSTEM Message
+                    && message.getSender().getMemberId() != memberId) {
                 message.read();
             }
             return ChatMessageResponse.updatedMessage(message);

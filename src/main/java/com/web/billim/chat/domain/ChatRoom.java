@@ -49,14 +49,12 @@ public class ChatRoom extends JpaEntity {
 	@Column(name = "buyer_joined_yn")
 	private boolean buyerJoined;
 
-	public static ChatRoom of(Member member, Product product) {
-		return ChatRoom.builder()
-			.product(product)
-			.seller(product.getMember())
-			.sellerJoined(true)
-			.buyer(member)
-			.buyerJoined(true)
-			.build();
+	public boolean isAvailable() {
+		return this.sellerJoined && this.buyerJoined;
+	}
+
+	public boolean isEmpty() {
+		return !this.sellerJoined && !this.buyerJoined;
 	}
 
 	public Member exit(long memberId) {
@@ -76,8 +74,14 @@ public class ChatRoom extends JpaEntity {
 		return this;
 	}
 
-	public boolean checkEmpty() {
-		return this.sellerJoined && this.buyerJoined;
+	public static ChatRoom of(Member member, Product product) {
+		return ChatRoom.builder()
+				.product(product)
+				.seller(product.getMember())
+				.sellerJoined(true)
+				.buyer(member)
+				.buyerJoined(true)
+				.build();
 	}
 
 }
