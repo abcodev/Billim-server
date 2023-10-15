@@ -58,6 +58,8 @@ public class WebSecurityConfig {
 
                 .and()
                 .oauth2Login()
+//                .authorizationEndpoint().authorizationRequestRepository(new CustomRepository())
+//                .and()
                 .redirectionEndpoint().baseUri("/oauth/kakao")
                 .and().userInfoEndpoint().userService(oauthService)
                 .and().successHandler(oAuth2LoginSuccessHandler);

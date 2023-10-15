@@ -36,6 +36,10 @@ spring:
 logging:
   level:
     org.springframework.web.cors: INFO
+    org:
+      springframework:
+        security:
+          oauth2: DEBUG
 
 springdoc:
   default-consumes-media-type: application/json
