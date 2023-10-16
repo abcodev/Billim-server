@@ -186,7 +186,7 @@ public class MemberService {
 		// 실버라면 기존 유지 ...
 		List<Long> memberIdLists = memberRepository.findAllMemberId();
 
-		memberIdLists.stream().forEach(memberId -> {
+		memberIdLists.forEach(memberId -> {
 
 			Long totalPurchaseAmount = calculateTotalPurchaseAmount(memberId);
 			log.info(memberId + "의 총 구매금액은 " + totalPurchaseAmount);
@@ -222,5 +222,6 @@ public class MemberService {
 			return MemberGrade.DIAMOND;
 		}
 	}
+
 }
 

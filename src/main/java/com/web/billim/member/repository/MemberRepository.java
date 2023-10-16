@@ -16,7 +16,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByEmailAndName(String email, String name);
     Member findByEmail(String email);
 
-    void deleteByProfileImageUrl(String deleteProfileImage);
+//    void deleteByProfileImageUrl(String deleteProfileImage);
 
     @Query("select m.memberId as memberId from Member m")
     List<Long> findAllMemberId();
