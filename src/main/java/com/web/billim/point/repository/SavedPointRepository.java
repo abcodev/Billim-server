@@ -17,4 +17,6 @@ public interface SavedPointRepository extends JpaRepository<SavedPoint, Long> {
 	List<SavedPoint> findAllNotExpired(@Param("memberId") long memberId);
 
 	List<SavedPoint> findAllByMember(Member member);
+
+	void deleteByMember_memberId(long memberId);
 }

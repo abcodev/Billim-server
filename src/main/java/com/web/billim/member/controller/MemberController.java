@@ -117,6 +117,13 @@ public class MemberController {
         return ResponseEntity.ok(memberService.retrieveHeaderInfo(memberId));
     }
 
+    @Operation(summary = "회원 탈퇴", description = "비밀번호를 RequestBody 에 넣어주세요.")
+    @PostMapping("/unregister")
+    public void unregister(@RequestBody Map<String, String> passwordMap,
+                            @AuthenticationPrincipal long memberId ){
+        memberService.unregister(memberId, passwordMap.get("password"));
+    }
+
 //    @GetMapping("/projectiontest/test")  -- postMan test
 //    @Scheduled(fixedRate = 180000) // 3분마다 실행
     @Scheduled(cron = "0 0 0 1 * ?")  //-- 실제 구동 시간 / 매월 1일 오전 12시

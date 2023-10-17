@@ -18,4 +18,5 @@ public interface CouponIssueRepository extends JpaRepository<CouponIssue, Long> 
 	@Query("SELECT ci FROM CouponIssue ci JOIN ci.coupon c WHERE ci.member = :member AND ci.status = 'AVAILABLE' ORDER BY c.rate DESC")
     List<CouponIssue> findAllByMemberOrderByRate(@Param("member") Member member);
 
+    void deleteByMember_memberId(long memberId);
 }

@@ -20,12 +20,14 @@ public class UserDetailsEntity implements UserDetails {
     private String email;
     private String password;
     private List<MemberGrade> grade;
+    private String useYn;
 
     public UserDetailsEntity(Member member){
         this.memberId = member.getMemberId();
         this.email = member.getEmail();
         this.password = member.getPassword();
         this.grade = List.of(member.getGrade());
+        this.useYn = member.getUseYn();
     }
 
     @Override

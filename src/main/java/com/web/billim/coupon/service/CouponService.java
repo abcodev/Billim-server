@@ -120,4 +120,7 @@ public class CouponService {
         return null;
     }
 
+    public void deleteByUnregister(long memberId) {
+        couponIssueRepository.deleteByMember_memberId(memberId);
+    }
 }

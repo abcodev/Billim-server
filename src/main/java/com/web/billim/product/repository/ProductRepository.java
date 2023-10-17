@@ -21,6 +21,8 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Product
     @Query("SELECT p FROM Product p WHERE p.member.memberId = :memberId AND p.isDeleted = false")
     Page<Product> findByMemberId(@Param("memberId") long memberId, Pageable pageable);
 
+    List<Product> findAllByMember_memberId(long memberId);
+
 
 //    Page<Product> findAllByOrderByCreatedAtDesc(Pageable paging);
 //    @Query("SELECT p FROM Product p "

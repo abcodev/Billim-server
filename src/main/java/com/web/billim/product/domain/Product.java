@@ -16,6 +16,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Entity
+@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Table(name = "product")

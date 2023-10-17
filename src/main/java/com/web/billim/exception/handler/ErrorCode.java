@@ -41,7 +41,7 @@ public enum ErrorCode {
 
     /* ID-PW */
     INVALID_EMAIL_PASSWORD(UNAUTHORIZED, "이메일 혹은 비밀번호가 일치하지 않습니다."),
-
+    INVALID_PASSWORD(UNAUTHORIZED, "비밀번호가 일치하지 않습니다."),
 
     /* 403 FORBIDDEN : 접근 권한 */
     MISMATCH_MEMBER(FORBIDDEN, "사용자 정보가 일치하지 않습니다."),

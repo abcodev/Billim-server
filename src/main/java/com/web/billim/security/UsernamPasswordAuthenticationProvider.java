@@ -23,7 +23,7 @@ public class UsernamPasswordAuthenticationProvider implements AuthenticationProv
         String email = (String) authentication.getPrincipal();
         String password = (String) authentication.getCredentials();
         UserDetailsEntity user = userDetailService.loadUserByUsername(email);
-        if(user != null && this.passwordEncoder.matches(password, user.getPassword())){
+        if(user != null && this.passwordEncoder.matches(password, user.getPassword()) && user.getUseYn().equals("Y") ){
             return new LoginAuthenticationToken(user.getAuthorities(),user.getMemberId());
         }else {
             throw new UnAuthorizedException(ErrorCode.INVALID_EMAIL_PASSWORD);
