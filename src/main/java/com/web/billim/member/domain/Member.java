@@ -39,6 +39,7 @@ public class Member extends JpaEntity {
 
     private String profileImageUrl;
     private String useYn;
+    private String memberType;
 
 
     @PrePersist
