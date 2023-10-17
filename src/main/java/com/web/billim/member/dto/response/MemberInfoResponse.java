@@ -12,6 +12,7 @@ public class MemberInfoResponse {
     private String nickname;
     private String address;
     private String profileImageUrl;
+    private String type;
 
     public static MemberInfoResponse from(Member member) {
         return MemberInfoResponse.builder()
@@ -20,6 +21,7 @@ public class MemberInfoResponse {
                 .nickname(member.getNickname())
                 .address(member.getAddress())
                 .profileImageUrl(member.getProfileImageUrl())
+                .type(member.getMemberType())
                 .build();
     }
 }

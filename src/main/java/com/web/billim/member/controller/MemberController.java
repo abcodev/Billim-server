@@ -84,7 +84,7 @@ public class MemberController {
         return ResponseEntity.ok(resp);
     }
 
-    @Operation(summary = "내 회원정보 조회" , description = "회원 정보 수정 시 내 정보 조회한다.")
+    @Operation(summary = "내 회원정보 조회" , description = "type = GENERAL 이면 일반회원 KAKAO 면 카카오회원")
     @GetMapping("/info")
     public ResponseEntity<MemberInfoResponse> memberInfo(@AuthenticationPrincipal long memberId) {
         return ResponseEntity.ok(memberService.retrieveUpdateInfoPage(memberId));
