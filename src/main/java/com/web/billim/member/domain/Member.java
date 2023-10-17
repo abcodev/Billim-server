@@ -38,6 +38,8 @@ public class Member extends JpaEntity {
     private MemberGrade grade;
 
     private String profileImageUrl;
+    private String useYn;
+
 
     @PrePersist
     public void prePersist(){

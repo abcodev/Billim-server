@@ -21,4 +21,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("select m.memberId as memberId from Member m")
     List<Long> findAllMemberId();
 
+    @Query("select m.useYn as useYn from Member m")
+    String resignCheck(String email);
 }

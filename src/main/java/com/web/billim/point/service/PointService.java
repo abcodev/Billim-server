@@ -116,4 +116,7 @@ public class PointService {
 		});
 	}
 
+    public void deleteByUnregister(long memberId) {
+		savedPointRepository.deleteByMember_memberId(memberId);
+    }
 }

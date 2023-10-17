@@ -22,6 +22,9 @@ import com.web.billim.point.dto.AddPointCommand;
 import com.web.billim.point.service.PointService;
 
 import com.web.billim.oauth.dto.OAuthLogin;
+import com.web.billim.product.domain.Product;
+import com.web.billim.product.repository.ProductRepository;
+import com.web.billim.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +39,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -51,6 +55,7 @@ public class MemberService {
 	private final PasswordEncoder passwordEncoder;
 	private final EmailSendService emailSendService;
 	private final OrderRepository orderRepository;
+	private final ProductRepository productRepository;
 
 	public Map<String, String> validateHandling(BindingResult bindingResult) {
 		Map<String, String> validatorResult = new HashMap<>();
@@ -201,6 +206,38 @@ public class MemberService {
 						memberRepository.save(member);
 			});
 		});
+
+	}
+
+	@Transactional
+	public void unregister(long memberId, String password) {
+
+		log.info("memberId : " + memberId );
+
+		Member member = memberRepository.findById(memberId)
+				.orElseThrow();
+		log.info("11111111111");
+		if(!passwordEncoder.matches(password, member.getPassword())) {
+			throw new UnAuthorizedException(ErrorCode.INVALID_PASSWORD);
+		}
+
+		// 판매 상품 상태변화
+		log.info("==========판매 상품 상태 변화===========");
+		List<Product> productList = productRepository.findAllByMember_memberId(memberId)
+				.stream().map(product -> {
+					product.setDeleted(true);
+					return product;
+				}).collect(Collectors.toList());
+		productRepository.saveAll(productList);
+
+		// 회원 상태 변화
+		log.info("==========회원 상태 변화===========");
+		member.setUseYn("N");
+
+
+		log.info("==========적립금 쿠폰 삭제===========");
+		pointService.deleteByUnregister(memberId);
+		couponService.deleteByUnregister(memberId);
 
 	}
 

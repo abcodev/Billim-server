@@ -27,7 +27,7 @@ public class EmailService {
     }
 
     public void validateDuplicated(String email) {
-        if (memberRepository.existsByEmail(email)) {
+        if (memberRepository.existsByEmail(email) && memberRepository.resignCheck(email).equals("Y")) {
             throw new DuplicatedException(ErrorCode.DUPLICATE_EMAIL);
         }
     }

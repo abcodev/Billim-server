@@ -46,6 +46,7 @@ public class MemberSignupRequest {
                 .nickname(nickname)
                 .address(address)
                 .grade(MemberGrade.BRONZE)
+                .useYn("Y")
                 .build();
     }
 
