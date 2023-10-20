@@ -75,7 +75,7 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "마이페이지 헤더 정보 조회", description = "내 프로필, 쿠폰, 적립금, 작성가능한 리뷰 조회")
+    @Operation(summary = "마이페이지 헤더 정보 조회", description = "내 프로필, 쿠폰, 적립금, 작성 가능한 리뷰 조회")
     @GetMapping("/my-page")
     public ResponseEntity<MyPageInfoResponse> myPageInfo(@AuthenticationPrincipal long memberId) {
         MyPageInfoResponse resp = memberService.retrieveMyPageInfo(memberId);
@@ -84,7 +84,7 @@ public class MemberController {
         return ResponseEntity.ok(resp);
     }
 
-    @Operation(summary = "내 회원정보 조회" , description = "type = GENERAL 이면 일반회원 KAKAO 면 카카오회원")
+    @Operation(summary = "내 회원정보 조회" , description = "type = GENERAL - 일반 회원 / KAKAO - 카카오 회원")
     @GetMapping("/info")
     public ResponseEntity<MemberInfoResponse> memberInfo(@AuthenticationPrincipal long memberId) {
         return ResponseEntity.ok(memberService.retrieveUpdateInfoPage(memberId));
