@@ -96,7 +96,7 @@ public class MemberService {
 		}).orElseThrow();
 	}
 
-	// 회원정보 수정시 기존 정보 조회
+	// 회원 정보 수정시 기존 정보 조회
 	@Transactional
 	public MemberInfoResponse retrieveUpdateInfoPage(long memberId) {
 		return memberRepository.findById(memberId)
