@@ -1,5 +1,6 @@
 package com.web.billim.exception.handler;
 
+import com.web.billim.exception.AuthenticationBusinessException;
 import com.web.billim.exception.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,12 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(BusinessException.class)
 	public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException ex) {
+		log.error(ex.getMessage(), ex);
+		return ErrorResponse.toResponseEntity(ex.getErrorCode());
+	}
+
+	@ExceptionHandler(AuthenticationBusinessException.class)
+	public ResponseEntity<ErrorResponse> handleAuthenticationBusinessException(AuthenticationBusinessException ex) {
 		log.error(ex.getMessage(), ex);
 		return ErrorResponse.toResponseEntity(ex.getErrorCode());
 	}
