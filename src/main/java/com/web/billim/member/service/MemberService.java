@@ -67,7 +67,7 @@ public class MemberService {
 		return validatorResult;
 	}
 
-	// 회원가입
+	// 회원 가입
 	@Transactional
 	public void signUp(MemberSignupRequest memberSignupRequest) {
 		memberSignupRequest.PasswordChange(passwordEncoder);
@@ -104,7 +104,7 @@ public class MemberService {
 				.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 	}
 
-	// 회원정보 수정
+	// 회원 정보 수정
 	@Transactional
 	public void updateInfo(long memberId, MemberInfoUpdateRequest req) {
 		memberRepository.findById(memberId).ifPresent(member -> {
@@ -204,37 +204,46 @@ public class MemberService {
 
 	}
 
-	@Transactional
-	public void unregister(long memberId, String password) {
-
-		log.info("memberId : " + memberId );
-
-		Member member = memberRepository.findById(memberId)
-				.orElseThrow();
-		log.info("11111111111");
+	public void checkPassword(long memberId, String password) {
+		Member member = memberDomainService.retrieve(memberId);
 		if(!passwordEncoder.matches(password, member.getPassword())) {
 			throw new UnAuthorizedException(ErrorCode.INVALID_PASSWORD);
 		}
-
-		// 판매 상품 상태변화
-		log.info("==========판매 상품 상태 변화===========");
-		List<Product> productList = productRepository.findAllByMember_memberId(memberId)
-				.stream().map(product -> {
-					product.setDeleted(true);
-					return product;
-				}).collect(Collectors.toList());
-		productRepository.saveAll(productList);
-
-		// 회원 상태 변화
-		log.info("==========회원 상태 변화===========");
-		member.setUseYn("N");
-
-
-		log.info("==========적립금 쿠폰 삭제===========");
-		pointService.deleteByUnregister(memberId);
-		couponService.deleteByUnregister(memberId);
-
 	}
+
+//	@Transactional
+//	public void unregister(long memberId, String password) {
+//
+//		log.info("memberId : " + memberId );
+//
+////		Member member = memberRepository.findById(memberId)
+////				.orElseThrow();
+//		Member member = memberDomainService.retrieve(memberId);
+//		log.info("11111111111");
+//		if(!passwordEncoder.matches(password, member.getPassword())) {
+//			throw new UnAuthorizedException(ErrorCode.INVALID_PASSWORD);
+//		}
+//
+////		this.checkPassword(memberId, password);
+//
+//		// 판매 상품 상태 변화
+//		log.info("==========판매 상품 상태 변화===========");
+//		List<Product> productList = productRepository.findAllByMember_memberId(memberId)
+//				.stream().map(product -> {
+//					product.setDeleted(true);
+//					return product;
+//				}).collect(Collectors.toList());
+//		productRepository.saveAll(productList);
+//
+//		// 회원 상태 변화
+//		log.info("==========회원 상태 변화===========");
+//		member.setUseYn("N");
+//
+//		log.info("==========적립금 쿠폰 삭제===========");
+//		pointService.deleteByUnregister(memberId);
+//		couponService.deleteByUnregister(memberId);
+//
+//	}
 
 	private long calculateTotalPurchaseAmount(Long memberId){
 		List<ProductOrder> productOrders = orderRepository.findByMember_memberId(memberId);
