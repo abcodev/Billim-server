@@ -96,7 +96,7 @@ public class MemberService {
 		}).orElseThrow();
 	}
 
-	// 회원정보 수정시 기존 정보 조회
+	// 회원 정보 수정시 기존 정보 조회
 	@Transactional
 	public MemberInfoResponse retrieveUpdateInfoPage(long memberId) {
 		return memberRepository.findById(memberId)
@@ -138,9 +138,6 @@ public class MemberService {
 	// 비밀번호 재설정
 	@Transactional
 	public void updatePassword(UpdatePasswordCommand command) {
-
-//		Member member = memberRepository.findById(command.getMemberId())
-//			.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 		Member member = memberDomainService.retrieve(command.getMemberId());
 		if (!passwordEncoder.matches(command.getPassword(), member.getPassword())) {
 			throw new UnAuthorizedException(ErrorCode.INVALID_EMAIL_PASSWORD);
@@ -156,8 +153,6 @@ public class MemberService {
 
 	@Transactional
 	public HeaderInfoResponse retrieveHeaderInfo(long memberId) {
-//		Member member = memberRepository.findById(memberId)
-//				.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 		Member member = memberDomainService.retrieve(memberId);
 		return HeaderInfoResponse.of(member);
 	}
