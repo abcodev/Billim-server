@@ -211,39 +211,39 @@ public class MemberService {
 		}
 	}
 
-//	@Transactional
-//	public void unregister(long memberId, String password) {
-//
-//		log.info("memberId : " + memberId );
-//
-////		Member member = memberRepository.findById(memberId)
-////				.orElseThrow();
-//		Member member = memberDomainService.retrieve(memberId);
-//		log.info("11111111111");
-//		if(!passwordEncoder.matches(password, member.getPassword())) {
-//			throw new UnAuthorizedException(ErrorCode.INVALID_PASSWORD);
-//		}
-//
-////		this.checkPassword(memberId, password);
-//
-//		// 판매 상품 상태 변화
-//		log.info("==========판매 상품 상태 변화===========");
-//		List<Product> productList = productRepository.findAllByMember_memberId(memberId)
-//				.stream().map(product -> {
-//					product.setDeleted(true);
-//					return product;
-//				}).collect(Collectors.toList());
-//		productRepository.saveAll(productList);
-//
-//		// 회원 상태 변화
-//		log.info("==========회원 상태 변화===========");
-//		member.setUseYn("N");
-//
-//		log.info("==========적립금 쿠폰 삭제===========");
-//		pointService.deleteByUnregister(memberId);
-//		couponService.deleteByUnregister(memberId);
-//
-//	}
+	@Transactional
+	public void unregister(long memberId, String password) {
+
+		log.info("memberId : " + memberId );
+
+//		Member member = memberRepository.findById(memberId)
+//				.orElseThrow();
+		Member member = memberDomainService.retrieve(memberId);
+		log.info("11111111111");
+		if(!passwordEncoder.matches(password, member.getPassword())) {
+			throw new UnAuthorizedException(ErrorCode.INVALID_PASSWORD);
+		}
+
+//		this.checkPassword(memberId, password);
+
+		// 판매 상품 상태 변화
+		log.info("==========판매 상품 상태 변화===========");
+		List<Product> productList = productRepository.findAllByMember_memberId(memberId)
+				.stream().map(product -> {
+					product.setDeleted(true);
+					return product;
+				}).collect(Collectors.toList());
+		productRepository.saveAll(productList);
+
+		// 회원 상태 변화
+		log.info("==========회원 상태 변화===========");
+		member.setUseYn("N");
+
+		log.info("==========적립금 쿠폰 삭제===========");
+		pointService.deleteByUnregister(memberId);
+		couponService.deleteByUnregister(memberId);
+
+	}
 
 	private long calculateTotalPurchaseAmount(Long memberId){
 		List<ProductOrder> productOrders = orderRepository.findByMember_memberId(memberId);
