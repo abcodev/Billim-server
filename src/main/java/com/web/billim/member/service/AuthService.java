@@ -61,7 +61,6 @@ public class AuthService {
         }
 
         Authentication authentication = jwtProvider.getAuthentication(refreshToken);
-//        Member member = memberService.findById(Long.parseLong(authentication.getPrincipal().toString()));
         Member member = memberDomainService.retrieve(Long.parseLong(authentication.getPrincipal().toString()));
 
         log.info("회원번호 검사");

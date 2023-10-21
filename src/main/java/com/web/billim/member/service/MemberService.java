@@ -135,6 +135,14 @@ public class MemberService {
 //		memberRepository.save(member);
 	}
 
+	// 비밀번호 확인
+	public void checkPassword(long memberId, String password) {
+		Member member = memberDomainService.retrieve(memberId);
+		if (!passwordEncoder.matches(password, member.getPassword())) {
+			throw new UnAuthorizedException(ErrorCode.INVALID_PASSWORD);
+		}
+	}
+
 	// 비밀번호 재설정
 	@Transactional
 	public void updatePassword(UpdatePasswordCommand command) {
@@ -146,20 +154,40 @@ public class MemberService {
 		member.changePassword(encodedPassword);
 	}
 
-	public Member findById(long memberId) {
-		return memberRepository.findById(memberId)
-				.orElseThrow(()-> new JwtException(ErrorCode.MEMBER_NOT_FOUND));
-	}
 
 	@Transactional
-	public HeaderInfoResponse retrieveHeaderInfo(long memberId) {
-		Member member = memberDomainService.retrieve(memberId);
-		return HeaderInfoResponse.of(member);
-	}
+	public void unregister(long memberId, String password) {
 
-//	public Boolean existByEmail(String email) {
-//		return memberRepository.existsByEmail(email);
-//	}
+		log.info("memberId : " + memberId );
+
+//		Member member = memberRepository.findById(memberId)
+//				.orElseThrow();
+		Member member = memberDomainService.retrieve(memberId);
+		log.info("11111111111");
+		if(!passwordEncoder.matches(password, member.getPassword())) {
+			throw new UnAuthorizedException(ErrorCode.INVALID_PASSWORD);
+		}
+
+//		this.checkPassword(memberId, password);
+
+		// 판매 상품 상태 변화
+		log.info("==========판매 상품 상태 변화===========");
+		List<Product> productList = productRepository.findAllByMember_memberId(memberId)
+				.stream().map(product -> {
+					product.setDeleted(true);
+					return product;
+				}).collect(Collectors.toList());
+		productRepository.saveAll(productList);
+
+		// 회원 상태 변화
+		log.info("==========회원 상태 변화===========");
+		member.setUseYn("N");
+
+		log.info("==========적립금 쿠폰 삭제===========");
+		pointService.deleteByUnregister(memberId);
+		couponService.deleteByUnregister(memberId);
+
+	}
 
 	// 카카오 회원가입
 	public Member register(OAuthLogin kakaoLogin) {
@@ -181,6 +209,26 @@ public class MemberService {
 		return memberRepository.save(member);
 	}
 
+
+
+//	public Member findById(long memberId) {
+//		return memberRepository.findById(memberId)
+//				.orElseThrow(()-> new JwtException(ErrorCode.MEMBER_NOT_FOUND));
+//	}
+
+	@Transactional
+	public HeaderInfoResponse retrieveHeaderInfo(long memberId) {
+		Member member = memberDomainService.retrieve(memberId);
+		return HeaderInfoResponse.of(member);
+	}
+
+//	public Boolean existByEmail(String email) {
+//		return memberRepository.existsByEmail(email);
+//	}
+
+
+
+	// 등급 체크
     public void memberGradeCheck() {
 		// 회원들의 총 구매 금액을 확인 → 10만원 이상 30만원 미만 회원이라면 등급을 확인해서 bronze 면 실버로
 		// 실버라면 기존 유지 ...
@@ -201,38 +249,6 @@ public class MemberService {
 						memberRepository.save(member);
 			});
 		});
-
-	}
-
-	@Transactional
-	public void unregister(long memberId, String password) {
-
-		log.info("memberId : " + memberId );
-
-		Member member = memberRepository.findById(memberId)
-				.orElseThrow();
-		if(!passwordEncoder.matches(password, member.getPassword())) {
-			throw new UnAuthorizedException(ErrorCode.INVALID_PASSWORD);
-		}
-
-		// 판매 상품 상태변화
-		log.info("==========판매 상품 상태 변화===========");
-		List<Product> productList = productRepository.findAllByMember_memberId(memberId)
-				.stream().map(product -> {
-					product.setDeleted(true);
-					return product;
-				}).collect(Collectors.toList());
-		productRepository.saveAll(productList);
-
-		// 회원 상태 변화
-		log.info("==========회원 상태 변화===========");
-		member.setUseYn("N");
-
-
-		log.info("==========적립금 쿠폰 삭제===========");
-		pointService.deleteByUnregister(memberId);
-		couponService.deleteByUnregister(memberId);
-
 	}
 
 	private long calculateTotalPurchaseAmount(Long memberId){
