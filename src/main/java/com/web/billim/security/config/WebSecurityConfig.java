@@ -10,7 +10,7 @@ import com.web.billim.security.provider.UsernamPasswordAuthenticationProvider;
 import com.web.billim.security.service.UserDetailServiceImpl;
 
 import com.web.billim.oauth.OAuth2LoginSuccessHandler;
-import com.web.billim.oauth.service.OauthService;
+import com.web.billim.oauth.service.OAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +31,7 @@ public class WebSecurityConfig {
     private final UserDetailServiceImpl userDetailsService;
     private final JwtService jwtService;
     private final SecurityFilterSkipMatcher securityFilterSkipMatcher;
-    private final OauthService oauthService;
+    private final OAuthService oauthService;
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     private final PasswordEncoder passwordEncoder;
 

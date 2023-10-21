@@ -1,9 +1,7 @@
 package com.web.billim.oauth.dto;
 
-import com.web.billim.member.domain.Member;
 import com.web.billim.member.type.MemberGrade;
 import com.web.billim.oauth.domain.SocialMember;
-import com.web.billim.oauth.dto.OAuthLogin;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -13,13 +11,13 @@ import java.util.List;
 import java.util.Map;
 
 @Data
-public class OauthMember implements  OAuth2User {
+public class OAuthMember implements  OAuth2User {
 
     private final long memberId;
     private final String accountId;
     private final MemberGrade grade;
 
-    public OauthMember (SocialMember socialMember){
+    public OAuthMember(SocialMember socialMember){
         this.memberId = socialMember.getMember().getMemberId();
         this.accountId = socialMember.getAccountId();
         this.grade = socialMember.getMember().getGrade();
