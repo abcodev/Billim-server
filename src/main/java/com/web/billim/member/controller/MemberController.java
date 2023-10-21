@@ -119,9 +119,9 @@ public class MemberController {
 
     @Operation(summary = "회원 탈퇴", description = "비밀번호를 RequestBody 에 넣어주세요.")
     @PostMapping("/unregister")
-    public void unregister(@RequestBody Map<String, String> passwordMap,
+    public void unregister(@RequestBody MemberRegisterRequest request,
                             @AuthenticationPrincipal long memberId ){
-        memberService.unregister(memberId, passwordMap.get("password"));
+        memberService.unregister(memberId, request.getPassword());
     }
 
 //    @GetMapping("/projectiontest/test")  -- postMan test

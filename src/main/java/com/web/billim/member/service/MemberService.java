@@ -216,7 +216,6 @@ public class MemberService {
 
 		Member member = memberRepository.findById(memberId)
 				.orElseThrow();
-		log.info("11111111111");
 		if(!passwordEncoder.matches(password, member.getPassword())) {
 			throw new UnAuthorizedException(ErrorCode.INVALID_PASSWORD);
 		}
