@@ -117,10 +117,22 @@ public class MemberController {
         return ResponseEntity.ok(memberService.retrieveHeaderInfo(memberId));
     }
 
+    @Operation(summary = "비밀번호 확인", description = "회원 탈퇴시 비밀번호 조회")
+    @PostMapping("/check/password")
+    public ResponseEntity<Void> checkPassword(
+            @AuthenticationPrincipal long memberId,
+            @RequestBody CheckPasswordRequest checkPasswordRequest
+    ) {
+        memberService.checkPassword(memberId, checkPasswordRequest.getPassword());
+        return ResponseEntity.ok().build();
+    }
+
     @Operation(summary = "회원 탈퇴", description = "비밀번호를 RequestBody 에 넣어주세요.")
     @PostMapping("/unregister")
-    public void unregister(@RequestBody Map<String, String> passwordMap,
-                            @AuthenticationPrincipal long memberId ){
+    public void unregister(
+            @RequestBody Map<String, String> passwordMap,
+            @AuthenticationPrincipal long memberId
+    ) {
         memberService.unregister(memberId, passwordMap.get("password"));
     }
 

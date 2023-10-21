@@ -135,6 +135,14 @@ public class MemberService {
 //		memberRepository.save(member);
 	}
 
+	// 비밀번호 확인
+	public void checkPassword(long memberId, String password) {
+		Member member = memberDomainService.retrieve(memberId);
+		if (!passwordEncoder.matches(password, member.getPassword())) {
+			throw new UnAuthorizedException(ErrorCode.INVALID_PASSWORD);
+		}
+	}
+
 	// 비밀번호 재설정
 	@Transactional
 	public void updatePassword(UpdatePasswordCommand command) {
@@ -146,70 +154,6 @@ public class MemberService {
 		member.changePassword(encodedPassword);
 	}
 
-	public Member findById(long memberId) {
-		return memberRepository.findById(memberId)
-				.orElseThrow(()-> new JwtException(ErrorCode.MEMBER_NOT_FOUND));
-	}
-
-	@Transactional
-	public HeaderInfoResponse retrieveHeaderInfo(long memberId) {
-		Member member = memberDomainService.retrieve(memberId);
-		return HeaderInfoResponse.of(member);
-	}
-
-//	public Boolean existByEmail(String email) {
-//		return memberRepository.existsByEmail(email);
-//	}
-
-	// 카카오 회원가입
-	public Member register(OAuthLogin kakaoLogin) {
-		String nickname;
-		do {
-			nickname = "Billim-" + RandomStringUtils.random(7, true, true);
-		}
-		while (memberRepository.existsByNickname(nickname));
-
-		Member member = Member.builder()
-				.email(kakaoLogin.getEmail())
-				.password(" ")
-				.name(kakaoLogin.getName())
-				.nickname(nickname)
-				.grade(MemberGrade.BRONZE)
-				.profileImageUrl(kakaoLogin.getImageUrl())
-				.address(" ")
-				.build();
-		return memberRepository.save(member);
-	}
-
-    public void memberGradeCheck() {
-		// 회원들의 총 구매 금액을 확인 → 10만원 이상 30만원 미만 회원이라면 등급을 확인해서 bronze 면 실버로
-		// 실버라면 기존 유지 ...
-		List<Long> memberIdLists = memberRepository.findAllMemberId();
-
-		memberIdLists.forEach(memberId -> {
-
-			Long totalPurchaseAmount = calculateTotalPurchaseAmount(memberId);
-			log.info(memberId + "의 총 구매금액은 " + totalPurchaseAmount);
-
-			MemberGrade memberGrade = calculateNewGrade(totalPurchaseAmount);
-			log.info(memberId + "의 바뀐등급은 " + memberGrade);
-
-			memberRepository.findById(memberId)
-					.filter(member -> !(member.getGrade().equals(memberGrade)))
-					.ifPresent(member -> {
-						member.setGrade(memberGrade);
-						memberRepository.save(member);
-			});
-		});
-
-	}
-
-	public void checkPassword(long memberId, String password) {
-		Member member = memberDomainService.retrieve(memberId);
-		if(!passwordEncoder.matches(password, member.getPassword())) {
-			throw new UnAuthorizedException(ErrorCode.INVALID_PASSWORD);
-		}
-	}
 
 	@Transactional
 	public void unregister(long memberId, String password) {
@@ -243,6 +187,68 @@ public class MemberService {
 		pointService.deleteByUnregister(memberId);
 		couponService.deleteByUnregister(memberId);
 
+	}
+
+	// 카카오 회원가입
+	public Member register(OAuthLogin kakaoLogin) {
+		String nickname;
+		do {
+			nickname = "Billim-" + RandomStringUtils.random(7, true, true);
+		}
+		while (memberRepository.existsByNickname(nickname));
+
+		Member member = Member.builder()
+				.email(kakaoLogin.getEmail())
+				.password(" ")
+				.name(kakaoLogin.getName())
+				.nickname(nickname)
+				.grade(MemberGrade.BRONZE)
+				.profileImageUrl(kakaoLogin.getImageUrl())
+				.address(" ")
+				.build();
+		return memberRepository.save(member);
+	}
+
+
+
+//	public Member findById(long memberId) {
+//		return memberRepository.findById(memberId)
+//				.orElseThrow(()-> new JwtException(ErrorCode.MEMBER_NOT_FOUND));
+//	}
+
+	@Transactional
+	public HeaderInfoResponse retrieveHeaderInfo(long memberId) {
+		Member member = memberDomainService.retrieve(memberId);
+		return HeaderInfoResponse.of(member);
+	}
+
+//	public Boolean existByEmail(String email) {
+//		return memberRepository.existsByEmail(email);
+//	}
+
+
+
+	// 등급 체크
+    public void memberGradeCheck() {
+		// 회원들의 총 구매 금액을 확인 → 10만원 이상 30만원 미만 회원이라면 등급을 확인해서 bronze 면 실버로
+		// 실버라면 기존 유지 ...
+		List<Long> memberIdLists = memberRepository.findAllMemberId();
+
+		memberIdLists.forEach(memberId -> {
+
+			Long totalPurchaseAmount = calculateTotalPurchaseAmount(memberId);
+			log.info(memberId + "의 총 구매금액은 " + totalPurchaseAmount);
+
+			MemberGrade memberGrade = calculateNewGrade(totalPurchaseAmount);
+			log.info(memberId + "의 바뀐등급은 " + memberGrade);
+
+			memberRepository.findById(memberId)
+					.filter(member -> !(member.getGrade().equals(memberGrade)))
+					.ifPresent(member -> {
+						member.setGrade(memberGrade);
+						memberRepository.save(member);
+			});
+		});
 	}
 
 	private long calculateTotalPurchaseAmount(Long memberId){
