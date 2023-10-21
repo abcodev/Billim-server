@@ -5,7 +5,7 @@ import com.web.billim.member.service.MemberService;
 import com.web.billim.oauth.domain.SocialMember;
 import com.web.billim.oauth.dto.KakaoLogin;
 import com.web.billim.oauth.dto.OAuthLogin;
-import com.web.billim.oauth.dto.OauthMember;
+import com.web.billim.oauth.dto.OAuthMember;
 import com.web.billim.oauth.repository.OAuthRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class OauthService extends DefaultOAuth2UserService {
+public class OAuthService extends DefaultOAuth2UserService {
 
     private final MemberService memberService;
     private final OAuthRepository oAuthRepository;
@@ -55,7 +55,7 @@ public class OauthService extends DefaultOAuth2UserService {
             socialMember = SocialMember.of(member,oAuthLogin); // 객체 만들기 --> 공통
             save(socialMember); // 소셜 테이블에 저장 -> 신규 로그인
         }
-        return new OauthMember(socialMember);
+        return new OAuthMember(socialMember);
     }
 
     public SocialMember save(SocialMember socialMember) {

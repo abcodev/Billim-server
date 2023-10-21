@@ -5,7 +5,7 @@ import com.web.billim.jwt.provider.JwtProvider;
 import com.web.billim.jwt.dto.RedisJwt;
 import com.web.billim.jwt.service.JwtService;
 import com.web.billim.member.type.MemberGrade;
-import com.web.billim.oauth.dto.OauthMember;
+import com.web.billim.oauth.dto.OAuthMember;
 import com.web.billim.security.dto.LoginResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         log.info("카카오 로그인 성공");
-        OauthMember oauthMember = (OauthMember) authentication.getPrincipal();
+        OAuthMember oauthMember = (OAuthMember) authentication.getPrincipal();
         long memberId = oauthMember.getMemberId();
         MemberGrade memberGrade = MemberGrade.valueOf(oauthMember.getGrade().name());
 
