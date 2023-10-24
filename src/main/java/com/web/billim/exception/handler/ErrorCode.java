@@ -12,6 +12,7 @@ public enum ErrorCode {
 
     /** 400 BAD_REQUEST : 잘못된 요청 */
     INVALIDATION_INPUT(BAD_REQUEST, "잘못된 사용자 입력이 있습니다."),
+    INVALID_MEMBER(BAD_REQUEST, "소셜 로그인 회원 입니다."),
     /* Order */
     ORDER_DUPLICATED_REQUEST(BAD_REQUEST, "해당 사용자가 이미 주문중인 거래가 있습니다."),
     ORDER_DUPLICATED_PERIOD(BAD_REQUEST, "해당 제품은 다른 사용자가 거래중입니다."),

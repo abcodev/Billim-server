@@ -1,5 +1,6 @@
 package com.web.billim.member.service;
 
+import com.web.billim.exception.BadRequestException;
 import com.web.billim.exception.JwtException;
 import com.web.billim.email.service.EmailSendService;
 import com.web.billim.exception.NotFoundException;
@@ -16,6 +17,7 @@ import com.web.billim.member.dto.response.MyPageInfoResponse;
 import com.web.billim.member.dto.response.MemberInfoResponse;
 import com.web.billim.member.repository.MemberRepository;
 import com.web.billim.member.type.MemberGrade;
+import com.web.billim.member.type.MemberType;
 import com.web.billim.order.domain.ProductOrder;
 import com.web.billim.order.repository.OrderRepository;
 import com.web.billim.point.dto.AddPointCommand;
@@ -124,10 +126,16 @@ public class MemberService {
 	}
 
 	// 비밀번호 찾기 (임시비밀번호 전송)
+	// TODO: 소셜 회원 임시비밀번호 못받게
 	@Transactional
 	public void findPassword(FindPasswordRequest req) {
 		Member member = memberRepository.findByEmailAndName(req.getEmail(), req.getName())
 				.orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+
+		if (member.getMemberType().equals(MemberType.KAKAO.name())) {
+			throw new BadRequestException(ErrorCode.INVALID_MEMBER);
+		}
+
 		String tempPassword = emailSendService.sendTempPassword(req);
 		String encodedPassword = passwordEncoder.encode(tempPassword);
 		member.changePassword(encodedPassword);
@@ -155,6 +163,7 @@ public class MemberService {
 	}
 
 
+	// 회원 탈퇴
 	@Transactional
 	public void unregister(long memberId, String password) {
 
@@ -210,12 +219,6 @@ public class MemberService {
 	}
 
 
-
-//	public Member findById(long memberId) {
-//		return memberRepository.findById(memberId)
-//				.orElseThrow(()-> new JwtException(ErrorCode.MEMBER_NOT_FOUND));
-//	}
-
 	@Transactional
 	public HeaderInfoResponse retrieveHeaderInfo(long memberId) {
 		Member member = memberDomainService.retrieve(memberId);
@@ -225,7 +228,6 @@ public class MemberService {
 //	public Boolean existByEmail(String email) {
 //		return memberRepository.existsByEmail(email);
 //	}
-
 
 
 	// 등급 체크

@@ -3,6 +3,7 @@ package com.web.billim.oauth.dto;
 import com.web.billim.member.type.MemberGrade;
 import com.web.billim.oauth.domain.SocialMember;
 import lombok.Data;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
@@ -13,6 +14,7 @@ import java.util.Map;
 @Data
 public class OAuthMember implements  OAuth2User {
 
+    @Getter
     private final long memberId;
     private final String accountId;
     private final MemberGrade grade;
@@ -31,9 +33,6 @@ public class OAuthMember implements  OAuth2User {
     @Override
     public Map<String, Object> getAttributes() {
         return null;
-    }
-    public long getMemberId(){
-        return this.memberId;
     }
 
     @Override

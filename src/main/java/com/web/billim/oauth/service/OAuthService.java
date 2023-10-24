@@ -51,7 +51,7 @@ public class OAuthService extends DefaultOAuth2UserService {
             socialMember = oAuthRepository.findByAccountId(oAuthLogin.getProviderId());
         }else {
             log.info("신규 카카오톡 로그인 회원");
-            Member member = memberService.register(oAuthLogin);  // member 티이블에 저장 -> 신규
+            Member member = memberService.register(oAuthLogin);  // member 테이블에 저장 -> 신규
             socialMember = SocialMember.of(member,oAuthLogin); // 객체 만들기 --> 공통
             save(socialMember); // 소셜 테이블에 저장 -> 신규 로그인
         }
@@ -65,5 +65,8 @@ public class OAuthService extends DefaultOAuth2UserService {
     public Boolean existByAccountId(String accountId){
         return oAuthRepository.existsByAccountId(accountId);
     }
+
+    // TODO: 연결 끊기
+
 
 }
