@@ -30,4 +30,11 @@ public class SendTextMessageRequest {
 		);
 	}
 
+	public static SendTextMessageRequest ofUnregisterMember(ChatRoom chatRoom, Member member) {
+		return new SendTextMessageRequest(
+				chatRoom.getId(), 0, String.format("%s 님은 탈퇴한 회원 입니다.", member.getUseYn())
+		);
+
+	}
+
 }
