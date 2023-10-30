@@ -11,9 +11,13 @@ import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 import com.web.billim.common.domain.JpaEntity;
+import com.web.billim.exception.UnAuthorizedException;
+import com.web.billim.exception.handler.ErrorCode;
 import com.web.billim.member.type.MemberGrade;
 
+import com.web.billim.member.type.MemberType;
 import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -24,8 +28,7 @@ import lombok.*;
 @Setter
 public class Member extends JpaEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long memberId;
     private String email;
@@ -39,8 +42,9 @@ public class Member extends JpaEntity {
 
     private String profileImageUrl;
     private String useYn;
-    private String memberType;
 
+    @Enumerated(EnumType.STRING)
+    private MemberType memberType;
 
     @PrePersist
     public void prePersist(){
@@ -57,5 +61,16 @@ public class Member extends JpaEntity {
 
     public void changePassword(String password) {
         this.password = password;
+    }
+
+    public Member unregister() {
+        this.useYn = "N";
+        return this;
+    }
+
+    public void validatePassword(PasswordEncoder passwordEncoder, String password) {
+        if (!passwordEncoder.matches(password, this.password)) {
+            throw new UnAuthorizedException(ErrorCode.INVALID_PASSWORD);
+        }
     }
 }
