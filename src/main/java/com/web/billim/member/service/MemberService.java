@@ -167,54 +167,33 @@ public class MemberService {
 
 
     // 회원 탈퇴
-//    @Transactional
-//    public void unregister(long memberId, String password) {
-//
-//        log.info("memberId : " + memberId );
-//
-////		Member member = memberRepository.findById(memberId)
-////				.orElseThrow();
-//        Member member = memberDomainService.retrieve(memberId);
-//        log.info("11111111111");
-//        if(!passwordEncoder.matches(password, member.getPassword())) {
-//            throw new UnAuthorizedException(ErrorCode.INVALID_PASSWORD);
-//        }
-//
-////		this.checkPassword(memberId, password);
-//
-//        // 판매 상품 상태 변화
-//        log.info("==========판매 상품 상태 변화===========");
-//        List<Product> productList = productRepository.findAllByMember_memberId(memberId)
-//                .stream().map(product -> {
-//                    product.setDeleted(true);
-//                    return product;
-//                }).collect(Collectors.toList());
-//        productRepository.saveAll(productList);
-//
-//        // 회원 상태 변화
-//        log.info("==========회원 상태 변화===========");
-//        member.setUseYn("N");
-//
-//        log.info("==========적립금 쿠폰 삭제===========");
-//        pointService.deleteByUnregister(memberId);
-//        couponService.deleteByUnregister(memberId);
-//
-//    }
-
-    // 회원 탈퇴
     @Transactional
     public void unregister(long memberId, String password) {
-        log.info("memberId : " + memberId);
+
+        log.info("memberId : " + memberId );
+
+//		Member member = memberRepository.findById(memberId)
+//				.orElseThrow();
         Member member = memberDomainService.retrieve(memberId);
-        member.validatePassword(passwordEncoder, password);
+        log.info("11111111111");
+        if(!passwordEncoder.matches(password, member.getPassword())) {
+            throw new UnAuthorizedException(ErrorCode.INVALID_PASSWORD);
+        }
 
+//		this.checkPassword(memberId, password);
+
+        // 판매 상품 상태 변화
         log.info("==========판매 상품 상태 변화===========");
-        // FIXME : deleteAll(memberId)
-        productRepository.findAllByMember_memberId(memberId)
-                .forEach(product -> productService.delete(memberId, product.getProductId()));
+        List<Product> productList = productRepository.findAllByMember_memberId(memberId)
+                .stream().map(product -> {
+                    product.setDeleted(true);
+                    return product;
+                }).collect(Collectors.toList());
+        productRepository.saveAll(productList);
 
+        // 회원 상태 변화
         log.info("==========회원 상태 변화===========");
-        memberRepository.save(member.unregister());
+        member.setUseYn("N");
 
         log.info("==========적립금 쿠폰 삭제===========");
         pointService.deleteByUnregister(memberId);
@@ -222,26 +201,30 @@ public class MemberService {
 
         chatRoomService.retrieveAllJoined(memberId)
                 .forEach(room -> chatRoomService.exit(memberId, room.getChatRoomId()));
-
-        /**
-         *  [ Layered Architecture ]
-         *  3계층 : Controller - Service - Repository
-         *  4계층 : Controller - Application Service - Domain(Entity, Domain Service) - Repository
-         *          (Presentation - Service - Domain - Infra)
-         *
-         *  이 MemberService 는 Application Service Layer 입니다.
-         *  Application Service(Facade Service) 를 개발할 때 신경써야 할 것.
-         *   1. 비즈니스의 요구사항을 잘 드러내야한다.
-         *   2. 요구사항 - UseCase
-         *   3. 위에서 아래로 설명하듯이 읽히는 적당히 추상화된 내용이 들어가도록.
-         *
-         *    - 앞으로 나아가면서 설명하듯이 읽혀야 한다.
-         *    - 적당히 추상화가 되어야 한다.
-         *    - 복잡한 코드는 더 잘하는 객체를 찾아서 시켜야한다.
-         *      그 대상이 다른 Application Service 가 될수도 있고, Domain Entity 가 될수도 있고,
-         *      Domain Service 가 될 수도 있다.
-         */
     }
+
+    // 회원 탈퇴
+//    @Transactional
+//    public void unregister(long memberId, String password) {
+//        log.info("memberId : " + memberId);
+//        Member member = memberDomainService.retrieve(memberId);
+//        member.validatePassword(passwordEncoder, password);
+//
+//        log.info("==========판매 상품 상태 변화===========");
+//        // FIXME : deleteAll(memberId)
+//        productRepository.findAllByMember_memberId(memberId)
+//                .forEach(product -> productService.delete(memberId, product.getProductId()));
+//
+//        log.info("==========회원 상태 변화===========");
+//        memberRepository.save(member.unregister());
+//
+//        log.info("==========적립금 쿠폰 삭제===========");
+//        pointService.deleteByUnregister(memberId);
+//        couponService.deleteByUnregister(memberId);
+//
+//        chatRoomService.retrieveAllJoined(memberId)
+//                .forEach(room -> chatRoomService.exit(memberId, room.getChatRoomId()));
+//    }
 
     // 카카오 회원가입
     public Member register(OAuthLogin kakaoLogin) {
