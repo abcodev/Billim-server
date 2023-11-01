@@ -1,6 +1,7 @@
 package com.web.billim.member.dto.response;
 
 import com.web.billim.member.domain.Member;
+import com.web.billim.member.type.MemberType;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,7 +13,7 @@ public class MemberInfoResponse {
     private String nickname;
     private String address;
     private String profileImageUrl;
-    private String type;
+    private MemberType memberType;
 
     public static MemberInfoResponse from(Member member) {
         return MemberInfoResponse.builder()
@@ -21,7 +22,7 @@ public class MemberInfoResponse {
                 .nickname(member.getNickname())
                 .address(member.getAddress())
                 .profileImageUrl(member.getProfileImageUrl())
-                .type(member.getMemberType())
+                .memberType(member.getMemberType())
                 .build();
     }
 }
