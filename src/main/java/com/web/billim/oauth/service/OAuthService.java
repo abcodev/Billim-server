@@ -39,34 +39,35 @@ public class OAuthService extends DefaultOAuth2UserService {
     private OAuth2User oAuth2UserLogin(OAuth2UserRequest userRequest, OAuth2User oAuth2User) {
         // SNS TYPE
         String provider = userRequest.getClientRegistration().getClientName();
-        OAuthLogin oAuthLogin = null;
+
+        OAuthLogin oAuthLogin;
         if (provider.equals("KAKAO")) {
-            oAuthLogin = KakaoLogin.ofKaKao(oAuth2User.getAttributes());
-            log.info("카카오 소셜 사용자");
+            oAuthLogin = KakaoLogin.ofKaKao(userRequest, oAuth2User.getAttributes());
+            log.debug("카카오 소셜 사용자"); // 습관처럼 흐름을 파악하고자 쓰고있다면..?
+        } else {
+            throw new RuntimeException("지원하지 않는 OAuth2 Provider 입니다.");
         }
 
         SocialMember socialMember;
-        if(existByAccountId(oAuthLogin.getProviderId())) {
-            log.info("기존 카카오톡 로그인 회원");
+        if (oAuthRepository.existsByAccountId(oAuthLogin.getProviderId())) {
+            log.debug("기존 카카오톡 로그인 회원");
             socialMember = oAuthRepository.findByAccountId(oAuthLogin.getProviderId());
-        }else {
-            log.info("신규 카카오톡 로그인 회원");
+            oAuthRepository.save(socialMember.updateLoginInfo(oAuthLogin));
+            // 여기서 RefreshToken, RefreshTokenExpiredAt 업데이트 해주기
+        } else {
+            log.debug("신규 카카오톡 로그인 회원");
             Member member = memberService.register(oAuthLogin);  // member 테이블에 저장 -> 신규
-            socialMember = SocialMember.of(member,oAuthLogin); // 객체 만들기 --> 공통
-            save(socialMember); // 소셜 테이블에 저장 -> 신규 로그인
+            socialMember = oAuthRepository.save(SocialMember.of(member, oAuthLogin));
         }
         return new OAuthMember(socialMember);
     }
 
-    public SocialMember save(SocialMember socialMember) {
-        return oAuthRepository.save(socialMember);
-    }
-
-    public Boolean existByAccountId(String accountId){
-        return oAuthRepository.existsByAccountId(accountId);
-    }
-
-    // TODO: 연결 끊기
-
+//    public SocialMember save(SocialMember socialMember) {
+//        return oAuthRepository.save(socialMember);
+//    }
+//
+//    public Boolean existByAccountId(String accountId){
+//        return oAuthRepository.existsByAccountId(accountId);
+//    }
 
 }

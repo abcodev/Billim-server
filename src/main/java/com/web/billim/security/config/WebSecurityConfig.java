@@ -4,6 +4,7 @@ import com.web.billim.jwt.filter.JwtAuthenticationFilter;
 import com.web.billim.jwt.filter.JwtExceptionFilter;
 import com.web.billim.jwt.provider.JwtProvider;
 import com.web.billim.jwt.service.JwtService;
+import com.web.billim.oauth.CustomOAuthTokenResponseConverter;
 import com.web.billim.security.filter.LoginAuthenticationFilter;
 import com.web.billim.security.provider.UsernamPasswordAuthenticationProvider;
 
@@ -14,13 +15,22 @@ import com.web.billim.oauth.service.OAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
+import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
+import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
+import org.springframework.security.oauth2.client.http.OAuth2ErrorResponseErrorHandler;
+import org.springframework.security.oauth2.core.http.converter.OAuth2AccessTokenResponseHttpMessageConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -36,8 +46,7 @@ public class WebSecurityConfig {
     private final PasswordEncoder passwordEncoder;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(AuthenticationManager authenticationManager,HttpSecurity http) throws Exception {
-
+    public SecurityFilterChain securityFilterChain(AuthenticationManager authenticationManager, HttpSecurity http) throws Exception {
         http
                 .cors()
                 .and()
@@ -54,17 +63,31 @@ public class WebSecurityConfig {
                 .anyRequest().authenticated()
 
                 .and()
-                .apply(jwtTokenFilterConfigurer(jwtProvider,authenticationManager, jwtService,securityFilterSkipMatcher))
+                .apply(jwtTokenFilterConfigurer(jwtProvider, authenticationManager, jwtService, securityFilterSkipMatcher))
 
                 .and()
                 .oauth2Login()
 //                .authorizationEndpoint().authorizationRequestRepository(new CustomRepository())
 //                .and()
-                .redirectionEndpoint().baseUri("/oauth/kakao")
+                .tokenEndpoint().accessTokenResponseClient(accessTokenResponseClient())
+                .and().redirectionEndpoint().baseUri("/oauth/kakao")
                 .and().userInfoEndpoint().userService(oauthService)
                 .and().successHandler(oAuth2LoginSuccessHandler);
 
         return http.build();
+    }
+
+    @Bean
+    public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient() {
+        DefaultAuthorizationCodeTokenResponseClient authorizationCodeTokenResponseClient = new DefaultAuthorizationCodeTokenResponseClient();
+
+        OAuth2AccessTokenResponseHttpMessageConverter converter = new OAuth2AccessTokenResponseHttpMessageConverter();
+        converter.setAccessTokenResponseConverter(new CustomOAuthTokenResponseConverter());
+
+        RestTemplate restTemplate = new RestTemplate(Arrays.asList(new FormHttpMessageConverter(), converter));
+        restTemplate.setErrorHandler(new OAuth2ErrorResponseErrorHandler());
+        authorizationCodeTokenResponseClient.setRestOperations(restTemplate);
+        return authorizationCodeTokenResponseClient;
     }
 
     @Bean
@@ -91,8 +114,8 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter(JwtProvider jwtProvider){
-        return new JwtAuthenticationFilter(jwtProvider,securityFilterSkipMatcher, jwtService);
+    public JwtAuthenticationFilter jwtAuthenticationFilter(JwtProvider jwtProvider) {
+        return new JwtAuthenticationFilter(jwtProvider, securityFilterSkipMatcher, jwtService);
     }
 
     @Bean
@@ -108,7 +131,7 @@ public class WebSecurityConfig {
 
     @Bean
     public UsernamPasswordAuthenticationProvider usernamPasswordAuthenticationProvider() {
-        return new UsernamPasswordAuthenticationProvider(userDetailsService,passwordEncoder);
+        return new UsernamPasswordAuthenticationProvider(userDetailsService, passwordEncoder);
     }
 
 }
