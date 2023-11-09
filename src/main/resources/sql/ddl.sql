@@ -159,19 +159,19 @@ CREATE TABLE `coupon`
     `updated_at` timestamp default current_timestamp on update current_timestamp NOT NULL COMMENT '마지막 수정일자'
 );
 
-DROP TABLE IF EXISTS `notification`;
-
-CREATE TABLE `notification`
-(
-    `notify_id`  bigint primary key auto_increment COMMENT '알림번호',
-    `member_id`  bigint                                                          NOT NULL COMMENT '수신회원번호',
-    `type`       varchar(50)                                                     NOT NULL COMMENT '알림타입',
-    `is_read`    boolean                                                         NOT NULL COMMENT '읽음여부',
-    `is_delete`  boolean                                                         NOT NULL COMMENT '삭제여부',
-    `content`    varchar(100)                                                    NOT NULL COMMENT '알림내용',
-    `created_at` timestamp default current_timestamp                             NOT NULL COMMENT '생성일자',
-    `updated_at` timestamp default current_timestamp on update current_timestamp NOT NULL COMMENT '수정일자'
-);
+# DROP TABLE IF EXISTS `notification`;
+#
+# CREATE TABLE `notification`
+# (
+#     `notify_id`  bigint primary key auto_increment COMMENT '알림번호',
+#     `member_id`  bigint                                                          NOT NULL COMMENT '수신회원번호',
+#     `type`       varchar(50)                                                     NOT NULL COMMENT '알림타입',
+#     `is_read`    boolean                                                         NOT NULL COMMENT '읽음여부',
+#     `is_delete`  boolean                                                         NOT NULL COMMENT '삭제여부',
+#     `content`    varchar(100)                                                    NOT NULL COMMENT '알림내용',
+#     `created_at` timestamp default current_timestamp                             NOT NULL COMMENT '생성일자',
+#     `updated_at` timestamp default current_timestamp on update current_timestamp NOT NULL COMMENT '수정일자'
+# );
 
 DROP TABLE IF EXISTS `chat_room`;
 
