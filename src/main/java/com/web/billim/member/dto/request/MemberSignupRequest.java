@@ -2,6 +2,7 @@ package com.web.billim.member.dto.request;
 
 import com.web.billim.member.domain.Member;
 import com.web.billim.member.type.MemberGrade;
+import com.web.billim.member.type.MemberType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -46,6 +47,7 @@ public class MemberSignupRequest {
                 .nickname(nickname)
                 .address(address)
                 .grade(MemberGrade.BRONZE)
+                .memberType(MemberType.GENERAL)
                 .useYn("Y")
                 .build();
     }

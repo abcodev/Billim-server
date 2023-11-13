@@ -25,7 +25,6 @@ spring:
 
   profiles:
     include:
-#      - aws
       - s3
       - datasource
       - email

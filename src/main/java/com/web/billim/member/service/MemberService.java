@@ -129,7 +129,6 @@ public class MemberService {
     }
 
     // 비밀번호 찾기 (임시비밀번호 전송)
-    // TODO: 소셜 회원 임시비밀번호 못받게
     @Transactional
     public void findPassword(FindPasswordRequest req) {
         Member member = memberRepository.findByEmailAndName(req.getEmail(), req.getName())
@@ -175,7 +174,7 @@ public class MemberService {
 //		Member member = memberRepository.findById(memberId)
 //				.orElseThrow();
         Member member = memberDomainService.retrieve(memberId);
-        log.info("11111111111");
+
         if(!passwordEncoder.matches(password, member.getPassword())) {
             throw new UnAuthorizedException(ErrorCode.INVALID_PASSWORD);
         }
@@ -192,7 +191,6 @@ public class MemberService {
         productRepository.saveAll(productList);
 
         // 회원 상태 변화
-        log.info("==========회원 상태 변화===========");
         member.setUseYn("N");
 
         log.info("==========적립금 쿠폰 삭제===========");
@@ -206,19 +204,15 @@ public class MemberService {
     // 회원 탈퇴
 //    @Transactional
 //    public void unregister(long memberId, String password) {
-//        log.info("memberId : " + memberId);
 //        Member member = memberDomainService.retrieve(memberId);
 //        member.validatePassword(passwordEncoder, password);
 //
-//        log.info("==========판매 상품 상태 변화===========");
 //        // FIXME : deleteAll(memberId)
 //        productRepository.findAllByMember_memberId(memberId)
 //                .forEach(product -> productService.delete(memberId, product.getProductId()));
 //
-//        log.info("==========회원 상태 변화===========");
 //        memberRepository.save(member.unregister());
 //
-//        log.info("==========적립금 쿠폰 삭제===========");
 //        pointService.deleteByUnregister(memberId);
 //        couponService.deleteByUnregister(memberId);
 //
@@ -240,11 +234,14 @@ public class MemberService {
                 .name(kakaoLogin.getName())
                 .nickname(nickname)
                 .grade(MemberGrade.BRONZE)
+                .memberType(MemberType.KAKAO)
                 .profileImageUrl(kakaoLogin.getImageUrl())
                 .address(" ")
                 .build();
         return memberRepository.save(member);
     }
+
+    // 카카오 회원탈퇴
 
 
     @Transactional
@@ -252,10 +249,6 @@ public class MemberService {
         Member member = memberDomainService.retrieve(memberId);
         return HeaderInfoResponse.of(member);
     }
-
-//	public Boolean existByEmail(String email) {
-//		return memberRepository.existsByEmail(email);
-//	}
 
 
     // 등급 체크

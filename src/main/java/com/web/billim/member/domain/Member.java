@@ -48,7 +48,7 @@ public class Member extends JpaEntity {
 
     @PrePersist
     public void prePersist(){
-        this.profileImageUrl = this.profileImageUrl == null ? "https://billim.s3.ap-northeast-2.amazonaws.com/profile/profile-default.png": this.profileImageUrl;
+        this.profileImageUrl = this.profileImageUrl == null ? "https://s3-billim.s3.ap-northeast-2.amazonaws.com/profile/profile-default.png": this.profileImageUrl;
     }
 
     public void updateInfo(String imageUrl, String nickname, String address) {
