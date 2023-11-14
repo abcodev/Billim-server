@@ -76,7 +76,7 @@ public class EmailSendService {
 
                 "<html>" +
                 "<head></head>" +
-                "<body style=\"background-color: #f4f4f4; margin: 0; padding: 0; font-family: 'NanumSquareNeoBold'; text-align: center;\>" +
+                "<body style=\"background-color: #f4f4f4; margin: 0; padding: 0; font-family: 'NanumSquareNeoBold'; text-align: center;\">" +
                 "   <div style=\"max-width: 600px; margin: 0px auto; padding: 20px; background-color: #ffffff;\">" +
                 "      <img src='https://s3-billim.s3.ap-northeast-2.amazonaws.com/common/billim_logo_1.png' alt=\"로고이미지\" style=\"width: 120px; height: 50px;\">" +
                 "      <div>" +
