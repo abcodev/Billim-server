@@ -43,7 +43,7 @@ public class OAuthService extends DefaultOAuth2UserService {
         OAuthLogin oAuthLogin;
         if (provider.equals("KAKAO")) {
             oAuthLogin = KakaoLogin.ofKaKao(userRequest, oAuth2User.getAttributes());
-            log.debug("카카오 소셜 사용자"); // 습관처럼 흐름을 파악하고자 쓰고있다면..?
+            log.debug("카카오 소셜 사용자");
         } else {
             throw new RuntimeException("지원하지 않는 OAuth2 Provider 입니다.");
         }
