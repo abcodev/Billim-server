@@ -1,8 +1,11 @@
 package com.web.billim.common.infra;
 
+import lombok.extern.slf4j.Slf4j;
+
 import javax.xml.bind.DatatypeConverter;
 import java.io.*;
 
+@Slf4j
 public class ImageFileConvertHelper {
 
     public static File convertBase64EncodedStringToImageFile(String encodedString, String fileName) {
@@ -25,7 +28,8 @@ public class ImageFileConvertHelper {
         try (OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
             outputStream.write(data);
         } catch (IOException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return file;
     }
