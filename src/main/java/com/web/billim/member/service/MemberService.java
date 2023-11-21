@@ -62,6 +62,7 @@ public class MemberService {
     private final ProductRepository productRepository;
     private final ChatRoomService chatRoomService;
 
+    // TODO: validation 정리
     public Map<String, String> validateHandling(BindingResult bindingResult) {
         Map<String, String> validatorResult = new HashMap<>();
 
@@ -88,25 +89,16 @@ public class MemberService {
         pointService.addPoint(command);
     }
 
+    // 닉네임 중복 확인
     public boolean checkDuplicateNickname(String nickname) {
         return memberRepository.existsByNickname(nickname);
     }
 
+    // 헤더 회원 정보
     @Transactional
-    public MyPageInfoResponse retrieveMyPageInfo(long memberId) {
-        return memberRepository.findById(memberId).map(member -> {
-            long availableAmount = pointService.retrieveAvailablePoint(memberId);
-            long availableCouponCount = couponService.retrieveAvailableCouponList(memberId).size();
-            return MyPageInfoResponse.of(member, availableAmount, availableCouponCount);
-        }).orElseThrow();
-    }
-
-    // 회원 정보 수정시 기존 정보 조회
-    @Transactional
-    public MemberInfoResponse retrieveUpdateInfoPage(long memberId) {
-        return memberRepository.findById(memberId)
-                .map(MemberInfoResponse::from)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+    public HeaderInfoResponse retrieveHeaderInfo(long memberId) {
+        Member member = memberDomainService.retrieve(memberId);
+        return HeaderInfoResponse.of(member);
     }
 
     // 회원정보 수정
@@ -241,15 +233,27 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
-    // 카카오 회원탈퇴
+    // TODO: 카카오 회원탈퇴
 
 
+
+    // 마이페이지 회원 정보
     @Transactional
-    public HeaderInfoResponse retrieveHeaderInfo(long memberId) {
-        Member member = memberDomainService.retrieve(memberId);
-        return HeaderInfoResponse.of(member);
+    public MyPageInfoResponse retrieveMyPageInfo(long memberId) {
+        return memberRepository.findById(memberId).map(member -> {
+            long availableAmount = pointService.retrieveAvailablePoint(memberId);
+            long availableCouponCount = couponService.retrieveAvailableCouponList(memberId).size();
+            return MyPageInfoResponse.of(member, availableAmount, availableCouponCount);
+        }).orElseThrow();
     }
 
+    // 회원 정보 수정시 기존 정보 조회
+    @Transactional
+    public MemberInfoResponse retrieveUpdateInfoPage(long memberId) {
+        return memberRepository.findById(memberId)
+                .map(MemberInfoResponse::from)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+    }
 
     // 등급 체크
     public void memberGradeCheck() {
@@ -260,10 +264,10 @@ public class MemberService {
         memberIdLists.forEach(memberId -> {
 
             Long totalPurchaseAmount = calculateTotalPurchaseAmount(memberId);
-            log.info(memberId + "의 총 구매금액은 " + totalPurchaseAmount);
+            log.debug(memberId + "의 총 구매금액은 " + totalPurchaseAmount);
 
             MemberGrade memberGrade = calculateNewGrade(totalPurchaseAmount);
-            log.info(memberId + "의 바뀐등급은 " + memberGrade);
+            log.debug(memberId + "의 바뀐등급은 " + memberGrade);
 
             memberRepository.findById(memberId)
                     .filter(member -> !(member.getGrade().equals(memberGrade)))

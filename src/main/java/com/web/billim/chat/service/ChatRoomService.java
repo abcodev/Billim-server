@@ -60,8 +60,6 @@ public class ChatRoomService {
                 .collect(Collectors.toList());
     }
 
-    // TODO: 채팅방 나갔다 재입장 했을 때 이전 메세지 안보이게?
-
     // 채팅방 상품 정보 조회
     @Transactional
     public ChatRoomProductInfo getChatRoomProductInfo(long chatRoomId) {

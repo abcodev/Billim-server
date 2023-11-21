@@ -58,7 +58,6 @@ public class ChatController {
 		return ResponseEntity.ok(chatRoomService.retrieveAllByProductId(productId));
 	}
 
-	// TODO : 나간 후 다시 재입장 했을 때 나가기 전 메시지 가리기
 	@Operation(summary = "채팅방 들어 갔을 때 채팅 내용 조회", description = "채팅방 들어 갔을 때 전체 채팅 목록을 불러 온다.")
 	@GetMapping("/messages/{chatRoomId}")
 	public ResponseEntity<List<ChatMessageResponse>> retrieveAllChatMessage(
