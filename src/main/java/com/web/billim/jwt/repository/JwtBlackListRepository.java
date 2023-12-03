@@ -24,7 +24,6 @@ public class JwtBlackListRepository {
         redisTemplate.expire(BLACKLIST_REDIS_KEY, remainingTimeInSeconds, TimeUnit.SECONDS);
     }
     public List<Object> checkBlackList() {
-        List<Object> accessTokens = redisTemplate.opsForHash().values(BLACKLIST_REDIS_KEY);
-        return accessTokens;
+        return redisTemplate.opsForHash().values(BLACKLIST_REDIS_KEY);
     }
 }

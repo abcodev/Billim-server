@@ -35,7 +35,6 @@ public class ChatMessageService {
 
     public ChatMessageResponse sendSystem(SendTextMessageRequest req) {
         ChatRoom chatRoom = chatRoomRepository.findById(req.getChatRoomId()).orElseThrow();
-
         ChatMessage message = ChatMessage.ofSystem(chatRoom, req.getMessage());
         ChatMessage saved = chatMessageRepository.save(message);
         return ChatMessageResponse.createNewMessage(saved);

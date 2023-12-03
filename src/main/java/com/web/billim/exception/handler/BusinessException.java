@@ -1,7 +1,9 @@
 package com.web.billim.exception.handler;
 
 import com.web.billim.exception.handler.ErrorCode;
+import lombok.Getter;
 
+@Getter
 public abstract class BusinessException extends RuntimeException {
 
 	private final ErrorCode errorCode;
@@ -19,10 +21,6 @@ public abstract class BusinessException extends RuntimeException {
 	public BusinessException(ErrorCode errorCode, String message) {
 		super(message);
 		this.errorCode = errorCode;
-	}
-
-	public ErrorCode getErrorCode() {
-		return errorCode;
 	}
 
 }

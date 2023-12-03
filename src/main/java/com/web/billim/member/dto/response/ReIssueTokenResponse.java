@@ -12,5 +12,4 @@ public class ReIssueTokenResponse {
     private long memberId;
     private String accessToken;
     private String newRefreshToken;
-
 }

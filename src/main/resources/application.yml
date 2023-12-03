@@ -31,7 +31,6 @@ spring:
       - import
       - security
       - oauth
-#      - ssl
 
 logging:
   level:
