@@ -35,5 +35,4 @@ public class EmailController {
         emailService.confirmEmail(emailAuthRequest);
         return ResponseEntity.ok().build();
     }
-
 }
