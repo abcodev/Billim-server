@@ -47,13 +47,13 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.getWriter().write(body);
 
-        response.sendRedirect(UriComponentsBuilder.fromUriString("http://localhost:3000/login/callback")
-                .queryParam("accessToken", accessToken)
-                .queryParam("refreshToken", refreshToken)
-                .queryParam("memberId", memberId)
-                .build()
-                .encode(StandardCharsets.UTF_8)
-                .toUriString());
+//        response.sendRedirect(UriComponentsBuilder.fromUriString("http://localhost:3000/login/callback")
+//                .queryParam("accessToken", accessToken)
+//                .queryParam("refreshToken", refreshToken)
+//                .queryParam("memberId", memberId)
+//                .build()
+//                .encode(StandardCharsets.UTF_8)
+//                .toUriString());
 
     }
 }
