@@ -59,7 +59,7 @@ public class MemberController {
             return new ResponseEntity<>(validatorResult, HttpStatus.BAD_REQUEST);
         }
         memberService.signUp(memberSignupRequest);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @Operation(summary = "닉네임 중복 확인", description = "true 시 중복된 닉네임")
@@ -135,6 +135,7 @@ public class MemberController {
     ) {
         memberService.unregister(memberId, request.getPassword());
     }
+
 
 //    @GetMapping("/projectiontest/test")  -- postMan test
 //    @Scheduled(fixedRate = 180000) // 3분마다 실행
