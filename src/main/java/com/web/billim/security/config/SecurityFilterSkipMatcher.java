@@ -26,7 +26,10 @@ public class SecurityFilterSkipMatcher{
 
             "/v3/api-docs", "/configuration/ui", "/swagger-resources/**",
             "/configuration/security", "/swagger-ui.html/**", "/swagger-ui/**", "/webjars/**", "/swagger/**",
-            "/v3/api-docs/swagger-config"
+            "/v3/api-docs/swagger-config",
+
+            "/.well-known/pki-validation/A9423C1CDA9F2161BA0C46C0B4C42EB7.txt"
+
     };
 
     public boolean shouldSkipFilter(HttpServletRequest request) {
