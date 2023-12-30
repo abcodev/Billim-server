@@ -1,35 +1,33 @@
 package com.web.billim.member.service;
 
-import com.web.billim.chat.service.ChatRoomService;
-import com.web.billim.exception.BadRequestException;
-import com.web.billim.exception.JwtException;
+import com.web.billim.client.kakao.KakaoOAuthClient;
+import com.web.billim.common.infra.ImageUploadService;
+import com.web.billim.coupon.repository.CouponRepository;
+import com.web.billim.coupon.service.CouponService;
 import com.web.billim.email.service.EmailSendService;
+import com.web.billim.exception.BadRequestException;
 import com.web.billim.exception.NotFoundException;
 import com.web.billim.exception.UnAuthorizedException;
 import com.web.billim.exception.handler.ErrorCode;
-import com.web.billim.coupon.repository.CouponRepository;
-import com.web.billim.coupon.service.CouponService;
-import com.web.billim.common.infra.ImageUploadService;
 import com.web.billim.member.domain.Member;
-import com.web.billim.member.dto.request.*;
 import com.web.billim.member.dto.command.UpdatePasswordCommand;
+import com.web.billim.member.dto.request.FindPasswordRequest;
+import com.web.billim.member.dto.request.MemberInfoUpdateRequest;
+import com.web.billim.member.dto.request.MemberSignupRequest;
 import com.web.billim.member.dto.response.HeaderInfoResponse;
-import com.web.billim.member.dto.response.MyPageInfoResponse;
 import com.web.billim.member.dto.response.MemberInfoResponse;
+import com.web.billim.member.dto.response.MyPageInfoResponse;
 import com.web.billim.member.repository.MemberRepository;
 import com.web.billim.member.type.MemberGrade;
 import com.web.billim.member.type.MemberType;
+import com.web.billim.oauth.domain.SocialMember;
+import com.web.billim.oauth.dto.OAuthLogin;
+import com.web.billim.oauth.repository.OAuthRepository;
 import com.web.billim.order.domain.ProductOrder;
 import com.web.billim.order.repository.OrderRepository;
 import com.web.billim.point.dto.AddPointCommand;
 import com.web.billim.point.service.PointService;
-
-import com.web.billim.oauth.dto.OAuthLogin;
-import com.web.billim.product.domain.Product;
-import com.web.billim.product.repository.ProductRepository;
-import com.web.billim.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -42,25 +40,26 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class MemberService {
 
-    private final MemberDomainService memberDomainService;
-    private final ImageUploadService imageUploadService;
-    private final CouponRepository couponRepository;
     private final CouponService couponService;
     private final PointService pointService;
+
+    private final MemberDomainService memberDomainService;
+    private final CouponRepository couponRepository;
     private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final EmailSendService emailSendService;
     private final OrderRepository orderRepository;
-    private final ProductService productService;
-    private final ProductRepository productRepository;
-    private final ChatRoomService chatRoomService;
+    private final OAuthRepository oAuthRepository;
+
+    private final KakaoOAuthClient kakaoOAuthClient;
+
+    private final ImageUploadService imageUploadService;
+    private final EmailSendService emailSendService;
+    private final PasswordEncoder passwordEncoder;
 
     // TODO: validation 정리
     public Map<String, String> validateHandling(BindingResult bindingResult) {
@@ -194,22 +193,19 @@ public class MemberService {
 //    }
 
     // 회원 탈퇴
-    @Transactional
     public void unregister(long memberId, String password) {
         Member member = memberDomainService.retrieve(memberId);
         member.validatePassword(passwordEncoder, password);
+        memberDomainService.unregister(memberId);
+    }
 
-        // FIXME : deleteAll(memberId)
-        productRepository.findAllByMember_memberId(memberId)
-                .forEach(product -> productService.delete(memberId, product.getProductId()));
-
-        memberRepository.save(member.unregister());
-
-        pointService.deleteByUnregister(memberId);
-        couponService.deleteByUnregister(memberId);
-
-        chatRoomService.retrieveAllJoined(memberId)
-                .forEach(room -> chatRoomService.exit(memberId, room.getChatRoomId()));
+    @Transactional
+    public void unregisterSocialMember(long memberId) {
+        Member member = memberDomainService.unregister(memberId);
+        oAuthRepository.findByMember(member).ifPresent(socialMember -> {
+            kakaoOAuthClient.unlink(socialMember.getRefreshToken());
+            oAuthRepository.delete(socialMember);
+        });
     }
 
     // 카카오 회원가입
@@ -234,7 +230,6 @@ public class MemberService {
     }
 
     // TODO: 카카오 회원탈퇴
-
 
 
     // 마이페이지 회원 정보
