@@ -56,6 +56,14 @@ dependencies {
 }
 
 
+//processResources {
+//    from('src/main/resources') {
+//        include 'certificate.p12'
+//        into 'META-INF/resources'
+//    }
+//}
+
+
 tasks.named('test') {
     useJUnitPlatform()
 }
