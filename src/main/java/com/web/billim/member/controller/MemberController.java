@@ -136,6 +136,13 @@ public class MemberController {
         memberService.unregister(memberId, request.getPassword());
     }
 
+    @Operation(summary = "소셜 사용자 회원 탈퇴", description = "")
+    @DeleteMapping("/")
+    public void unregisterSocialMember(
+            @AuthenticationPrincipal long memberId
+    ) {
+        memberService.unregisterSocialMember(memberId);
+    }
 
 //    @GetMapping("/projectiontest/test")  -- postMan test
 //    @Scheduled(fixedRate = 180000) // 3분마다 실행
