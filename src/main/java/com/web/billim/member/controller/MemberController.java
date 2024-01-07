@@ -59,7 +59,7 @@ public class MemberController {
             return new ResponseEntity<>(validatorResult, HttpStatus.BAD_REQUEST);
         }
         memberService.signUp(memberSignupRequest);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @Operation(summary = "닉네임 중복 확인", description = "true 시 중복된 닉네임")
@@ -134,6 +134,14 @@ public class MemberController {
             @AuthenticationPrincipal long memberId
     ) {
         memberService.unregister(memberId, request.getPassword());
+    }
+
+    @Operation(summary = "소셜 사용자 회원 탈퇴", description = "")
+    @DeleteMapping("/")
+    public void unregisterSocialMember(
+            @AuthenticationPrincipal long memberId
+    ) {
+        memberService.unregisterSocialMember(memberId);
     }
 
 //    @GetMapping("/projectiontest/test")  -- postMan test
