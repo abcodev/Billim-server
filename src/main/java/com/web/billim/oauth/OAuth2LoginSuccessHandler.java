@@ -1,15 +1,12 @@
 package com.web.billim.oauth;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.web.billim.jwt.provider.JwtProvider;
 import com.web.billim.jwt.dto.RedisJwt;
 import com.web.billim.jwt.service.JwtService;
 import com.web.billim.member.type.MemberGrade;
 import com.web.billim.oauth.dto.OAuthMember;
-import com.web.billim.security.dto.LoginResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -79,8 +76,6 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
      * access_token, refresh_token 을 쿼리 파라미터로 전달하는게 좋아보이지 않음
      * 다른 전달 방법은 없을까..? (해결하고싶은 내용) // FIXME
      */
-
-
 
 
 

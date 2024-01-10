@@ -1,5 +1,6 @@
 package com.web.billim.member.service;
 
+import com.web.billim.chat.service.ChatRoomService;
 import com.web.billim.client.kakao.KakaoOAuthClient;
 import com.web.billim.common.infra.ImageUploadService;
 import com.web.billim.coupon.repository.CouponRepository;
@@ -27,6 +28,8 @@ import com.web.billim.order.domain.ProductOrder;
 import com.web.billim.order.repository.OrderRepository;
 import com.web.billim.point.dto.AddPointCommand;
 import com.web.billim.point.service.PointService;
+import com.web.billim.product.repository.ProductRepository;
+import com.web.billim.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -36,10 +39,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -60,6 +65,13 @@ public class MemberService {
     private final ImageUploadService imageUploadService;
     private final EmailSendService emailSendService;
     private final PasswordEncoder passwordEncoder;
+
+
+    private final ProductService productService;
+    private final ProductRepository productRepository;
+    private final ChatRoomService chatRoomService;
+
+
 
     // TODO: validation 정리
     public Map<String, String> validateHandling(BindingResult bindingResult) {
@@ -103,20 +115,21 @@ public class MemberService {
     // 회원정보 수정
     @Transactional
     public void updateInfo(long memberId, MemberInfoUpdateRequest req) {
-        memberRepository.findById(memberId).ifPresent(member -> {
-            if (!member.getNickname().equals(req.getNickname())
-                    && memberRepository.existsByNickname(req.getNickname())) {
-                throw new RuntimeException("중복된 닉네임 입니다.");
-            }
-            String imageUrl = null;
-            if (req.getNewProfileImage() != null && !req.getNewProfileImage().isEmpty()) {
+        Member member = memberDomainService.retrieve(memberId);
+        if (!member.getNickname().equals(req.getNickname())) {
+            throw new RuntimeException("동일한 닉네임으로 변경할 수 없습니다.");
+        }
+        if (memberRepository.existsByNickname(req.getNickname())) {
+            throw new RuntimeException("중복된 닉네임 입니다.");
+        }
+        String imageUrl = Optional.ofNullable(req.getNewProfileImage()).map(image -> {
+            if (!member.isDefaultImage()) {
                 imageUploadService.delete(member.getProfileImageUrl());
-                imageUrl = imageUploadService.upload(req.getNewProfileImage(), "profile");
             }
-
-            member.updateInfo(imageUrl, req.getNickname(), req.getAddress());
-            memberRepository.save(member);
-        });
+            return imageUploadService.upload(req.getNewProfileImage(), "profile");
+        }).orElse(null);
+        member.updateInfo(imageUrl, req.getNickname(), req.getAddress());
+        memberRepository.save(member);
     }
 
     // 비밀번호 찾기 (임시비밀번호 전송)
@@ -192,16 +205,32 @@ public class MemberService {
 //                .forEach(room -> chatRoomService.exit(memberId, room.getChatRoomId()));
 //    }
 
+    public Member unregister(long memberId) {
+        Member member = memberDomainService.retrieve(memberId);
+        productRepository.findAllByMember_memberId(memberId)
+                .forEach(product -> productService.delete(memberId, product.getProductId()));
+
+        memberRepository.save(member.unregister());
+
+        pointService.deleteByUnregister(memberId);
+        couponService.deleteByUnregister(memberId);
+
+        chatRoomService.retrieveAllJoined(memberId)
+                .forEach(room -> chatRoomService.exit(memberId, room.getChatRoomId()));
+        return member;
+    }
+
     // 회원 탈퇴
+    @Transactional
     public void unregister(long memberId, String password) {
         Member member = memberDomainService.retrieve(memberId);
         member.validatePassword(passwordEncoder, password);
-        memberDomainService.unregister(memberId);
+        this.unregister(memberId);
     }
 
     @Transactional
     public void unregisterSocialMember(long memberId) {
-        Member member = memberDomainService.unregister(memberId);
+        Member member = this.unregister(memberId);
         oAuthRepository.findByMember(member).ifPresent(socialMember -> {
             kakaoOAuthClient.unlink(socialMember.getRefreshToken());
             oAuthRepository.delete(socialMember);
