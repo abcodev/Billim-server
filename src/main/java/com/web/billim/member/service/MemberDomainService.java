@@ -23,30 +23,30 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberDomainService {
 
     private final MemberRepository memberRepository;
-    private final CouponService couponService;
-    private final PointService pointService;
-    private final ProductService productService;
-    private final ProductRepository productRepository;
-    private final ChatRoomService chatRoomService;
+//    private final CouponService couponService;
+//    private final PointService pointService;
+//    private final ProductService productService;
+//    private final ProductRepository productRepository;
+//    private final ChatRoomService chatRoomService;
 
     public Member retrieve(long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
     }
 
-    @Transactional
-    public Member unregister(long memberId) {
-        Member member = this.retrieve(memberId);
-        productRepository.findAllByMember_memberId(memberId)
-                .forEach(product -> productService.delete(memberId, product.getProductId()));
-
-        memberRepository.save(member.unregister());
-
-        pointService.deleteByUnregister(memberId);
-        couponService.deleteByUnregister(memberId);
-
-        chatRoomService.retrieveAllJoined(memberId)
-                .forEach(room -> chatRoomService.exit(memberId, room.getChatRoomId()));
-        return member;
-    }
+//    @Transactional
+//    public Member unregister(long memberId) {
+//        Member member = this.retrieve(memberId);
+//        productRepository.findAllByMember_memberId(memberId)
+//                .forEach(product -> productService.delete(memberId, product.getProductId()));
+//
+//        memberRepository.save(member.unregister());
+//
+//        pointService.deleteByUnregister(memberId);
+//        couponService.deleteByUnregister(memberId);
+//
+//        chatRoomService.retrieveAllJoined(memberId)
+//                .forEach(room -> chatRoomService.exit(memberId, room.getChatRoomId()));
+//        return member;
+//    }
 }

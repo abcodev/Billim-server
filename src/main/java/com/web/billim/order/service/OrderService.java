@@ -1,9 +1,11 @@
 package com.web.billim.order.service;
 
 import com.web.billim.exception.ForbiddenException;
+import com.web.billim.exception.NotFoundException;
 import com.web.billim.exception.OrderFailedException;
 import com.web.billim.exception.handler.ErrorCode;
 import com.web.billim.member.domain.Member;
+import com.web.billim.member.repository.MemberRepository;
 import com.web.billim.member.service.MemberDomainService;
 import com.web.billim.order.domain.ProductOrder;
 import com.web.billim.order.dto.OrderCommand;
@@ -31,7 +33,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class OrderService {
-    private final MemberDomainService memberDomainService;
+    private final MemberRepository memberRepository;
     private final PaymentService paymentService;
     private final OrderRepository orderRepository;
     private final ProductDomainService productDomainService;
@@ -57,7 +59,8 @@ public class OrderService {
     //   FE -> 2번 (500) -> /failure
     @Transactional
     public PaymentInfoResponse order(long memberId, OrderCommand orderCommand) {
-        Member member = memberDomainService.retrieve(memberId);
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 
         // 1. 해당 사용자가 주문중인게 있는지 확인
         if (orderDomainService.checkAlreadyInProgressOrder(member)) {

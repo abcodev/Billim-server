@@ -28,7 +28,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Setter
 public class Member extends JpaEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long memberId;
     private String email;
@@ -40,16 +41,11 @@ public class Member extends JpaEntity {
     @Enumerated(EnumType.STRING)
     private MemberGrade grade;
 
-    private String profileImageUrl;
+    private String profileImageUrl = DEFAULT_IMAGE_URL;
     private String useYn;
 
     @Enumerated(EnumType.STRING)
     private MemberType memberType;
-
-    @PrePersist
-    public void prePersist(){
-        this.profileImageUrl = this.profileImageUrl == null ? "https://s3-billim.s3.ap-northeast-2.amazonaws.com/profile/profile-default.png": this.profileImageUrl;
-    }
 
     public void updateInfo(String imageUrl, String nickname, String address) {
         if (imageUrl != null) {
@@ -73,4 +69,10 @@ public class Member extends JpaEntity {
             throw new UnAuthorizedException(ErrorCode.INVALID_PASSWORD);
         }
     }
+
+    public boolean isDefaultImage() {
+        return this.profileImageUrl.equals(DEFAULT_IMAGE_URL);
+    }
+
+    private final static String DEFAULT_IMAGE_URL = "https://s3-billim.s3.ap-northeast-2.amazonaws.com/profile/profile-default.png";
 }
