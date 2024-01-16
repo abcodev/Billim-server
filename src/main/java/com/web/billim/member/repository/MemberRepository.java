@@ -22,7 +22,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("select m.memberId as memberId from Member m")
     List<Long> findAllMemberId();
 
-    @Query("select m.useYn as useYn from Member m")
+    @Query("select m.useYn as useYn from Member m where m.email = :email")
     String resignCheck(@Param("email") String email);
 
 }
