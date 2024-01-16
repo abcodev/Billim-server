@@ -14,6 +14,8 @@ public class WritableReviewList {
 
     private long orderId;
     private String sellerNickname;
+
+    private Long productId;
     private String productName;
     private long price;
     private String productImageUrl;
