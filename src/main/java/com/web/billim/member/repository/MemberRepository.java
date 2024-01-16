@@ -3,6 +3,7 @@ package com.web.billim.member.repository;
 import com.web.billim.member.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,5 +23,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     List<Long> findAllMemberId();
 
     @Query("select m.useYn as useYn from Member m")
-    String resignCheck(String email);
+    String resignCheck(@Param("email") String email);
+
 }
