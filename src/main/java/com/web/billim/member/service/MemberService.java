@@ -169,41 +169,20 @@ public class MemberService {
     }
 
 
-    // 회원 탈퇴
-//    @Transactional
-//    public void unregister(long memberId, String password) {
-//
-//        log.info("memberId : " + memberId );
-//
-////		Member member = memberRepository.findById(memberId)
-////				.orElseThrow();
-//        Member member = memberDomainService.retrieve(memberId);
-//
-//        if(!passwordEncoder.matches(password, member.getPassword())) {
-//            throw new UnAuthorizedException(ErrorCode.INVALID_PASSWORD);
-//        }
-//
-////		this.checkPassword(memberId, password);
-//
-//        // 판매 상품 상태 변화
-//        log.info("==========판매 상품 상태 변화===========");
-//        List<Product> productList = productRepository.findAllByMember_memberId(memberId)
-//                .stream().map(product -> {
-//                    product.setDeleted(true);
-//                    return product;
-//                }).collect(Collectors.toList());
-//        productRepository.saveAll(productList);
-//
-//        // 회원 상태 변화
-//        member.setUseYn("N");
-//
-//        log.info("==========적립금 쿠폰 삭제===========");
-//        pointService.deleteByUnregister(memberId);
-//        couponService.deleteByUnregister(memberId);
-//
-//        chatRoomService.retrieveAllJoined(memberId)
-//                .forEach(room -> chatRoomService.exit(memberId, room.getChatRoomId()));
-//    }
+    public Member unregister(long memberId) {
+        Member member = memberDomainService.retrieve(memberId);
+        productRepository.findAllByMember_memberId(memberId)
+                .forEach(product -> productService.delete(memberId, product.getProductId()));
+
+        memberRepository.save(member.unregister());
+
+        pointService.deleteByUnregister(memberId);
+        couponService.deleteByUnregister(memberId);
+
+        chatRoomService.retrieveAllJoined(memberId)
+                .forEach(room -> chatRoomService.exit(memberId, room.getChatRoomId()));
+        return member;
+    }
 
     public Member unregister(long memberId) {
         Member member = memberDomainService.retrieve(memberId);
@@ -257,9 +236,6 @@ public class MemberService {
                 .build();
         return memberRepository.save(member);
     }
-
-    // TODO: 카카오 회원탈퇴
-
 
     // 마이페이지 회원 정보
     @Transactional
