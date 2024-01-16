@@ -169,20 +169,20 @@ public class MemberService {
     }
 
 
-    public Member unregister(long memberId) {
-        Member member = memberDomainService.retrieve(memberId);
-        productRepository.findAllByMember_memberId(memberId)
-                .forEach(product -> productService.delete(memberId, product.getProductId()));
-
-        memberRepository.save(member.unregister());
-
-        pointService.deleteByUnregister(memberId);
-        couponService.deleteByUnregister(memberId);
-
-        chatRoomService.retrieveAllJoined(memberId)
-                .forEach(room -> chatRoomService.exit(memberId, room.getChatRoomId()));
-        return member;
-    }
+//    public Member unregister(long memberId) {
+//        Member member = memberDomainService.retrieve(memberId);
+//        productRepository.findAllByMember_memberId(memberId)
+//                .forEach(product -> productService.delete(memberId, product.getProductId()));
+//
+//        memberRepository.save(member.unregister());
+//
+//        pointService.deleteByUnregister(memberId);
+//        couponService.deleteByUnregister(memberId);
+//
+//        chatRoomService.retrieveAllJoined(memberId)
+//                .forEach(room -> chatRoomService.exit(memberId, room.getChatRoomId()));
+//        return member;
+//    }
 
     public Member unregister(long memberId) {
         Member member = memberDomainService.retrieve(memberId);

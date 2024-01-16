@@ -14,6 +14,7 @@ public class WritableReviewList {
 
     private long orderId;
     private String sellerNickname;
+    private long productId;
     private String productName;
     private long price;
     private String productImageUrl;
@@ -30,6 +31,7 @@ public class WritableReviewList {
         return WritableReviewList.builder()
                 .orderId(productOrder.getOrderId())
                 .sellerNickname(product.getMember().getNickname())
+                .productId(product.getProductId())
                 .productName(product.getProductName())
                 .price(productOrder.getPrice())
                 .productImageUrl(product.mainImage())
