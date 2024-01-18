@@ -59,12 +59,12 @@ public class EmailSendService {
             "      </div>" +
             "" +
 //            "      <a href='http://localhost:3000/emailverify/confirm?email=" + email + "&authToken=" + authToken + "'" + "style=\"display: inline-block; background-color: #fcd34d; font-weight: bolder; color: #ffffff; font-size: 13px; padding: 10px 30px; text-decoration: none; border-radius: 20px;\">이메일 인증</a>" +
-            "      <a href='http://billim.store/emailverify/confirm?email=" + email + "&authToken=" + authToken + "'" + "style=\"display: inline-block; background-color: #fcd34d; font-weight: bolder; color: #ffffff; font-size: 13px; padding: 10px 30px; text-decoration: none; border-radius: 20px;\">이메일 인증</a>" +
+            "      <a href='https://billim.store/emailverify/confirm?email=" + email + "&authToken=" + authToken + "'" + "style=\"display: inline-block; background-color: #fcd34d; font-weight: bolder; color: #ffffff; font-size: 13px; padding: 10px 30px; text-decoration: none; border-radius: 20px;\">이메일 인증</a>" +
             "" +
             "      <hr style=\"background: #dee2e6; height: 1px; border: 0; margin: 32px auto 0;\">" +
             "      <p style=\"font-size: 11px; text-align: initial; padding-left: 13px; color: #868e96;\">만약 버튼이 정상적으로 클릭 되지 않으면, 아래 주소를 복사하여 접속해 주세요.</p>" +
 //            "      <p style=\"font-size: 11px; text-align: initial; padding-left: 13px; margin: 0; color: #868e96;\">http://localhost:3000/emailverify/confirm?email=" + email + "&authToken=" + authToken + "</p>" +
-            "      <p style=\"font-size: 11px; text-align: initial; padding-left: 13px; margin: 0; color: #868e96;\">http://billim.store/emailverify/confirm?email=" + email + "&authToken=" + authToken + "</p>" +
+            "      <p style=\"font-size: 11px; text-align: initial; padding-left: 13px; margin: 0; color: #868e96;\">https://billim.store/emailverify/confirm?email=" + email + "&authToken=" + authToken + "</p>" +
             "    </div>" +
             "</body>" +
             "</html>";
