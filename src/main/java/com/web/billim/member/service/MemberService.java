@@ -233,6 +233,7 @@ public class MemberService {
                 .memberType(MemberType.KAKAO)
                 .profileImageUrl(kakaoLogin.getImageUrl())
                 .address(" ")
+                .useYn("Y")
                 .build();
         return memberRepository.save(member);
     }
