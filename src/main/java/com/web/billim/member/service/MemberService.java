@@ -116,10 +116,10 @@ public class MemberService {
     @Transactional
     public void updateInfo(long memberId, MemberInfoUpdateRequest req) {
         Member member = memberDomainService.retrieve(memberId);
-        if (!member.getNickname().equals(req.getNickname())) {
+        if (member.getNickname().equals(req.getNickname())) {
             throw new RuntimeException("동일한 닉네임으로 변경할 수 없습니다.");
         }
-        if (memberRepository.existsByNickname(req.getNickname())) {
+        if (memberRepository.existsByNickname(req.getNickname()))   {
             throw new RuntimeException("중복된 닉네임 입니다.");
         }
         String imageUrl = Optional.ofNullable(req.getNewProfileImage()).map(image -> {

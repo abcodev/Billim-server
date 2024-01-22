@@ -1,6 +1,7 @@
 package com.web.billim.oauth.service;
 
 import com.web.billim.member.domain.Member;
+import com.web.billim.member.service.MemberDomainService;
 import com.web.billim.member.service.MemberService;
 import com.web.billim.oauth.domain.SocialMember;
 import com.web.billim.oauth.dto.KakaoLogin;
@@ -23,6 +24,7 @@ public class OAuthService extends DefaultOAuth2UserService {
 
     private final MemberService memberService;
     private final OAuthRepository oAuthRepository;
+    private final MemberDomainService memberDomainService;
 
     @Transactional
     @Override
@@ -56,6 +58,11 @@ public class OAuthService extends DefaultOAuth2UserService {
             // 여기서 RefreshToken, RefreshTokenExpiredAt 업데이트 해주기
         } else {
             log.debug("신규 카카오톡 로그인 회원");
+
+            // member table 에 email 있으면 일반 로그인 회원으로 가입한 이력이 있음.
+            if (memberDomainService.existByEmail(oAuthLogin.getEmail())) {
+                throw new RuntimeException("이미 사용중인 이메일입니다.");
+            }
             Member member = memberService.register(oAuthLogin);  // member 테이블에 저장 -> 신규
             socialMember = oAuthRepository.save(SocialMember.of(member, oAuthLogin));
         }

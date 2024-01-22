@@ -34,6 +34,10 @@ public class MemberDomainService {
                 .orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
     }
 
+    public Boolean existByEmail(String email){
+        return memberRepository.existsByEmail(email);
+    }
+
 //    @Transactional
 //    public Member unregister(long memberId) {
 //        Member member = this.retrieve(memberId);
