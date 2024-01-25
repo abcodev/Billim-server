@@ -25,13 +25,7 @@ spring:
 
   profiles:
     include:
-      - s3
-      - datasource
-      - email
-      - import
-      - security
-      - oauth
-      - ssl
+      - prod
 
 logging:
   level:
