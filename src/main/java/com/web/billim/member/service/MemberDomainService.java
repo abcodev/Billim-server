@@ -38,6 +38,10 @@ public class MemberDomainService {
         return memberRepository.existsByEmail(email);
     }
 
+    public Member findByEmail(String email){
+        return memberRepository.findByEmail(email);
+    }
+
 //    @Transactional
 //    public Member unregister(long memberId) {
 //        Member member = this.retrieve(memberId);

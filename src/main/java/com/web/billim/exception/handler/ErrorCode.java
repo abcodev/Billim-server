@@ -51,6 +51,7 @@ public enum ErrorCode {
     DUPLICATE_RESOURCE(CONFLICT, "데이터가 이미 존재합니다"),
     DUPLICATE_EMAIL(CONFLICT, "중복된 이메일 입니다."),
     DUPLICATE_NICKNAME(CONFLICT, "중복된 닉네임 입니다."),
+    GENERAL_DUPLICATE_EMAIL(CONFLICT,"일반회원으로 가입된 이메일입니다."),
 
     /* INTERNAL_SERVER_ERROR */
     IMAGE_UPLOAD_FAILED(INTERNAL_SERVER_ERROR, "이미지 업로드에 실패했습니다."),
