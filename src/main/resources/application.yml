@@ -9,12 +9,6 @@ spring:
     host: localhost
     port: 6379
 
-  devtools:
-    livereload:
-      enabled: true
-    restart:
-      enabled: true
-
   jackson:
     time-zone: Asia/Seoul
 
@@ -31,7 +25,13 @@ spring:
       - import
       - security
       - oauth
-      - ssl
+#      - ssl
+
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
 
 logging:
   level:
