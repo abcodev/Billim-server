@@ -19,12 +19,14 @@ spring:
 
   profiles:
     include:
-      - s3
-      - datasource
-      - email
-      - import
-      - security
-      - oauth
+      - dev
+#      - prod
+#      - s3
+#      - datasource
+#      - email
+#      - import
+#      - security
+#      - oauth
 #      - ssl
 
   devtools:
