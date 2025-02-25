@@ -3,9 +3,8 @@ package com.web.billim.point.domain;
 import com.web.billim.common.domain.JpaEntity;
 import com.web.billim.member.domain.Member;
 import com.web.billim.point.dto.AddPointCommand;
+import jakarta.persistence.*;
 import lombok.*;
-
-import javax.persistence.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

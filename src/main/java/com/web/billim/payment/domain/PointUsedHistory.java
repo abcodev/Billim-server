@@ -2,9 +2,8 @@ package com.web.billim.payment.domain;
 
 import com.web.billim.common.domain.JpaEntity;
 import com.web.billim.point.domain.SavedPoint;
+import jakarta.persistence.*;
 import lombok.*;
-
-import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

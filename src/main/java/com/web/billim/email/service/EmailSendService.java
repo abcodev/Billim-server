@@ -3,6 +3,8 @@ package com.web.billim.email.service;
 import com.web.billim.exception.InternalSeverException;
 import com.web.billim.exception.handler.ErrorCode;
 import com.web.billim.member.dto.request.FindPasswordRequest;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
@@ -11,8 +13,6 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import java.util.UUID;
 
 @Slf4j

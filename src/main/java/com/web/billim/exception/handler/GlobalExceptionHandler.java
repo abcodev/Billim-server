@@ -2,14 +2,13 @@ package com.web.billim.exception.handler;
 
 import com.web.billim.exception.AuthenticationBusinessException;
 import com.web.billim.exception.JwtException;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import javax.validation.ConstraintViolationException;
 
 @Slf4j
 @RestControllerAdvice

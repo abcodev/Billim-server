@@ -2,8 +2,8 @@ package com.web.billim.review.domain;
 
 import com.web.billim.common.domain.JpaEntity;
 import com.web.billim.order.domain.ProductOrder;
+import jakarta.persistence.*;
 import lombok.*;
-import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -31,7 +31,5 @@ public class Review extends JpaEntity {
 //  -> order 를 불러올때 order 번호로된 review 가 있는지 찾고 없다면 리뷰를 달지 않았다는 말.
 //  -> 즉, review는 order 를 가지고 order는 review 를 가지고 있지 않아도 된다.
 //  -> review 에 상태는 존재하지 않아도 된다.
-
-
 
 }

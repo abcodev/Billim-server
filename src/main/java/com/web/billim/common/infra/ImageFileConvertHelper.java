@@ -1,8 +1,8 @@
 package com.web.billim.common.infra;
 
+import jakarta.xml.bind.DatatypeConverter;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.xml.bind.DatatypeConverter;
 import java.io.*;
 
 @Slf4j

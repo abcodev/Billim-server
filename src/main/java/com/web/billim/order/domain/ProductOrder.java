@@ -7,9 +7,9 @@ import com.web.billim.order.type.ProductOrderStatus;
 import com.web.billim.order.vo.Period;
 import com.web.billim.product.domain.Product;
 import com.web.billim.product.type.TradeMethod;
+import jakarta.persistence.*;
 import lombok.*;
 
-import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity

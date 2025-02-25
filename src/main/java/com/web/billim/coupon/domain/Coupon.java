@@ -3,9 +3,8 @@ package com.web.billim.coupon.domain;
 import com.web.billim.common.domain.JpaEntity;
 import com.web.billim.coupon.dto.CouponRegisterCommand;
 import com.web.billim.member.domain.Member;
+import jakarta.persistence.*;
 import lombok.*;
-
-import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

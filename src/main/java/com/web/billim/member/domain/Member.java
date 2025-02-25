@@ -1,21 +1,19 @@
 package com.web.billim.member.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.PrePersist;
-import javax.persistence.Table;
-
 import com.web.billim.common.domain.JpaEntity;
 import com.web.billim.exception.UnAuthorizedException;
 import com.web.billim.exception.handler.ErrorCode;
 import com.web.billim.member.type.MemberGrade;
 
 import com.web.billim.member.type.MemberType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 

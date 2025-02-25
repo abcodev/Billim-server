@@ -8,9 +8,8 @@ import com.web.billim.payment.dto.PaymentInfoDto;
 import com.web.billim.payment.type.PaymentStatus;
 import com.web.billim.product.type.TradeMethod;
 
+import jakarta.persistence.*;
 import lombok.*;
-
-import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

@@ -1,7 +1,7 @@
 package com.web.billim.common.converter;
 
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 
 @Converter(autoApply = true)
 public class BooleanYNConverter implements AttributeConverter<Boolean, String> {

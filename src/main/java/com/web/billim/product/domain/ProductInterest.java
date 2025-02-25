@@ -2,9 +2,9 @@ package com.web.billim.product.domain;
 
 import com.web.billim.member.domain.Member;
 import com.web.billim.product.dto.request.InterestRequest;
+import jakarta.persistence.*;
 import lombok.*;
 
-import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

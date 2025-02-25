@@ -6,9 +6,12 @@ import com.web.billim.product.dto.command.ProductUpdateCommand;
 import com.web.billim.member.domain.Member;
 import com.web.billim.product.type.TradeMethod;
 
+import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.*;
-
-import javax.persistence.*;
 
 import java.util.Arrays;
 import java.util.List;

@@ -3,14 +3,12 @@ package com.web.billim.member.dto.request;
 import com.web.billim.member.domain.Member;
 import com.web.billim.member.type.MemberGrade;
 import com.web.billim.member.type.MemberType;
+import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 
 @Getter
 @Setter

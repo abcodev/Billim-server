@@ -1,14 +1,12 @@
 package com.web.billim.product.domain;
 
 import com.web.billim.common.domain.JpaEntity;
-//import io.swagger.annotations.ApiModelProperty;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

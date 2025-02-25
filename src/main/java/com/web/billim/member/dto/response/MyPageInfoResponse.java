@@ -3,12 +3,11 @@ package com.web.billim.member.dto.response;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.web.billim.member.domain.Member;
 import com.web.billim.member.type.MemberGrade;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import java.time.LocalDateTime;
 
 @Setter
