@@ -12,15 +12,16 @@ import com.web.billim.security.service.UserDetailServiceImpl;
 
 import com.web.billim.oauth.OAuth2LoginSuccessHandler;
 import com.web.billim.oauth.service.OAuthService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
@@ -29,19 +30,18 @@ import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCo
 import org.springframework.security.oauth2.client.http.OAuth2ErrorResponseErrorHandler;
 import org.springframework.security.oauth2.core.http.converter.OAuth2AccessTokenResponseHttpMessageConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
-import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
+    private final CorsConfigurationSource corsConfigurationSource;
     private final JwtProvider jwtProvider;
     private final UserDetailServiceImpl userDetailsService;
     private final JwtService jwtService;
@@ -51,56 +51,25 @@ public class WebSecurityConfig {
     private final PasswordEncoder passwordEncoder;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(AuthenticationManager authenticationManager, HttpSecurity http) throws Exception {
-        http
-            .cors().and()
-            .csrf().disable()
-            .formLogin().disable()
-            .httpBasic().disable()
-
-            .sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-
-            .and()
-            .authorizeHttpRequests() // 변경된 부분
-            .requestMatchers("/**").permitAll() // permitAll 변경
-            .anyRequest().authenticated()
-
-            .and()
-            .apply(jwtTokenFilterConfigurer(jwtProvider, authenticationManager, jwtService, securityFilterSkipMatcher))
-
-            .and()
-            .oauth2Login()
-            .tokenEndpoint().accessTokenResponseClient(accessTokenResponseClient())
-            .and()
-            .redirectionEndpoint().baseUri("/oauth/kakao")
-            .and()
-            .userInfoEndpoint().userService(oauthService)
-            .and()
-            .successHandler(oAuth2LoginSuccessHandler);
-
-        return http.build();
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http
+            .authorizeHttpRequests(authz -> authz
+                .requestMatchers("/**").permitAll()
+                .anyRequest().authenticated()
+            )
+            .cors(cors -> cors.configurationSource(corsConfigurationSource))
+            .csrf(AbstractHttpConfigurer::disable)
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .addFilterBefore(jwtExceptionFilter(), UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(jwtAuthenticationFilter(jwtProvider), JwtExceptionFilter.class)
+            .oauth2Login(oauth2 -> oauth2
+                .tokenEndpoint(token -> token.accessTokenResponseClient(accessTokenResponseClient()))
+                .redirectionEndpoint(redirection -> redirection.baseUri("/oauth/kakao"))
+                .userInfoEndpoint(userInfo -> userInfo.userService(oauthService))
+                .successHandler(oAuth2LoginSuccessHandler)
+            )
+            .build();
     }
-
-
-//    @Bean
-//    public CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration corsConfig = new CorsConfiguration();
-//        corsConfig.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://yourdomain.com"));  // 허용할 도메인 추가
-//        corsConfig.setAllowedMethods(Arrays.asList(HttpMethod.GET.name(), HttpMethod.POST.name(), HttpMethod.PUT.name(), HttpMethod.DELETE.name()));
-//        corsConfig.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
-//        corsConfig.setAllowCredentials(true);  // 자격 증명 허용 (쿠키 포함 등)
-//
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", corsConfig);  // 모든 요청에 대해 CORS 설정 적용
-//
-//        return source;
-//    }
-//
-//    @Bean
-//    public CorsFilter corsFilter() {
-//        return new CorsFilter(corsConfigurationSource());
-//    }
 
     @Bean
     public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient() {
@@ -116,20 +85,8 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManagerBean(HttpSecurity http) throws Exception { // 변경된 부분
-        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.authenticationProvider(usernamPasswordAuthenticationProvider());
-        return authenticationManagerBuilder.build();
-    }
-
-    @Bean
-    public SecurityFilterConfigurer jwtTokenFilterConfigurer(
-        JwtProvider jwtProvider,
-        AuthenticationManager authenticationManager,
-        JwtService jwtService,
-        SecurityFilterSkipMatcher securityFilterSkipMatcher
-    ) {
-        return new SecurityFilterConfigurer(jwtProvider, authenticationManager, jwtService, securityFilterSkipMatcher);
+    public AuthenticationManager authenticationManager() {
+        return new ProviderManager(List.of(usernamPasswordAuthenticationProvider()));
     }
 
     @Bean
@@ -144,7 +101,7 @@ public class WebSecurityConfig {
 
     @Bean
     public LoginAuthenticationFilter loginAuthenticationFilter(
-        AuthenticationManager authenticationManager,  // 변경된 부분
+        AuthenticationManager authenticationManager,
         JwtProvider jwtProvider,
         JwtService jwtService
     ) {
@@ -157,5 +114,4 @@ public class WebSecurityConfig {
     public UsernamPasswordAuthenticationProvider usernamPasswordAuthenticationProvider() {
         return new UsernamPasswordAuthenticationProvider(userDetailsService, passwordEncoder);
     }
-
 }

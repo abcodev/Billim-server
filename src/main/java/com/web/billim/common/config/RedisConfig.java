@@ -1,6 +1,7 @@
 package com.web.billim.common.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
@@ -17,10 +18,10 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @EnableRedisRepositories
 public class RedisConfig {
 
-    @Value("${spring.redis.host}")
-    private String host;
-    @Value("${spring.redis.port}")
-    private int port;
+//    @Value("${spring.redis.host}")
+    private String host = "localhost";
+//    @Value("${spring.redis.port}")
+    private int port = 6367;
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory(){
